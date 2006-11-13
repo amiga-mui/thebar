@@ -1,0 +1,58 @@
+# TheBarVirt.mcc smake file
+
+# Target
+TARGET = TheBarVirt.mcc
+
+# Compiler
+C_COMPILER = sc
+
+C_OPTIMIZE = OPTIMIZE OPTSCHEDULE NOOPTSIZE OPTTIME\
+OPTINLINE OPTLOOP NOOPTALIAS OPTPEEP\
+OPTRDEPTH=5 OPTDEPTH=5 OPTCOMPLEXITY=8\
+NOOPTINLOCAL
+#OPTINLOCAL
+
+C_COMPILER_OPTS = PARAMS=r NOCHECKABORT NOSTACKCHECK NOSTACKEXTEND STRINGMERGE\
+COMMENTNEST IDLEN=128 INCLUDEDIR=/include DEFINE VIRTUAL\
+$(C_OPTIMIZE)
+
+
+# Assembler
+ASSEMBLER = a68k
+ASSEMBLER_OPTS = -iainc:
+
+# Linker
+LINKER = slink
+LINKER_OPTS = NOICONS SC SD ND
+
+# Objects
+OBJECTS = libent.o libinit.o endcode.o init.o utils.o brc1.o spacer.o dragbar.o build.o class.o
+
+# Libs
+LIBS = LIB:sc.lib LIB:amiga.lib LIB:debug.lib
+
+# Built file
+$(TARGET): $(OBJECTS) $(LIBS)
+        $(LINKER) <with <
+FROM $(OBJECTS) TO $(TARGET) LIB $(LIBS) $(LINKER_OPTS)
+<
+        avail flush
+
+# Rules
+.c.o:
+      $(C_COMPILER) $*.c $(C_COMPILER_OPTS)
+
+.asm.o:
+      $(ASSEMBLER) $(ASSEMBLER_OPTS) $*.asm
+
+# Dependences
+libent.o:   libent.asm TheBarVirt.mcc_rev.i
+libinit.o:  libinit.c class.h TheBarVirt.mcc_rev.h base.h class_protos.h
+endcode.o:  endcode.asm
+init.o:     init.c class.h base.h class_protos.h
+utils.o:    utils.c class.h base.h class_protos.h
+brc1.o:     brc1.c
+spacer.o:   spacer.c class.h base.h class_protos.h
+dragbar.o:  dragbar.c class.h base.h class_protos.h
+build.o:    build.c class.h instance.h base.h class_protos.h
+class.o:    class.c class.h instance.h base.h class_protos.h

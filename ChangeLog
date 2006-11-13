@@ -1,0 +1,13 @@
+--------------------------------
+MUI TheBar MCC class - ChangeLog
+--------------------------------
+
+$Id$
+
+2006-11-12  Jens Langner <Jens.Langner@light-speed.de>
+
+  * converted old CVS repository to sf.net based SVN
+
+2005-11-30  Alfonso Ranieri <alforan@tin.it>
+
+  * released sources under LGPL at sf.net
