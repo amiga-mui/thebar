@@ -1,0 +1,60 @@
+# TheBar.mcp smake file
+
+# Target
+TARGET = TheBar.mcp
+
+# Compiler
+C_COMPILER = sc
+
+C_OPTIMIZE = OPTIMIZE OPTSCHEDULE NOOPTSIZE OPTTIME\
+OPTINLINE OPTLOOP NOOPTALIAS OPTPEEP\
+OPTRDEPTH=5 OPTDEPTH=5 OPTCOMPLEXITY=8\
+NOOPTINLOCAL
+#OPTINLOCAL
+
+C_COMPILER_OPTS = PARAMS=r NOCHECKABORT NOSTACKCHECK NOSTACKEXTEND STRINGMERGE\
+COMMENTNEST IDLEN=128 INCLUDEDIR=/include\
+$(C_OPTIMIZE)
+
+# Assembler
+ASSEMBLER = a68k
+ASSEMBLER_OPTS = -iainc:
+
+# Linker
+LINKER = slink
+LINKER_OPTS = NOICONS SC SD ND
+
+# Objects
+OBJECTS = libent.o libinit.o endcode.o init.o utils.o loc.o coloradjust.o penadjust.o\
+backgroundadjust.o poppen.o popbackground.o class.o
+
+# Libs
+LIBS = LIB:sc.lib LIB:amiga.lib LIB:debug.lib
+
+# Built file
+$(TARGET): $(OBJECTS) $(LIBS)
+        $(LINKER) <with <
+FROM $(OBJECTS) TO $(TARGET) LIB $(LIBS) $(LINKER_OPTS)
+<
+        avail flush
+
+# Rules
+.c.o:
+      $(C_COMPILER) $*.c $(C_COMPILER_OPTS)
+
+.asm.o:
+      $(ASSEMBLER) $(ASSEMBLER_OPTS) $*.asm
+
+# Dependences
+libent.o:               libent.asm TheBar.mcp_rev.i
+libinit.o:              libinit.c class.h TheBar.mcp_rev.h base.h loc.h class_protos.h
+endcode.o:              endcode.asm
+init.o:                 init.c class.h TheBar_iff.h base.h loc.h class_protos.h
+utils.o:                utils.c class.h base.h loc.h class_protos.h
+loc.o:                  loc.c class.h base.h loc.h class_protos.h
+coloradjust.o:          coloradjust.c class.h base.h loc.h class_protos.h
+penadjust.o:            penadjust.c class.h base.h loc.h class_protos.h
+backgroundadjust.o:     backgroundadjust.c class.h base.h loc.h class_protos.h
+poppen.o:               poppen.c class.h base.h loc.h class_protos.h
+popbackground.o:        popbackground.c class.h base.h loc.h class_protos.h
+class.o:                class.c class.h base.h loc.h class_protos.h TheBar.mcp_rev.h
