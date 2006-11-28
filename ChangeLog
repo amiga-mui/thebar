@@ -4,6 +4,10 @@ MUI TheBar MCC class - ChangeLog
 
 $Id$
 
+2006-11-29  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: applied latest changes supplied by Alfonso.
+
 2006-11-12  Jens Langner <Jens.Langner@light-speed.de>
 
   * converted old CVS repository to sf.net based SVN

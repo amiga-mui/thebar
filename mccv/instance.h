@@ -1,15 +1,3 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
-
 #ifndef _INSTANCE_H
 #define _INSTANCE_H
 
@@ -122,6 +110,8 @@ struct data
     ULONG                          userFlags;
     ULONG                          flags2;
     ULONG                          userFlags2;
+
+    struct MUI_EventHandlerNode    eh;
 };
 
 /* flags */
@@ -159,6 +149,7 @@ enum
     FLG2_Gradient            = 1<<0,
     FLG2_IgnoreAppareance    = 1<<1,
     FLG2_ForceWindowActivity = 1<<2,
+    FLG2_EventHandler        = 1<<3,
 };
 
 /* userFlags */
