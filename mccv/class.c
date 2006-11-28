@@ -1,14 +1,3 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
 
 #include "class.h"
 #include "instance.h"
@@ -489,12 +478,23 @@ M_HOOK(layout,Object *obj,struct MUI_LayoutMsg *lm)
                     lm->lm_MinMax.MinHeight = rows*(butMaxMinHeight+data->vertSpacing)-data->vertSpacing;
 
                     if (data->db)
+                    {
                         if (data->cols) lm->lm_MinMax.MinWidth += _minwidth(data->db)+data->horizSpacing;
                         else lm->lm_MinMax.MinHeight += _minheight(data->db)+data->vertSpacing;
+                        #ifndef __MORPHOS__
+                        lm->lm_MinMax.MinHeight += (data->flags & FLG_Framed) ? 4 : 0;
+                        #endif
+                    }
                 }
                 else
                 {
-                    if (data->db) width += _minwidth(data->db)+data->horizSpacing;
+                    if (data->db)
+                    {
+                        width += _minwidth(data->db)+data->horizSpacing;
+                        #ifndef __MORPHOS__
+                        width += (data->flags & FLG_Framed) ? 4 : 0;
+                        #endif
+                    }
 
                     lm->lm_MinMax.MinWidth  = width;
                     lm->lm_MinMax.MinHeight = butMaxMinHeight;
@@ -513,7 +513,13 @@ M_HOOK(layout,Object *obj,struct MUI_LayoutMsg *lm)
             }
             else
             {
-                if (data->db) height += _minheight(data->db)+data->vertSpacing;
+                if (data->db)
+                {
+                    height += _minheight(data->db)+data->vertSpacing;
+                    #ifndef __MORPHOS__
+                    height += (data->flags & FLG_Framed) ? 4 : 0;
+                    #endif
+                }
 
                 lm->lm_MinMax.MinWidth  = butMaxMinWidth;
                 lm->lm_MinMax.MinHeight = height;
@@ -662,20 +668,25 @@ M_HOOK(layout,Object *obj,struct MUI_LayoutMsg *lm)
                         case MUIV_TheButton_Spacer_DragBar:
                             if (data->cols)
                             {
+                                register ULONG xx;
+
                                 width  = _minwidth(child);
-				                #ifdef __MORPHOS__
-                                height = data->height;
+                                height = _mheight(obj);
+				
+                                #ifdef __MORPHOS__
+                                xx = y = 0;
                                 #else
-                                height = data->height-((data->flags & FLG_Framed) ? data->topBarFrameSpacing+data->bottomBarFrameSpacing+2 : 0);
+                                if (data->flags & FLG_Framed)
+                                {
+                                    height -= 4;
+                                    xx = 2;
+                                    y  = 2;
+                                }
+                                else xx = y = 0;
+                                //height -= (data->flags & FLG_Framed) ? data->topBarFrameSpacing+data->bottomBarFrameSpacing+2 : 0;
                                 #endif
 
-                				#ifndef __MORPHOS__
-                                if (data->flags & FLG_Framed) y = data->topBarFrameSpacing+1;
-                                else
-                                #endif
-                                y = 0;
-                				
-                                if (!MUI_Layout(child,0,y,width,height,0)) return FALSE;
+                                if (!MUI_Layout(child,xx,y,width,height,0)) return FALSE;
                                 sx += width+spc;
                                 x += width+spc;
                                 continue;
@@ -683,34 +694,49 @@ M_HOOK(layout,Object *obj,struct MUI_LayoutMsg *lm)
                             else
                                 if (data->rows)
                                 {
-				                    #ifdef __MORPHOS__
-                                    width  = data->width;
-                                    #else
-                                    width  = data->width-((data->flags & FLG_Framed) ? data->leftBarFrameSpacing+data->rightBarFrameSpacing+2 : 0);
-                                    #endif
-                                    height = _minheight(child);
-				
-                                    #ifndef __MORPHOS__
-                                    if (data->flags & FLG_Framed) y = data->topBarFrameSpacing+1;
-                                    else
-                                    #endif
-                                    y = 0;
+                                    register ULONG xx;
 
-                                    if (!MUI_Layout(child,x,y,width,height,0)) return FALSE;
+				                    width  = _mwidth(obj);
+                                    height = _minheight(child);
+
+                                    #ifdef __MORPHOS__
+                                    xx = y = 0;
+                                    #else
+                                    if (data->flags & FLG_Framed)
+                                    {
+                                        width -= 4;
+                                        xx = 2;
+                                        y  = 2;
+                                    }
+                                    else xx = y = 0;
+                                    //width  -= (data->flags & FLG_Framed) ? data->leftBarFrameSpacing+data->rightBarFrameSpacing+2 : 0;
+                                    #endif
+				
+                                    if (!MUI_Layout(child,xx,y,width,height,0)) return FALSE;
                                     sy = data->vertSpacing+height;
                                     continue;
                                 }
                                 else
                                 {
-                                    width  = _minwidth(child);
-    				
-                                    height = data->height;
+                                    register ULONG xx;
 
-                                    #ifndef __MORPHOS__
-                                    height -= (data->flags & FLG_Framed) ? data->topBarFrameSpacing+data->bottomBarFrameSpacing+2 : 0;
+                                    width  = _minwidth(child);
+                                    height = _mheight(obj);
+    				
+                                    #ifdef __MORPHOS__
+                                    xx = y = 0;
+                                    #else
+                                    if (data->flags & FLG_Framed)
+                                    {
+                                        height -= 4;
+                                        xx = 2;
+                                        y  = 2;
+                                    }
+                                    else xx = y = 0;
+                                    //height -= (data->flags & FLG_Framed) ? data->topBarFrameSpacing+data->bottomBarFrameSpacing+2 : 0;
                                     #endif
 
-                                    if (!MUI_Layout(child,0,0,width,height,0)) return FALSE;
+                                    if (!MUI_Layout(child,xx,y,width,height,0)) return FALSE;
                                     sx += width+spc;
                                     x += width+spc;
                                     continue;
@@ -823,16 +849,29 @@ M_HOOK(layout,Object *obj,struct MUI_LayoutMsg *lm)
                             break;
 
                         case MUIV_TheButton_Spacer_DragBar:
+                        {
+                            register ULONG yy;
+
                             height = _minheight(child);
-    				
-                            width  = data->width;
-                            #ifndef __MORPHOS__
-                            width  -= (data->flags & FLG_Framed) ? data->leftBarFrameSpacing+data->rightBarFrameSpacing+2 : 0;
+                            width  = _mwidth(obj);
+
+                            #ifdef __MORPHOS__
+                            x = yy = 0;
+                            #else
+                            if (data->flags & FLG_Framed)
+                            {
+                              width -= 4;
+                              x  = 2;
+                              yy = 2;
+                            }
+                            else x = yy = 0;
+                            //width -= (data->flags & FLG_Framed) ? data->leftBarFrameSpacing+data->rightBarFrameSpacing+2 : 0;
                             #endif
 
-                            if (!MUI_Layout(child,0,0,width,height,0)) return FALSE;
+                            if (!MUI_Layout(child,x,yy,width,height,0)) return FALSE;
                             y += height+d;
                             continue;
+                        }
                     }
 
                     if (width<data->buttonWidth) x = (data->buttonWidth - _minwidth(child)) >> 1;
@@ -970,13 +1009,24 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                             brush->flags = BRFLG_ARGB;
                             brush->dataTotalWidth *= 4;
 
+
                             if (bmh->bmh_Masking==mskHasTransparentColor)
                             {
                                 register ULONG tc = bmh->bmh_Transparent;
 
                                 brush->trColor = ((colors[tc] & 0xFF000000)>>8) | ((colors[tc+1] & 0xFF000000)>>16) | ((colors[tc+2] & 0xFF000000)>>24);
                             }
+                            #ifdef __MORPHOS__
                             else brush->flags |= BRFLG_AlphaMask;
+                            #else
+                            {
+                                APTR p = NULL;
+
+                                if (GetDTAttrs(dto,PDTA_MaskPlane,(ULONG)&p,TAG_DONE) && p)
+                                    brush->flags |= BRFLG_AlphaMask;
+                            }
+                            #endif
+
                         }
                         else
                         {
@@ -2492,8 +2542,14 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             if (!(button->flags & BFLG_Sleep)) DoMethod(button->obj,MUIM_TheButton_Build);
     }
 
-    if ((data->flags2 & FLG2_ForceWindowActivity) || !(lib_flags & BASEFLG_MUI20))
-        DoMethod(_win(obj),MUIM_Notify,MUIA_Window_Activate,FALSE,(ULONG)obj,1,MUIM_TheBar_DeActivate);
+    //if ((data->flags2 & FLG2_ForceWindowActivity) || !(lib_flags & BASEFLG_MUI20))
+    //    DoMethod(_win(obj),MUIM_Notify,MUIA_Window_Activate,FALSE,(ULONG)obj,1,MUIM_TheBar_DeActivate);
+
+    memset(&data->eh,0,sizeof(data->eh));
+    data->eh.ehn_Class  = cl;
+    data->eh.ehn_Object = obj;
+    data->eh.ehn_Events = IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW;
+    DoMethod(_win(obj),MUIM_Window_AddEventHandler,(ULONG)&data->eh);
 
     #ifdef VIRTUAL
     data->flags |= FLG_IsInVirtgroup;
@@ -2525,8 +2581,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
     if (data->flags & FLG_Framed) freeFramePens(obj,data);
     #endif
 
-    if ((data->flags2 & FLG2_ForceWindowActivity) || !(lib_flags & BASEFLG_MUI20))
-        DoMethod(_win(obj),MUIM_KillNotifyObj,MUIA_Window_Activate,(ULONG)obj);
+    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(ULONG)&data->eh);
 
     if (data->flags & FLG_FreeStrip) freeBitMaps(data);
 
@@ -3441,6 +3496,25 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 
 /***********************************************************************/
 
+static ULONG
+mHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
+{
+    register struct data     *data = INST_DATA(cl,obj);
+    register struct button *button, *succ;
+
+    //NewRawDoFmt(">>>>>>>>>>>>>>>> in\n",1,1,0);
+
+    for (button = BUTTON(data->buttons.mlh_Head); succ = BUTTON(button->link.mln_Succ); button = succ)
+    {
+        if (button->flags & BFLG_Sleep) continue;
+        set(button->obj,MUIA_TheButton_MouseOver,FALSE);
+    }
+
+    return 0;
+}
+
+/***********************************************************************/
+
 M_DISP(dispatcher)
 {
     M_DISPSTART
@@ -3462,6 +3536,7 @@ M_DISP(dispatcher)
         case MUIM_CustomBackfill:           return mCustomBackfill(cl,obj,(APTR)msg);
         case MUIM_CreateDragImage:          return mCreateDragImage(cl,obj,(APTR)msg);
         case MUIM_DeleteDragImage:          return mDeleteDragImage(cl,obj,(APTR)msg);
+        case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);
 
         case MUIM_Group_InitChange:         return mInitChange(cl,obj,(APTR)msg);
         case MUIM_Group_ExitChange:         return mExitChange(cl,obj,(APTR)msg);

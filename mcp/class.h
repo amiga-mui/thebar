@@ -1,15 +1,3 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
-
 #ifndef _CLASS_H
 #define _CLASS_H
 
@@ -248,6 +236,19 @@ struct MUIS_Popbackground_Status
 
 #ifndef MUII_PopFont
 #define MUII_PopFont 42
+#endif
+
+#ifndef MUIV_Imageadjust_Type_All
+#define MUIV_Imageadjust_Type_All 0
+#endif
+#ifndef MUIV_Imageadjust_Type_Image
+#define MUIV_Imageadjust_Type_Image 1
+#endif
+#ifndef MUIV_Imageadjust_Type_Background
+#define MUIV_Imageadjust_Type_Background 2
+#endif
+#ifndef MUIV_Imageadjust_Type_Pen
+#define MUIV_Imageadjust_Type_Pen 3
 #endif
 
 /***********************************************************************/
