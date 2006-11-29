@@ -6,6 +6,13 @@ $Id$
 
 2006-11-29  Jens Langner <Jens.Langner@light-speed.de>
 
+  * mcc, include: ported MCC sources to the generalized mccheader.c
+    framework and added GNU makefiles for all three mainly supported
+    targets (OS3/OS4/MOS). SAS/C compilation should now be considered
+    obsolete as we want to concentrate on getting everything running
+    with GCC instead. However, please note that the MCC sources just
+    compile and link now. The porting is still largly untested but
+    should soonish end up in a usable state hopefully.
   * misc: applied latest changes supplied by Alfonso.
 
 2006-11-12  Jens Langner <Jens.Langner@light-speed.de>

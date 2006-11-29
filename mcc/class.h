@@ -1,20 +1,30 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #ifndef _CLASS_H
 #define _CLASS_H
 
-#define __NOLIBBASE__
-#define __USE_SYSBASE
+//#define __NOLIBBASE__
+//#define __USE_SYSBASE
 
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -31,23 +41,16 @@
 #include <datatypes/pictureclass.h>
 #include <utility/pack.h>
 #include <cybergraphx/cybergraphics.h>
-#include <mui/muiundoc.h>
+//#include <mui/muiundoc.h>
 
-#include <dos.h>
+//#include <dos.h>
 #include <string.h>
 
-#include <TheBar_mcc.h>
-#include <TheButton_mcc.h>
-#include <TheBarPrefs.h>
+#include <mui/TheBar_mcc.h>
+//#include <TheButton_mcc.h>
+//#include <TheBarPrefs.h>
 
 #include "base.h"
-
-#ifdef __MORPHOS__
-#undef NewObject
-APTR NewObject( struct IClass *classPtr, CONST_STRPTR classID, ULONG tag1, ... );
-#undef MUI_NewObject
-Object *MUI_NewObject(char *classname,Tag tag1,...);
-#endif
 
 /***********************************************************************/
 

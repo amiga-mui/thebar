@@ -1,24 +1,45 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #include "class.h"
+
+#include "SDI_stdarg.h"
 
 /***********************************************************************/
 
 #ifndef __MORPHOS__
-ULONG STDARGS
-DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
+
+// DoSuperNew()
+// Calls parent NEW method within a subclass
+Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
-    return DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL);
+  Object *rc;
+  VA_LIST args;
+
+  VA_START(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  VA_END(args);
+
+  return rc;
 }
 #endif
 
@@ -39,7 +60,7 @@ allocVecPooled(APTR pool,ULONG size)
 {
     register ULONG *mem;
 
-    if (mem = AllocPooled(pool,size = size+sizeof(ULONG)))
+    if((mem = AllocPooled(pool,size = size+sizeof(ULONG))))
         *mem++ = size;
 
     return mem;
@@ -52,26 +73,6 @@ freeVecPooled(APTR pool,APTR mem)
 {
     FreePooled(pool,(LONG *)mem-1,*((LONG *)mem-1));
 }
-
-/****************************************************************************/
-
-#ifdef __MORPHOS__
-int
-min(int a,int b)
-{
-    return (a>=b) ? b :a;
-}
-#endif
-
-/****************************************************************************/
-
-#ifdef __MORPHOS__
-int
-max(int a,int b)
-{
-    return (a>=b) ? a :b;
-}
-#endif
 
 /****************************************************************************/
 
