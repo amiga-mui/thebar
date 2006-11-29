@@ -16,33 +16,32 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
+ $Id: AUTHORS 2 2006-11-13 00:36:45Z damato $
 
 ***************************************************************************/
 
-#ifndef _CLASS_PROTOS_H
-#define _CLASS_PROTOS_H
+#define LIB_VERSION    20
+#define LIB_REVISION   9
 
-#include <exec/types.h>
-#include <proto/intuition.h>
+#define LIB_REV_STRING "29.9"
+#define LIB_DATE       "24.11.2006"
 
-#include "SDI_stdarg.h"
-
-/* utils.c */
-#ifndef __MORPHOS__
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
+#if defined(__PPC__)
+  #if defined(__MORPHOS__)
+    #define CPU " [MOS/PPC]"
+  #else
+    #define CPU " [OS4/PPC]"
+  #endif
+#elif defined(_M68060) || defined(__M68060) || defined(__mc68060)
+  #define CPU " [060]"
+#elif defined(_M68040) || defined(__M68040) || defined(__mc68040)
+  #define CPU " [040]"
+#elif defined(_M68030) || defined(__M68030) || defined(__mc68030)
+  #define CPU " [030]"
+#elif defined(_M68020) || defined(__M68020) || defined(__mc68020)
+  #define CPU " [020]"
+#else
+  #define CPU ""
 #endif
-APTR allocVecPooled ( APTR pool , ULONG size );
-void freeVecPooled ( APTR pool , APTR mem );
-LONG xget ( Object *obj , ULONG attribute );
 
-/* brc1.c */
-USHORT BRCUnpack ( signed char *pSource , signed char *pDest , LONG srcBytes0 , LONG dstBytes0 );
-
-/* spacer.c */
-ULONG initSpacerClass ( void );
-
-/* dragbar.c */
-ULONG initDragBarClass ( void );
-
-#endif /* _CLASS_PROTOS_H */
+#define LIB_COPYRIGHT  "Copyright (C) 2005-2006 by TheBar.mcc Open Source Team"

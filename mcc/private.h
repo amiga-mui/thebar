@@ -1,19 +1,54 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+#ifndef _PRIVATE_H
+#define _PRIVATE_H
 
-#ifndef _INSTANCE_H
-#define _INSTANCE_H
+/***************************************************************************
 
-/***********************************************************************/
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
+
+#include <mui/TheBar_mcc.h>
+
+#include "TheBar_mcp.h"
+
+/***************************************************************************/
+
+extern ULONG lib_flags;
+
+extern struct MUI_CustomClass *ThisClass;
+extern struct MUI_CustomClass *lib_spacerClass;
+extern struct MUI_CustomClass *lib_dragBarClass;
+
+enum
+{
+    BASEFLG_Init    = 1<<0,
+    BASEFLG_MUI20   = 1<<1,
+    BASEFLG_MUI4    = 1<<2,
+    BASEFLG_MORPHOS = 1<<3,
+};
+
+/***************************************************************************/
+
+struct MUI_FrameSpec
+{
+  char buf[32];
+};
 
 struct pen
 {
@@ -23,7 +58,7 @@ struct pen
 
 #define STATICSORTSIZE 31
 
-struct data
+struct InstData
 {
     APTR                           pool;
     struct MinList                 buttons;
@@ -109,19 +144,21 @@ struct data
     ULONG                          spacersSize;
 
     #ifdef VIRTUAL
-    ULONG			               objWidth;
-    ULONG			               objHeight;
+    ULONG			                     objWidth;
+    ULONG			                     objHeight;
     #endif
 
     #ifdef __MORPHOS__
-    ULONG			               userFrame;
-    struct MUI_FrameSpec 	       frameSpec;
+    ULONG			                     userFrame;
+    struct MUI_FrameSpec 	         frameSpec;
     #endif
 
     ULONG                          flags;
     ULONG                          userFlags;
     ULONG                          flags2;
     ULONG                          userFlags2;
+
+    struct MUI_EventHandlerNode    eh;
 };
 
 /* flags */
@@ -159,6 +196,7 @@ enum
     FLG2_Gradient            = 1<<0,
     FLG2_IgnoreAppareance    = 1<<1,
     FLG2_ForceWindowActivity = 1<<2,
+    FLG2_EventHandler        = 1<<3,
 };
 
 /* userFlags */
@@ -243,10 +281,44 @@ struct notify
 /***********************************************************************/
 
 /* build.c */
-void build ( struct data *data );
-void freeBitMaps ( struct data *data );
+void build(struct InstData *data);
+void freeBitMaps(struct InstData *data);
 
 /***********************************************************************/
 
-#endif /* _INSTANCE_H */
+// some undocumented but valid MUI specials
+#define MUIM_CustomBackfill                 0x80428d73 /* private */ /* V11 */
+#define MUIM_CreateDragImage                0x8042eb6f /* private */ /* V18 */
+#define MUIM_DeleteDragImage                0x80423037 /* private */ /* V18 */
+#define MUIM_DoDrag                         0x804216bb /* V20 */
+
+#define MUIA_CustomBackfill                 0x80420a63 /* V11 isg BOOL              */ /* private */
+#define MUIA_Group_Forward                  0x80421422 /* V11 .s. BOOL              */
+
+struct MUIP_CreateDragImage                 { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* private */
+struct MUIP_DeleteDragImage                 { ULONG MethodID; struct MUI_DragImage *di; }; /* private */
+struct MUIP_CustomBackfill                  { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; };
+
+struct MUI_DragImage
+{
+	struct BitMap *bm;
+	WORD width;  /* exact width and height of bitmap */
+	WORD height;
+	WORD touchx; /* position of pointer click relative to bitmap */
+	WORD touchy;
+	ULONG flags; /* see flags below, all other flags reserved for future use */
+	PLANEPTR mask;
+};
+
+#define MUIVER20 20
+
+/***********************************************************************/
+
+// some general macros
+#define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
+#define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
+#define copymem(to,from,len)            memcpy((to), (from), (len))
+#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
+
+#endif /* _PRIVATE_H */
 
