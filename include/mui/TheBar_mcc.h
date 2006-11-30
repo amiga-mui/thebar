@@ -456,14 +456,14 @@ struct MUIS_TheBar_Strip
 */
 struct MUIS_TheBar_Button
 {
-    ULONG         img;     /* Image index                                          */
-    ULONG         ID;      /* Button ID                                            */
-    STRPTR        text;    /* Button label (max TB_MAXLABELLEN) not copied!        */
-    STRPTR        help;    /* Button help not copied!                              */
-    ULONG         flags;   /* See below                                            */
-    ULONG         exclude; /* Exclude mask                                         */
-    struct IClass *class;  /* Easy way of getting a bar of subclassed buttons      */
-    Object        *obj;    /* Filled when the button is created                    */
+  ULONG         img;     /* Image index                                          */
+  ULONG         ID;      /* Button ID                                            */
+  const char    *text;   /* Button label (max TB_MAXLABELLEN) not copied!        */
+  const char    *help;   /* Button help not copied!                              */
+  ULONG         flags;   /* See below                                            */
+  ULONG         exclude; /* Exclude mask                                         */
+  struct IClass *class;  /* Easy way of getting a bar of subclassed buttons      */
+  Object        *obj;    /* Filled when the button is created                    */
 };
 
 /* flags */
