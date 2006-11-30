@@ -4,6 +4,14 @@ MUI TheBar MCC class - ChangeLog
 
 $Id$
 
+2006-11-30  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/TheBar-Test.c: added new testing application which should allow to
+    directly run tests on TheBar.mcc without having to update the library,
+	 reboot and run the tests. Now the testing application will directly
+	 link against all MCC modules and as such acts as a standalone application.
+	 That might come really handy at some point.
+
 2006-11-29  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc, include: ported MCC sources to the generalized mccheader.c

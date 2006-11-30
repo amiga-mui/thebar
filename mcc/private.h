@@ -242,17 +242,17 @@ enum
 
 struct button
 {
-    struct MinNode link;
-    ULONG          ID;
-    Object         *obj;
-    ULONG          img;
-    STRPTR         text;
-    STRPTR         help;
-    struct IClass  *class;
-    struct MinList notifies;
-    ULONG          exclude;
+  struct MinNode link;
+  ULONG          ID;
+  Object         *obj;
+  ULONG          img;
+  const char     *text;
+  const char     *help;
+  struct IClass  *class;
+  struct MinList notifies;
+  ULONG          exclude;
 
-    ULONG          flags;
+  ULONG          flags;
 };
 
 enum

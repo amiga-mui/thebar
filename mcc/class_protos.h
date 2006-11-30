@@ -40,9 +40,9 @@ LONG xget ( Object *obj , ULONG attribute );
 USHORT BRCUnpack ( signed char *pSource , signed char *pDest , LONG srcBytes0 , LONG dstBytes0 );
 
 /* spacer.c */
-ULONG initSpacerClass ( void );
+BOOL initSpacerClass(void);
 
 /* dragbar.c */
-ULONG initDragBarClass ( void );
+BOOL initDragBarClass(void);
 
 #endif /* _CLASS_PROTOS_H */

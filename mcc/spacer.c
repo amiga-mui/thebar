@@ -26,6 +26,8 @@
 
 #include "SDI_hook.h"
 
+#include "Debug.h"
+
 /***********************************************************************/
 
 //#define _riflags(obj) (muiRenderInfo(obj)->mri_Flags)
@@ -52,30 +54,32 @@ enum
 
 /***********************************************************************/
 
-static ULONG
-mNew(struct IClass *cl,Object *obj,struct opSet *msg)
+static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 {
-    if((obj = (Object *)DoSuperNew(cl,obj,
-            MUIA_CustomBackfill,TRUE,
-            TAG_MORE, (ULONG)msg->ops_AttrList)))
+  ENTER();
+
+  if((obj = (Object *)DoSuperNew(cl,obj,
+    MUIA_CustomBackfill,TRUE,
+    TAG_MORE, (ULONG)msg->ops_AttrList)))
+  {
+    struct data *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
+
+    data->bar   = (Object *)GetTagData(MUIA_TheButton_TheBar,FALSE,msg->ops_AttrList);
+    data->flags = (GetTagData(MUIA_Group_Horiz,FALSE,msg->ops_AttrList) ? FLG_SP_Horiz : 0) |
+                  ((GetTagData(MUIA_TheButton_Spacer,MUIV_TheButton_Spacer_Bar,msg->ops_AttrList)==MUIV_TheButton_Spacer_Bar) ? FLG_SP_Bar : 0) |
+                  (GetTagData(MUIA_ShowMe,TRUE,msg->ops_AttrList) ? FLG_SP_ShowMe : 0);
+
+    if((tag = FindTagItem(MUIA_TheBar_BarSpacerSpacing,msg->ops_AttrList)) &&
+       ((int)tag->ti_Data>=0 && (int)tag->ti_Data<=16))
     {
-        register struct data    *data = INST_DATA(cl,obj);
-        register struct TagItem *tag;
-
-        data->bar   = (Object *)GetTagData(MUIA_TheButton_TheBar,FALSE,msg->ops_AttrList);
-        data->flags = (GetTagData(MUIA_Group_Horiz,FALSE,msg->ops_AttrList) ? FLG_SP_Horiz : 0) |
-                      ((GetTagData(MUIA_TheButton_Spacer,MUIV_TheButton_Spacer_Bar,msg->ops_AttrList)==MUIV_TheButton_Spacer_Bar) ? FLG_SP_Bar : 0) |
-                      (GetTagData(MUIA_ShowMe,TRUE,msg->ops_AttrList) ? FLG_SP_ShowMe : 0);
-
-        if ((tag = FindTagItem(MUIA_TheBar_BarSpacerSpacing,msg->ops_AttrList)) &&
-            ((int)tag->ti_Data>=0 && (int)tag->ti_Data<=16))
-        {
-            data->sp = tag->ti_Data;
-            data->flags |= FLG_SP_UserBarSpacerSpacing;
-        }
+      data->sp = tag->ti_Data;
+      data->flags |= FLG_SP_UserBarSpacerSpacing;
     }
+  }
 
-    return (ULONG)obj;
+  RETURN(obj);
+  return (ULONG)obj;
 }
 
 /***********************************************************************/
@@ -302,18 +306,21 @@ DISPATCHER(SpacerDispatcher)
 
 /***********************************************************************/
 
-ULONG
-initSpacerClass(void)
+BOOL initSpacerClass(void)
 {
-    if((lib_spacerClass = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,sizeof(struct data),ENTRY(SpacerDispatcher))))
-    {
-        if(lib_flags & BASEFLG_MUI20)
-          lib_spacerClass->mcc_Class->cl_ID = (STRPTR)"TheBar_Spacer";
+  BOOL result = FALSE;
+  ENTER();
 
-        return TRUE;
-    }
+  if((lib_spacerClass = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct data), ENTRY(SpacerDispatcher))))
+  {
+    if(lib_flags & BASEFLG_MUI20)
+      lib_spacerClass->mcc_Class->cl_ID = "TheBar_Spacer";
 
-    return FALSE;
+    result = TRUE;
+  }
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/

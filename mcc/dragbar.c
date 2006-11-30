@@ -26,6 +26,8 @@
 
 #include "SDI_hook.h"
 
+#include "Debug.h"
+
 /***********************************************************************/
 
 struct data
@@ -46,23 +48,25 @@ enum
 
 /***********************************************************************/
 
-static ULONG
-mNew(struct IClass *cl,Object *obj,struct opSet *msg)
+static ULONG mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    if((obj = (Object *)DoSuperNew(cl,obj,
-            MUIA_InputMode,      MUIV_InputMode_Immediate,
-            MUIA_ShowSelState,   FALSE,
-            MUIA_CustomBackfill, TRUE,
-            TAG_DONE)))
-    {
-        register struct data *data = INST_DATA(cl,obj);
+  ENTER();
 
-        data->bar   = (Object *)GetTagData(MUIA_TheButton_TheBar,FALSE,msg->ops_AttrList);
-        data->flags = (GetTagData(MUIA_Group_Horiz,FALSE,msg->ops_AttrList) ? FLG_DB_Horiz : 0) |
-                      (GetTagData(MUIA_ShowMe,TRUE,msg->ops_AttrList) ? FLG_DB_ShowMe : 0);
-    }
+  if((obj = (Object *)DoSuperNew(cl,obj,
+    MUIA_InputMode,      MUIV_InputMode_Immediate,
+    MUIA_ShowSelState,   FALSE,
+    MUIA_CustomBackfill, TRUE,
+    TAG_DONE)))
+  {
+    struct data *data = INST_DATA(cl,obj);
 
-    return (ULONG)obj;
+    data->bar   = (Object *)GetTagData(MUIA_TheButton_TheBar,FALSE,msg->ops_AttrList);
+    data->flags = (GetTagData(MUIA_Group_Horiz,FALSE,msg->ops_AttrList) ? FLG_DB_Horiz : 0) |
+                  (GetTagData(MUIA_ShowMe,TRUE,msg->ops_AttrList) ? FLG_DB_ShowMe : 0);
+  }
+
+  RETURN((ULONG)obj);
+  return (ULONG)obj;
 }
 
 /***********************************************************************/
@@ -301,18 +305,22 @@ DISPATCHER(DragBarDispatcher)
 
 /***********************************************************************/
 
-ULONG
-initDragBarClass(void)
+BOOL initDragBarClass(void)
 {
-    if((lib_dragBarClass = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,sizeof(struct data),ENTRY(DragBarDispatcher))))
-    {
-        if(lib_flags & BASEFLG_MUI20)
-          lib_dragBarClass->mcc_Class->cl_ID = (STRPTR)"TheBar_DragBar";
+  BOOL result = FALSE;
 
-        return TRUE;
-    }
+  ENTER();
 
-    return FALSE;
+  if((lib_dragBarClass = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct data), ENTRY(DragBarDispatcher))))
+  {
+    if(lib_flags & BASEFLG_MUI20)
+      lib_dragBarClass->mcc_Class->cl_ID = "TheBar_DragBar";
+
+    result = TRUE;
+  }
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
