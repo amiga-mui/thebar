@@ -74,7 +74,7 @@ static ULONG mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     switch (msg->opg_AttrID)
     {
@@ -89,13 +89,13 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 static ULONG
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register struct TagItem *tag;
+    struct data    *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
     struct TagItem          *tstate;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -133,7 +133,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
     APTR                 pen;
     ULONG                *val;
 
@@ -164,7 +164,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     MUI_ReleasePen(muiRenderInfo(obj),data->pshine);
     MUI_ReleasePen(muiRenderInfo(obj),data->pshadow);
@@ -182,7 +182,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -209,14 +209,14 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 static ULONG
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
     if (msg->flags & (MADF_DRAWUPDATE|MADF_DRAWOBJECT))
     {
         struct RastPort rp;
-        register WORD   l, t, r, b;
+        WORD   l, t, r, b;
 
         copymem(&rp,_rp(obj),sizeof(rp));
 
@@ -271,7 +271,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 static ULONG
 mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     if (data->bar)
         return DoMethod(data->bar,MUIM_CustomBackfill,

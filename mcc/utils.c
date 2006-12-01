@@ -58,7 +58,7 @@ xget(Object *obj,ULONG attribute)
 APTR
 allocVecPooled(APTR pool,ULONG size)
 {
-    register ULONG *mem;
+    ULONG *mem;
 
     if((mem = AllocPooled(pool,size = size+sizeof(ULONG))))
         *mem++ = size;

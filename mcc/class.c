@@ -32,9 +32,9 @@
 static Object *
 makeButton(struct button *button,Object *obj,struct InstData *data)
 {
-    register Object                   *o;
-    register struct MUIS_TheBar_Brush *brush, *sbrush, *dbrush;
-    register ULONG                    flags = data->flags, userFlags = data->userFlags, userFlags2 = data->userFlags2, bflags = button->flags, viewMode;
+    Object                   *o;
+    struct MUIS_TheBar_Brush *brush, *sbrush, *dbrush;
+    ULONG                    flags = data->flags, userFlags = data->userFlags, userFlags2 = data->userFlags2, bflags = button->flags, viewMode;
     struct TagItem           attrs[64];
 
     if (button->img==MUIV_TheBar_BarSpacer)
@@ -287,10 +287,10 @@ makeButton(struct button *button,Object *obj,struct InstData *data)
 static ULONG
 orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
 {
-    register struct MUIP_Group_Sort *smsg;
-    register struct button          *button, *succ;
-    register Object                 **o;
-    register ULONG                  n;
+    struct MUIP_Group_Sort *smsg;
+    struct button          *button, *succ;
+    Object                 **o;
+    ULONG                  n;
 
     for(n = 0, button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
         if (!(button->flags & (BFLG_Sleep|BFLG_Hide))) n++;
@@ -324,17 +324,17 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
 
 HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 {
-    register struct InstData *data = INST_DATA(ThisClass->mcc_Class,obj);
+    struct InstData *data = INST_DATA(ThisClass->mcc_Class,obj);
 
     switch (lm->lm_Type)
     {
         case MUILM_MINMAX:
         {
-            register Object *child;
+            Object *child;
             Object          *cstate;
-            register ULONG  horiz = data->flags & (FLG_Horiz|FLG_Table), test;
-            register LONG   cols = 0, rows = 0, numBut, c;
-            register UWORD  butMaxMinWidth, butMaxMinHeight, maxMinWidth, maxMinHeight, width, height, addSpace;
+            ULONG  horiz = data->flags & (FLG_Horiz|FLG_Table), test;
+            LONG   cols = 0, rows = 0, numBut, c;
+            UWORD  butMaxMinWidth, butMaxMinHeight, maxMinWidth, maxMinHeight, width, height, addSpace;
 
             butMaxMinWidth  = butMaxMinHeight = numBut = 0;
 
@@ -383,7 +383,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
             for(cstate = (Object *)lm->lm_Children->mlh_Head; (child = NextObject(&cstate)); )
             {
-                register UWORD w = 0;
+                UWORD w = 0;
 
                 if (!xget(child,MUIA_ShowMe)) continue;
 
@@ -464,7 +464,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                         case MUIV_TheButton_Spacer_Button:
                         {
-                            register UWORD w = butMaxMinHeight;
+                            UWORD w = butMaxMinHeight;
 
                             switch (data->spacersSize)
                             {
@@ -606,7 +606,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
         case MUILM_LAYOUT:
         {
-            register ULONG horiz = data->flags & (FLG_Horiz|FLG_Table);
+            ULONG horiz = data->flags & (FLG_Horiz|FLG_Table);
 
             #ifdef VIRTUAL
             lm->lm_Layout.Width  = data->objWidth;
@@ -615,10 +615,10 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
             if (horiz)
             {
-                register Object *child;
+                Object *child;
                 Object          *cstate;
-                register        int x, sx, sy = 0, cols = data->lcols, c = 0, r = 0;
-                register ULONG  spc = data->horizSpacing;
+                       int x, sx, sy = 0, cols = data->lcols, c = 0, r = 0;
+                ULONG  spc = data->horizSpacing;
 
                 switch (data->barPos)
                 {
@@ -652,7 +652,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                 for(cstate = (Object *)lm->lm_Children->mlh_Head; (child = NextObject(&cstate)); )
                 {
-                    register ULONG width = 0, height = 0, y, d = 0, test = TRUE; // gcc
+                    ULONG width = 0, height = 0, y, d = 0, test = TRUE; // gcc
 
                     if (!xget(child,MUIA_ShowMe)) continue;
 
@@ -701,7 +701,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         case MUIV_TheButton_Spacer_DragBar:
                             if (data->cols)
                             {
-                                register ULONG xx;
+                                ULONG xx;
 
                                 width  = _minwidth(child);
                                 height = _mheight(obj);
@@ -727,7 +727,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                             else
                                 if (data->rows)
                                 {
-                                    register ULONG xx;
+                                    ULONG xx;
 
 				                    width  = _mwidth(obj);
                                     height = _minheight(child);
@@ -751,7 +751,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                 }
                                 else
                                 {
-                                    register ULONG xx;
+                                    ULONG xx;
 
                                     width  = _minwidth(child);
                                     height = _mheight(obj);
@@ -804,10 +804,10 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             }
             else
             {
-                register Object *child;
+                Object *child;
                 Object          *cstate;
-                register int    y;
-                register ULONG  spc = data->vertSpacing;
+                int    y;
+                ULONG  spc = data->vertSpacing;
 
                 switch (data->barPos)
                 {
@@ -838,7 +838,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                 for (cstate = (Object *)lm->lm_Children->mlh_Head; (child = NextObject(&cstate)); )
                 {
-                    register ULONG width = 0, height = 0, x, d = 0; //gcc
+                    ULONG width = 0, height = 0, x, d = 0; //gcc
 
                     if (!xget(child,MUIA_ShowMe)) continue;
 
@@ -883,7 +883,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                         case MUIV_TheButton_Spacer_DragBar:
                         {
-                            register ULONG yy;
+                            ULONG yy;
 
                             height = _minheight(child);
                             width  = _mwidth(obj);
@@ -933,8 +933,8 @@ MakeStaticHook(LayoutHook, LayoutFunc);
 static ULONG
 loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 {
-    register Object *dto;
-    register ULONG  res = FALSE;
+    Object *dto;
+    ULONG  res = FALSE;
 
     memset(brush,0,sizeof(struct MUIS_TheBar_Brush));
 
@@ -949,8 +949,8 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 
         if (GetDTAttrs(dto,PDTA_CRegs,(ULONG)&colors,PDTA_NumColors,(ULONG)&numColors,PDTA_BitMapHeader,(ULONG)&bmh,TAG_DONE)==3)
         {
-            register UBYTE *chunky;
-            register ULONG width, height, cdepth, tw, size, csize;
+            UBYTE *chunky;
+            ULONG width, height, cdepth, tw, size, csize;
 
             width  = bmh->bmh_Width;
             height = bmh->bmh_Height;
@@ -972,7 +972,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 
             if((chunky = allocVecPooled(pool,size+csize)))
             {
-                register ULONG line8 = 0;
+                ULONG line8 = 0;
 
                 if (cdepth)
                 {
@@ -996,7 +996,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                             if((trp.BitMap = AllocBitMap(8*(((width+15)>>4)<<1),1,8,0,bm)))
                             {
                                 struct RastPort rp;
-                                register UBYTE  *dest = chunky;
+                                UBYTE  *dest = chunky;
                                 ULONG y;
 
                                 InitRastPort(&rp);
@@ -1046,7 +1046,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 
                             if (bmh->bmh_Masking==mskHasTransparentColor)
                             {
-                                register ULONG tc = bmh->bmh_Transparent;
+                                ULONG tc = bmh->bmh_Transparent;
 
                                 brush->trColor = ((colors[tc] & 0xFF000000)>>8) | ((colors[tc+1] & 0xFF000000)>>16) | ((colors[tc+2] & 0xFF000000)>>24);
                             }
@@ -1086,7 +1086,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 static struct button *
 findButton(struct InstData *data,ULONG ID)
 {
-    register struct button *button, *succ;
+    struct button *button, *succ;
 
     for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
         if (button->ID==ID) return button;
@@ -1099,11 +1099,11 @@ findButton(struct InstData *data,ULONG ID)
 static void
 updateRemove(struct IClass *cl,Object *obj,struct InstData *data)
 {
-    register struct button *button, *succ;
+    struct button *button, *succ;
 
     for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
     {
-        register ULONG sp;
+        ULONG sp;
 
         if (button->flags & BFLG_Sleep) continue;
 
@@ -1330,12 +1330,12 @@ static ULONG
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct pack                        pt;
-    register struct MUIS_TheBar_Button *buttons;
-    register APTR                      pool;
-    register struct TagItem            *attrs = msg->ops_AttrList;
+    struct MUIS_TheBar_Button *buttons;
+    APTR                      pool;
+    struct TagItem            *attrs = msg->ops_AttrList;
     struct MUIS_TheBar_Brush           sb, ssb, dsb;
-    register ULONG                     pics;
-    register UWORD                     nbr = 0;
+    ULONG                     pics;
+    UWORD                     nbr = 0;
 
     if ((GetTagData(MUIA_TheBar_MinVer,0,attrs) > LIB_VERSION) ||
         !(pool = CreatePool(MEMF_ANY,2048,1024)))
@@ -1363,9 +1363,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     if (!pt.brushes)
     {
-        register struct Process *me;
-        register struct Window  *win;
-        register BPTR           idrawer, odir = 0;
+        struct Process *me;
+        struct Window  *win;
+        BPTR           idrawer, odir = 0;
 
         pics = FALSE;
 
@@ -1378,8 +1378,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         if (pt.stripBrush || pt.strip)
         {
-            register struct MUIS_TheBar_Button *b;
-            register ULONG                     brpsize, brsize, totsize;
+            struct MUIS_TheBar_Button *b;
+            ULONG                     brpsize, brsize, totsize;
 
             if (pt.stripBrush)
             {
@@ -1433,8 +1433,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 if((pt.brushes = allocVecPooled(pool,totsize)))
                 {
-                    register ULONG rows, cols, horizSpace, vertSpace;
-                    register int   w, h;
+                    ULONG rows, cols, horizSpace, vertSpace;
+                    int   w, h;
 
                     rows       = pt.stripRows;
                     cols       = pt.stripCols;
@@ -1446,8 +1446,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                     if (w && h)
                     {
-                        register struct MUIS_TheBar_Brush *brush, *sbrush, *dbrush;
-                        register int x, vofs;
+                        struct MUIS_TheBar_Brush *brush, *sbrush, *dbrush;
+                        int x, vofs;
                         ULONG i;
 
                         brush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt.brushes+brpsize);
@@ -1532,14 +1532,14 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         {
             if (pt.pics)
             {
-                register STRPTR *p;
+                STRPTR *p;
 
                 for (nbr = 0, p = pt.pics; *p; nbr++, p++);
 
                 if (nbr)
                 {
-                    register STRPTR *sp = NULL, *dp = NULL;
-                    register ULONG  brpsize, brsize, totsize, num;
+                    STRPTR *sp = NULL, *dp = NULL;
+                    ULONG  brpsize, brsize, totsize, num;
 
                     if (pt.spics)
                     {
@@ -1564,8 +1564,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                     if((pt.brushes = allocVecPooled(pool,totsize)))
                     {
-                        register struct MUIS_TheBar_Brush *brush, *sbrush = NULL, *dbrush = NULL;
-                        register int                      i;
+                        struct MUIS_TheBar_Brush *brush, *sbrush = NULL, *dbrush = NULL;
+                        int                      i;
 
                         brush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt.brushes+brpsize);
 
@@ -1637,7 +1637,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     }
     else
     {
-        register struct MUIS_TheBar_Brush **brush;
+        struct MUIS_TheBar_Brush **brush;
 
         for (brush = pt.brushes, nbr = 0; *brush; nbr++, brush++);
         nbr++;
@@ -1652,7 +1652,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, TRUE,
             TAG_MORE,(ULONG)attrs)))
     {
-        register struct InstData *data = INST_DATA(cl,obj);
+        struct InstData *data = INST_DATA(cl,obj);
 
         data->brushes   = pt.brushes;
         data->sbrushes  = pt.sbrushes;
@@ -1685,7 +1685,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         if (data->userFlags || data->userFlags2)
         {
-            register ULONG userFlags = data->userFlags, userFlags2 = data->userFlags2;
+            ULONG userFlags = data->userFlags, userFlags2 = data->userFlags2;
 
             if (userFlags & UFLG_UserHorizSpacing)
             {
@@ -1851,10 +1851,10 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mDispose(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button, *succ;
-    register APTR          pool = data->pool;
-    register ULONG         res;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button, *succ;
+    APTR          pool = data->pool;
+    ULONG         res;
 
     for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
         if (button->flags & BFLG_Hide) MUI_DisposeObject(button->obj);
@@ -1871,7 +1871,7 @@ mDispose(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     switch (msg->opg_AttrID)
     {
@@ -1969,14 +1969,14 @@ enum
 static ULONG
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct TagItem *tag;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
     struct TagItem          *tstate;
-    register ULONG          flags = 0, res;
+    ULONG          flags = 0, res;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -1984,7 +1984,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 if (tidata==data->active) tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    register struct button *b, *button, *succ;
+                    struct button *b, *button, *succ;
 
                     data->active = tidata;
 
@@ -2100,7 +2100,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 if (tidata>=MUIV_TheBar_ViewMode_Last) tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    register ULONG old = data->viewMode;
+                    ULONG old = data->viewMode;
 
                     if ((old==tidata) || (data->flags & FLG_TextOnly)) tag->ti_Tag = TAG_IGNORE;
                     else
@@ -2310,7 +2310,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
             if (!(data->flags & FLG_Table))
             {
-                register struct button *button, *succ;
+                struct button *button, *succ;
 
                 data->flags |= FLG_Table;
 
@@ -2325,7 +2325,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         {
             if (data->flags & FLG_Table)
             {
-                register struct button *button, *succ;
+                struct button *button, *succ;
 
                 data->flags &= ~FLG_Table;
 
@@ -2342,11 +2342,11 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     if (flags & SFLG_Horiz)
     {
-        register ULONG horiz = data->flags & FLG_Horiz;
+        ULONG horiz = data->flags & FLG_Horiz;
 
         if (!(flags & SFLG_Rebuild))
         {
-            register struct button *button, *succ;
+            struct button *button, *succ;
 
             for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
             {
@@ -2362,7 +2362,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     else
         if (flags & SFLG_ButtonAttrs)
         {
-            register struct         button *button, *succ;
+            struct         button *button, *succ;
             struct TagItem attrs[8] = { { TAG_IGNORE, 0 },
                                         { TAG_IGNORE, 0 },
                                         { TAG_IGNORE, 0 },
@@ -2438,7 +2438,7 @@ static struct MUIS_TheBar_Appareance staticAp = { MUIDEF_TheBar_Appareance_ViewM
 static ULONG
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
     #ifndef VIRTUAL
     Object               *parent;
     #endif
@@ -2466,7 +2466,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
     if (!(data->flags & FLG_Background))
     {
-        register ULONG done = FALSE;
+        ULONG done = FALSE;
 
         if (lib_flags & BASEFLG_MUI4)
         {
@@ -2618,7 +2618,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
     if (data->flags & FLG_FreeStrip)
     {
-        register struct button *button, *succ;
+        struct button *button, *succ;
 
         build(data);
 
@@ -2659,7 +2659,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     #ifndef __MORPHOS__
     if (data->flags & FLG_Framed) freeFramePens(obj,data);
@@ -2680,19 +2680,19 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
     if ((data->flags & FLG_CyberDeep) && (data->flags2 & FLG2_Gradient))
     {
-        register UWORD w = _width(obj), h = _height(obj);
+        UWORD w = _width(obj), h = _height(obj);
 
         if((data->gradbm = AllocBitMap(w,h,24,BMF_MINPLANES,_rp(obj)->BitMap)))
         {
             struct RastPort trp;
-            register ULONG  rs, gs, bs, from, to, horiz;
-            register int    i, x, d, step, rdif, gdif, bdif, r1, g1, b1, r2, g2, b2, r, g, b, rd = 0, gd = 0, bd = 0, ridx = 0, gidx = 0, bidx = 0;
+            ULONG  rs, gs, bs, from, to, horiz;
+            int    i, x, d, step, rdif, gdif, bdif, r1, g1, b1, r2, g2, b2, r, g, b, rd = 0, gd = 0, bd = 0, ridx = 0, gidx = 0, bidx = 0;
 
             InitRastPort(&trp);
             trp.BitMap = data->gradbm;
@@ -2809,7 +2809,7 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 
             for (i = 0; i<step; i++)
             {
-                register ULONG col = (r<<16) | (g<<8) | b;
+                ULONG col = (r<<16) | (g<<8) | b;
 
                 /* Fill; if last step fill all rest */
                 if (horiz)
@@ -2887,7 +2887,7 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mHide(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (data->gradbm)
     {
@@ -2904,7 +2904,7 @@ mHide(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -2954,7 +2954,7 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 static ULONG
 mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     return (ULONG)(data->dm = (struct MUI_DragImage *)DoSuperMethodA(cl,obj,(Msg)msg));
 }
@@ -2964,7 +2964,7 @@ mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 static ULONG
 mDeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     data->dm = NULL;
 
@@ -2976,7 +2976,7 @@ mDeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 static ULONG
 mInitChange(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     return data->changes++ ? 0 : DoSuperMethodA(cl,obj,msg);
 }
@@ -2986,7 +2986,7 @@ mInitChange(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mExitChange(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     return (data->changes && !(--data->changes)) ? DoSuperMethodA(cl,obj,msg) : 0;
 }
@@ -2996,14 +2996,14 @@ mExitChange(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button, *succ;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button, *succ;
 
     if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
 
     for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
     {
-        register Object *o;
+        Object *o;
 
         if (button->flags & BFLG_Sleep) continue;
 
@@ -3035,7 +3035,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
         if((button->obj = makeButton(button,obj,data)))
         {
-            register struct notify *notify, *nsucc;
+            struct notify *notify, *nsucc;
 
             if (!(button->flags & BFLG_Hide)) DoSuperMethod(cl,obj,OM_ADDMEMBER,(ULONG)button->obj);
 
@@ -3061,9 +3061,9 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 static ULONG
 mAddNotify(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddNotify *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button, *succ;
-    register APTR          pool = data->pool;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button, *succ;
+    APTR          pool = data->pool;
 
     for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
     {
@@ -3071,8 +3071,8 @@ mAddNotify(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddNotify *msg)
 
         if (button->obj==msg->dest)
         {
-            register struct notify *notify;
-            register ULONG         size;
+            struct notify *notify;
+            ULONG         size;
 
             size = sizeof(struct notify)+(sizeof(ULONG)*msg->msg->FollowParams);
 
@@ -3094,8 +3094,8 @@ mAddNotify(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddNotify *msg)
 static ULONG
 mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button;
 
     if((button = AllocPooled(data->pool,sizeof(struct button))))
     {
@@ -3163,8 +3163,8 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 static ULONG
 mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *bt;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *bt;
 
     if((bt = findButton(data,msg->ID)))
     {
@@ -3198,7 +3198,7 @@ mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
 static ULONG
 hideButton(struct IClass *cl,Object *obj,struct InstData *data,struct button *bt,ULONG value)
 {
-    register ULONG res = FALSE;
+    ULONG res = FALSE;
 
     if (!BOOLSAME(value,bt->flags & BFLG_Hide))
     {
@@ -3240,7 +3240,7 @@ hideButton(struct IClass *cl,Object *obj,struct InstData *data,struct button *bt
 static ULONG
 sleepButton(struct IClass *cl,Object *obj,struct InstData *data,struct button *bt,ULONG value)
 {
-    register ULONG res = FALSE;
+    ULONG res = FALSE;
 
     if (!BOOLSAME(value,bt->flags & BFLG_Sleep))
     {
@@ -3305,7 +3305,7 @@ sleepButton(struct IClass *cl,Object *obj,struct InstData *data,struct button *b
 
                 if (res)
                 {
-                    register struct notify *notify, *nsucc;
+                    struct notify *notify, *nsucc;
 
                     set(bt->obj,MUIA_TheButton_QuietNotify,TRUE);
 
@@ -3327,13 +3327,13 @@ sleepButton(struct IClass *cl,Object *obj,struct InstData *data,struct button *b
 static ULONG
 mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *bt;
-    register ULONG         res = FALSE;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *bt;
+    ULONG         res = FALSE;
 
     if((bt = findButton(data,msg->ID)))
     {
-        register ULONG value = msg->value;
+        ULONG value = msg->value;
 
         switch (msg->attr)
         {
@@ -3370,16 +3370,16 @@ mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 static ULONG
 mRemove(struct IClass *cl,Object *obj,struct MUIP_TheBar_Remove *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button;
 
     if((button = findButton(data,msg->ID)))
     {
-        register APTR pool = data->pool;
+        APTR pool = data->pool;
 
         if (!(button->flags & BFLG_Sleep))
         {
-            register struct notify *notify;
+            struct notify *notify;
 
             if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
             if (!(button->flags & BFLG_Hide)) DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)button->obj);
@@ -3404,8 +3404,8 @@ mRemove(struct IClass *cl,Object *obj,struct MUIP_TheBar_Remove *msg)
 static ULONG
 mGetObject(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetObject *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button;
 
     return (button = findButton(data,msg->ID)) ? (ULONG)button->obj : 0;
 }
@@ -3415,8 +3415,8 @@ mGetObject(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetObject *msg)
 static ULONG
 mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button;
 
     return ((button = findButton(data,msg->ID)) && !(button->flags & BFLG_Sleep)) ?
         DoMethodA(button->obj,(Msg)&msg->method) : 0;
@@ -3427,9 +3427,9 @@ mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 static ULONG
 mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button;
-    register APTR            pool = data->pool;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button;
+    APTR            pool = data->pool;
 
     if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
 
@@ -3439,7 +3439,7 @@ mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
         if (!(button->flags & BFLG_Sleep))
         {
-            register struct notify *notify;
+            struct notify *notify;
 
             MUI_DisposeObject(button->obj);
 
@@ -3460,8 +3460,8 @@ mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 static ULONG
 mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button, *succ;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button, *succ;
 
     for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
     {
@@ -3477,13 +3477,13 @@ mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 static ULONG
 mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
     struct MinList                  temp;
-    register struct MUIP_Group_Sort *smsg;
-    register struct button          *button, *succ;
-    register Object                 **o;
-    register ULONG                  n;
-    register LONG                   *id;
+    struct MUIP_Group_Sort *smsg;
+    struct button          *button, *succ;
+    Object                 **o;
+    ULONG                  n;
+    LONG                   *id;
 
     /* Counts buttons */
     for(n = 0, button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
@@ -3585,8 +3585,8 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 static ULONG
 mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg)
 {
-    register struct InstData *data = INST_DATA(cl,obj);
-    register struct button *button, *succ;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct button *button, *succ;
 
     for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
     {
