@@ -31,7 +31,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-#include "class_protos.h"
+#include "class.h"
 #include "private.h"
 #include "rev.h"
 

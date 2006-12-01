@@ -23,9 +23,6 @@
 #ifndef _CLASS_H
 #define _CLASS_H
 
-//#define __NOLIBBASE__
-//#define __USE_SYSBASE
-
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/utility.h>
@@ -41,20 +38,10 @@
 #include <datatypes/pictureclass.h>
 #include <utility/pack.h>
 #include <cybergraphx/cybergraphics.h>
-//#include <mui/muiundoc.h>
 
-//#include <dos.h>
 #include <string.h>
 
 #include <mui/TheBar_mcc.h>
-//#include <TheButton_mcc.h>
-//#include <TheBarPrefs.h>
-
-#include "base.h"
-
-/***********************************************************************/
-
-extern char LIBNAME[];
 
 /***********************************************************************/
 
@@ -86,7 +73,34 @@ enum
 
 /****************************************************************************/
 
-#include "class_protos.h"
+// xget()
+// Gets an attribute value from a MUI object
+ULONG xget(Object *obj, const ULONG attr);
+#if defined(__GNUC__)
+  // please note that we do not evaluate the return value of GetAttr()
+  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
+  // when they are supported by the object. But setting b=0 right before
+  // the GetAttr() should catch the case when attr doesn't exist at all
+  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+#endif
+
+/****************************************************************************/
+
+/* utils.c */
+#ifndef __MORPHOS__
+Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
+#endif
+APTR allocVecPooled(APTR pool, ULONG size);
+void freeVecPooled (APTR pool, APTR mem);
+
+/* brc1.c */
+USHORT BRCUnpack ( signed char *pSource , signed char *pDest , LONG srcBytes0 , LONG dstBytes0 );
+
+/* spacer.c */
+BOOL initSpacerClass(void);
+
+/* dragbar.c */
+BOOL initDragBarClass(void);
 
 /***********************************************************************/
 
