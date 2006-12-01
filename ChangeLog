@@ -4,6 +4,13 @@ MUI TheBar MCC class - ChangeLog
 
 $Id$
 
+2006-12-01  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc: removed all "register" definitions as there is really no reason
+    to set all kind of variables explicitly as register. The compiler should
+    decide which value to directly put on a register and which not. Just
+    defining every variable "register" doesn't help at all.
+
 2006-11-30  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/TheBar-Test.c: added new testing application which should allow to

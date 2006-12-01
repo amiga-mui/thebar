@@ -35,9 +35,9 @@
 USHORT
 BRCUnpack(signed char *pSource,signed char *pDest,LONG srcBytes0,LONG dstBytes0)
 {
-    register signed char *source = pSource, *dest = pDest, c;
-    register SHORT n;
-    register LONG  srcBytes = srcBytes0, dstBytes = dstBytes0;
+    signed char *source = pSource, *dest = pDest, c;
+    SHORT n;
+    LONG  srcBytes = srcBytes0, dstBytes = dstBytes0;
     USHORT         error = TRUE;
     SHORT          minus128 = -128;
 
