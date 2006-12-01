@@ -131,9 +131,6 @@ ULONG lib_flags = 0;
 
 int main(void)
 {
-  long    argarray[6] = {0,0,0,0,0,0};
-  struct  RDArgs        *args;
-
   if((DiskfontBase = OpenLibrary("diskfont.library", 38)) &&
     GETINTERFACE(IDiskfont, DiskfontBase))
   if((GfxBase = OpenLibrary("graphics.library", 38)) &&
@@ -157,145 +154,137 @@ int main(void)
   {
   	// Open cybergraphics.library (optional)
     if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-      GETINTERFACE(ICyberGfx, CyberGfxBase) == FALSE)
+       GETINTERFACE(ICyberGfx, CyberGfxBase) == FALSE)
     {
       CloseLibrary(CyberGfxBase);
       CyberGfxBase = NULL;
     }
 
   	// Open workbench.library (optional)
-		if ((WorkbenchBase = OpenLibrary("workbench.library",0)))
+		if((WorkbenchBase = OpenLibrary("workbench.library", 0)) &&
+  		 GETINTERFACE(IWorkbench, WorkbenchBase) == FALSE)
 		{
-  		if (!(GETINTERFACE(IWorkbench, WorkbenchBase)))
-  		{
-  			CloseLibrary(WorkbenchBase);
-  			WorkbenchBase = NULL;
-  		}
-		}
+      CloseLibrary(WorkbenchBase);
+      WorkbenchBase = NULL;
+    }
 
     #if defined(DEBUG)
     SetupDebug();
     #endif
 
-    if((args = ReadArgs("FILENAME,MIME/S,MIMEQUOTED/S,SKIPHEADER/S,FIXED/S,EMAIL/S", argarray, NULL)))
+    if((MUIMasterBase = OpenLibrary("muimaster.library", MUIMASTER_VMIN)) &&
+      GETINTERFACE(IMUIMaster, MUIMasterBase))
     {
-      if((MUIMasterBase = OpenLibrary("muimaster.library", MUIMASTER_VMIN)) &&
-        GETINTERFACE(IMUIMaster, MUIMasterBase))
-      {
-        Object *app, *win, *sb, *appareance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
+      Object *app, *win, *sb, *appareance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
 
-        // now we init our subclasses
-        initSpacerClass();
-        initDragBarClass();
+      // now we init our subclasses
+      initSpacerClass();
+      initDragBarClass();
 
-        ThisClass = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
+      ThisClass = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
 
-        if(ThisClass && (app = ApplicationObject,
-                           MUIA_Application_Title,         "TheBar Demo1",
-                           MUIA_Application_Version,       "$VER: TheBarDemo1 1.0 (24.6.2003)",
-                           MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
-                           MUIA_Application_Author,        "Alfonso Ranieri <alforan@tin.it>",
-                           MUIA_Application_Description,  "TheBar example",
-                           MUIA_Application_Base,         "THEBAREXAMPLE",
+      if(ThisClass && (app = ApplicationObject,
+                         MUIA_Application_Title,         "TheBar Demo1",
+                         MUIA_Application_Version,       "$VER: TheBarDemo1 1.0 (24.6.2003)",
+                         MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
+                         MUIA_Application_Author,        "Alfonso Ranieri <alforan@tin.it>",
+                         MUIA_Application_Description,  "TheBar example",
+                         MUIA_Application_Base,         "THEBAREXAMPLE",
 
-                           SubWindow, win = WindowObject,
-                             MUIA_Window_ID,             MAKE_ID('M','A','I','N'),
-                             MUIA_Window_Title,          "TheBar Demo1",
-                             WindowContents, VGroup,
-                               Child, sb = NewObject(ThisClass->mcc_Class, NULL,
-                                 MUIA_Group_Horiz,       TRUE,
-                                 MUIA_TheBar_EnableKeys, TRUE,
-                                 MUIA_TheBar_Buttons,    buttons,
-                                 MUIA_TheBar_PicsDrawer, "PROGDIR:/demo/pics",
-                                 MUIA_TheBar_Strip,      "Read.toolbar",
-                                 MUIA_TheBar_SelStrip,   "Read_S.toolbar",
-                                 MUIA_TheBar_DisStrip,   "Read_G.toolbar",
-                                 MUIA_TheBar_StripCols,  11,
-                               End,
-                               Child, VGroup,
-                                 GroupFrameT("Settings"),
-                                 Child, HGroup,
-                                   Child, Label2("Appareance"),
-                                   Child, appareance = MUI_MakeObject(MUIO_Cycle,NULL,appareances),
-                                   Child, Label2("Label pos"),
-                                   Child, labelPos = MUI_MakeObject(MUIO_Cycle,NULL,labelPoss),
-                                 End,
-                                 Child, HGroup,
-                                   Child, HSpace(0),
-                                   Child, Label1("Borderless"),
-                                   Child, borderless = MUI_MakeObject(MUIO_Checkmark,NULL),
-                                   Child, HSpace(0),
-                                   Child, Label1("Sunny"),
-                                   Child, sunny = MUI_MakeObject(MUIO_Checkmark,NULL),
-                                   Child, HSpace(0),
-                                   Child, Label1("Raised"),
-                                   Child, raised = MUI_MakeObject(MUIO_Checkmark,NULL),
-                                   Child, HSpace(0),
-                                   Child, Label1("Scaled"),
-                                   Child, scaled = MUI_MakeObject(MUIO_Checkmark,NULL),
-                                   Child, HSpace(0),
-                                 End,
-                               End,
-                               Child, update = MUI_MakeObject(MUIO_Button,"_Update"),
+                         SubWindow, win = WindowObject,
+                           MUIA_Window_ID,             MAKE_ID('M','A','I','N'),
+                           MUIA_Window_Title,          "TheBar Demo1",
+                           WindowContents, VGroup,
+                             Child, sb = NewObject(ThisClass->mcc_Class, NULL,
+                               MUIA_Group_Horiz,       TRUE,
+                               MUIA_TheBar_EnableKeys, TRUE,
+                               MUIA_TheBar_Buttons,    buttons,
+                               MUIA_TheBar_PicsDrawer, "PROGDIR:/demo/pics",
+                               MUIA_TheBar_Strip,      "Read.toolbar",
+                               MUIA_TheBar_SelStrip,   "Read_S.toolbar",
+                               MUIA_TheBar_DisStrip,   "Read_G.toolbar",
+                               MUIA_TheBar_StripCols,  11,
                              End,
+                             Child, VGroup,
+                               GroupFrameT("Settings"),
+                               Child, HGroup,
+                                 Child, Label2("Appareance"),
+                                 Child, appareance = MUI_MakeObject(MUIO_Cycle,NULL,appareances),
+                                 Child, Label2("Label pos"),
+                                 Child, labelPos = MUI_MakeObject(MUIO_Cycle,NULL,labelPoss),
+                               End,
+                               Child, HGroup,
+                                 Child, HSpace(0),
+                                 Child, Label1("Borderless"),
+                                 Child, borderless = MUI_MakeObject(MUIO_Checkmark,NULL),
+                                 Child, HSpace(0),
+                                 Child, Label1("Sunny"),
+                                 Child, sunny = MUI_MakeObject(MUIO_Checkmark,NULL),
+                                 Child, HSpace(0),
+                                 Child, Label1("Raised"),
+                                 Child, raised = MUI_MakeObject(MUIO_Checkmark,NULL),
+                                 Child, HSpace(0),
+                                 Child, Label1("Scaled"),
+                                 Child, scaled = MUI_MakeObject(MUIO_Checkmark,NULL),
+                                 Child, HSpace(0),
+                               End,
+                             End,
+                             Child, update = MUI_MakeObject(MUIO_Button,"_Update"),
                            End,
-                         End))
+                         End,
+                       End))
+      {
+        ULONG sigs = 0, id;
+
+        DoMethod(win,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
+        DoMethod(update,MUIM_Notify,MUIA_Pressed,FALSE,app,2,MUIM_Application_ReturnID,TAG_USER);
+
+        set(win,MUIA_Window_Open,TRUE);
+
+        while((LONG)(id = DoMethod(app,MUIM_Application_NewInput,&sigs)) != MUIV_Application_ReturnID_Quit)
         {
-          ULONG sigs = 0, id;
-
-          DoMethod(win,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
-          DoMethod(update,MUIM_Notify,MUIA_Pressed,FALSE,app,2,MUIM_Application_ReturnID,TAG_USER);
-
-          set(win,MUIA_Window_Open,TRUE);
-
-          while((LONG)(id = DoMethod(app,MUIM_Application_NewInput,&sigs)) != MUIV_Application_ReturnID_Quit)
+          if(id==TAG_USER)
           {
-            if(id==TAG_USER)
-            {
-              ULONG appareanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
+            ULONG appareanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
 
-              get(appareance,MUIA_Cycle_Active,&appareanceV);
-              get(labelPos,MUIA_Cycle_Active,&labelPosV);
-              get(borderless,MUIA_Selected,&borderlessV);
-              get(sunny,MUIA_Selected,&sunnyV);
-              get(raised,MUIA_Selected,&raisedV);
-              get(scaled,MUIA_Selected,&scaledV);
+            get(appareance,MUIA_Cycle_Active,&appareanceV);
+            get(labelPos,MUIA_Cycle_Active,&labelPosV);
+            get(borderless,MUIA_Selected,&borderlessV);
+            get(sunny,MUIA_Selected,&sunnyV);
+            get(raised,MUIA_Selected,&raisedV);
+            get(scaled,MUIA_Selected,&scaledV);
 
-              SetAttrs(sb,MUIA_TheBar_ViewMode,   appareanceV,
-                          MUIA_TheBar_LabelPos,   labelPosV,
-                          MUIA_TheBar_Borderless, borderlessV,
-                          MUIA_TheBar_Sunny,      sunnyV,
-                          MUIA_TheBar_Raised,     raisedV,
-                          MUIA_TheBar_Scaled,     scaledV,
-                          TAG_DONE);
-            }
-
-            if(sigs)
-            {
-              sigs = Wait(sigs | SIGBREAKF_CTRL_C);
-              if(sigs & SIGBREAKF_CTRL_C) break;
-            }
+            SetAttrs(sb,MUIA_TheBar_ViewMode,   appareanceV,
+                        MUIA_TheBar_LabelPos,   labelPosV,
+                        MUIA_TheBar_Borderless, borderlessV,
+                        MUIA_TheBar_Sunny,      sunnyV,
+                        MUIA_TheBar_Raised,     raisedV,
+                        MUIA_TheBar_Scaled,     scaledV,
+                        TAG_DONE);
           }
-        
-          if(ThisClass)
-            MUI_DeleteCustomClass(ThisClass);
+
+          if(sigs)
+          {
+            sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+            if(sigs & SIGBREAKF_CTRL_C) break;
+          }
         }
-        else printf("Failed to create application\n");
+        
+        if(ThisClass)
+          MUI_DeleteCustomClass(ThisClass);
 
-        DROPINTERFACE(IMUIMaster);
-        CloseLibrary(MUIMasterBase);
-        MUIMasterBase = NULL;
+        if(lib_dragBarClass)
+          MUI_DeleteCustomClass(lib_dragBarClass);
+
+        if(lib_spacerClass)
+          MUI_DeleteCustomClass(lib_spacerClass);
       }
+      else
+        printf("Failed to create application\n");
 
-      FreeArgs(args);
-    }
-    else
-    {
-      char prgname[32];
-      long error = IoErr();
-
-      GetProgramName(prgname, 32);
-      PrintFault(error, prgname);
+      DROPINTERFACE(IMUIMaster);
+      CloseLibrary(MUIMasterBase);
+      MUIMasterBase = NULL;
     }
   }
 
