@@ -6,6 +6,7 @@ $Id$
 
 2006-12-01  Jens Langner <Jens.Langner@light-speed.de>
 
+  * mcc: some more general cleanup of definitions and used files.
   * mcc: removed all "register" definitions as there is really no reason
     to set all kind of variables explicitly as register. The compiler should
     decide which value to directly put on a register and which not. Just

@@ -39,7 +39,7 @@
 
 #include "private.h"
 #include "mcc_common.h"
-#include "class_protos.h"
+#include "class.h"
 #include "Debug.h"
 
 #include "SDI_hook.h"
