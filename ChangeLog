@@ -6,6 +6,9 @@ $Id$
 
 2006-12-02  Jens Langner <Jens.Langner@light-speed.de>
 
+  * mcc: the source do compile for OS3 and MOS again. Also the test application
+    seems to work fine for the moment. So lets see how the MCC behaves with all
+    the demo's included. But we seem to get quite fare for now.
   * mcc/TheBar-Test.c:  fixed the test application to not crash upon exit and
     also set the PicsDir so that the images are loaded correctly if executed
     within the respository hierarchy.

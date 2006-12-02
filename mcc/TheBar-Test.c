@@ -27,14 +27,11 @@
 
 #include <exec/tasks.h>
 #include <libraries/mui.h>
-#include <devices/clipboard.h>
-#include <libraries/iffparse.h>
 
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/muimaster.h>
 #include <proto/intuition.h>
-#include <proto/iffparse.h>
 #include <proto/utility.h>
 
 #include "private.h"
@@ -64,91 +61,51 @@ static struct MUIS_TheBar_Button buttons[] =
 // static hooks
 
 #if defined(__amigaos4__)
-struct Library *DiskfontBase = NULL;
 struct Library *GfxBase = NULL;
 struct Library *IntuitionBase = NULL;
-struct Library *KeymapBase = NULL;
-struct Library *LayersBase = NULL;
-struct Library *LocaleBase = NULL;
 struct Library *MUIMasterBase = NULL;
-struct Library *RexxSysBase = NULL;
 struct Library *UtilityBase = NULL;
-struct Library *IFFParseBase = NULL;
-struct Library *WorkbenchBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
 #elif defined(__MORPHOS__)
-struct Library *DiskfontBase = NULL;
-struct Library *GfxBase = NULL;
+struct GfxBase *GfxBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
-struct Library *KeymapBase = NULL;
-struct Library *LayersBase = NULL;
-struct Library *LocaleBase = NULL;
 struct Library *MUIMasterBase = NULL;
-struct Library *RexxSysBase = NULL;
 struct Library *UtilityBase = NULL;
-struct Library *IFFParseBase = NULL;
-struct Library *WorkbenchBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
 #else
-struct Library *DiskfontBase = NULL;
-struct Library *GfxBase = NULL;
+struct GfxBase *GfxBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
-struct Library *KeymapBase = NULL;
-struct Library *LayersBase = NULL;
-struct Library *LocaleBase = NULL;
 struct Library *MUIMasterBase = NULL;
-struct Library *RexxSysBase = NULL;
 struct Library *UtilityBase = NULL;
-struct Library *IFFParseBase = NULL;
-struct Library *WorkbenchBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
 #endif
 
 #if defined(__amigaos4__)
-struct DiskfontIFace *IDiskfont = NULL;
 struct GraphicsIFace *IGraphics = NULL;
 struct IntuitionIFace *IIntuition = NULL;
-struct KeymapIFace *IKeymap = NULL;
-struct LayersIFace *ILayers = NULL;
-struct LocaleIFace *ILocale = NULL;
 struct MUIMasterIFace *IMUIMaster = NULL;
-struct RexxSysIFace *IRexxSys = NULL;
 struct UtilityIFace *IUtility = NULL;
-struct IFFParseIFace *IIFFParse = NULL;
-struct WorkbenchIFace *IWorkbench = NULL;
 struct CyberGfxIFace *ICyberGfx = NULL;
 struct DataTypesIFace *IDataTypes = NULL;
 #endif
 
 DISPATCHERPROTO(_Dispatcher);
-struct  MUI_CustomClass *ThisClass = NULL;
+struct MUI_CustomClass *ThisClass = NULL;
 struct MUI_CustomClass *lib_spacerClass = NULL;
 struct MUI_CustomClass *lib_dragBarClass = NULL;
 ULONG lib_flags = 0;
 
 int main(void)
 {
-  if((DiskfontBase = OpenLibrary("diskfont.library", 38)) &&
-    GETINTERFACE(IDiskfont, DiskfontBase))
-  if((GfxBase = OpenLibrary("graphics.library", 38)) &&
+  if((GfxBase = (APTR)OpenLibrary("graphics.library", 38)) &&
     GETINTERFACE(IGraphics, GfxBase))
   if((IntuitionBase = (APTR)OpenLibrary("intuition.library", 38)) &&
     GETINTERFACE(IIntuition, IntuitionBase))
-  if((KeymapBase = OpenLibrary("keymap.library", 38)) &&
-    GETINTERFACE(IKeymap, KeymapBase))
-  if((LayersBase = OpenLibrary("layers.library", 38)) &&
-    GETINTERFACE(ILayers, LayersBase))
-  if((LocaleBase = OpenLibrary("locale.library", 38)) &&
-    GETINTERFACE(ILocale, LocaleBase))
-  if((RexxSysBase = OpenLibrary("rexxsyslib.library", 36)) &&
-    GETINTERFACE(IRexxSys, RexxSysBase))
   if((UtilityBase = OpenLibrary("utility.library", 38)) &&
     GETINTERFACE(IUtility, UtilityBase))
-  if((IFFParseBase = OpenLibrary("iffparse.library", 36)) &&
-    GETINTERFACE(IIFFParse, IFFParseBase))
   if((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
     GETINTERFACE(IDataTypes, DataTypesBase))
   {
@@ -158,14 +115,6 @@ int main(void)
     {
       CloseLibrary(CyberGfxBase);
       CyberGfxBase = NULL;
-    }
-
-  	// Open workbench.library (optional)
-		if((WorkbenchBase = OpenLibrary("workbench.library", 0)) &&
-  		 GETINTERFACE(IWorkbench, WorkbenchBase) == FALSE)
-		{
-      CloseLibrary(WorkbenchBase);
-      WorkbenchBase = NULL;
     }
 
     #if defined(DEBUG)
@@ -296,12 +245,6 @@ int main(void)
 
   D(DBF_STARTUP, "freeing library bases/interfaces...");
 
-	if(WorkbenchBase)
-	{
-		DROPINTERFACE(IWorkbench);
-		WorkbenchBase = NULL;
-	}
-
   if(CyberGfxBase)
   {
     DROPINTERFACE(ICyberGfx);
@@ -316,41 +259,10 @@ int main(void)
     DataTypesBase = NULL;
   }
 
-  if(IFFParseBase)
-  {
-    DROPINTERFACE(IIFFParse);
-    CloseLibrary(IFFParseBase);
-    IFFParseBase = NULL;
-  }
-
   if(UtilityBase)
   {
     DROPINTERFACE(IUtility);
     CloseLibrary(UtilityBase);
-  }
-
-  if(RexxSysBase)
-  {
-    DROPINTERFACE(IRexxSys);
-    CloseLibrary(RexxSysBase);
-  }
-
-  if(LocaleBase)
-  {
-    DROPINTERFACE(ILocale);
-    CloseLibrary(LocaleBase);
-  }
-
-  if(LayersBase)
-  {
-    DROPINTERFACE(ILayers);
-    CloseLibrary(LayersBase);
-  }
-
-  if(KeymapBase)
-  {
-    DROPINTERFACE(IKeymap);
-    CloseLibrary(KeymapBase);
   }
 
   if(IntuitionBase)
@@ -362,13 +274,7 @@ int main(void)
   if(GfxBase)
   {
     DROPINTERFACE(IGraphics);
-    CloseLibrary(GfxBase);
-  }
-
-  if(DiskfontBase)
-  {
-    DROPINTERFACE(IDiskfont);
-    CloseLibrary(DiskfontBase);
+    CloseLibrary((struct Library *)GfxBase);
   }
 
   RETURN(0);
