@@ -22,6 +22,8 @@
 
 #include <exec/types.h>
 
+#include "Debug.h"
+
 /***********************************************************************/
 
 #define DUMP     0
@@ -40,6 +42,8 @@ BRCUnpack(signed char *pSource,signed char *pDest,LONG srcBytes0,LONG dstBytes0)
     LONG  srcBytes = srcBytes0, dstBytes = dstBytes0;
     USHORT         error = TRUE;
     SHORT          minus128 = -128;
+
+    ENTER();
 
     while(dstBytes>0)
     {
@@ -77,6 +81,7 @@ BRCUnpack(signed char *pSource,signed char *pDest,LONG srcBytes0,LONG dstBytes0)
 
     errorExit:
 
+    RETURN(error);
     return error;
 }
 

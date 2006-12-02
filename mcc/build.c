@@ -25,6 +25,8 @@
 #include "class.h"
 #include "private.h"
 
+#include "Debug.h"
+
 /***********************************************************************/
 
 #define ALLOCRASTER(w,h)        AllocVec(RAWIDTH(w)*((UWORD)(h)),MEMF_CHIP|MEMF_CLEAR)
@@ -93,6 +95,8 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
     ULONG flags = copy->flags, size;
     UWORD w, h;
 
+    ENTER();
+
     copy->mask = NULL;
     copy->grey = NULL;
 
@@ -142,7 +146,7 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
                     {
                         UBYTE p = *src++;
 
-			if (!aflag)
+			                  if (!aflag)
                         {
                             alpha[x>>3] = 0;
                             aflag = 1;
@@ -210,6 +214,7 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
         if (flags & MFLG_Grey) copymem(copy->grey = chunky+size,chunky,size);
     }
 
+    RETURN(chunky);
     return chunky;
 }
 
@@ -221,6 +226,8 @@ LUT8ToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
     UBYTE *chunky;
     ULONG flags = copy->flags, size;
     UWORD w, h;
+
+    ENTER();
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -340,6 +347,7 @@ LUT8ToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
         }
     }
 
+    RETURN(chunky);
     return chunky;
 }
 
@@ -351,6 +359,8 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
     UBYTE *chunky;
     ULONG flags = copy->flags, size, maskDone = FALSE;
     UWORD w, h;
+
+    ENTER();
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -544,6 +554,7 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
         }
     }
 
+    RETURN(chunky);
     return chunky;
 }
 
@@ -555,6 +566,8 @@ calcPen(struct palette *pal,ULONG rgb)
     ULONG i;
     LONG d, bestd = 196000;
     WORD besti = 0, r, g, b, dr, dg, db;
+
+    ENTER();
 
     r = (rgb & 0xff0000) >> 16;
     g = (rgb & 0x00ff00) >> 8;
@@ -575,6 +588,7 @@ calcPen(struct palette *pal,ULONG rgb)
         }
     }
 
+    RETURN(besti);
     return besti;
 }
 
@@ -584,9 +598,15 @@ addColor(struct palette *pal,ULONG rgb)
     LONG p;
     ULONG i;
 
+    ENTER();
+
     for (i = 0; i<pal->numColors; i++)
     {
-        if (pal->colors[i]==rgb) return i;
+        if(pal->colors[i]==rgb)
+        {
+          RETURN(i);
+          return i;
+        }
     }
 
     if (pal->numColors<pal->maxColors)
@@ -596,6 +616,7 @@ addColor(struct palette *pal,ULONG rgb)
     }
     else p = -1;
 
+    RETURN(p);
     return p;
 }
 
@@ -615,6 +636,8 @@ RGBToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
     UBYTE *chunky;
     ULONG flags = copy->flags, size;
     UWORD w, h, left, top, tsw;
+
+    ENTER();
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -715,6 +738,7 @@ RGBToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
         }
     }
 
+    RETURN(chunky);
     return chunky;
 }
 
@@ -725,20 +749,29 @@ getSource(struct InstData *data,struct MUIS_TheBar_Brush *image)
 {
     UBYTE *src;
 
+    ENTER();
+
     if (image->compressedSize)
     {
         ULONG size = image->dataWidth*image->dataHeight;
 
-        if (!(src = allocVecPooled(data->pool,size))) return NULL;
+        if(!(src = allocVecPooled(data->pool,size)))
+        {
+          RETURN(NULL);
+          return NULL;
+        }
 
         if (BRCUnpack(image->data, (signed char*)src,image->compressedSize,size))
         {
             freeVecPooled(data->pool,src);
+
+            RETURN(NULL);
             return NULL;
         }
     }
     else src = image->data;
 
+    RETURN(src);
     return src;
 }
 
@@ -747,11 +780,15 @@ getSource(struct InstData *data,struct MUIS_TheBar_Brush *image)
 static void
 freeSource(struct InstData *data,struct MUIS_TheBar_Brush *image,UBYTE *back)
 {
+    ENTER();
+
     if (image->data && image->data!=back)
     {
         freeVecPooled(data->pool,image->data);
         image->data = back;
     }
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -759,6 +796,8 @@ freeSource(struct InstData *data,struct MUIS_TheBar_Brush *image,UBYTE *back)
 static ULONG
 makeSources(struct InstData *data,struct make *make)
 {
+    ENTER();
+
     if (data->image.data)
     {
         struct copy    copy;
@@ -767,6 +806,8 @@ makeSources(struct InstData *data,struct make *make)
         if (!(data->image.data = getSource(data,&data->image)))
         {
             data->image.data = back;
+
+            RETURN(FALSE);
             return FALSE;
         }
 
@@ -783,7 +824,11 @@ makeSources(struct InstData *data,struct make *make)
         else make->chunky = LUT8ToLUT8(data,&data->image,&copy);
 
         freeSource(data,&data->image,back);
-        if (!make->chunky) return FALSE;
+        if (!make->chunky)
+        {
+          RETURN(FALSE);
+          return FALSE;
+        }
 
         make->mask    = copy.mask;
         make->gchunky = copy.grey;
@@ -832,9 +877,11 @@ makeSources(struct InstData *data,struct make *make)
             else data->dimage.data = back;
         }
 
+        RETURN(TRUE);
         return TRUE;
     }
 
+    RETURN(FALSE);
     return FALSE;
 }
 
@@ -843,6 +890,8 @@ makeSources(struct InstData *data,struct make *make)
 static ULONG
 makeSourcesRGB(struct InstData *data,struct make *make)
 {
+    ENTER();
+
     if (data->image.data)
     {
         struct copy    copy;
@@ -862,7 +911,11 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         else make->chunky = LUT8ToRGB(data,&data->image,&copy);
 
         freeSource(data,&data->image,back);
-        if (!make->chunky) return FALSE;
+        if(!make->chunky)
+        {
+          RETURN(FALSE);
+          return FALSE;
+        }
 
         make->mask    = copy.mask;
         make->gchunky = copy.grey;
@@ -902,9 +955,11 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             else data->dimage.data = back;
         }
 
+        RETURN(TRUE);
         return TRUE;
     }
 
+    RETURN(FALSE);
     return FALSE;
 }
 
@@ -914,6 +969,8 @@ static struct BitMap *
 greyBitMapCyber(struct InstData *data,UBYTE *chunky,UWORD w,UWORD h)
 {
     struct BitMap *dest;
+
+    ENTER();
 
     if (chunky)
     {
@@ -929,6 +986,7 @@ greyBitMapCyber(struct InstData *data,UBYTE *chunky,UWORD w,UWORD h)
     }
     else dest = NULL;
 
+    RETURN(dest);
     return dest;
 }
 
@@ -941,7 +999,14 @@ buildBitMapsCyber(struct InstData *data)
     ULONG  flags = data->flags;
     UWORD  w, h;
 
-    if (!(make = allocVecPooled(data->pool,sizeof(struct make)))) return;
+    ENTER();
+
+    if(!(make = allocVecPooled(data->pool,sizeof(struct make))))
+    {
+      LEAVE();
+      return;
+    }
+
     memset(make,0,sizeof(struct make));
 
     w = make->dw = data->image.width;
@@ -954,6 +1019,8 @@ buildBitMapsCyber(struct InstData *data)
     if (!makeSourcesRGB(data,make))
     {
         freeVecPooled(data->pool,make);
+
+        LEAVE();
         return;
     }
 
@@ -1028,6 +1095,8 @@ buildBitMapsCyber(struct InstData *data)
     #endif
 
     freeVecPooled(data->pool,make);
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -1042,6 +1111,8 @@ LUT8ToBitMap(struct InstData *data,
              struct pen *pens)
 {
     struct BitMap *dest;
+
+    ENTER();
 
     if((dest = AllocBitMap(width,height, MIN(8, data->screenDepth),((data->flags & FLG_CyberMap) ? BMF_MINPLANES : 0)|BMF_CLEAR,(data->flags & FLG_CyberMap) ? data->screen->RastPort.BitMap : NULL)))
     {
@@ -1090,6 +1161,7 @@ LUT8ToBitMap(struct InstData *data,
         else WriteChunkyPixels(&rport,0,0,width-1,height-1,src,width);
     }
 
+    RETURN(dest);
     return dest;
 }
 
@@ -1105,6 +1177,10 @@ greyBitMap(struct InstData *data,
            ULONG RGB8,
            struct pen *pens)
 {
+    struct BitMap *result = NULL;
+
+    ENTER();
+
     if (src)
     {
         ULONG greyColors[3*256];
@@ -1140,10 +1216,11 @@ greyBitMap(struct InstData *data,
             *gc++ = gcol;
         }
 
-        return LUT8ToBitMap(data,src,width,height,greyColors,0,pens);
+        result = LUT8ToBitMap(data,src,width,height,greyColors,0,pens);
     }
 
-    return NULL;
+    RETURN(result);
+    return result;
 }
 
 /***********************************************************************/
@@ -1156,7 +1233,14 @@ buildBitMaps(struct InstData *data)
     ULONG           flags = data->flags;
     UWORD           w, h;
 
-    if (!(make = allocVecPooled(data->pool,sizeof(struct make)))) return;
+    ENTER();
+
+    if (!(make = allocVecPooled(data->pool,sizeof(struct make))))
+    {
+      LEAVE();
+      return;
+    }
+
     memset(make,0,sizeof(struct make));
 
     w = make->dw = image->width;
@@ -1170,6 +1254,8 @@ buildBitMaps(struct InstData *data)
     if (!makeSources(data,make))
     {
         freeVecPooled(data->pool,make);
+
+        LEAVE();
         return;
     }
 
@@ -1231,6 +1317,8 @@ buildBitMaps(struct InstData *data)
     if (make->dchunky) freeVecPooled(data->pool,make->dchunky);
 
     freeVecPooled(data->pool,make);
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -1238,8 +1326,12 @@ buildBitMaps(struct InstData *data)
 void
 build(struct InstData *data)
 {
+    ENTER();
+
     if (data->flags & FLG_CyberDeep) buildBitMapsCyber(data);
     else buildBitMaps(data);
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -1248,6 +1340,8 @@ void
 freeBitMaps(struct InstData *data)
 {
     struct MUIS_TheBar_Strip *strip = &data->strip;
+
+    ENTER();
 
     #ifdef __MORPHOS__
     if (data->image.flags & BRFLG_AlphaMask)
@@ -1272,7 +1366,11 @@ freeBitMaps(struct InstData *data)
     }
     #endif
 
-    if (!strip->normalBM) return;
+    if(!strip->normalBM)
+    {
+      LEAVE();
+      return;
+    }
 
     if (!(data->flags & FLG_CyberDeep))
     {
@@ -1419,6 +1517,8 @@ freeBitMaps(struct InstData *data)
         FreeBitMap(strip->dnormalBM);
         strip->dnormalBM = NULL;
     }
+
+    LEAVE();
 }
 
 /***********************************************************************/
