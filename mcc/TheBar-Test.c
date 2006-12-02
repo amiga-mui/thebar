@@ -201,7 +201,7 @@ int main(void)
                                MUIA_Group_Horiz,       TRUE,
                                MUIA_TheBar_EnableKeys, TRUE,
                                MUIA_TheBar_Buttons,    buttons,
-                               MUIA_TheBar_PicsDrawer, "PROGDIR:/demo/pics",
+                               MUIA_TheBar_PicsDrawer, "PROGDIR://demo/pics",
                                MUIA_TheBar_Strip,      "Read.toolbar",
                                MUIA_TheBar_SelStrip,   "Read_S.toolbar",
                                MUIA_TheBar_DisStrip,   "Read_G.toolbar",
@@ -271,20 +271,22 @@ int main(void)
             if(sigs & SIGBREAKF_CTRL_C) break;
           }
         }
-        
-        D(DBF_STARTUP, "cleaning up custom classes...");
 
+        D(DBF_STARTUP, "cleaning up application object...");
+        MUI_DisposeObject(app);
+        
+        D(DBF_STARTUP, "cleaning up mcc...");
         if(ThisClass)
           MUI_DeleteCustomClass(ThisClass);
-
-        if(lib_dragBarClass)
-          MUI_DeleteCustomClass(lib_dragBarClass);
-
-        if(lib_spacerClass)
-          MUI_DeleteCustomClass(lib_spacerClass);
       }
       else
         printf("Failed to create application\n");
+
+     if(lib_dragBarClass)
+       MUI_DeleteCustomClass(lib_dragBarClass);
+
+     if(lib_spacerClass)
+       MUI_DeleteCustomClass(lib_spacerClass);
 
       DROPINTERFACE(IMUIMaster);
       CloseLibrary(MUIMasterBase);
