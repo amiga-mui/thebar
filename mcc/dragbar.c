@@ -207,29 +207,39 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
-    struct data *data = INST_DATA(cl,obj);
+  struct data *data = INST_DATA(cl,obj);
 
-    ENTER();
+  ENTER();
 
-    DoSuperMethodA(cl,obj,(Msg)msg);
+  DoSuperMethodA(cl,obj,(Msg)msg);
 
-    if (data->flags & FLG_DB_Horiz)
-    {
-        msg->MinMaxInfo->MinWidth  += 9;
-        msg->MinMaxInfo->DefWidth  += 9;
-        msg->MinMaxInfo->MaxWidth  += 9;
-        msg->MinMaxInfo->MaxHeight  = MBQ_MUI_MAXMAX;
-    }
-    else
-    {
-        msg->MinMaxInfo->MinHeight += 9;
-        msg->MinMaxInfo->DefHeight += 9;
-        msg->MinMaxInfo->MaxWidth   = MBQ_MUI_MAXMAX;
-        msg->MinMaxInfo->MaxHeight += 9;
-    }
+  if(data->flags & FLG_Horiz)
+  {
+    msg->MinMaxInfo->MinWidth  += 9;
+    msg->MinMaxInfo->DefWidth  += 9;
+    msg->MinMaxInfo->MaxWidth  += 9;
+    msg->MinMaxInfo->MaxHeight  = MBQ_MUI_MAXMAX;
 
-    RETURN(0);
-    return 0;
+    #if defined(VIRTUAL)
+    msg->MinMaxInfo->MinHeight += 4;
+    msg->MinMaxInfo->DefHeight += 4;
+    #endif
+  }
+  else
+  {
+    msg->MinMaxInfo->MinHeight += 9;
+    msg->MinMaxInfo->DefHeight += 9;
+    msg->MinMaxInfo->MaxWidth   = MBQ_MUI_MAXMAX;
+    msg->MinMaxInfo->MaxHeight += 9;
+
+    #if defined(VIRTUAL)
+    msg->MinMaxInfo->MinWidth  += 4;
+    msg->MinMaxInfo->DefWidth  += 4;
+    #endif
+  }
+
+  RETURN(0);
+  return 0;
 }
 
 /***********************************************************************/

@@ -4,6 +4,16 @@ MUI TheBar MCC class - ChangeLog
 
 $Id$
 
+2006-12-03  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/Makefile.#?: reworked all makefiles to also compile the TheBarVirt.mcc
+    class on a normal make operation.
+  * mcc, mccv: removed the 'mccv' directory and its whole sources as they were
+    completly identical to the one of the mcc instead of the "#ifdef VIRTUAL"
+    statements. However, there were no real reason to keep two identical copies
+    of the same sources. So they are now unified and the 'mccv' directory
+    completly removed.
+
 2006-12-02  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc: the source do compile for OS3 and MOS again. Also the test application

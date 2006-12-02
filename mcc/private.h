@@ -143,7 +143,7 @@ struct InstData
 
     ULONG                          spacersSize;
 
-    #ifdef VIRTUAL
+    #if defined(VIRTUAL)
     ULONG			                     objWidth;
     ULONG			                     objHeight;
     #endif

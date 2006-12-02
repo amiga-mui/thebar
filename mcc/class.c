@@ -110,7 +110,7 @@ makeButton(struct button *button,Object *obj,struct InstData *data)
     }
 
 
-    #ifdef VIRTUAL
+    #if defined(VIRTUAL)
     attrs[0].ti_Tag   = MUIA_TheButton_InVirtgroup;
     attrs[0].ti_Data  = TRUE;
     #else
@@ -586,18 +586,18 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             data->width  = lm->lm_MinMax.MinWidth;
             data->height = lm->lm_MinMax.MinHeight;
 
-        #ifdef VIRTUAL
-	        #ifdef __MORPHOS__
-            data->objWidth  = lm->lm_MinMax.MinWidth;
-            data->objHeight = lm->lm_MinMax.MinHeight;
-	        #else
-    	    if (!(data->flags & FLG_Framed))
-            {
+            #if defined(VIRTUAL)
+	            #if defined(__MORPHOS__)
+              data->objWidth  = lm->lm_MinMax.MinWidth;
+              data->objHeight = lm->lm_MinMax.MinHeight;
+	            #else
+    	        if(!(data->flags & FLG_Framed))
+              {
                 data->objWidth  = lm->lm_MinMax.MinWidth;
-    	        data->objHeight = lm->lm_MinMax.MinHeight;
-    	    }
-	        #endif
-	    #endif
+    	          data->objHeight = lm->lm_MinMax.MinHeight;
+    	        }
+	            #endif
+	          #endif
 
             data->lcols = cols;
             data->lrows = rows;
@@ -620,7 +620,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
         {
             ULONG horiz = data->flags & (FLG_Horiz|FLG_Table);
 
-            #ifdef VIRTUAL
+            #if defined(VIRTUAL)
             lm->lm_Layout.Width  = data->objWidth;
             lm->lm_Layout.Height = data->objHeight;
             #endif
@@ -635,16 +635,16 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 switch (data->barPos)
                 {
                     case MUIV_TheBar_BarPos_Center:
-                        #ifdef VIRTUAL
-                        x = (_width(obj)>data->width) ? (_width(obj)-data->width)>>1 : 0;
+                        #if defined(VIRTUAL)
+                        x = ((ULONG)_width(obj) > data->width) ? (_width(obj)-data->width)>>1 : 0;
                         #else
                         x = (_width(obj)-_minwidth(obj))>>1;
                         #endif
                         break;
 
                     case MUIV_TheBar_BarPos_Right:
-                        #ifdef VIRTUAL
-                        x = (_mwidth(obj)>data->width) ? _mwidth(obj)-data->width : 0;
+                        #if defined(VIRTUAL)
+                        x = ((ULONG)_mwidth(obj) > data->width) ? _mwidth(obj)-data->width : 0;
                         //x = (_width(obj)>data->width) ? _width(obj)-data->width : 0;
                         #else
                         x = _mwidth(obj)-_minwidth(obj);
@@ -843,16 +843,16 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 switch (data->barPos)
                 {
                     case MUIV_TheBar_BarPos_Center:
-                        #ifdef VIRTUAL
-                        y = (_height(obj)>data->height) ? (_height(obj)-data->height)>>1 : 0;
+                        #if defined(VIRTUAL)
+                        y = ((ULONG)_height(obj) > data->height) ? (_height(obj)-data->height)>>1 : 0;
                         #else
                         y = (_height(obj)-_minheight(obj))>>1;
                         #endif
                         break;
 
                     case MUIV_TheBar_BarPos_Right:
-                        #ifdef VIRTUAL
-                        y = (_height(obj)>data->height) ? _height(obj)-data->height : 0;
+                        #if defined(VIRTUAL)
+                        y = ((ULONG)_height(obj) > data->height) ? _height(obj)-data->height : 0;
                         #else
                         y = _height(obj)-_minheight(obj);
                         #endif
@@ -2514,7 +2514,7 @@ static ULONG
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    #ifndef VIRTUAL
+    #if !defined(VIRTUAL)
     Object               *parent;
     #endif
     STRPTR               ptr;
@@ -2716,7 +2716,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     data->eh.ehn_Events = IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW;
     DoMethod(_win(obj),MUIM_Window_AddEventHandler,(ULONG)&data->eh);
 
-    #ifdef VIRTUAL
+    #if defined(VIRTUAL)
     data->flags |= FLG_IsInVirtgroup;
     #else
     for (parent = obj; ;)
@@ -3009,7 +3009,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
-    #ifdef VIRTUAL
+    #if defined(VIRTUAL)
     if (data->flags & FLG_Framed)
     #else
     if ((data->flags & FLG_Framed) && (msg->flags & (MADF_DRAWUPDATE|MADF_DRAWOBJECT)))

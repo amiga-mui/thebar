@@ -42,17 +42,17 @@
 #define VERSION       LIB_VERSION
 #define REVISION      LIB_REVISION
 
-#define CLASS         MUIC_TheBar
-
-#ifdef VIRTUAL
-#define SUPERCLASS    MUIC_Virtgroup
-#else
+#if !defined(VIRTUAL)
 #define SUPERCLASS    MUIC_Group
+#define CLASS         MUIC_TheBar
+#else
+#define SUPERCLASS    MUIC_Virtgroup
+#define CLASS         MUIC_TheBarVirt
 #endif
 
 #define INSTDATA      InstData
 
-#define UserLibID     "$VER: TheBar.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define UserLibID     "$VER: " CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
 #define USEDCLASSESP  used_classesP

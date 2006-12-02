@@ -56,38 +56,52 @@ LDLIBS   =
 #
 
 MCCTARGET = $(BINDIR)/TheBar.mcc
+MCCVTARGET= $(BINDIR)/TheBarVirt.mcc
 TESTTARGET= $(BINDIR)/TheBar-Test
 
 M68KSTUBS = $(OBJDIR)/mccclass_68k.o
 
-MCCOBJS = $(OBJDIR)/library.o \
-          $(OBJDIR)/brc1.o \
-          $(OBJDIR)/build.o \
-          $(OBJDIR)/class.o \
-          $(OBJDIR)/dragbar.o \
-          $(OBJDIR)/scale.o \
-          $(OBJDIR)/spacer.o \
-          $(OBJDIR)/utils.o \
+MCCOBJS = $(OBJDIR)/mcc/library.o \
+          $(OBJDIR)/mcc/brc1.o \
+          $(OBJDIR)/mcc/build.o \
+          $(OBJDIR)/mcc/class.o \
+          $(OBJDIR)/mcc/dragbar.o \
+          $(OBJDIR)/mcc/scale.o \
+          $(OBJDIR)/mcc/spacer.o \
+          $(OBJDIR)/mcc/utils.o \
+          $(OBJDIR)/Debug.o
+
+MCCVOBJS= $(OBJDIR)/mccv/library.o \
+          $(OBJDIR)/mccv/brc1.o \
+          $(OBJDIR)/mccv/build.o \
+          $(OBJDIR)/mccv/class.o \
+          $(OBJDIR)/mccv/dragbar.o \
+          $(OBJDIR)/mccv/scale.o \
+          $(OBJDIR)/mccv/spacer.o \
+          $(OBJDIR)/mccv/utils.o \
           $(OBJDIR)/Debug.o
 
 TESTOBJS= $(OBJDIR)/TheBar-Test.o \
-          $(OBJDIR)/brc1.o \
-          $(OBJDIR)/build.o \
-          $(OBJDIR)/class.o \
-          $(OBJDIR)/dragbar.o \
-          $(OBJDIR)/scale.o \
-          $(OBJDIR)/spacer.o \
-          $(OBJDIR)/utils.o \
+          $(OBJDIR)/mcc/brc1.o \
+          $(OBJDIR)/mcc/build.o \
+          $(OBJDIR)/mcc/class.o \
+          $(OBJDIR)/mcc/dragbar.o \
+          $(OBJDIR)/mcc/scale.o \
+          $(OBJDIR)/mcc/spacer.o \
+          $(OBJDIR)/mcc/utils.o \
           $(OBJDIR)/Debug.o
 
 #
 
-all: $(BINDIR) $(OBJDIR) $(MCCTARGET) $(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) $(MCCTARGET) $(MCCVTARGET) $(TESTTARGET)
 
 # make the object directories
 $(OBJDIR):
 	@printf '\033[33mGenerating $@ directory\033[0m\n'
 	@$(MKDIR) $(OBJDIR)
+	@$(MKDIR) $(OBJDIR)/mcc
+	@$(MKDIR) $(OBJDIR)/mccv
+
 
 # make the binary directories
 $(BINDIR):
@@ -100,6 +114,14 @@ $(OBJDIR)/%.o: %.c
 	@printf '\033[32mCompiling $<\033[0m\n'
 	@$(CC) $(CFLAGS) $< -o $@ -DNO_PPCINLINE_STDARG
 
+$(OBJDIR)/mcc/%.o: %.c
+	@printf '\033[32mCompiling $<\033[0m\n'
+	@$(CC) $(CFLAGS) $< -o $@ -DNO_PPCINLINE_STDARG
+
+$(OBJDIR)/mccv/%.o: %.c
+	@printf '\033[32mCompiling $<\033[0m\n'
+	@$(CC) $(CFLAGS) -DVIRTUAL $< -o $@ -DNO_PPCINLINE_STDARG
+
 $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@printf '\033[32mCompiling $<\033[0m\n'
 	@$(CC) $(CFLAGS) $< -o $@
@@ -109,6 +131,11 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 $(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
 	@$(CC) $(LDFLAGS) -o $@.debug $(MCCOBJS) $(M68KSTUBS) $(LDLIBS)
+	@$(STRIP) -R .comment -S -o $@ $@.debug
+
+$(MCCVTARGET): $(M68KSTUBS) $(MCCVOBJS)
+	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@$(CC) $(LDFLAGS) -o $@.debug $(MCCVOBJS) $(M68KSTUBS) $(LDLIBS)
 	@$(STRIP) -R .comment -S -o $@ $@.debug
 
 $(TESTTARGET): $(TESTOBJS)
@@ -123,9 +150,11 @@ $(OBJDIR)/library.o: library.c ../include/mccheader.c \
 
 .PHONY: clean
 clean:
-	-$(RM) $(MCCTARGET) $(MCCTARGET).debug $(TESTTARGET) $(TESTTARGET).debug $(MCCOBJS) $(TESTOBJS) $(M68KSTUBS)
+	-$(RM) $(MCCTARGET) $(MCCTARGET).debug $(MCCVTARGET) $(MCCVTARGET).debug $(TESTTARGET) $(TESTTARGET).debug $(MCCOBJS) $(MCCVOBJS) $(TESTOBJS) $(M68KSTUBS)
 
 .PHONY: distclean
 distclean: clean
+	-$(RMDIR) $(OBJDIR)/mccv
+	-$(RMDIR) $(OBJDIR)/mcc
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)
