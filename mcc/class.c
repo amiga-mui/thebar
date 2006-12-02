@@ -276,8 +276,10 @@ makeButton(struct button *button,Object *obj,struct InstData *data)
     }
     else attrs[22].ti_Tag = TAG_DONE;
 
-    if (button->class) return NewObjectA(button->class,NULL,attrs);
-    else return MUI_NewObjectA(MUIC_TheButton,attrs);
+    if(button->class)
+      return NewObjectA(button->class,NULL,attrs);
+    else
+      return MUI_NewObjectA(MUIC_TheButton,attrs);
 }
 
 

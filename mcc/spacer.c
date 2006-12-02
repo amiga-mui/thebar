@@ -359,7 +359,7 @@ BOOL initSpacerClass(void)
   if((lib_spacerClass = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct data), ENTRY(SpacerDispatcher))))
   {
     if(lib_flags & BASEFLG_MUI20)
-      lib_spacerClass->mcc_Class->cl_ID = "TheBar_Spacer";
+      lib_spacerClass->mcc_Class->cl_ID = (STRPTR)"TheBar_Spacer";
 
     result = TRUE;
   }

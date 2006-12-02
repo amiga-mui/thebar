@@ -43,6 +43,8 @@
 
 #include <mui/TheBar_mcc.h>
 
+#include "SDI_compiler.h"
+
 /***********************************************************************/
 
 #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL

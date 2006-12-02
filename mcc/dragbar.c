@@ -361,7 +361,7 @@ BOOL initDragBarClass(void)
   if((lib_dragBarClass = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct data), ENTRY(DragBarDispatcher))))
   {
     if(lib_flags & BASEFLG_MUI20)
-      lib_dragBarClass->mcc_Class->cl_ID = "TheBar_DragBar";
+      lib_dragBarClass->mcc_Class->cl_ID = (STRPTR)"TheBar_DragBar";
 
     result = TRUE;
   }
