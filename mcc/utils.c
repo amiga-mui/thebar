@@ -47,12 +47,12 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 APTR
 allocVecPooled(APTR pool,ULONG size)
 {
-    ULONG *mem;
+  ULONG *mem;
 
-    if((mem = AllocPooled(pool,size = size+sizeof(ULONG))))
-        *mem++ = size;
+  if((mem = AllocPooled(pool,size = size+sizeof(ULONG))))
+    *mem++ = size;
 
-    return mem;
+  return mem;
 }
 
 /****************************************************************************/
@@ -60,7 +60,7 @@ allocVecPooled(APTR pool,ULONG size)
 void
 freeVecPooled(APTR pool,APTR mem)
 {
-    FreePooled(pool,(LONG *)mem-1,*((LONG *)mem-1));
+  FreePooled(pool,(LONG *)mem-1,*((LONG *)mem-1));
 }
 
 /****************************************************************************/

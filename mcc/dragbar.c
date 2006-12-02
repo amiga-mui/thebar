@@ -74,14 +74,20 @@ static ULONG mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-    struct data *data = INST_DATA(cl,obj);
+  struct data *data = INST_DATA(cl,obj);
+  BOOL result = FALSE;
 
-    switch (msg->opg_AttrID)
-    {
-        case MUIA_TheButton_Spacer: *msg->opg_Storage = MUIV_TheButton_Spacer_DragBar; return TRUE;
-        case MUIA_ShowMe:           *msg->opg_Storage = (data->flags & FLG_DB_ShowMe) ? TRUE : FALSE; return TRUE;
-        default:                    return DoSuperMethodA(cl,obj,(Msg)msg);
-    }
+  ENTER();
+
+  switch (msg->opg_AttrID)
+  {
+    case MUIA_TheButton_Spacer: *msg->opg_Storage = MUIV_TheButton_Spacer_DragBar; result=TRUE; break;
+    case MUIA_ShowMe:           *msg->opg_Storage = (data->flags & FLG_DB_ShowMe) ? TRUE : FALSE; result=TRUE; break;
+    default:                    result=DoSuperMethodA(cl,obj,(Msg)msg);
+  }
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -91,7 +97,10 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    struct TagItem          *tstate;
+    struct TagItem *tstate;
+    ULONG result = 0;
+
+    ENTER();
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
@@ -125,7 +134,10 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         }
     }
 
-    return DoSuperMethodA(cl,obj,(Msg)msg);
+    result =  DoSuperMethodA(cl,obj,(Msg)msg);
+
+    RETURN(result);
+    return result;
 }
 
 /***********************************************************************/
@@ -137,7 +149,13 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     APTR                 pen;
     ULONG                *val;
 
-    if (!(DoSuperMethodA(cl,obj,(Msg)msg))) return FALSE;
+    ENTER();
+
+    if(!(DoSuperMethodA(cl,obj,(Msg)msg)))
+    {
+      RETURN(FALSE);
+      return FALSE;
+    }
 
     if (!getconfigitem(cl,obj,MUICFG_TheBar_DragBarShinePen,&pen))
         pen = MUIDEF_TheBar_DragBarShinePen;
@@ -156,6 +174,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         data->flags |= FLG_DB_UseDragBarFill;
     }
 
+    RETURN(TRUE);
     return TRUE;
 }
 
@@ -165,6 +184,9 @@ static ULONG
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
+    ULONG result = 0;
+
+    ENTER();
 
     MUI_ReleasePen(muiRenderInfo(obj),data->pshine);
     MUI_ReleasePen(muiRenderInfo(obj),data->pshadow);
@@ -174,7 +196,10 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
         data->flags &= ~FLG_DB_UseDragBarFill;
     }
 
-    return DoSuperMethodA(cl,obj,msg);
+    result = DoSuperMethodA(cl,obj,msg);
+
+    RETURN(result);
+    return result;
 }
 
 /***********************************************************************/
@@ -183,6 +208,8 @@ static ULONG
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
     struct data *data = INST_DATA(cl,obj);
+
+    ENTER();
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -201,6 +228,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
         msg->MinMaxInfo->MaxHeight += 9;
     }
 
+    RETURN(0);
     return 0;
 }
 
@@ -210,6 +238,8 @@ static ULONG
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
     struct data *data = INST_DATA(cl,obj);
+
+    ENTER();
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -263,6 +293,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         }
     }
 
+    RETURN(0);
     return 0;
 }
 
@@ -271,36 +302,52 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 static ULONG
 mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 {
-    struct data *data = INST_DATA(cl,obj);
+  struct data *data = INST_DATA(cl,obj);
+  ULONG result = 0;
 
-    if (data->bar)
-        return DoMethod(data->bar,MUIM_CustomBackfill,
-            msg->left,
-            msg->top,
-            msg->right,
-            msg->bottom,
-            msg->left+msg->xoffset,
-            msg->top+msg->yoffset,
-            0);
-    else return DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,msg->xoffset,msg->yoffset,0);
+  ENTER();
+
+  if(data->bar)
+  {
+    result = DoMethod(data->bar, MUIM_CustomBackfill, msg->left,
+                                                      msg->top,
+                                                      msg->right,
+                                                      msg->bottom,
+                                                      msg->left+msg->xoffset,
+                                                      msg->top+msg->yoffset,
+                                                      0);
+  }
+  else
+  {
+    result = DoSuperMethod(cl, obj, MUIM_DrawBackground, msg->left,
+                                                         msg->top,
+                                                         msg->right-msg->left+1,
+                                                         msg->bottom-msg->top+1,
+                                                         msg->xoffset,
+                                                         msg->yoffset,
+                                                         0);
+  }
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
 
 DISPATCHER(DragBarDispatcher)
 {
-    switch(msg->MethodID)
-    {
-        case OM_NEW:              return mNew(cl,obj,(APTR)msg);
-        case OM_GET:              return mGet(cl,obj,(APTR)msg);
-        case OM_SET:              return mSets(cl,obj,(APTR)msg);
-        case MUIM_AskMinMax:      return mAskMinMax(cl,obj,(APTR)msg);
-        case MUIM_Draw:           return mDraw(cl,obj,(APTR)msg);
-        case MUIM_CustomBackfill: return mCustomBackfill(cl,obj,(APTR)msg);
-        case MUIM_Setup:          return mSetup(cl,obj,(APTR)msg);
-        case MUIM_Cleanup:        return mCleanup(cl,obj,(APTR)msg);
-        default:                  return DoSuperMethodA(cl,obj,msg);
-    }
+  switch(msg->MethodID)
+  {
+    case OM_NEW:              return mNew(cl,obj,(APTR)msg);
+    case OM_GET:              return mGet(cl,obj,(APTR)msg);
+    case OM_SET:              return mSets(cl,obj,(APTR)msg);
+    case MUIM_AskMinMax:      return mAskMinMax(cl,obj,(APTR)msg);
+    case MUIM_Draw:           return mDraw(cl,obj,(APTR)msg);
+    case MUIM_CustomBackfill: return mCustomBackfill(cl,obj,(APTR)msg);
+    case MUIM_Setup:          return mSetup(cl,obj,(APTR)msg);
+    case MUIM_Cleanup:        return mCleanup(cl,obj,(APTR)msg);
+    default:                  return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/

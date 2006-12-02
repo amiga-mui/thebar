@@ -172,6 +172,8 @@ int main(void)
     SetupDebug();
     #endif
 
+    ENTER();
+
     if((MUIMasterBase = OpenLibrary("muimaster.library", MUIMASTER_VMIN)) &&
       GETINTERFACE(IMUIMaster, MUIMasterBase))
     {
@@ -270,6 +272,8 @@ int main(void)
           }
         }
         
+        D(DBF_STARTUP, "cleaning up custom classes...");
+
         if(ThisClass)
           MUI_DeleteCustomClass(ThisClass);
 
@@ -287,6 +291,8 @@ int main(void)
       MUIMasterBase = NULL;
     }
   }
+
+  D(DBF_STARTUP, "freeing library bases/interfaces...");
 
 	if(WorkbenchBase)
 	{
@@ -363,5 +369,6 @@ int main(void)
     CloseLibrary(DiskfontBase);
   }
 
+  RETURN(0);
   return 0;
 }

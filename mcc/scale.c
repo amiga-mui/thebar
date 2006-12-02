@@ -22,6 +22,8 @@
 
 #include "class.h"
 
+#include "Debug.h"
+
 #include <math.h>
 
 /*
@@ -49,6 +51,8 @@ scaleLine(struct scale *sce,struct ScaleData *data,UBYTE *src,UBYTE *dst)
 {
     LONG w8 = (sce->dw>>3)+1, cx = 0, dx = data->deltax*65536;
 
+    ENTER();
+
     src += data->cy*sce->sw;
 
     switch (sce->dw & 7)
@@ -69,6 +73,8 @@ scaleLine(struct scale *sce,struct ScaleData *data,UBYTE *src,UBYTE *dst)
     }
 
     data->cy = data->sourcey += data->deltay;
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -76,6 +82,8 @@ scaleLine(struct scale *sce,struct ScaleData *data,UBYTE *src,UBYTE *dst)
 void
 scale(struct scale *sce,UBYTE *src,UBYTE *dst)
 {
+    ENTER();
+
     if (sce && src && dst)
     {
         struct ScaleData scdata;
@@ -96,6 +104,8 @@ scale(struct scale *sce,UBYTE *src,UBYTE *dst)
             dst += sce->dw;
         }
     }
+
+    LEAVE();
 }
 
 /***********************************************************************/
