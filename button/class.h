@@ -13,9 +13,7 @@
 #ifndef _CLASS_H
 #define _CLASS_H
 
-#define __NOLIBBASE__
-#define __USE_SYSBASE
-#define USE_BUITLIN_MATH
+#include <diskfont/glyph.h>
 
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -28,29 +26,19 @@
 #include <proto/muimaster.h>
 
 #include <clib/alib_protos.h>
-#include <clib/debug_protos.h>
 
 #include <graphics/rpattr.h>
-#include <graphics/gfxmacros.h>
 #include <utility/pack.h>
 #include <datatypes/pictureclass.h>
 #include <cybergraphx/cybergraphics.h>
-#include <mui/muiundoc.h>
-
-#ifndef __MORPHOS__
-#include <dos.h>
-#endif
 
 #include <string.h>
 
-#include <TheBar_mcc.h>
-#include <TheButton_mcc.h>
-#include <TheBarPrefs.h>
+#include <mui/TheBar_mcc.h>
 
-#include "base.h"
+#include "private.h"
 
-//#define USE_BASTARD_MACROS
-//#include <poolbastard.h>
+#include "SDI_compiler.h"
 
 /****************************************************************************/
 
@@ -96,7 +84,30 @@ struct scale
 
 /***********************************************************************/
 
-#include "class_protos.h"
+/* utils.c */
+#ifndef __MORPHOS__
+Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
+#endif
+APTR allocVecPooled(APTR pool, ULONG size);
+void freeVecPooled(APTR pool, APTR mem);
+void stripUnderscore(STRPTR dest , STRPTR from, ULONG mode);
+struct TextFont *openFont(STRPTR name);
+APTR allocArbitratePooled(ULONG size);
+APTR freeArbitratePooled(APTR mem, ULONG size);
+APTR allocArbitrateVecPooled(ULONG size);
+APTR freeArbitrateVecPooled(APTR mem);
+
+/* brc1.c */
+USHORT BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);
+
+/* scale.c */
+void scale(struct scale *sce , UBYTE *src , UBYTE *dst);
+void scaleRGB(struct scale *sce , ULONG *src , ULONG *dst);
+
+/* build.c */
+void scaleStripBitMaps(struct InstData *data);
+void freeBitMaps(struct InstData *data);
+void build(struct InstData *data);
 
 /***********************************************************************/
 

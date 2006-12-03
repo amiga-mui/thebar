@@ -1,17 +1,27 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #include "class.h"
-#include "instance.h"
+#include "private.h"
 
 /***********************************************************************/
 
@@ -80,9 +90,9 @@ enum
 static UBYTE *
 LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 {
-    register UBYTE *chunky;
-    register ULONG flags = copy->flags, size, maskDone = FALSE;
-    register UWORD w, h;
+    UBYTE *chunky;
+    ULONG flags = copy->flags, size, maskDone = FALSE;
+    UWORD w, h;
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -110,21 +120,22 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (chunky)
     {
-        register UBYTE *alpha = NULL;
+        UBYTE *alpha = NULL;
 
         if (!(flags & MFLG_NtMask))
         {
             if (flags & MFLG_Cyber)
             {
-                register ULONG len = RAWIDTH(w)*h;
+                ULONG len = RAWIDTH(w)*h;
 
-            	if (copy->mask = allocArbitrateVecPooled(len))
-                {
+            	if((copy->mask = allocArbitrateVecPooled(len)))
+              {
                     alpha = copy->mask;
                     memset(alpha,0,len);
 		          }
             }
-            else if (copy->mask = ALLOCRASTER(w,h)) alpha = copy->mask;
+            else if((copy->mask = ALLOCRASTER(w,h)))
+              alpha = copy->mask;
         }
 
         if (flags & MFLG_Scaled)
@@ -147,10 +158,10 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
         {
             if (image->left!=0 || image->top!=0 || image->width!=image->dataWidth || image->height!=image->dataHeight || image->dataWidth!=image->dataTotalWidth)
             {
-                register ULONG trColor;
-                register UWORD tsw;
-                register UBYTE *src, *dest;
-                register int   x, y;
+                ULONG trColor;
+                UWORD tsw;
+                UBYTE *src, *dest;
+                int   x, y;
 
                 tsw     = image->dataTotalWidth;
                 trColor = image->trColor;
@@ -160,13 +171,13 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                 for (y = 0; y<h; y++)
                 {
-                    register int bitmask = 0x80, aflag = 0;
+                    int bitmask = 0x80, aflag = 0;
 
                     for (x = 0; x<w; x++)
                     {
                         if (alpha)
                         {
-                            register UBYTE p = *src++;
+                            UBYTE p = *src++;
 
                             if (!aflag)
                             {
@@ -200,9 +211,9 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
         if (!maskDone && alpha)
         {
-            register ULONG trColor;
-            register UBYTE *src;
-            register int   x, y;
+            ULONG trColor;
+            UBYTE *src;
+            int   x, y;
 
             trColor = image->trColor;
 
@@ -210,7 +221,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
             for (y = 0; y<h; y++)
             {
-                register int bitmask = 0x80, aflag = 0;
+                int bitmask = 0x80, aflag = 0;
 
                 for (x = 0; x<w; x++)
                 {
@@ -242,9 +253,9 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 static UBYTE *
 LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 {
-    register UBYTE *from, *chunky;
-    register ULONG flags = copy->flags, size;
-    register UWORD w, h, left, top, tsw;
+    UBYTE *from, *chunky;
+    ULONG flags = copy->flags, size;
+    UWORD w, h, left, top, tsw;
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -252,7 +263,7 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
     if (flags & MFLG_Scaled)
     {
         struct copy    temp;
-        register UBYTE *cchunky;
+        UBYTE *cchunky;
 
         copymem(&temp,copy,sizeof(temp));
         temp.flags = MFLG_Scaled|MFLG_NtMask;
@@ -288,13 +299,14 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (chunky)
     {
-        register ULONG *colors, trColor, RGB8 = image->flags & BRFLG_ColorRGB8;
-        register UBYTE *src, *dest, *alpha = NULL, *gdest;
-        register int   x, y;
+        ULONG *colors, trColor, RGB8 = image->flags & BRFLG_ColorRGB8;
+        UBYTE *src, *dest, *alpha = NULL, *gdest;
+        int   x, y;
 
         if (!(flags & MFLG_NtMask))
         {
-            if (copy->mask = (flags & MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)) alpha = copy->mask;
+            if((copy->mask = (flags & MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)))
+              alpha = copy->mask;
         }
 
         copy->grey = gdest = (flags & MFLG_Grey) ? chunky+size : NULL;
@@ -307,12 +319,12 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
         for (y = 0; y<h; y++)
         {
-            register int bitmask = 0x80, aflag = 0;
+            int bitmask = 0x80, aflag = 0;
 
             for (x = 0; x<w; x++)
             {
-                register ULONG p = *src++;
-                register ULONG *c = colors+p+(RGB8 ? 0 : p+p);
+                ULONG p = *src++;
+                ULONG *c = colors+p+(RGB8 ? 0 : p+p);
 
                 if (alpha)
                 {
@@ -333,8 +345,8 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                 if (gdest)
                 {
-                    register ULONG gcol;
-                    register UBYTE r, g, b;
+                    ULONG gcol;
+                    UBYTE r, g, b;
 
                     if (RGB8)
                     {
@@ -393,9 +405,9 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 static UBYTE *
 RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 {
-    register UBYTE *chunky;
-    register ULONG flags = copy->flags, size, maskDone = FALSE;
-    register UWORD w, h;
+    UBYTE *chunky;
+    ULONG flags = copy->flags, size, maskDone = FALSE;
+    UWORD w, h;
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -424,11 +436,12 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (chunky)
     {
-        register UBYTE *alpha = NULL, *gdest;
+        UBYTE *alpha = NULL, *gdest;
 
         if (!(flags & MFLG_NtMask))
         {
-            if (copy->mask = (flags & MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)) alpha = copy->mask;
+            if((copy->mask = (flags & MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)))
+              alpha = copy->mask;
         }
 
         copy->grey = gdest = (flags & MFLG_Grey) ? chunky+size : NULL;
@@ -453,10 +466,10 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
         {
             if (image->left!=0 || image->top!=0 || image->width!=image->dataWidth || image->height!=image->dataHeight || 4*image->dataWidth!=image->dataTotalWidth)
             {
-                register UBYTE *src, *dest;
-                register ULONG trColor, useAlpha, reallyHasAlpha = FALSE;
-                register UWORD tsw;
-                register int   x, y;
+                UBYTE *src, *dest;
+                ULONG trColor, useAlpha, reallyHasAlpha = FALSE;
+                UWORD tsw;
+                int   x, y;
 
                 tsw      = image->dataTotalWidth;
                 trColor  = image->trColor & 0x00FFFFFF;
@@ -467,15 +480,15 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                 for (y = 0; y<h; y++)
                 {
-                    register int bitmask = 0x80, aflag = 0;
+                    int bitmask = 0x80, aflag = 0;
 
                     for (x = 0; x<w; x++)
                     {
-                        register ULONG c = *((ULONG *)src);
+                        ULONG c = *((ULONG *)src);
 
                         if (alpha)
                         {
-                            register ULONG hi;
+                            ULONG hi;
 
                             if (!aflag)
                             {
@@ -503,8 +516,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                         if (gdest)
                         {
-                            register ULONG v;
-                            register UBYTE r, g, b;
+                            ULONG v;
+                            UBYTE r, g, b;
 
                             r = (c & 0x00FF0000)>>16;
                             g = (c & 0x0000FF00)>>8;
@@ -540,10 +553,10 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
         if (!maskDone && (alpha || gdest))
         {
-            register UBYTE *src;
-            register ULONG trColor, useAlpha, reallyHasAlpha = FALSE;
+            UBYTE *src;
+            ULONG trColor, useAlpha, reallyHasAlpha = FALSE;
 
-            register int   x, y;
+            int   x, y;
 
             trColor = image->trColor & 0x00FFFFFF;
             useAlpha = image->flags & BRFLG_AlphaMask;
@@ -552,15 +565,15 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
             for (y = 0; y<h; y++)
             {
-                register int bitmask = 0x80, aflag = 0;
+                int bitmask = 0x80, aflag = 0;
 
                 for (x = 0; x<w; x++)
                 {
-                    register ULONG c = *((ULONG *)src);
+                    ULONG c = *((ULONG *)src);
 
                     if (alpha)
                     {
-                        register ULONG hi;
+                        ULONG hi;
 
                         if (!aflag)
                         {
@@ -588,8 +601,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                     if (gdest)
                     {
-                        register ULONG v;
-                        register UBYTE r, g, b;
+                        ULONG v;
+                        UBYTE r, g, b;
 
                         r = (c & 0x00FF0000)>>16;
                         g = (c & 0x0000FF00)>>8;
@@ -621,8 +634,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 static LONG
 calcPen(struct palette *pal,ULONG rgb)
 {
-    register LONG i, d, bestd = 196000;
-    register WORD besti = 0, r, g, b, dr, dg, db;
+    ULONG i, d, bestd = 196000;
+    UWORD besti = 0, r, g, b, dr, dg, db;
 
     r = (rgb & 0xff0000) >> 16;
     g = (rgb & 0x00ff00) >> 8;
@@ -649,8 +662,8 @@ calcPen(struct palette *pal,ULONG rgb)
 static LONG
 addColor(struct palette *pal,ULONG rgb)
 {
-    register LONG p;
-    register int  i;
+    LONG p;
+    ULONG i;
 
     for (i = 0; i<pal->numColors; i++)
     {
@@ -670,7 +683,7 @@ addColor(struct palette *pal,ULONG rgb)
 static LONG
 bestColor(struct palette *pal,ULONG rgb)
 {
-    register LONG p = addColor(pal,rgb);
+    LONG p = addColor(pal,rgb);
 
     return (p<0) ? calcPen(pal,rgb) : p;
 }
@@ -680,9 +693,9 @@ bestColor(struct palette *pal,ULONG rgb)
 static UBYTE *
 RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 {
-    register UBYTE *from, *chunky;
-    register ULONG flags = copy->flags, size;
-    register UWORD w, h, left, top, tsw;
+    UBYTE *from, *chunky;
+    ULONG flags = copy->flags, size;
+    UWORD w, h, left, top, tsw;
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -694,7 +707,7 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (flags & MFLG_Scaled)
     {
-        if (from = allocArbitrateVecPooled(4*copy->dw*copy->dh))
+        if((from = allocArbitrateVecPooled(4*copy->dw*copy->dh)))
         {
             struct scale sce;
 
@@ -741,13 +754,14 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (chunky)
     {
-        register UBYTE *src, *dest, *alpha = NULL, *gdest;
-        register ULONG trColor, useAlpha;
-        register int   x, y;
+        UBYTE *src, *dest, *alpha = NULL, *gdest;
+        ULONG trColor, useAlpha;
+        int   x, y;
 
         if (!(flags & MFLG_NtMask))
         {
-            if (copy->mask = (flags & MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)) alpha = copy->mask;
+            if((copy->mask = (flags & MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)))
+              alpha = copy->mask;
         }
 
         copy->grey = gdest = (flags & MFLG_Grey) ? chunky+size : NULL;
@@ -760,15 +774,15 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
         for (y = 0; y<h; y++)
         {
-            register int bitmask = 0x80, aflag = 0;
+            int bitmask = 0x80, aflag = 0;
 
             for (x = 0; x<w; x++)
             {
-                register ULONG c = *((ULONG *)src);
+                ULONG c = *((ULONG *)src);
 
                 if (alpha)
                 {
-                    register ULONG hi;
+                    ULONG hi;
 
 		    if (!aflag)
                     {
@@ -790,8 +804,8 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                 if (gdest)
                 {
-                    register ULONG v;
-                    register UBYTE r, g, b;
+                    ULONG v;
+                    UBYTE r, g, b;
 
                     r = (c & 0x00FF0000)>>16;
                     g = (c & 0x0000FF00)>>8;
@@ -818,10 +832,10 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
 /***********************************************************************/
 
-static UBYTE *
+static BYTE *
 getSource(struct MUIS_TheBar_Brush *image)
 {
-    register UBYTE *src;
+    BYTE *src;
 
     if (image->compressedSize)
     {
@@ -831,7 +845,7 @@ getSource(struct MUIS_TheBar_Brush *image)
 
         if (!(src = allocArbitrateVecPooled(size))) return NULL;
 
-        if (BRCUnpack(image->data,src,image->compressedSize,size))
+        if(BRCUnpack(image->data,src,image->compressedSize,size))
         {
             freeArbitrateVecPooled(src);
             return NULL;
@@ -857,12 +871,12 @@ freeSource(struct MUIS_TheBar_Brush *image,UBYTE *back)
 /***********************************************************************/
 
 static ULONG
-makeSources(struct data *data,struct make *make)
+makeSources(struct InstData *data,struct make *make)
 {
     if (data->image->data)
     {
         struct copy    copy;
-        register UBYTE *back = data->image->data;
+        UBYTE *back = data->image->data;
 
         if (!(data->image->data = getSource(data->image)))
         {
@@ -892,7 +906,7 @@ makeSources(struct data *data,struct make *make)
         {
             back = data->simage->data;
 
-            if (data->simage->data = getSource(data->simage))
+            if((data->simage->data = getSource(data->simage)))
             {
                 if (data->simage->flags & BRFLG_ARGB)
                 {
@@ -914,7 +928,7 @@ makeSources(struct data *data,struct make *make)
         {
             back = data->dimage->data;
 
-            if (data->dimage->data = getSource(data->dimage))
+            if((data->dimage->data = getSource(data->dimage)))
             {
                 if (data->dimage->flags & BRFLG_ARGB)
                 {
@@ -941,12 +955,12 @@ makeSources(struct data *data,struct make *make)
 /***********************************************************************/
 
 static ULONG
-makeSourcesRGB(struct data *data,struct make *make)
+makeSourcesRGB(struct InstData *data,struct make *make)
 {
     if (data->image->data)
     {
         struct copy    copy;
-        register UBYTE *back = data->image->data;
+        UBYTE *back = data->image->data;
 
         if (!(data->image->data = getSource(data->image)))
         {
@@ -971,7 +985,7 @@ makeSourcesRGB(struct data *data,struct make *make)
         {
             back = data->simage->data;
 
-            if (data->simage->data = getSource(data->simage))
+            if((data->simage->data = getSource(data->simage)))
             {
                 if (data->simage->flags & BRFLG_ARGB) make->schunky = RGBToRGB(data->simage,&copy);
                 else make->schunky = LUT8ToRGB(data->simage,&copy);
@@ -987,7 +1001,7 @@ makeSourcesRGB(struct data *data,struct make *make)
         {
             back = data->dimage->data;
 
-            if (data->dimage->data = getSource(data->dimage))
+            if((data->dimage->data = getSource(data->dimage)))
             {
                 if (data->dimage->flags & BRFLG_ARGB) make->dchunky = RGBToRGB(data->dimage,&copy);
                 else make->dchunky = LUT8ToRGB(data->dimage,&copy);
@@ -1008,13 +1022,13 @@ makeSourcesRGB(struct data *data,struct make *make)
 /***********************************************************************/
 
 static struct BitMap *
-greyBitMapCyber(struct data *data,UBYTE *chunky,UWORD w,UWORD h)
+greyBitMapCyber(struct InstData *data,UBYTE *chunky,UWORD w,UWORD h)
 {
-    register struct BitMap *dest;
+    struct BitMap *dest;
 
     if (chunky)
     {
-        if (dest = AllocBitMap(w,h,24,BMF_MINPLANES,data->screen->RastPort.BitMap))
+        if((dest = AllocBitMap(w,h,24,BMF_MINPLANES,data->screen->RastPort.BitMap)))
         {
             struct RastPort rport;
 
@@ -1032,11 +1046,11 @@ greyBitMapCyber(struct data *data,UBYTE *chunky,UWORD w,UWORD h)
 /***********************************************************************/
 
 static void
-buildBitMapsCyber(struct data *data)
+buildBitMapsCyber(struct InstData *data)
 {
     struct make     *make;
-    register ULONG  flags = data->flags;
-    register UWORD  w, h;
+    ULONG  flags = data->flags;
+    UWORD  w, h;
 
     if (!(make = allocArbitrateVecPooled(sizeof(struct make)))) return;
     memset(make,0,sizeof(struct make));
@@ -1066,10 +1080,10 @@ buildBitMapsCyber(struct data *data)
         return;
     }
 
-    if (data->normalBM = AllocBitMap(w,h,24,BMF_MINPLANES|BMF_CLEAR,data->screen->RastPort.BitMap))
+    if((data->normalBM = AllocBitMap(w,h,24,BMF_MINPLANES|BMF_CLEAR,data->screen->RastPort.BitMap)))
     {
         struct RastPort rport;
-        register UWORD  tw;
+        UWORD  tw;
 
         InitRastPort(&rport);
         rport.BitMap = data->normalBM;
@@ -1084,7 +1098,7 @@ buildBitMapsCyber(struct data *data)
 
         if (make->schunky)
         {
-            if (data->snormalBM = AllocBitMap(w,h,24,BMF_MINPLANES|BMF_CLEAR,data->screen->RastPort.BitMap))
+            if((data->snormalBM = AllocBitMap(w,h,24,BMF_MINPLANES|BMF_CLEAR,data->screen->RastPort.BitMap)))
             {
                 InitRastPort(&rport);
                 rport.BitMap = data->snormalBM;
@@ -1099,7 +1113,7 @@ buildBitMapsCyber(struct data *data)
 
         if (make->dchunky)
         {
-            if (data->dnormalBM = AllocBitMap(w,h,24,BMF_MINPLANES|BMF_CLEAR,data->screen->RastPort.BitMap))
+            if((data->dnormalBM = AllocBitMap(w,h,24,BMF_MINPLANES|BMF_CLEAR,data->screen->RastPort.BitMap)))
             {
                 InitRastPort(&rport);
                 rport.BitMap = data->dnormalBM;
@@ -1144,7 +1158,7 @@ buildBitMapsCyber(struct data *data)
 /***********************************************************************/
 
 static struct BitMap *
-LUT8ToBitMap(struct data *data,
+LUT8ToBitMap(struct InstData *data,
              UBYTE *src,
              UWORD width,
              UWORD height,
@@ -1153,32 +1167,33 @@ LUT8ToBitMap(struct data *data,
              ULONG RGB8,
              struct pen *pens)
 {
-    register struct BitMap *dest;
-    register UWORD	   d;
+    struct BitMap *dest;
+    UWORD	    d;
 
     if (data->screenDepth>8) d = 8;
     else d = data->screenDepth;
 
-    if (dest = AllocBitMap(width,height,d,((data->flags & FLG_CyberMap) ? BMF_MINPLANES : 0)|BMF_CLEAR,(data->flags & FLG_CyberMap) ? data->screen->RastPort.BitMap : NULL))
+    if((dest = AllocBitMap(width,height,d,((data->flags & FLG_CyberMap) ? BMF_MINPLANES : 0)|BMF_CLEAR,(data->flags & FLG_CyberMap) ? data->screen->RastPort.BitMap : NULL)))
     {
         struct RastPort rport;
 
         if (colors && numColors && pens)
         {
-            register struct ColorMap *cm = data->screen->ViewPort.ColorMap;
-            REGARRAY struct TagItem  tags[] = {OBP_Precision,0,TAG_DONE};
-            register UBYTE           *buf;
-            register int             i;
+            struct ColorMap *cm = data->screen->ViewPort.ColorMap;
+            UBYTE           *buf;
+            int             i;
+            struct TagItem  tags[] =  { { OBP_Precision, 0 },
+                                        { TAG_DONE,      0 } };
 
             tags[0].ti_Data = data->precision;
 
             for (buf = src, i = width*height; --i;)
             {
-                register UBYTE p = *buf;
+                UBYTE p = *buf;
 
                 if (!pens[p].done)
                 {
-                    register ULONG *c = colors+p+(RGB8 ? 0 : p+p);
+                    ULONG *c = colors+p+(RGB8 ? 0 : p+p);
 
                     if (RGB8)
                     {
@@ -1211,7 +1226,7 @@ LUT8ToBitMap(struct data *data,
 /****************************************************************************/
 
 static struct BitMap *
-greyBitMap(struct data *data,
+greyBitMap(struct InstData *data,
            UBYTE *src,
            UWORD width,
            UWORD height,
@@ -1222,16 +1237,16 @@ greyBitMap(struct data *data,
 {
     if (src)
     {
-        REGARRAY ULONG greyColors[3*256];
-        register ULONG *gc;
-        register int   i;
+        ULONG greyColors[3*256];
+        ULONG *gc;
+        int   i;
 
         gc = greyColors;
 
         for (i = numColors; i--; )
         {
-            register ULONG gcol;
-            register UBYTE r, g, b, v;
+            ULONG gcol;
+            UBYTE r, g, b, v;
 
             if (RGB8)
             {
@@ -1264,12 +1279,12 @@ greyBitMap(struct data *data,
 /***********************************************************************/
 
 static void
-buildBitMaps(struct data *data)
+buildBitMaps(struct InstData *data)
 {
     struct make              *make;
     struct MUIS_TheBar_Brush *image = data->image;
-    register ULONG           flags = data->flags;
-    register UWORD           w, h;
+    ULONG           flags = data->flags;
+    UWORD           w, h;
 
     if (!(make = allocArbitrateVecPooled(sizeof(struct make)))) return;
     memset(make,0,sizeof(struct make));
@@ -1325,16 +1340,22 @@ buildBitMaps(struct data *data)
         if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny))
         {
             if (make->gchunky)
+            {
                 if (data->image->flags & BRFLG_ARGB) data->greyBM = LUT8ToBitMap(data,make->gchunky,w,h,make->gpal.colors,make->gpal.numColors,BRFLG_ColorRGB8,data->gpens);
                 else data->greyBM = greyBitMap(data,make->gchunky,w,h,image->colors,image->numColors,image->flags & BRFLG_ColorRGB8,data->gpens);
+            }
 
             if (make->sgchunky)
+            {
                 if (data->simage->flags & BRFLG_ARGB) data->sgreyBM = LUT8ToBitMap(data,make->sgchunky,w,h,make->sgpal.colors,make->sgpal.numColors,BRFLG_ColorRGB8,data->sgpens);
                 else data->sgreyBM = greyBitMap(data,make->sgchunky,w,h,simage->colors,simage->numColors,simage->flags & BRFLG_ColorRGB8,data->sgpens);
+            }
 
             if (make->dgchunky)
+            {
                 if (data->dimage->flags & BRFLG_ARGB) data->dgreyBM = LUT8ToBitMap(data,make->dgchunky,w,h,make->dgpal.colors,make->dgpal.numColors,BRFLG_ColorRGB8,data->dgpens);
                 else data->dgreyBM = greyBitMap(data,make->dgchunky,w,h,dimage->colors,dimage->numColors,dimage->flags & BRFLG_ColorRGB8,data->dgpens);
+            }
         }
 
         WaitBlit();
@@ -1372,12 +1393,12 @@ static struct BitMap *
 scaleBitMap(APTR src,struct scaleBitMap *scale,ULONG flags)
 {
     struct BitMap          msbm, mdbm;
-    register struct BitMap *sbm, *dbm;
-    register APTR          dest;
+    struct BitMap *sbm, *dbm;
+    APTR          dest;
 
     if (flags & SCALEFLG_Mask)
     {
-        if (dest = (flags & SCALEFLG_CyberMap) ? ALLOCRASTERCG(scale->dw,scale->dh) : ALLOCRASTER(scale->dw,scale->dh))
+        if((dest = (flags & SCALEFLG_CyberMap) ? ALLOCRASTERCG(scale->dw,scale->dh) : ALLOCRASTER(scale->dw,scale->dh)))
         {
             memset(&msbm,0,sizeof(msbm));
             msbm.BytesPerRow = RAWIDTH(scale->tsw);
@@ -1397,7 +1418,7 @@ scaleBitMap(APTR src,struct scaleBitMap *scale,ULONG flags)
     }
     else
     {
-        if (dest = AllocBitMap(scale->dw,scale->dh,GetBitMapAttr(src,BMA_DEPTH),(flags & SCALEFLG_CyberMap) ? BMF_MINPLANES : 0,(flags & SCALEFLG_CyberMap) ? src : NULL))
+        if((dest = AllocBitMap(scale->dw,scale->dh,GetBitMapAttr(src,BMA_DEPTH),(flags & SCALEFLG_CyberMap) ? BMF_MINPLANES : 0,(flags & SCALEFLG_CyberMap) ? src : NULL)))
         {
             sbm = src;
             dbm = dest;
@@ -1439,12 +1460,12 @@ scaleBitMap(APTR src,struct scaleBitMap *scale,ULONG flags)
 /***********************************************************************/
 
 void
-scaleStripBitMaps(struct data *data)
+scaleStripBitMaps(struct InstData *data)
 {
     if (data->strip->normalBM)
     {
         struct scaleBitMap scale;
-        register ULONG     flags;
+        ULONG     flags;
 
         //NewRawDoFmt("Scaling normal bitmap\n",1,1,0);
 
@@ -1460,7 +1481,7 @@ scaleStripBitMaps(struct data *data)
         flags = (data->flags & FLG_CyberMap) ? SCALEFLG_CyberMap : 0;
         if (data->flags & FLG_CyberDeep) flags |= SCALEFLG_CyberDeep;
 
-        if (data->normalBM = scaleBitMap(data->strip->normalBM,&scale,flags))
+        if((data->normalBM = scaleBitMap(data->strip->normalBM,&scale,flags)))
         {
             if (data->strip->greyBM) data->greyBM = scaleBitMap(data->strip->greyBM,&scale,flags);
             if (data->strip->mask) data->mask = scaleBitMap(data->strip->mask,&scale,flags | SCALEFLG_Mask);
@@ -1488,7 +1509,7 @@ scaleStripBitMaps(struct data *data)
 /***********************************************************************/
 
 void
-freeBitMaps(struct data *data)
+freeBitMaps(struct InstData *data)
 {
     #ifdef __MORPHOS__
     if (data->image->flags & BRFLG_AlphaMask)
@@ -1517,18 +1538,22 @@ freeBitMaps(struct data *data)
 
     if (!(data->flags & FLG_CyberDeep) && !(data->flags & FLG_Strip))
     {
-        register struct ColorMap *cm = data->screen->ViewPort.ColorMap;
-        register struct pen      *pens, *gpens, *spens, *sgpens, *dpens, *dgpens;
-        register int             i;
+        struct ColorMap *cm = data->screen->ViewPort.ColorMap;
+        struct pen      *pens, *gpens, *spens, *sgpens, *dpens, *dgpens;
+        int             i;
 
         pens  = data->pens;
         gpens = (data->greyBM) ? data->gpens : NULL;
 
-        if (spens = (data->snormalBM) ? data->spens : NULL) sgpens = (data->sgreyBM) ? data->sgpens : NULL;
-        else sgpens = NULL;
+        if((spens = ((data->snormalBM) ? data->spens : NULL)))
+          sgpens = (data->sgreyBM) ? data->sgpens : NULL;
+        else
+          sgpens = NULL;
 
-        if (dpens = (data->dnormalBM) ? data->dpens : NULL) dgpens = (data->dgreyBM) ? data->dgpens : NULL;
-        else dgpens = NULL;
+        if((dpens = ((data->dnormalBM) ? data->dpens : NULL)))
+          dgpens = (data->dgreyBM) ? data->dgpens : NULL;
+        else
+          dgpens = NULL;
 
         for (i = 256; i--; )
         {
@@ -1661,7 +1686,7 @@ freeBitMaps(struct data *data)
 /***********************************************************************/
 
 void
-build(struct data *data)
+build(struct InstData *data)
 {
     if (data->image)
     {
@@ -1686,8 +1711,8 @@ build(struct data *data)
 
                 if (data->strip->mask)
                 {
-                    if (data->mask = (data->flags & FLG_CyberMap) ? ALLOCRASTERCG(data->imgWidth,data->imgHeight) : ALLOCRASTER(data->imgWidth,data->imgHeight))
-                        copymem(data->mask,data->strip->mask,RAWIDTH(data->imgWidth)*data->imgHeight);
+                    if((data->mask = ((data->flags & FLG_CyberMap) ? ALLOCRASTERCG(data->imgWidth,data->imgHeight) : ALLOCRASTER(data->imgWidth,data->imgHeight))))
+                      copymem(data->mask,data->strip->mask,RAWIDTH(data->imgWidth)*data->imgHeight);
                 }
             }
         }

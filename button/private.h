@@ -1,20 +1,43 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+#ifndef _PRIVATE_H
+#define _PRIVATE_H
 
-#ifndef _INSTANCE_H
-#define _INSTANCE_H
+/***************************************************************************
 
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
 
-/***********************************************************************/
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
+
+/***************************************************************************/
+
+extern struct SignalSemaphore  lib_poolSem;
+extern APTR                    lib_pool;
+extern ULONG                   lib_flags;
+extern ULONG		               lib_alpha;
+
+enum
+{
+    BASEFLG_Init    = 1<<0,
+    BASEFLG_MUI20   = 1<<1,
+    BASEFLG_MUI4    = 1<<2,
+};
+
+/***************************************************************************/
 
 struct pen
 {
@@ -22,7 +45,7 @@ struct pen
     UBYTE done;
 };
 
-struct data
+struct InstData
 {
     Object                      *tb;                    // Parent TheBar object, if any
     ULONG                       id;                     // As it says
@@ -180,11 +203,41 @@ enum
 
 /***********************************************************************/
 
-/* build.c */
-void scaleStripBitMaps ( struct data *data );
-void freeBitMaps ( struct data *data );
-void build ( struct data *data );
+// some undocumented but valid MUI specials
+#define MUIM_CustomBackfill                 0x80428d73 /* private */ /* V11 */
+#define MUIM_CreateDragImage                0x8042eb6f /* private */ /* V18 */
+#define MUIM_DeleteDragImage                0x80423037 /* private */ /* V18 */
+#define MUIM_DoDrag                         0x804216bb /* V20 */
+
+#define MUIA_CustomBackfill                 0x80420a63 /* V11 isg BOOL              */ /* private */
+#define MUIA_Group_Forward                  0x80421422 /* V11 .s. BOOL              */
+
+struct MUIP_CreateDragImage                 { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* private */
+struct MUIP_DeleteDragImage                 { ULONG MethodID; struct MUI_DragImage *di; }; /* private */
+struct MUIP_CustomBackfill                  { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; };
+
+struct MUI_DragImage
+{
+	struct BitMap *bm;
+	WORD width;  /* exact width and height of bitmap */
+	WORD height;
+	WORD touchx; /* position of pointer click relative to bitmap */
+	WORD touchy;
+	ULONG flags; /* see flags below, all other flags reserved for future use */
+	PLANEPTR mask;
+};
+
+#define MUIVER20 20
 
 /***********************************************************************/
 
-#endif /* _INSTANCE_H */
+// some general macros
+#define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
+#define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
+#define copymem(to,from,len)            memcpy((to), (from), (len))
+#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
+#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
+#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))
+#define IDCMP_MOUSEOBJECT               0x40000000
+
+#endif /* _PRIVATE_H */
