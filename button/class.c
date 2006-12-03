@@ -1,17 +1,56 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #include "class.h"
-#include "instance.h"
+#include "private.h"
+#include "rev.h"
+
+#include "TheBar_mcp.h"
+
+#include "SDI_hook.h"
+
+#undef GetOutlinePen
+#include <graphics/gfxmacros.h>
+
+/***********************************************************************/
+
+// MorphOS seems to have a cybergraphics.library which can deal with
+// alpha channels, so lets prepare a define for that.
+#ifdef __MORPHOS__
+ULONG WritePixelArrayAlpha(APTR, UWORD, UWORD, UWORD, struct RastPort *, UWORD, UWORD, UWORD, UWORD, ULONG);
+#define WritePixelArrayAlpha(__p0, __p1, __p2, __p3, __p4, __p5, __p6, __p7, __p8, __p9) \
+	LP10(216, ULONG , WritePixelArrayAlpha, \
+		APTR ,             __p0, a0, \
+		UWORD ,            __p1, d0, \
+		UWORD ,            __p2, d1, \
+		UWORD , 	         __p3, d2, \
+		struct RastPort *, __p4, a1, \
+		UWORD , 	         __p5, d3, \
+		UWORD , 	         __p6, d4, \
+		UWORD ,            __p7, d5, \
+		UWORD ,            __p8, d6, \
+		ULONG ,            __p9, d7, \
+		, CyberGfxBase, 0, 0, 0, 0, 0, 0)
+#endif
 
 /***********************************************************************/
 
@@ -127,10 +166,11 @@ static ULONG
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct pack             pack;
-    register struct TagItem *attrs = msg->ops_AttrList;
-    register ULONG          nflags, imode;
+    struct TagItem *attrs = msg->ops_AttrList;
+    ULONG          nflags, imode;
 
-    if (GetTagData(MUIA_TheButton_MinVer,0,attrs)>lib_version) return 0;
+    if(GetTagData(MUIA_TheButton_MinVer, 0, attrs) > LIB_VERSION)
+      return 0;
 
     memset(&pack,0,sizeof(pack));
 
@@ -156,18 +196,18 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         pack.flags &= ~FLG_Raised;
     }
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if((obj = (Object *)DoSuperNew(cl,obj,
             (pack.flags & FLG_Borderless) ? TAG_IGNORE : MUIA_Frame,   MUIV_Frame_ImageButton,
             (pack.flags & FLG_NoClick) ? TAG_IGNORE : MUIA_CycleChain, TRUE,
             (pack.flags & FLG_NoClick) ? TAG_IGNORE : MUIA_InputMode,  imode,
             MUIA_Font, (pack.vMode==MUIV_TheButton_ViewMode_Text) ? MUIV_Font_Button : MUIV_Font_Tiny,
             (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, pack.flags & FLG_Borderless,
             //MUIA_Background,     MUII_ButtonBack,
-            TAG_MORE,(ULONG)attrs))
+            TAG_MORE,(ULONG)attrs)))
     {
-        register struct data *data = INST_DATA(cl,obj);
-        register STRPTR      label;
-        register ULONG       userFlags;
+        struct InstData *data = INST_DATA(cl,obj);
+        STRPTR      label;
+        ULONG       userFlags;
 
         data->tb     = pack.tb;
         data->id     = pack.id;
@@ -180,37 +220,52 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->flags  = pack.flags;
         data->flags2 = pack.flags2;
 
-        if (userFlags = pack.userFlags)
+        if((userFlags = pack.userFlags))
         {
-            if (userFlags & UFLG_UserHorizInnerSpacing)
+            if(userFlags & UFLG_UserHorizInnerSpacing)
+            {
                 if (pack.horizInnerSpacing>0 && pack.horizInnerSpacing<=16) data->horizInnerSpacing = pack.horizInnerSpacing;
                 else userFlags &= ~UFLG_UserHorizInnerSpacing;
+            }
 
             if (userFlags & UFLG_UserTopInnerSpacing)
+            {
                 if (pack.topInnerSpacing>0 && pack.topInnerSpacing<=16) data->topInnerSpacing = pack.topInnerSpacing;
                 else userFlags &= ~UFLG_UserTopInnerSpacing;
+            }
 
             if (userFlags & UFLG_UserBottomInnerSpacing)
+            {
                 if (pack.bottomInnerSpacing>0 && pack.bottomInnerSpacing<=16) data->bottomInnerSpacing = pack.bottomInnerSpacing;
                 else userFlags &= ~UFLG_UserBottomInnerSpacing;
+            }
 
             if (userFlags & UFLG_UserHorizTextGfxSpacing)
+            {
                 if (pack.horizTextGfxSpacing>0 && pack.horizTextGfxSpacing<=16) data->horizTextGfxSpacing = pack.horizTextGfxSpacing;
                 else userFlags &= ~UFLG_UserHorizTextGfxSpacing;
+            }
 
             if (userFlags & UFLG_UserVertTextGfxSpacing)
+            {
                 if (pack.vertTextGfxSpacing>0 && pack.vertTextGfxSpacing<=16) data->vertTextGfxSpacing = pack.vertTextGfxSpacing;
                 else userFlags &= ~UFLG_UserVertTextGfxSpacing;
+            }
 
             if (userFlags & UFLG_UserPrecision)
+            {
                 if (pack.precision<MUIV_TheButton_Precision_Last) data->precision = pack.precision;
                 else userFlags &= ~UFLG_UserPrecision;
+            }
 
             if (userFlags & UFLG_UserScale)
+            {
                 if (pack.scale>=25 && pack.scale<=400) data->scale = pack.scale;
                 else userFlags &= ~UFLG_UserScale;
+            }
 
             if (userFlags & UFLG_UserDisMode)
+            {
                 if (pack.disMode<MUIV_TheButton_DisMode_Last)
                 {
                     data->disMode = pack.disMode;
@@ -218,27 +273,28 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     	data->flags &= ~FLG_Sunny;
                 }
                 else userFlags &= ~UFLG_UserDisMode;
+            }
 
             data->userFlags = userFlags;
         }
 
-        if (label = pack.label)
+        if((label = pack.label))
         {
-            register char *c;
+            char *c;
 
             c = strchr(label,'_');
 
             if (c && *(c+1))
             {
-                data->end = c+1;
+                data->end = (unsigned char *)(c+1);
                 data->cchar = *(c+1);
                 if (data->flags & FLG_EnableKey)
                     superset(cl,obj,MUIA_ControlChar,ToLower(data->cchar));
             }
 
-            stripUnderscore(data->blabel,label,STRIP_First);
+            stripUnderscore((STRPTR)data->blabel,label,STRIP_First);
 
-            data->labelLen = strlen(data->blabel);
+            data->labelLen = strlen((char *)data->blabel);
         }
     }
 
@@ -250,7 +306,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     switch (msg->opg_AttrID)
     {
@@ -264,8 +320,8 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
         case MUIA_TheButton_EnableKey: *msg->opg_Storage = (data->flags & FLG_EnableKey) ? TRUE : FALSE; return TRUE;
         case MUIA_TheButton_DisMode:   *msg->opg_Storage = data->disMode; return TRUE;
         case MUIA_TheButton_NtRaiseActive: *msg->opg_Storage = (data->userFlags & UFLG_NtRaiseActive) ? TRUE : FALSE; return TRUE;
-        case MUIA_Version:             *msg->opg_Storage = lib_version; return TRUE;
-        case MUIA_Revision:            *msg->opg_Storage = lib_revision; return TRUE;
+        case MUIA_Version:             *msg->opg_Storage = LIB_VERSION; return TRUE;
+        case MUIA_Revision:            *msg->opg_Storage = LIB_REVISION; return TRUE;
         default:                       return DoSuperMethodA(cl,obj,(Msg)msg);
     }
 }
@@ -273,24 +329,25 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 /***********************************************************************/
 
 static void
-addRemHandler(Object *obj,struct data *data)
+addRemHandler(Object *obj,struct InstData *data)
 {
-    if (data->flags & FLG_Visible)
-        //if (!(data->flags & FLG_Disabled) && ((data->flags & (FLG_Raised|FLG_Sunny)) || (data->flags2 & FLG2_Special)))
-        if (!(data->flags & FLG_Disabled) && (((data->flags & (FLG_Raised|FLG_Sunny)) && !(data->flags & FLG_Selected)) || (data->flags2 & FLG2_Special)))
-        {
-            if (!(data->flags & FLG_Handler))
-            {
-                DoMethod(_win(obj),MUIM_Window_AddEventHandler,(ULONG)&data->eh);
-                data->flags |= FLG_Handler;
-            }
-        }
-        else
-            if (data->flags & FLG_Handler)
-            {
-                DoMethod(_win(obj),MUIM_Window_RemEventHandler,(ULONG)&data->eh);
-                data->flags &= ~FLG_Handler;
-            }
+  if(data->flags & FLG_Visible)
+  {
+    //if (!(data->flags & FLG_Disabled) && ((data->flags & (FLG_Raised|FLG_Sunny)) || (data->flags2 & FLG2_Special)))
+    if (!(data->flags & FLG_Disabled) && (((data->flags & (FLG_Raised|FLG_Sunny)) && !(data->flags & FLG_Selected)) || (data->flags2 & FLG2_Special)))
+    {
+      if (!(data->flags & FLG_Handler))
+      {
+        DoMethod(_win(obj),MUIM_Window_AddEventHandler,(ULONG)&data->eh);
+        data->flags |= FLG_Handler;
+      }
+    }
+    else if(data->flags & FLG_Handler)
+    {
+      DoMethod(_win(obj),MUIM_Window_RemEventHandler,(ULONG)&data->eh);
+      data->flags &= ~FLG_Handler;
+    }
+  }
 }
 
 /***********************************************************************/
@@ -299,9 +356,9 @@ addRemHandler(Object *obj,struct data *data)
 #define _isinobject(obj,x,y) (_between(_left(obj),(x),_right(obj)) && _between(_top(obj),(y),_bottom(obj)))
 
 static ULONG
-checkIn(Object *obj,struct data *data,WORD x,WORD y)
+checkIn(Object *obj,struct InstData *data,WORD x,WORD y)
 {
-    register ULONG  in;
+    ULONG  in;
 
     if ((in = _isinobject(obj,x,y)) && (data->flags & FLG_IsInVirtgroup))
     {
@@ -328,17 +385,17 @@ checkIn(Object *obj,struct data *data,WORD x,WORD y)
 static ULONG
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register struct TagItem *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
+    struct InstData    *data = INST_DATA(cl,obj);
+    struct TagItem *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
     struct TagItem          *tstate;
-    register ULONG          redraw, setidcmp, back, sel, res, pressed, over;
+    ULONG          redraw, setidcmp, back, sel, res, pressed, over;
 
     redraw = setidcmp = back = sel = pressed = over = FALSE;
     vmt = rat = sct = sut = lpt = ekt = ract = NULL;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -590,7 +647,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
+    struct InstData    *data = INST_DATA(cl,obj);
     Object                  *parent;
     APTR                    pen;
     ULONG                   *val;
@@ -808,13 +865,13 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 /***********************************************************************/
 
 static ULONG
-mBuild(struct IClass *cl,Object *obj,Msg msg)
+mBuild(struct IClass *cl,Object *obj,UNUSED Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl,obj);
 
-    build(data);
+  build(data);
 
-    return 0;
+  return 0;
 }
 
 /***********************************************************************/
@@ -822,7 +879,7 @@ mBuild(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (!(data->flags2 & FLG2_Limbo))
     {
@@ -849,7 +906,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
@@ -866,7 +923,7 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mHide(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (data->flags & FLG_Handler) DoMethod(_win(obj),MUIM_Window_RemEventHandler,(ULONG)&data->eh);
 
@@ -880,8 +937,8 @@ mHide(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
-    register UWORD       mw, mh;
+    struct InstData *data = INST_DATA(cl,obj);
+    UWORD       mw, mh;
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -897,12 +954,12 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
         if (data->vMode==MUIV_TheButton_ViewMode_Text) SetFont(&rp,data->tf);
         else SetFont(&rp,data->tgf);
 
-        TextExtent(&rp,data->blabel,data->labelLen,&data->lInfo);
+        TextExtent(&rp,(STRPTR)data->blabel,data->labelLen,&data->lInfo);
 
         if (data->end)
         {
-            TextExtent(&rp,data->end,strlen(data->end),&data->eInfo);
-            TextExtent(&rp,&data->cchar,1,&data->ccInfo);
+            TextExtent(&rp,(STRPTR)data->end,strlen((char *)data->end),&data->eInfo);
+            TextExtent(&rp,(STRPTR)&data->cchar,1,&data->ccInfo);
         }
     }
 
@@ -935,7 +992,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
             }
             else
             {
-                mw += (data->lInfo.te_Width>data->imgWidth) ? data->lInfo.te_Width : data->imgWidth;
+                mw += (data->lInfo.te_Width > (LONG)data->imgWidth) ? (ULONG)data->lInfo.te_Width : data->imgWidth;
                 mh += data->lInfo.te_Height+data->imgHeight+((data->lInfo.te_Height && data->imgHeight) ? data->vertTextGfxSpacing : 0);
 
                 if (data->userFlags & UFLG_SpecialSelect)
@@ -967,15 +1024,15 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 /***********************************************************************/
 
 static void
-drawText(struct data *data,struct RastPort *rp)
+drawText(struct InstData *data,struct RastPort *rp)
 {
     if (data->labelLen)
     {
-        Text(rp,data->blabel,data->labelLen);
+        Text(rp,(STRPTR)data->blabel,data->labelLen);
 
         if (data->end && (data->flags & FLG_EnableKey))
         {
-            register WORD x, y, ux, uy;
+            WORD x, y, ux, uy;
 
             x = rp->cp_x;
             y = rp->cp_y;
@@ -995,8 +1052,8 @@ drawText(struct data *data,struct RastPort *rp)
 static ULONG
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register ULONG          flags = data->flags;
+    struct InstData    *data = INST_DATA(cl,obj);
+    ULONG          flags = data->flags;
 
     //if (flags & FLG_RedrawBack) return 0;
 
@@ -1006,20 +1063,20 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
     if (!(flags & FLG_RedrawBack) && (msg->flags & (MADF_DRAWUPDATE|MADF_DRAWOBJECT)))
     {
-        register struct RastPort *rp = &data->rp;
-        register ULONG           bl = flags & FLG_Borderless,
+        struct RastPort *rp = &data->rp;
+        ULONG           bl = flags & FLG_Borderless,
                                  se = flags & FLG_Selected,
                                  ov = flags & FLG_MouseOver,
                                  ra = flags & FLG_Raised,
                                  di = flags & FLG_Disabled,
                                  done = FALSE,
                                  strip = (flags & FLG_Strip) && !(flags & FLG_Scaled);
-        register UWORD           txp = 0, typ = 0, ixp = 0, iyp = 0,
+        UWORD           txp = 0, typ = 0, ixp = 0, iyp = 0,
                                  iw = data->imgWidth, ih = data->imgHeight,
                                  tw = data->lInfo.te_Width, th  = data->lInfo.te_Height,
                                  tmy = data->lInfo.te_Extent.MinY, vm = data->vMode,
                                  hisp = data->horizInnerSpacing, tisp = data->topInnerSpacing;
-        register WORD            mt = _mtop(obj),  ml = _mleft(obj),
+        WORD            mt = _mtop(obj),  ml = _mleft(obj),
                                  mw = _mwidth(obj), mh = _mheight(obj);
 
         switch(data->lPos)
@@ -1044,7 +1101,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
             case MUIV_TheButton_LabelPos_Right:
             {
-                register UWORD s = 0;
+                UWORD s = 0;
 
                 switch(vm)
                 {
@@ -1083,7 +1140,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
             case MUIV_TheButton_LabelPos_Left:
             {
-                register UWORD s = 0;
+                UWORD s = 0;
 
                 switch(vm)
                 {
@@ -1135,12 +1192,12 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         {
             if (vm!=MUIV_TheButton_ViewMode_Text)
             {
-                register struct BitMap *bm;
-                register APTR          mask;
-                register UWORD         x, y;
+                struct BitMap *bm;
+                APTR          mask;
+                UWORD         x, y;
                 #ifdef __MORPHOS__
-                register UBYTE	       *chunky = NULL;
-                register ULONG	       useChunky = data->image->flags & BRFLG_AlphaMask;
+                UBYTE	        *chunky = NULL;
+                ULONG	        useChunky = data->image->flags & BRFLG_AlphaMask;
                 #endif
 
                 if (data->flags & FLG_Sunny)
@@ -1151,8 +1208,10 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         if (useChunky) chunky = data->strip->dgchunky;
                         #endif
 
-                        if (bm = data->strip->dgreyBM) mask = data->strip->dmask;
-                        else mask = data->strip->mask;
+                        if((bm = data->strip->dgreyBM))
+                          mask = data->strip->dmask;
+                        else
+                          mask = data->strip->mask;
 
                         x = data->image->left;
                         y = data->image->top;
@@ -1163,8 +1222,10 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         if (useChunky) chunky = data->dgchunky;
                         #endif
 
-                        if (bm = data->dgreyBM) mask = data->dmask;
-                        else mask = data->mask;
+                        if((bm = data->dgreyBM))
+                          mask = data->dmask;
+                        else
+                          mask = data->mask;
 
                         x = y = 0;
                     }
@@ -1204,8 +1265,10 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     	                    if (useChunky) chunky = data->strip->dnchunky;
                             #endif
 
-                            if (bm = data->strip->dnormalBM) mask = data->strip->dmask;
-                            else mask = data->strip->mask;
+                            if((bm = data->strip->dnormalBM))
+                              mask = data->strip->dmask;
+                            else
+                              mask = data->strip->mask;
 
                             x = data->image->left;
                             y = data->image->top;
@@ -1216,32 +1279,38 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     	                    if (useChunky) chunky = data->dnchunky;
                             #endif
 
-                            if (bm = data->dnormalBM) mask = data->dmask;
-                            else mask = data->mask;
+                            if((bm = data->dnormalBM))
+                              mask = data->dmask;
+                            else
+                              mask = data->mask;
 
                             x = y = 0;
                         }
                 }
 
                 #ifdef __MORPHOS__
-                if (done = bm || chunky)
+                if((done = (bm || chunky)))
                 #else
-                if (done = (ULONG)bm)
+                if((done = (ULONG)bm))
                 #endif
                 {
                     //NewRawDoFmt(">>> 1 %lx %lx %lx %ld\n",1,1,bm,chunky,mask,data->disMode);
                     #ifdef __MORPHOS__
                     if (chunky)
                     {
-	                    if (data->image->flags & BRFLG_EmpytAlpha) WritePixelArray(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
-                        else WritePixelArrayAlpha(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,lib_alpha);
+	                    if(data->image->flags & BRFLG_EmpytAlpha)
+                        WritePixelArray(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
+                      else
+                        WritePixelArrayAlpha(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,lib_alpha);
                     }
                     else
                     #endif
                     {
-                        if (bm)
+                        if(bm)
+                        {
                     	    if (mask) BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
                     	    else BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
+                        }
                     }
                 }
                 else
@@ -1250,9 +1319,9 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     {
                         if (strip)
                         {
-                            register struct BitMap *tbm;
+                            struct BitMap *tbm;
 
-                            if (tbm = AllocBitMap(iw,ih,1,0,NULL))
+                            if((tbm = AllocBitMap(iw,ih,1,0,NULL)))
                             {
                                 struct BitMap sbm;
 
@@ -1313,12 +1382,12 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
             if (vm!=MUIV_TheButton_ViewMode_Text)
             {
-                register struct BitMap *bm;
-                register APTR          mask;
-                register UWORD         x = 0, y = 0;
+                struct BitMap *bm;
+                APTR          mask;
+                UWORD         x = 0, y = 0;
                 #ifdef __MORPHOS__
-                register UBYTE	       *chunky = NULL;
-                register ULONG	       useChunky = data->image->flags & BRFLG_AlphaMask;
+                UBYTE	        *chunky = NULL;
+                ULONG	        useChunky = data->image->flags & BRFLG_AlphaMask;
                 #endif
 
                 if (strip)
@@ -1397,8 +1466,8 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         }
                     }
                 }
-                else
-                    if (!ov && (data->flags & FLG_Sunny))
+                else if(!ov && (data->flags & FLG_Sunny))
+                {
                         if (strip)
                         {
         	                if (data->flags & FLG_Scaled)
@@ -1429,6 +1498,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                             if (data->greyBM) bm = data->greyBM;
                         }
+                }
 
                 #ifdef __MORPHOS__
                 if (bm || chunky)
@@ -1438,16 +1508,16 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 {
                     if (bm && mask && di && (data->disMode==MUIV_TheButton_DisMode_Grid))
                     {
-                        register struct BitMap *tbm;
+                        struct BitMap *tbm;
 
-                        if (tbm = AllocBitMap(iw,ih,GetBitMapAttr(bm,BMA_DEPTH),(data->flags & FLG_CyberMap) ? BMF_MINPLANES : 0,(data->flags & FLG_CyberMap) ? bm : NULL))
+                        if((tbm = (AllocBitMap(iw,ih,GetBitMapAttr(bm,BMA_DEPTH),(data->flags & FLG_CyberMap) ? BMF_MINPLANES : 0,(data->flags & FLG_CyberMap) ? bm : NULL))))
                         {
-                            register struct BitMap *tbmask = NULL; // gcc
-                            register APTR 	   tmask;
+                            struct BitMap *tbmask = NULL; // gcc
+                            APTR 	    tmask;
 
                             if (strip && ! (data->flags & FLG_Scaled))
                             {
-                                if (tbmask = AllocBitMap(iw,ih,1,0,NULL))
+                                if((tbmask = AllocBitMap(iw,ih,1,0,NULL)))
                                 {
                                     struct BitMap sbm;
 
@@ -1468,7 +1538,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                             if (tmask)
                             {
                                 struct RastPort trp;
-                                REGARRAY USHORT grid[] = {0x5555,0xAAAA};
+                                USHORT grid[] = { 0x5555, 0xAAAA };
 
                                 BltBitMap(bm,x,y,tbm,0,0,iw,ih,0xc0,0xff,NULL);
 
@@ -1510,16 +1580,19 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         else
                         #endif
                         {
-                            if (bm)
+                            if(bm)
+                            {
     	                        //if ((data->image->flags & BRFLG_EmpytAlpha) && mask)
-    	                        if (mask)
-                                    BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
-                        	    else BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
+    	                        if(mask)
+                                BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
+                        	    else
+                                BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
+                            }
                         }
 
                         if (di)
                         {
-                            REGARRAY USHORT grid[] = {0x5555,0xAAAA};
+                            USHORT grid[] = { 0x5555, 0xAAAA };
 
                             SetAPen(rp,MUIPEN(data->disBodyPen));
                             SetAfPt(rp,grid,1);
@@ -1535,7 +1608,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
             {
                 if (di && (data->disMode==MUIV_TheButton_DisMode_Grid || data->disMode==MUIV_TheButton_DisMode_FullGrid))
                 {
-                    REGARRAY USHORT grid[] = {0x5555,0xAAAA};
+                    USHORT grid[] = { 0x5555, 0xAAAA };
 
                     SetAPen(rp,MUIPEN(data->disBodyPen));
                     SetAfPt(rp,grid,1);
@@ -1549,9 +1622,9 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
         if (bl && ((se && !(data->userFlags & UFLG_NtRaiseActive)) || (ov && ra)))
         {
-            register ULONG dsize = data->fSize>1;
-            register LONG  shine, shadow;
-            register WORD  t = _top(obj), l = _left(obj), r = _right(obj), b = _bottom(obj);
+            ULONG dsize = data->fSize>1;
+            LONG  shine, shadow;
+            WORD  t = _top(obj), l = _left(obj), r = _right(obj), b = _bottom(obj);
 
             if (data->fStyle==MUIV_TheButton_FrameStyle_Recessed)
                 if (se)
@@ -1608,7 +1681,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 static ULONG
 mHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (data->flags2 & FLG2_Special)
     {
@@ -1620,7 +1693,7 @@ mHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 
     if (msg->imsg)
     {
-        register ULONG in;
+        ULONG in;
 
         in = checkIn(obj,data,msg->imsg->MouseX,msg->imsg->MouseY);
 
@@ -1636,7 +1709,7 @@ mHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 static ULONG
 mNotify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (data->tb && !(data->flags & FLG_NoNotify))
         DoMethod(data->tb,MUIM_TheBar_AddNotify,(ULONG)obj,(ULONG)msg);
@@ -1649,7 +1722,7 @@ mNotify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
 static ULONG
 mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (lib_flags & BASEFLG_MUI20) return DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -1678,47 +1751,27 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 
 /***********************************************************************/
 
-M_DISP(dispatcher)
+DISPATCHER(_Dispatcher)
 {
-    M_DISPSTART
+  switch(msg->MethodID)
+  {
+    case OM_NEW:               return mNew(cl,obj,(APTR)msg);
+    case OM_GET:               return mGet(cl,obj,(APTR)msg);
+    case OM_SET:               return mSets(cl,obj,(APTR)msg);
 
-    switch (msg->MethodID)
-    {
-        case OM_NEW:               return mNew(cl,obj,(APTR)msg);
-        case OM_GET:               return mGet(cl,obj,(APTR)msg);
-        case OM_SET:               return mSets(cl,obj,(APTR)msg);
+    case MUIM_Draw:            return mDraw(cl,obj,(APTR)msg);
+    case MUIM_CustomBackfill:  return mCustomBackfill(cl,obj,(APTR)msg);
+    case MUIM_HandleEvent:     return mHandleEvent(cl,obj,(APTR)msg);
+    case MUIM_AskMinMax:       return mAskMinMax(cl,obj,(APTR)msg);
+    case MUIM_Setup:           return mSetup(cl,obj,(APTR)msg);
+    case MUIM_Cleanup:         return mCleanup(cl,obj,(APTR)msg);
+    case MUIM_Show:            return mShow(cl,obj,(APTR)msg);
+    case MUIM_Hide:            return mHide(cl,obj,(APTR)msg);
+    case MUIM_Notify:          return mNotify(cl,obj,(APTR)msg);
+    case MUIM_TheButton_Build: return mBuild(cl,obj,(APTR)msg);
 
-        case MUIM_Draw:            return mDraw(cl,obj,(APTR)msg);
-        case MUIM_CustomBackfill:  return mCustomBackfill(cl,obj,(APTR)msg);
-        case MUIM_HandleEvent:     return mHandleEvent(cl,obj,(APTR)msg);
-        case MUIM_AskMinMax:       return mAskMinMax(cl,obj,(APTR)msg);
-        case MUIM_Setup:           return mSetup(cl,obj,(APTR)msg);
-        case MUIM_Cleanup:         return mCleanup(cl,obj,(APTR)msg);
-        case MUIM_Show:            return mShow(cl,obj,(APTR)msg);
-        case MUIM_Hide:            return mHide(cl,obj,(APTR)msg);
-        case MUIM_Notify:          return mNotify(cl,obj,(APTR)msg);
-        case MUIM_TheButton_Build: return mBuild(cl,obj,(APTR)msg);
-
-        default:                   return DoSuperMethodA(cl,obj,msg);
-    }
-}
-
-M_DISPEND(dispatcher)
-
-/***********************************************************************/
-
-ULONG
-initMCC(void)
-{
-    if (lib_class = MUI_CreateCustomClass(lib_base,MUIC_Area,NULL,sizeof(struct data),DISP(dispatcher)))
-    {
-        if (lib_flags & BASEFLG_MUI20)
-            lib_class->mcc_Class->cl_ID = lib_name;
-
-        return TRUE;
-    }
-
-    return FALSE;
+    default:                   return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
