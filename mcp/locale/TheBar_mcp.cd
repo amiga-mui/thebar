@@ -508,10 +508,7 @@ MouseObject
 Msg_Item_Defaults (500//)
 Reset to defaults
 ;
-Msg_Item_alfie_Defaults (//)
-alfie's defaults
-;
-Msg_NoMUI20Event_Help (//)
+Msg_NoMUI20Event_Help (502//)
 How to verify if the mouse is over a button:\n\
 - IntuiTicks: it is verified periodically\n\
 - MouseMove: it is verified at every mouse move

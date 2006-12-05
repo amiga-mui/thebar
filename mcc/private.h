@@ -45,11 +45,6 @@ enum
 
 /***************************************************************************/
 
-struct MUI_FrameSpec
-{
-  char buf[32];
-};
-
 struct pen
 {
     UBYTE pen;
@@ -285,30 +280,6 @@ void build(struct InstData *data);
 void freeBitMaps(struct InstData *data);
 
 /***********************************************************************/
-
-// some undocumented but valid MUI specials
-#define MUIM_CustomBackfill                 0x80428d73 /* private */ /* V11 */
-#define MUIM_CreateDragImage                0x8042eb6f /* private */ /* V18 */
-#define MUIM_DeleteDragImage                0x80423037 /* private */ /* V18 */
-#define MUIM_DoDrag                         0x804216bb /* V20 */
-
-#define MUIA_CustomBackfill                 0x80420a63 /* V11 isg BOOL              */ /* private */
-#define MUIA_Group_Forward                  0x80421422 /* V11 .s. BOOL              */
-
-struct MUIP_CreateDragImage                 { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* private */
-struct MUIP_DeleteDragImage                 { ULONG MethodID; struct MUI_DragImage *di; }; /* private */
-struct MUIP_CustomBackfill                  { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; };
-
-struct MUI_DragImage
-{
-	struct BitMap *bm;
-	WORD width;  /* exact width and height of bitmap */
-	WORD height;
-	WORD touchx; /* position of pointer click relative to bitmap */
-	WORD touchy;
-	ULONG flags; /* see flags below, all other flags reserved for future use */
-	PLANEPTR mask;
-};
 
 #define MUIVER20 20
 

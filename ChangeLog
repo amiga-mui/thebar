@@ -4,6 +4,16 @@ MUI TheBar MCC class - ChangeLog
 
 $Id$
 
+2006-12-05  Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mui/muiundoc.h: added the general muiundoc.h and distributed it's
+    use to all our code instead of having to specify some of the yet undocumented
+    MUI defines throughout our own sources.
+  * mcp: ported the preferences class source code also to our generalized MCC
+    framework and make it compile for all our major three platforms. So now all
+    source code of TheBar should be portable accross all major Amiga platforms
+    and hopefully running there as well :)
+
 2006-12-03  Jens Langner <Jens.Langner@light-speed.de>
 
   * button: reworked the whole sources to also fit into the new general MCC

@@ -1,26 +1,46 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #include "class.h"
+#include "private.h"
+
 #include <proto/iffparse.h>
 #include <prefs/prefhdr.h>
 #include <libraries/asl.h>
-#include "TheBar.mcp_rev.h"
+
+#include <mui/muiundoc.h>
+
+#include "locale.h"
+#include "rev.h"
+
+#include <stdio.h>
+
+#include "SDI_hook.h"
 
 /***********************************************************************/
 /*
 ** alfie's prefs
 */
-
+/*
 #define ALFIE_ButtonBack            ((APTR)"0:135")
 #define ALFIE_UseButtonBack         TRUE
 #define ALFIE_FrameShinePen         ((APTR)"r08640864,9CEE9CEE,FFFFFFFF")
@@ -37,177 +57,11 @@
 #define ALFIE_HorizTextGfxSpacing   2
 #define ALFIE_VertTextGfxSpacing    2
 #define ALFIE_DisMode               MUIV_TheBar_DisMode_Grid
+*/
 
 /***********************************************************************/
 
-static ULONG regIDs[] =
-{
-    Msg_Reg_Colors,
-    Msg_Reg_Appareance,
-    Msg_Reg_Spacing,
-    Msg_Reg_Options,
-    0
-};
-static STRPTR regs[IDSSIZE(regIDs)];
-
-static ULONG frameIDs[] =
-{
-    Msg_FrameStyle_Recessed,
-    Msg_FrameStyle_Normal,
-    0
-};
-static STRPTR frames[IDSSIZE(frameIDs)];
-
-static ULONG precisionIDs[] =
-{
-    Msg_Precision_Gui,
-    Msg_Precision_Icon,
-    Msg_Precision_Image,
-    Msg_Precision_Exact,
-    0
-};
-static STRPTR precisions[IDSSIZE(precisionIDs)];
-
-static ULONG dismodeIDs[] =
-{
-    Msg_DisMode_Shape,
-    Msg_DisMode_Grid,
-    Msg_DisMode_FullGrid,
-    Msg_DisMode_Sunny,
-    0
-};
-static STRPTR dismodes[IDSSIZE(dismodeIDs)];
-
-static ULONG spacersSizeIDs[] =
-{
-    Msg_SpacersSize_Quarter,
-    Msg_SpacersSize_Half,
-    Msg_SpacersSize_One,
-    0
-};
-static STRPTR spacersSizes[IDSSIZE(spacersSizeIDs)];
-
-static ULONG viewModeIDs[] =
-{
-    Msg_TextGfx,
-    Msg_Gfx,
-    Msg_Text,
-    0
-};
-static STRPTR viewModes[IDSSIZE(viewModeIDs)];
-
-static ULONG labelPosIDs[] =
-{
-    Msg_LabelPos_Bottom,
-    Msg_LabelPos_Top,
-    Msg_LabelPos_Right,
-    Msg_LabelPos_Left,
-    0
-};
-static STRPTR labelPoss[IDSSIZE(labelPosIDs)];
-
-static ULONG menuIDs[] =
-{
-    0,
-    Msg_Item_Globals,
-    Msg_Item_LastSaved,
-    Msg_Item_Restore,
-    0,
-    Msg_Item_Defaults,
-    Msg_Item_alfie_Defaults
-};
-static struct NewMenu menu[] =
-{
-    MTITLE("TheBar"),
-        MITEM(Msg_Item_Globals),
-        MITEM(Msg_Item_LastSaved),
-        MITEM(Msg_Item_Restore),
-        MBAR,
-        MITEM(Msg_Item_Defaults),
-        MITEM(Msg_Item_alfie_Defaults),
-    MEND
-};
-
-/***********************************************************************/
-
-struct data
-{
-    Object  *menu;
-
-    Object  *groupBack;
-    Object  *useGroupBack;
-
-    Object  *buttonBack;
-    Object  *useButtonBack;
-
-    Object  *frameShinePen;
-    Object  *frameShadowPen;
-    Object  *frameStyle;
-
-    Object  *disBodyPen;
-    Object  *disShadowPen;
-
-    Object  *barSpacerShinePen;
-    Object  *barSpacerShadowPen;
-
-    #ifdef __MORPHOS__
-    Object  *frame;
-    #else
-    Object  *barFrameShinePen;
-    Object  *barFrameShadowPen;
-    #endif
-
-    Object  *dragBarShinePen;
-    Object  *dragBarShadowPen;
-    Object  *dragBarFillPen;
-    Object  *useDragBarFillPen;
-
-    Object  *textFont;
-    Object  *textGfxFont;
-    Object  *textOverUseShine;
-    Object  *viewMode;
-    Object  *labelPos;
-    Object  *borderless;
-    Object  *raised;
-    Object  *sunny;
-    Object  *scaled;
-    Object  *barSpacer;
-    Object  *enableKeys;
-
-    Object  *horizSpacing;
-    Object  *vertSpacing;
-    Object  *barSpacerSpacing;
-
-    Object  *horizInnerSpacing;
-    Object  *topInnerSpacing;
-    Object  *bottomInnerSpacing;
-
-    #ifndef __MORPHOS__
-    Object  *leftBarFrameSpacing;
-    Object  *rightBarFrameSpacing;
-    Object  *topBarFrameSpacing;
-    Object  *bottomBarFrameSpacing;
-    #endif
-
-    Object  *horizTexGfxSpacing;
-    Object  *vertTexGfxSpacing;
-
-    Object  *precision;
-    Object  *scale;
-    Object  *specialSelect;
-
-    Object  *ignoreSel;
-    Object  *ignoreDis;
-    Object  *dontMove;
-    Object  *ntRaiseActive;
-
-    Object  *disMode;
-
-    Object  *spacersSize;
-
-    STRPTR  base;
-    ULONG   flags;
-};
+enum MItems { MI_GLOBALS, MI_LASTSAVED, MI_RESTORE, MI_DEFAULTS };
 
 enum
 {
@@ -220,16 +74,63 @@ enum
 static ULONG
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    if (obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg))
+    if((obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg)))
     {
-        register struct data    *data = INST_DATA(cl,obj);
-        REGARRAY char           buf[128];
-        register char           *t;
-        register Object         *prefs, *trans, *groups[16], *hidden[16];
+        struct InstData    *data = INST_DATA(cl,obj);
+        char           buf[128];
+        const char *t;
+        Object         *prefs, *trans, *groups[16], *hidden[16];
 
-        snprintf(buf,sizeof(buf),getString(Msg_Info_First),"\33bTheBar " VRSTRING "\33n (" DATE ")\33n");
+        static const char *regs[5];
+        static const char *frames[3];
+        static const char *precisions[5];
+        static const char *dismodes[5];
+        static const char *spacersSizes[4];
+        static const char *viewModes[4];
+        static const char *labelPoss[5];
 
-        if ((t = getString(Msg_Info_Translator)) && *t)
+        regs[0] = GetStr(Msg_Reg_Colors);
+        regs[1] = GetStr(Msg_Reg_Appareance);
+        regs[2] = GetStr(Msg_Reg_Spacing);
+        regs[3] = GetStr(Msg_Reg_Options);
+        regs[4] = NULL;
+
+        frames[0] = GetStr(Msg_FrameStyle_Recessed);
+        frames[1] = GetStr(Msg_FrameStyle_Normal);
+        frames[2] = NULL;
+
+        precisions[0] = GetStr(Msg_Precision_Gui);
+        precisions[1] = GetStr(Msg_Precision_Icon);
+        precisions[2] = GetStr(Msg_Precision_Image);
+        precisions[3] = GetStr(Msg_Precision_Exact);
+        precisions[4] = NULL;
+
+        dismodes[0] = GetStr(Msg_DisMode_Shape);
+        dismodes[1] = GetStr(Msg_DisMode_Grid);
+        dismodes[2] = GetStr(Msg_DisMode_FullGrid);
+        dismodes[3] = GetStr(Msg_DisMode_Sunny);
+        dismodes[4] = NULL;
+
+        spacersSizes[0] = GetStr(Msg_SpacersSize_Quarter);
+        spacersSizes[1] = GetStr(Msg_SpacersSize_Half);
+        spacersSizes[2] = GetStr(Msg_SpacersSize_One);
+        spacersSizes[3] = NULL;
+
+        viewModes[0] = GetStr(Msg_TextGfx);
+        viewModes[1] = GetStr(Msg_Gfx);
+        viewModes[2] = GetStr(Msg_Text);
+        viewModes[3] = NULL;
+
+        labelPoss[0] = GetStr(Msg_LabelPos_Bottom);
+        labelPoss[1] = GetStr(Msg_LabelPos_Top);
+        labelPoss[2] = GetStr(Msg_LabelPos_Right);
+        labelPoss[3] = GetStr(Msg_LabelPos_Left);
+        labelPoss[4] = NULL;
+
+        snprintf(buf, sizeof(buf), GetStr(Msg_Info_First), "\33bTheBar " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
+
+        if((t = GetStr(Msg_Info_Translator)) && *t)
+        {
             trans = VGroup,
                 MUIA_InnerLeft,0,
                 MUIA_InnerBottom,0,
@@ -241,9 +142,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 End,
                 Child, ofhspace("a"),
             End;
-        else trans = NULL;
+        }
+        else
+          trans = NULL;
 
-        if (prefs = VGroup,
+        if((prefs = VGroup,
 
             Child, RegisterGroup(regs), // Register
 
@@ -251,7 +154,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     MUIA_Group_Columns, 2,
 
                     Child, VGroup, // >Backrounds
-                        GroupFrameT(getString(Msg_Title_Backgrounds)),
+                        GroupFrameT(GetStr(Msg_Title_Backgrounds)),
                         Child, owspace(1),
                         Child, groups[1] = ColGroup(3),
                             Child, oflabel(Msg_GroupBackground),
@@ -281,7 +184,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     End, // <Backgrounds
 
                     Child, VGroup, // >Buttons frame
-                        GroupFrameT(getString(Msg_Title_Frame)),
+                        GroupFrameT(GetStr(Msg_Title_Frame)),
                         Child, owspace(1),
                         Child, ColGroup(2),
                             Child, oflabel(Msg_FrameShinePen),
@@ -298,13 +201,13 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     End, // <Buttons frame
 
                     Child, hidden[2] = VGroup, // >BarFrame
-                        GroupFrameT(getString(Msg_Title_BarFrame)),
+                        GroupFrameT(GetStr(Msg_Title_BarFrame)),
                         MUIA_Weight, 60,
                         Child, owspace(1),
                         Child, HGroup,
-                            #ifdef __MORPHOS__
+                            #if defined(__MORPHOS__) || defined(__amigaos4__)
                             Child, oflabel(Msg_Frame),
-	                        Child, data->frame = opopframe(Msg_Frame,Msg_Frame_Title,Msg_Frame_Help),
+	                          Child, data->frame = opopframe(Msg_Frame,Msg_Frame_Title,Msg_Frame_Help),
                             #else
                             Child, oflabel(Msg_BarFrameShine),
                             Child, data->barFrameShinePen = opoppen(Msg_BarFrameShine,Msg_BarFrameShine_Title,Msg_BarFrameShine_Help),
@@ -317,7 +220,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     End, // <BarFrame
 
                     Child, VGroup, // >Grey
-                        GroupFrameT(getString(Msg_Title_Disabled)),
+                        GroupFrameT(GetStr(Msg_Title_Disabled)),
                         MUIA_Weight, 60,
                         Child, owspace(1),
                         Child, HGroup,
@@ -331,7 +234,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     End, // <Grey
 
                     Child, VGroup, // >Bar spacer
-                        GroupFrameT(getString(Msg_Title_BarSpacer)),
+                        GroupFrameT(GetStr(Msg_Title_BarSpacer)),
                         MUIA_Weight, 60,
                         Child, owspace(1),
                         Child, HGroup,
@@ -345,7 +248,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     End, // <Bar spacer
 
                     Child, VGroup, // >DragBar
-                        GroupFrameT(getString(Msg_Title_DragBar)),
+                        GroupFrameT(GetStr(Msg_Title_DragBar)),
                         MUIA_Weight, 60,
                         Child, owspace(1),
                         Child, HGroup,
@@ -378,23 +281,23 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     Child, ColGroup(2),
                         Child, olabel2(Msg_TextFont),
                         Child, PopaslObject,
-                            MUIA_ShortHelp,   getString(Msg_TextFont_Help),
+                            MUIA_ShortHelp,   GetStr(Msg_TextFont_Help),
                             MUIA_Popasl_Type, ASL_FontRequest,
                             MUIA_Popstring_String, data->textFont = StringObject,
                                 StringFrame,
                                 MUIA_CycleChain,  TRUE,
-                                MUIA_ControlChar, getKeyChar(getString(Msg_TextFont)),
+                                MUIA_ControlChar, GetKeyChar(GetStr(Msg_TextFont)),
                             End,
                             MUIA_Popstring_Button, opop(MUII_PopFont,Msg_TextFont_Help),
                         End,
                         Child, olabel2(Msg_TextGfxFont),
                         Child, PopaslObject,
-                            MUIA_ShortHelp,   getString(Msg_TextGfxFont_Help),
+                            MUIA_ShortHelp,   GetStr(Msg_TextGfxFont_Help),
                             MUIA_Popasl_Type, ASL_FontRequest,
                             MUIA_Popstring_String, data->textGfxFont = StringObject,
                                 StringFrame,
                                 MUIA_CycleChain,  TRUE,
-                                MUIA_ControlChar, getKeyChar(getString(Msg_TextGfxFont)),
+                                MUIA_ControlChar, GetKeyChar(GetStr(Msg_TextGfxFont)),
                             End,
                             MUIA_Popstring_Button, opop(MUII_PopFont,Msg_TextGfxFont_Help),
                         End,
@@ -408,7 +311,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     	//MUIA_Weight, 0,
                         TextFrame,
                     	MUIA_Background,    MUII_TextBack,
-                    	MUIA_Text_Contents, getString(Msg_Appareance_Text),
+                    	MUIA_Text_Contents, GetStr(Msg_Appareance_Text),
                     End,*/
 
                     Child, HGroup,
@@ -445,7 +348,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 Child, ColGroup(2),  // >Spacing
                     Child, VGroup, // >Group spacing
-                        GroupFrameT(getString(Msg_Title_GroupSpacing)),
+                        GroupFrameT(GetStr(Msg_Title_GroupSpacing)),
                         Child, owspace(1),
                         Child, ColGroup(2),
                             Child, olabel2(Msg_HorizGroupSpacing),
@@ -461,7 +364,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     End, // <Group spacing
 
                     Child, VGroup, // >Inner spacing
-                        GroupFrameT(getString(Msg_Title_InnerSpacing)),
+                        GroupFrameT(GetStr(Msg_Title_InnerSpacing)),
                         Child, owspace(1),
                         Child, ColGroup(2),
                             Child, olabel2(Msg_HorizInnerSpacing),
@@ -476,9 +379,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         Child, owspace(1),
                     End, // <Inner spacing
 
-                    #ifndef __MORPHOS__
+                    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                     Child, VGroup, // >BarFrame spacing
-                        GroupFrameT(getString(Msg_Title_BarFrameSpacing)),
+                        GroupFrameT(GetStr(Msg_Title_BarFrameSpacing)),
                         Child, owspace(1),
                         Child, ColGroup(4),
                             Child, olabel2(Msg_LeftBarFrameSpacing),
@@ -495,7 +398,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     #endif
 
                     Child, VGroup, // >Text/Gfx spacing
-                        GroupFrameT(getString(Msg_Title_TextGfxSpacing)),
+                        GroupFrameT(GetStr(Msg_Title_TextGfxSpacing)),
                         Child, owspace(1),
                         Child, ColGroup(2),
                             Child, olabel2(Msg_HorizTextGfxSpacing),
@@ -506,7 +409,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         Child, owspace(1),
                     End, // <Text/Gfx spacing
 
-                    #ifdef __MORPHOS__
+                    #if defined(__MORPHOS__) || defined(__amigaos4__)
                     Child, HVSpace,
                     #endif
 
@@ -561,14 +464,14 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 Child, TextObject,
                     MUIA_Text_PreParse, "\033c",
-                    MUIA_Text_Contents, getString(Msg_Info_Reserved),
+                    MUIA_Text_Contents, GetStr(Msg_Info_Reserved),
                 End,
 
                 Child, ofhspace("a"),
 
                 Child, TextObject,
                     MUIA_Text_PreParse, "\033c",
-                    MUIA_Text_Contents, getString(Msg_Info_Rest),
+                    MUIA_Text_Contents, GetStr(Msg_Info_Rest),
                 End,
 
                 Child, ofhspace("a"),
@@ -582,7 +485,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
             End, // <Crawling
 
-        End)
+        End))
         {
             set(data->scale,MUIA_Numeric_Format,"\33c%ld %%");
 
@@ -590,7 +493,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
             if (lib_flags & BASEFLG_MUI4)
             {
-                UBYTE *at;
+                const char *at;
 
                 DoMethod(groups[1],OM_REMMEMBER,(ULONG)hidden[0]);
                 DoMethod(groups[1],OM_REMMEMBER,(ULONG)hidden[1]);
@@ -598,23 +501,23 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 DoMethod(groups[0],OM_REMMEMBER,(ULONG)hidden[2]);
 
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->groupBack,MUICFG_TheBar_GroupBack,1,(ULONG)getString(Msg_GroupBackground));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->buttonBack,MUICFG_TheBar_ButtonBack,1,(ULONG)getString(Msg_ButtonBackground));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->frameShinePen,MUICFG_TheBar_FrameShinePen,1,(ULONG)getString(Msg_FrameShinePen));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->frameShadowPen,MUICFG_TheBar_FrameShadowPen,1,(ULONG)getString(Msg_FrameShadowPen));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->frameStyle,MUICFG_TheBar_FrameStyle,1,(ULONG)getString(Msg_FrameStyle));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->disBodyPen,MUICFG_TheBar_DisBodyPen,1,(ULONG)getString(Msg_DisabledBody));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->disShadowPen,MUICFG_TheBar_DisShadowPen,1,(ULONG)getString(Msg_DisabledShadow));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacerShinePen,MUICFG_TheBar_BarSpacerShinePen,1,(ULONG)getString(Msg_BarSpacerShinePen));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacerShadowPen,MUICFG_TheBar_BarSpacerShadowPen,1,(ULONG)getString(Msg_BarSpacerShadowPen));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->dragBarShinePen,MUICFG_TheBar_DragBarShinePen,1,(ULONG)getString(Msg_DragBarShine));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->dragBarShadowPen,MUICFG_TheBar_DragBarShadowPen,1,(ULONG)getString(Msg_DragBarShadow));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->dragBarFillPen,MUICFG_TheBar_DragBarFillPen,1,(ULONG)getString(Msg_DragBarFill));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->useDragBarFillPen,MUICFG_TheBar_UseDragBarFillPen,1,(ULONG)getString(Msg_UseDragBarFill));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->textFont,MUICFG_TheBar_TextFont,1,(ULONG)getString(Msg_TextFont));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->textGfxFont,MUICFG_TheBar_TextGfxFont,1,(ULONG)getString(Msg_TextGfxFont));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->textOverUseShine,MUICFG_TheBar_TextOverUseShine,1,(ULONG)getString(Msg_TextOverUseShine));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->viewMode,MUICFG_TheBar_Appareance,1,(ULONG)(at = getString(Msg_Reg_Appareance)));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->groupBack,MUICFG_TheBar_GroupBack,1,(ULONG)GetStr(Msg_GroupBackground));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->buttonBack,MUICFG_TheBar_ButtonBack,1,(ULONG)GetStr(Msg_ButtonBackground));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->frameShinePen,MUICFG_TheBar_FrameShinePen,1,(ULONG)GetStr(Msg_FrameShinePen));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->frameShadowPen,MUICFG_TheBar_FrameShadowPen,1,(ULONG)GetStr(Msg_FrameShadowPen));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->frameStyle,MUICFG_TheBar_FrameStyle,1,(ULONG)GetStr(Msg_FrameStyle));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->disBodyPen,MUICFG_TheBar_DisBodyPen,1,(ULONG)GetStr(Msg_DisabledBody));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->disShadowPen,MUICFG_TheBar_DisShadowPen,1,(ULONG)GetStr(Msg_DisabledShadow));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacerShinePen,MUICFG_TheBar_BarSpacerShinePen,1,(ULONG)GetStr(Msg_BarSpacerShinePen));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacerShadowPen,MUICFG_TheBar_BarSpacerShadowPen,1,(ULONG)GetStr(Msg_BarSpacerShadowPen));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->dragBarShinePen,MUICFG_TheBar_DragBarShinePen,1,(ULONG)GetStr(Msg_DragBarShine));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->dragBarShadowPen,MUICFG_TheBar_DragBarShadowPen,1,(ULONG)GetStr(Msg_DragBarShadow));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->dragBarFillPen,MUICFG_TheBar_DragBarFillPen,1,(ULONG)GetStr(Msg_DragBarFill));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->useDragBarFillPen,MUICFG_TheBar_UseDragBarFillPen,1,(ULONG)GetStr(Msg_UseDragBarFill));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->textFont,MUICFG_TheBar_TextFont,1,(ULONG)GetStr(Msg_TextFont));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->textGfxFont,MUICFG_TheBar_TextGfxFont,1,(ULONG)GetStr(Msg_TextGfxFont));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->textOverUseShine,MUICFG_TheBar_TextOverUseShine,1,(ULONG)GetStr(Msg_TextOverUseShine));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->viewMode,MUICFG_TheBar_Appareance,1,(ULONG)(at = GetStr(Msg_Reg_Appareance)));
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->labelPos,MUICFG_TheBar_Appareance,1,(ULONG)at);
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->borderless,MUICFG_TheBar_Appareance,1,(ULONG)at);
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->raised,MUICFG_TheBar_Appareance,1,(ULONG)at);
@@ -622,28 +525,39 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->scaled,MUICFG_TheBar_Appareance,1,(ULONG)at);
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacer,MUICFG_TheBar_Appareance,1,(ULONG)at);
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->enableKeys,MUICFG_TheBar_Appareance,1,(ULONG)at);
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->horizSpacing,MUICFG_TheBar_HorizSpacing,1,(ULONG)getString(Msg_HorizGroupSpacing));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->vertSpacing,MUICFG_TheBar_VertSpacing,1,(ULONG)getString(Msg_VertGroupSpacing));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacerSpacing,MUICFG_TheBar_BarSpacerSpacing,1,(ULONG)getString(Msg_BarSpacerSpacing));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->horizInnerSpacing,MUICFG_TheBar_HorizInnerSpacing,1,(ULONG)getString(Msg_HorizInnerSpacing));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->topInnerSpacing,MUICFG_TheBar_TopInnerSpacing,1,(ULONG)getString(Msg_TopInnerSpacing));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->bottomInnerSpacing,MUICFG_TheBar_BottomInnerSpacing,1,(ULONG)getString(Msg_BottomInnerSpacing));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->horizTexGfxSpacing,MUICFG_TheBar_HorizTextGfxSpacing,1,(ULONG)getString(Msg_HorizTextGfxSpacing));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->vertTexGfxSpacing,MUICFG_TheBar_VertTextGfxSpacing,1,(ULONG)getString(Msg_VertTextGfxSpacing));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->precision,MUICFG_TheBar_Precision,1,(ULONG)getString(Msg_Precision));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->scale,MUICFG_TheBar_Scale,1,(ULONG)getString(Msg_Scale));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->specialSelect,MUICFG_TheBar_SpecialSelect,1,(ULONG)getString(Msg_SpecialSelect));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->ignoreSel,MUICFG_TheBar_IgnoreSelImages,1,(ULONG)getString(Msg_IgnoreSelImages));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->ignoreDis,MUICFG_TheBar_IgnoreDisImages,1,(ULONG)getString(Msg_IgnoreDisImages));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->dontMove,MUICFG_TheBar_DontMove,1,(ULONG)getString(Msg_DontMove));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->ntRaiseActive,MUICFG_TheBar_NtRaiseActive,1,(ULONG)getString(Msg_NtRaiseActive));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->disMode,MUICFG_TheBar_DisMode,1,(ULONG)getString(Msg_DisMode));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->spacersSize,MUICFG_TheBar_SpacersSize,1,(ULONG)getString(Msg_SpacersSize));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->horizSpacing,MUICFG_TheBar_HorizSpacing,1,(ULONG)GetStr(Msg_HorizGroupSpacing));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->vertSpacing,MUICFG_TheBar_VertSpacing,1,(ULONG)GetStr(Msg_VertGroupSpacing));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacerSpacing,MUICFG_TheBar_BarSpacerSpacing,1,(ULONG)GetStr(Msg_BarSpacerSpacing));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->horizInnerSpacing,MUICFG_TheBar_HorizInnerSpacing,1,(ULONG)GetStr(Msg_HorizInnerSpacing));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->topInnerSpacing,MUICFG_TheBar_TopInnerSpacing,1,(ULONG)GetStr(Msg_TopInnerSpacing));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->bottomInnerSpacing,MUICFG_TheBar_BottomInnerSpacing,1,(ULONG)GetStr(Msg_BottomInnerSpacing));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->horizTexGfxSpacing,MUICFG_TheBar_HorizTextGfxSpacing,1,(ULONG)GetStr(Msg_HorizTextGfxSpacing));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->vertTexGfxSpacing,MUICFG_TheBar_VertTextGfxSpacing,1,(ULONG)GetStr(Msg_VertTextGfxSpacing));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->precision,MUICFG_TheBar_Precision,1,(ULONG)GetStr(Msg_Precision));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->scale,MUICFG_TheBar_Scale,1,(ULONG)GetStr(Msg_Scale));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->specialSelect,MUICFG_TheBar_SpecialSelect,1,(ULONG)GetStr(Msg_SpecialSelect));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->ignoreSel,MUICFG_TheBar_IgnoreSelImages,1,(ULONG)GetStr(Msg_IgnoreSelImages));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->ignoreDis,MUICFG_TheBar_IgnoreDisImages,1,(ULONG)GetStr(Msg_IgnoreDisImages));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->dontMove,MUICFG_TheBar_DontMove,1,(ULONG)GetStr(Msg_DontMove));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->ntRaiseActive,MUICFG_TheBar_NtRaiseActive,1,(ULONG)GetStr(Msg_NtRaiseActive));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->disMode,MUICFG_TheBar_DisMode,1,(ULONG)GetStr(Msg_DisMode));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->spacersSize,MUICFG_TheBar_SpacersSize,1,(ULONG)GetStr(Msg_SpacersSize));
             }
             else
             {
-                if (data->menu = MUI_MakeObject(MUIO_MenustripNM,(ULONG)menu,0))
-                    superset(cl,obj,MUIA_ContextMenu,data->menu);
+              struct NewMenu menu[] =
+              {
+                { NM_TITLE, (STRPTR)"TheBar",                   0, 0, 0, NULL               },
+                { NM_ITEM,  (STRPTR)GetStr(Msg_Item_Globals),   0, 0, 0, (APTR)MI_GLOBALS   },
+                { NM_ITEM,  (STRPTR)GetStr(Msg_Item_LastSaved), 0, 0, 0, (APTR)MI_LASTSAVED },
+                { NM_ITEM,  (STRPTR)GetStr(Msg_Item_Restore),   0, 0, 0, (APTR)MI_RESTORE   },
+                { NM_ITEM,  NM_BARLABEL,                        0, 0, 0, NULL               },
+                { NM_ITEM,  (STRPTR)GetStr(Msg_Item_Defaults),  0, 0, 0, (APTR)MI_DEFAULTS  },
+                { NM_END,   NULL,                               0, 0, 0, NULL               }
+              };
+
+              if((data->menu = MUI_MakeObject(MUIO_MenustripNM, (ULONG)menu, 0)))
+                superset(cl,obj,MUIA_ContextMenu,data->menu);
             }
         }
         else
@@ -663,8 +577,8 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
     switch (msg->opg_AttrID)
     {
-        case MUIA_Version:  *msg->opg_Storage = lib_version; return TRUE;
-        case MUIA_Revision: *msg->opg_Storage = lib_revision; return TRUE;
+        case MUIA_Version:  *msg->opg_Storage = LIB_VERSION; return TRUE;
+        case MUIA_Revision: *msg->opg_Storage = LIB_REVISION; return TRUE;
         default:            return DoSuperMethodA(cl,obj,(Msg)msg);
     }
 }
@@ -674,7 +588,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 static ULONG
 mDispose(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (data->menu) MUI_DisposeObject(data->menu);
     return DoSuperMethodA(cl,obj,msg);
@@ -685,7 +599,7 @@ mDispose(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
@@ -694,9 +608,9 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         get(_app(obj),MUIA_Application_Base,&data->base);
         if (!stricmp(data->base,"MUI"))
         {
-            register Object *o;
+            Object *o;
 
-            if (o = (Object *)DoMethod(data->menu,MUIM_FindUData,Msg_Item_Globals))
+            if((o = (Object *)DoMethod(data->menu, MUIM_FindUData, Msg_Item_Globals)))
             {
                 DoMethod(data->menu,MUIM_Family_Remove,(ULONG)o);
                 MUI_DisposeObject(o);
@@ -713,16 +627,20 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static struct MUIS_TheBar_Appareance staticAp = {MUIDEF_TheBar_Appareance_ViewMode,MUIDEF_TheBar_Appareance_Flags};
+static struct MUIS_TheBar_Appareance staticAp = { MUIDEF_TheBar_Appareance_ViewMode,
+                                                  MUIDEF_TheBar_Appareance_Flags,
+                                                  0,
+                                                  { 0, 0 }
+                                                };
 
 static ULONG
 mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigToGadgets *msg)
 {
-    register struct data                   *data = INST_DATA(cl, obj );
-    register Object                        *cfg = msg->configdata;
+    struct InstData                   *data = INST_DATA(cl, obj );
+    Object                        *cfg = msg->configdata;
     APTR                                   ptr;
-    register struct MUIS_TheBar_Appareance *ap;
-    register ULONG                         v;
+    struct MUIS_TheBar_Appareance *ap;
+    ULONG                         v;
     ULONG                                  *val;
 
     if (!(lib_flags & BASEFLG_MUI20) && (ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Gradient)))
@@ -774,7 +692,7 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
         ptr = MUIDEF_TheBar_BarSpacerShadowPen;
     set(data->barSpacerShadowPen,MUIA_Pendisplay_Spec,ptr);
 
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     if (lib_flags & BASEFLG_MUI4)
     {
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Frame)))
@@ -818,6 +736,7 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
 
     if (!(ap = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Appareance)))
         ap = &staticAp;
+
     set(data->viewMode,MUIA_Cycle_Active,ap->viewMode);
     set(data->labelPos,MUIA_Cycle_Active,ap->labelPos);
     set(data->borderless,MUIA_Selected,ap->flags & MUIV_TheBar_Appareance_Borderless);
@@ -851,7 +770,7 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
         *val : MUIDEF_TheBar_BottomInnerSpacing;
     set(data->bottomInnerSpacing,MUIA_Numeric_Value,v);
 
-#ifndef __MORPHOS__
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_LeftBarFrameSpacing)) ?
         *val : MUIDEF_TheBar_LeftBarFrameSpacing;
     set(data->leftBarFrameSpacing,MUIA_Numeric_Value,v);
@@ -867,7 +786,7 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BottomBarFrameSpacing)) ?
         *val : MUIDEF_TheBar_BottomBarFrameSpacing;
     set(data->bottomBarFrameSpacing,MUIA_Numeric_Value,v);
-#endif
+    #endif
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_HorizTextGfxSpacing)) ?
         *val : MUIDEF_TheBar_HorizTextGfxSpacing;
@@ -927,8 +846,8 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
 static ULONG
 mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_GadgetsToConfig *msg)
 {
-    register struct data           *data = INST_DATA(cl,obj);
-    register Object                *cfg = msg->configdata;
+    struct InstData           *data = INST_DATA(cl,obj);
+    Object                *cfg = msg->configdata;
     struct MUIS_TheBar_Appareance      ap;
     STRPTR                         ptr;
     ULONG                          val;
@@ -975,7 +894,7 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     get(data->barSpacerShadowPen,MUIA_Pendisplay_Spec,&ptr);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_BarSpacerShadowPen);
 
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     if (lib_flags & BASEFLG_MUI4) get(data->groupBack,MUIA_Framedisplay_Spec,&ptr);
     else get(data->frame,MUIA_Framedisplay_Spec,&ptr);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_FrameSpec),MUICFG_TheBar_Frame);
@@ -1042,7 +961,7 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     get(data->vertTexGfxSpacing,MUIA_Numeric_Value,&val);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_VertTextGfxSpacing);
 
-    #ifndef __MORPHOS__
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
     get(data->leftBarFrameSpacing,MUIA_Numeric_Value,&val);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_LeftBarFrameSpacing);
 
@@ -1092,18 +1011,18 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
 /***********************************************************************/
 
 static ULONG
-loadPrefs(Object *obj,STRPTR fileName)
+loadPrefs(Object *obj, const char *fileName)
 {
-    register Object *cfg;
-    register ULONG  res = FALSE;
+    Object *cfg;
+    ULONG  res = FALSE;
 
-    if (cfg = MUI_NewObjectA(MUIC_Dataspace,NULL))
+    if((cfg = MUI_NewObjectA((STRPTR)MUIC_Dataspace,NULL)))
     {
-        register struct IFFHandle *iffh;
+        struct IFFHandle *iffh;
 
-        if (iffh = AllocIFF())
+        if((iffh = AllocIFF()))
         {
-            if (iffh->iff_Stream = Open(fileName,MODE_OLDFILE))
+            if((iffh->iff_Stream = Open(fileName,MODE_OLDFILE)))
             {
                 InitIFFasDOS(iffh);
 
@@ -1113,7 +1032,7 @@ loadPrefs(Object *obj,STRPTR fileName)
                         !StopChunk(iffh,ID_PREF,MAKE_ID('M','U','I','C')) &&
                         !ParseIFF(iffh,IFFPARSE_SCAN))
                     {
-                        register struct ContextNode *cn;
+                        struct ContextNode *cn;
 
                         if ((cn = CurrentChunk(iffh)) && (cn->cn_Type==ID_PREF) && (cn->cn_ID==ID_PRHD) && (cn->cn_Size==sizeof(struct PrefHeader)))
                         {
@@ -1149,13 +1068,13 @@ loadPrefs(Object *obj,STRPTR fileName)
 static ULONG
 mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl,obj);
 
     if (!data->menu) return 0;
 
     switch (muiUserData(msg->item))
     {
-        case Msg_Item_Defaults:
+        case MI_DEFAULTS:
             set(data->groupBack,MUIA_Imagedisplay_Spec,MUIDEF_TheBar_GroupBack);
             set(data->useGroupBack,MUIA_Selected,MUIDEF_TheBar_UseGroupBack);
             set(data->buttonBack,MUIA_Imagedisplay_Spec,MUIDEF_TheBar_ButtonBack);
@@ -1167,8 +1086,8 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
             set(data->disShadowPen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_DisShadowPen);
             set(data->barSpacerShinePen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarSpacerShinePen);
             set(data->barSpacerShadowPen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarSpacerShadowPen);
-            #ifndef __MORPHOS__
-    	    set(data->barFrameShinePen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarFrameShinePen);
+            #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+      	    set(data->barFrameShinePen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarFrameShinePen);
             set(data->barFrameShadowPen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarFrameShadowPen);
             #endif
             set(data->dragBarShinePen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_DragBarShinePen);
@@ -1194,12 +1113,12 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
             set(data->horizInnerSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_HorizInnerSpacing);
             set(data->topInnerSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_TopInnerSpacing);
             set(data->bottomInnerSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_BottomInnerSpacing);
-#ifndef __MORPHOS__
+            #if !defined(__MORPHOS__) && !defined(__amigaos4__)
             set(data->leftBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_LeftBarFrameSpacing);
             set(data->rightBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_RightBarFrameSpacing);
             set(data->topBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_TopBarFrameSpacing);
             set(data->bottomBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_BottomBarFrameSpacing);
-#endif
+            #endif
             set(data->horizTexGfxSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_HorizTextGfxSpacing);
             set(data->vertTexGfxSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_VertTextGfxSpacing);
 
@@ -1215,8 +1134,8 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
 
             set(data->spacersSize,MUIA_Cycle_Active,MUIDEF_TheBar_SpacersSize);
             break;
-
-        case Msg_Item_alfie_Defaults:
+/*
+        case (ULONG)Msg_Item_alfie_Defaults:
             set(data->groupBack,MUIA_Imagedisplay_Spec,MUIDEF_TheBar_GroupBack);
             set(data->useGroupBack,MUIA_Selected,MUIDEF_TheBar_UseGroupBack);
             set(data->buttonBack,MUIA_Imagedisplay_Spec,ALFIE_ButtonBack);
@@ -1273,16 +1192,16 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
             set(data->ntRaiseActive,MUIA_Selected,MUIDEF_TheBar_NtRaiseActive);
 
             break;
-
-        case Msg_Item_Globals:
+*/
+        case MI_GLOBALS:
             loadPrefs(obj,"ENVARC:MUI/«Global».prefs");
             break;
 
-        case Msg_Item_LastSaved:
+        case MI_LASTSAVED:
             if (data->flags & FLG_Global) loadPrefs(obj,"ENVARC:MUI/«Global».prefs");
             else
             {
-                REGARRAY char buf[256];
+                char buf[256];
 
                 strcpy(buf,"ENVARC:MUI");
                 AddPart(buf,data->base,sizeof(buf)-6);
@@ -1291,11 +1210,11 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
             }
             break;
 
-        case Msg_Item_Restore:
+        case MI_RESTORE:
             if (data->flags & FLG_Global) loadPrefs(obj,"ENV:MUI/«Global».prefs");
             else
             {
-                REGARRAY char buf[256];
+                char buf[256];
 
                 strcpy(buf,"ENV:MUI");
                 AddPart(buf,data->base,sizeof(buf)-6);
@@ -1310,61 +1229,20 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
 
 /***********************************************************************/
 
-M_DISP(dispatcher)
+DISPATCHER(_DispatcherP)
 {
-    M_DISPSTART
+  switch (msg->MethodID)
+  {
+    case OM_NEW:                                return mNew(cl,obj,(APTR)msg);
+    case OM_GET:                                return mGet(cl,obj,(APTR)msg);
+    case OM_DISPOSE:                            return mDispose(cl,obj,(APTR)msg);
+    case MUIM_Setup:                            return mSetup(cl,obj,(APTR)msg);
+    case MUIM_Settingsgroup_ConfigToGadgets:    return mConfigToGadgets(cl,obj,(APTR)msg);
+    case MUIM_Settingsgroup_GadgetsToConfig:    return mGadgetsToConfig(cl,obj,(APTR)msg);
+    case MUIM_ContextMenuChoice:                return mContextMenuChoice(cl,obj,(APTR)msg);
 
-    switch (msg->MethodID)
-    {
-        case OM_NEW:                                return mNew(cl,obj,(APTR)msg);
-        case OM_GET:                                return mGet(cl,obj,(APTR)msg);
-        case OM_DISPOSE:                            return mDispose(cl,obj,(APTR)msg);
-        case MUIM_Setup:                            return mSetup(cl,obj,(APTR)msg);
-        case MUIM_Settingsgroup_ConfigToGadgets:    return mConfigToGadgets(cl,obj,(APTR)msg);
-        case MUIM_Settingsgroup_GadgetsToConfig:    return mGadgetsToConfig(cl,obj,(APTR)msg);
-        case MUIM_ContextMenuChoice:                return mContextMenuChoice(cl,obj,(APTR)msg);
-
-        default:                                    return DoSuperMethodA(cl,obj,msg);
-    }
-}
-
-M_DISPEND(dispatcher)
-
-/***********************************************************************/
-
-void
-freeMCP(void)
-{
-    if (lib_class)
-    {
-        MUI_DeleteCustomClass(lib_class);
-        lib_class = NULL;
-    }
+    default:                                    return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
-
-ULONG
-initMCP(void)
-{
-    if (lib_class = MUI_CreateCustomClass(lib_base,MUIC_Mccprefs,NULL,sizeof(struct data),DISP(dispatcher)))
-    {
-        localizeArray(regs,regIDs);
-        localizeArray(frames,frameIDs);
-        localizeArray(precisions,precisionIDs);
-        localizeArray(dismodes,dismodeIDs);
-        localizeArray(spacersSizes,spacersSizeIDs);
-        localizeArray(viewModes,viewModeIDs);
-        localizeArray(labelPoss,labelPosIDs);
-        if (!(lib_flags & BASEFLG_MUI4)) localizeMenus(menu,menuIDs);
-
-        if (lib_flags & BASEFLG_MUI20) lib_class->mcc_Class->cl_ID = lib_name;
-
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-/***********************************************************************/
-

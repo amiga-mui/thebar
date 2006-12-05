@@ -1,26 +1,44 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #include "class.h"
-#include <pragmas/colorwheel_pragmas.h>
+
+#include <proto/colorwheel.h>
 #include <gadgets/gradientslider.h>
 #include <gadgets/colorwheel.h>
 #include <intuition/icclass.h>
 #include <intuition/gadgetclass.h>
 
+#include <mui/muiundoc.h>
+
+#include "locale.h"
+#include "private.h"
+
+#include "SDI_hook.h"
+
 /***********************************************************************/
 
-static struct Library *ColorWheelBase = NULL;
-static struct Library *GradientSliderBase = NULL;
+struct Library *ColorWheelBase = NULL;
+struct Library *GradientSliderBase = NULL;
 
 static struct MUI_CustomClass *gradientslider = NULL;
 #define gradientsliderObject NewObject(gradientslider->mcc_Class,NULL
@@ -51,22 +69,22 @@ struct colorWheelData
 static ULONG
 mColorWheelNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_FillArea,         FALSE,
-            MUIA_ShortHelp,        getString(Msg_Coloradjust_WheelHelp),
+            MUIA_ShortHelp,        GetStr(Msg_Coloradjust_WheelHelp),
             MUIA_Boopsi_ClassID,   "colorwheel.gadget",
             MUIA_Boopsi_MinWidth,  30,
             MUIA_Boopsi_MinHeight, 30,
             MUIA_Boopsi_TagScreen, WHEEL_Screen,
             WHEEL_Screen,          NULL,
-            WHEEL_Abbrv,           getString(Msg_Coloradjust_WheelAbbr),
+            WHEEL_Abbrv,           GetStr(Msg_Coloradjust_WheelAbbr),
             GA_Left,               0,
             GA_Top,                0,
             GA_Width,              0,
             GA_Height,             0,
-            TAG_MORE, msg->ops_AttrList))
+            TAG_MORE, msg->ops_AttrList)))
     {
-        register struct colorWheelData *data = INST_DATA(cl,obj);
+        struct colorWheelData *data = INST_DATA(cl,obj);
 
         data->hsb.cw_Hue        = 0;
         data->hsb.cw_Saturation = 0;
@@ -85,13 +103,13 @@ mColorWheelNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct colorWheelData *data = INST_DATA(cl,obj);
-    register struct TagItem        *tag;
+    struct colorWheelData *data = INST_DATA(cl,obj);
+    struct TagItem        *tag;
     struct TagItem                 *tstate;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -128,7 +146,7 @@ mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mColorWheelShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct colorWheelData *data = INST_DATA(cl,obj);
+    struct colorWheelData *data = INST_DATA(cl,obj);
     struct ColorWheelHSB           hsb;
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
@@ -154,7 +172,7 @@ mColorWheelShow(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct colorWheelData *data = INST_DATA(cl,obj);
+    struct colorWheelData *data = INST_DATA(cl,obj);
 
     get(obj,WHEEL_HSB,&data->hsb);
 
@@ -168,7 +186,7 @@ mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
 /***********************************************************************/
 
 static ULONG
-mColorWheelHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
+mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 {
     if ((msg->imsg->Class==IDCMP_MOUSEMOVE) || (msg->imsg->Class==IDCMP_INTUITICKS))
     {
@@ -183,18 +201,17 @@ mColorWheelHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *ms
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
-colorWheelDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(colorWheelDispatcher)
 {
-    switch (msg->MethodID)
-    {
-        case OM_NEW:           return mColorWheelNew(cl,obj,(APTR)msg);
-        case OM_SET:           return mColorWheelSets(cl,obj,(APTR)msg);
-        case MUIM_Show:        return mColorWheelShow(cl,obj,(APTR)msg);
-        case MUIM_Hide:        return mColorWheelHide(cl,obj,(APTR)msg);
-        case MUIM_HandleEvent: return mColorWheelHandleEvent(cl,obj,(APTR)msg);
-        default:               return DoSuperMethodA(cl,obj,msg);
-    }
+  switch (msg->MethodID)
+  {
+    case OM_NEW:           return mColorWheelNew(cl,obj,(APTR)msg);
+    case OM_SET:           return mColorWheelSets(cl,obj,(APTR)msg);
+    case MUIM_Show:        return mColorWheelShow(cl,obj,(APTR)msg);
+    case MUIM_Hide:        return mColorWheelHide(cl,obj,(APTR)msg);
+    case MUIM_HandleEvent: return mColorWheelHandleEvent(cl,obj,(APTR)msg);
+    default:               return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
@@ -202,10 +219,10 @@ colorWheelDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg ms
 static ULONG
 initColorwheel(void)
 {
-    if (colorwheel = MUI_CreateCustomClass(NULL,MUIC_Boopsi,NULL,sizeof(struct colorWheelData),colorWheelDispatcher))
+    if((colorwheel = MUI_CreateCustomClass(NULL, MUIC_Boopsi, NULL, sizeof(struct colorWheelData), ENTRY(colorWheelDispatcher))))
     {
         if (lib_flags & BASEFLG_MUI20)
-            colorwheel->mcc_Class->cl_ID = "Coloradjust_Colorwheel";
+            colorwheel->mcc_Class->cl_ID = (STRPTR)"Coloradjust_Colorwheel";
 
         return TRUE;
     }
@@ -229,14 +246,14 @@ struct gradientSliderData
 static ULONG
 mGradientSliderNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register UWORD *pens;
+    UWORD *pens;
 
     if (!(pens = AllocMem(sizeof(UWORD)*4,MEMF_PUBLIC|MEMF_CLEAR)))
         return 0;
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_FillArea,         FALSE,
-            MUIA_ShortHelp,        getString(Msg_Coloradjust_GradientHelp),
+            MUIA_ShortHelp,        GetStr(Msg_Coloradjust_GradientHelp),
             MUIA_Boopsi_ClassID,   "gradientslider.gadget",
             MUIA_Boopsi_MaxWidth,  18,
             GRAD_CurVal,           0xffff,
@@ -247,16 +264,17 @@ mGradientSliderNew(struct IClass *cl,Object *obj,struct opSet *msg)
             GA_Top,                0,
             GA_Width,              0,
             GA_Height,             0,
-            TAG_MORE, msg->ops_AttrList))
+            TAG_MORE, msg->ops_AttrList)))
     {
-        register struct gradientSliderData *data = INST_DATA(cl,obj);
+        struct gradientSliderData *data = INST_DATA(cl,obj);
 
         data->cur          = 0;
         data->rgb.cw_Red   = 0xffffffff;
         data->rgb.cw_Green = 0xffffffff;
         data->rgb.cw_Blue  = 0xffffffff;
 
-        if (data->pens = pens) pens[2] = (UWORD)~0;
+        if((data->pens = pens))
+          pens[2] = (UWORD)~0;
 
         msg->MethodID = OM_SET;
         DoMethodA(obj,(Msg)msg);
@@ -272,7 +290,7 @@ mGradientSliderNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mGradientSliderDispose(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct gradientSliderData *data = INST_DATA(cl,obj);
+    struct gradientSliderData *data = INST_DATA(cl,obj);
 
     if (data->pens) FreeMem(data->pens,sizeof(UWORD)*4);
 
@@ -284,14 +302,14 @@ mGradientSliderDispose(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mGradientSliderSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct gradientSliderData *data = INST_DATA(cl,obj);
-    register struct TagItem            *tag;
+    struct gradientSliderData *data = INST_DATA(cl,obj);
+    struct TagItem            *tag;
     struct TagItem                     *tstate;
-    register ULONG                     rgb = FALSE;
+    ULONG                     rgb = FALSE;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -327,7 +345,7 @@ mGradientSliderSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     if (rgb && (data->flags & FLG_Setup) && data->pens)
     {
-        register UWORD p = data->pens[0];
+        UWORD p = data->pens[0];
 
         data->pens[0] = ObtainBestPenA(_screen(obj)->ViewPort.ColorMap,data->rgb.cw_Red,data->rgb.cw_Green,data->rgb.cw_Blue,NULL);
         MUI_Redraw(obj,MADF_DRAWOBJECT);
@@ -342,7 +360,7 @@ mGradientSliderSets(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mGradientSliderSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct gradientSliderData *data = INST_DATA(cl,obj);
+    struct gradientSliderData *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
@@ -362,7 +380,7 @@ mGradientSliderSetup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mGradientSliderCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct gradientSliderData *data = INST_DATA(cl,obj);
+    struct gradientSliderData *data = INST_DATA(cl,obj);
 
     if (data->pens)
     {
@@ -380,7 +398,7 @@ mGradientSliderCleanup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mGradientSliderShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct gradientSliderData *data = INST_DATA(cl,obj);
+    struct gradientSliderData *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
@@ -402,7 +420,7 @@ mGradientSliderShow(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mGradientSliderHide(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct gradientSliderData *data = INST_DATA(cl,obj);
+    struct gradientSliderData *data = INST_DATA(cl,obj);
 
     DoMethod(_win(obj),MUIM_Window_RemEventHandler,&data->eh);
 
@@ -414,7 +432,7 @@ mGradientSliderHide(struct IClass *cl,Object *obj,Msg msg)
 /***********************************************************************/
 
 static ULONG
-mGradientSliderHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
+mGradientSliderHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 {
     if ((msg->imsg->Class==IDCMP_MOUSEMOVE) || (msg->imsg->Class==IDCMP_MOUSEBUTTONS))
     {
@@ -429,21 +447,20 @@ mGradientSliderHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
-gradientSliderDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(gradientSliderDispatcher)
 {
-    switch (msg->MethodID)
-    {
-        case OM_NEW:           return mGradientSliderNew(cl,obj,(APTR)msg);
-        case OM_DISPOSE:       return mGradientSliderDispose(cl,obj,(APTR)msg);
-        case OM_SET:           return mGradientSliderSets(cl,obj,(APTR)msg);
-        case MUIM_Setup:       return mGradientSliderSetup(cl,obj,(APTR)msg);
-        case MUIM_Cleanup:     return mGradientSliderCleanup(cl,obj,(APTR)msg);
-        case MUIM_Show:        return mGradientSliderShow(cl,obj,(APTR)msg);
-        case MUIM_Hide:        return mGradientSliderHide(cl,obj,(APTR)msg);
-        case MUIM_HandleEvent: return mGradientSliderHandleEvent(cl,obj,(APTR)msg);
-        default:               return DoSuperMethodA(cl,obj,msg);
-    }
+  switch (msg->MethodID)
+  {
+    case OM_NEW:           return mGradientSliderNew(cl,obj,(APTR)msg);
+    case OM_DISPOSE:       return mGradientSliderDispose(cl,obj,(APTR)msg);
+    case OM_SET:           return mGradientSliderSets(cl,obj,(APTR)msg);
+    case MUIM_Setup:       return mGradientSliderSetup(cl,obj,(APTR)msg);
+    case MUIM_Cleanup:     return mGradientSliderCleanup(cl,obj,(APTR)msg);
+    case MUIM_Show:        return mGradientSliderShow(cl,obj,(APTR)msg);
+    case MUIM_Hide:        return mGradientSliderHide(cl,obj,(APTR)msg);
+    case MUIM_HandleEvent: return mGradientSliderHandleEvent(cl,obj,(APTR)msg);
+    default:               return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
@@ -451,10 +468,10 @@ gradientSliderDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Ms
 static ULONG
 initGradientslider(void)
 {
-    if (gradientslider = MUI_CreateCustomClass(NULL,MUIC_Boopsi,NULL,sizeof(struct gradientSliderData),gradientSliderDispatcher))
+    if((gradientslider = MUI_CreateCustomClass(NULL, MUIC_Boopsi, NULL, sizeof(struct gradientSliderData), ENTRY(gradientSliderDispatcher))))
     {
         if (lib_flags & BASEFLG_MUI20)
-            gradientslider->mcc_Class->cl_ID = "Coloradjust_Gradientslider";
+            gradientslider->mcc_Class->cl_ID = (STRPTR)"Coloradjust_Gradientslider";
 
         return TRUE;
     }
@@ -482,14 +499,16 @@ struct coloradjustData
 static ULONG
 mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    if (obj = (Object *)DoSuperNew(cl,obj,MUIA_Group_Horiz,TRUE,TAG_MORE,msg->ops_AttrList))
+    if((obj = (Object *)DoSuperNew(cl,obj,MUIA_Group_Horiz,TRUE,TAG_MORE,msg->ops_AttrList)))
     {
-        register struct coloradjustData *data = INST_DATA(cl,obj);
-        register Object                 *o;
-        register struct TagItem         *tag;
+        struct coloradjustData *data = INST_DATA(cl,obj);
+        Object                 *o;
+        struct TagItem         *tag;
 
-        if (tag = FindTagItem(MUIA_Coloradj_Colorfield,msg->ops_AttrList))
+        if((tag = FindTagItem(MUIA_Coloradj_Colorfield,msg->ops_AttrList)))
+        {
             data->color = (Object *)tag->ti_Data;
+        }
         else
         {
             data->color = ColorfieldObject,
@@ -560,7 +579,7 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mColoradjustGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-    register struct coloradjustData *data = INST_DATA(cl,obj);
+    struct coloradjustData *data = INST_DATA(cl,obj);
 
     switch (msg->opg_AttrID)
     {
@@ -590,14 +609,14 @@ mColoradjustGet(struct IClass *cl,Object *obj,struct opGet *msg)
 static ULONG
 mColoradjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct coloradjustData *data = INST_DATA(cl,obj);
-    register struct TagItem         *tag;
+    struct coloradjustData *data = INST_DATA(cl,obj);
+    struct TagItem         *tag;
     struct TagItem                  *tstate;
-    register ULONG                  nonotify = FALSE, wheel = FALSE, hsb = FALSE, rgb = FALSE, grad = FALSE, comp = FALSE;
+    ULONG                  nonotify = FALSE, wheel = FALSE, hsb = FALSE, rgb = FALSE, grad = FALSE, comp = FALSE;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -760,7 +779,7 @@ mColoradjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mColoradjustSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct coloradjustData *data = INST_DATA(cl,obj);
+    struct coloradjustData *data = INST_DATA(cl,obj);
 
     if ((GetBitMapAttr(_screen(obj)->RastPort.BitMap,BMA_DEPTH)>8) &&
         CyberGfxBase && IsCyberModeID(GetVPModeID(&_screen(obj)->ViewPort)))
@@ -790,7 +809,7 @@ mColoradjustSetup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mColoradjustShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct coloradjustData *data = INST_DATA(cl,obj);
+    struct coloradjustData *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
@@ -802,7 +821,7 @@ mColoradjustShow(struct IClass *cl,Object *obj,Msg msg)
 /***********************************************************************/
 
 static ULONG
-mColoradjustDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
+mColoradjustDragQuery(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
     STRPTR x;
 
@@ -824,7 +843,7 @@ mColoradjustDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 /***********************************************************************/
 
 static ULONG
-mColoradjustDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
+mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
     STRPTR x;
 
@@ -834,30 +853,30 @@ mColoradjustDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
     }
     else
     {
-        register ULONG im;
+        ULONG im;
 
         im = get(msg->obj,MUIA_Imagedisplay_Spec,&x);
 
         if (im || get(msg->obj,MUIA_Pendisplay_Spec,&x))
         {
-            register char        spec[sizeof(struct MUI_PenSpec)];
+            char        spec[sizeof(struct MUI_PenSpec)];
             struct ColorWheelRGB rgb;
-            register char        *p;
+            char        *p;
 
             if (im) x +=2;
             else x++;
 
             stccpy(spec,x,sizeof(spec));
 
-            if (p = strchr(spec,','))
+            if((p = strchr(spec,',')))
             {
                 *p = 0;
                 if (stch_l(spec,(LONG *)&rgb.cw_Red)==8)
                 {
-                    register char *s;
+                    char *s;
 
                     s = ++p;
-                    if (p = strchr(s,','))
+                    if((p = strchr(s,',')))
                     {
                         *p = 0;
                         if (stch_l(s,(LONG *)&rgb.cw_Green)==8)
@@ -873,7 +892,7 @@ mColoradjustDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
             if (get(msg->obj,MUIA_Popbackground_Grad,&x))
             {
                 struct ColorWheelRGB rgb;
-                register ULONG       c, r, g, b;
+                ULONG       c, r, g, b;
 
                 c = (((struct MUIS_TheBar_Gradient *)x)->flags & MUIV_TheBar_Gradient_DragTo) ? ((struct MUIS_TheBar_Gradient *)x)->to : ((struct MUIS_TheBar_Gradient *)x)->from;
                 r = c>>16;
@@ -893,20 +912,19 @@ mColoradjustDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
-coloradjustDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(coloradjustDispatcher)
 {
-    switch (msg->MethodID)
-    {
-        case OM_NEW:         return mColoradjustNew(cl,obj,(APTR)msg);
-        case OM_GET:         return mColoradjustGet(cl,obj,(APTR)msg);
-        case OM_SET:         return mColoradjustSets(cl,obj,(APTR)msg);
-        case MUIM_Setup:     return mColoradjustSetup(cl,obj,(APTR)msg);
-        case MUIM_Show:      return mColoradjustShow(cl,obj,(APTR)msg);
-        case MUIM_DragQuery: return mColoradjustDragQuery(cl,obj,(APTR)msg);
-        case MUIM_DragDrop:  return mColoradjustDragDrop(cl,obj,(APTR)msg);
-        default:             return DoSuperMethodA(cl,obj,msg);
-    }
+  switch (msg->MethodID)
+  {
+    case OM_NEW:         return mColoradjustNew(cl,obj,(APTR)msg);
+    case OM_GET:         return mColoradjustGet(cl,obj,(APTR)msg);
+    case OM_SET:         return mColoradjustSets(cl,obj,(APTR)msg);
+    case MUIM_Setup:     return mColoradjustSetup(cl,obj,(APTR)msg);
+    case MUIM_Show:      return mColoradjustShow(cl,obj,(APTR)msg);
+    case MUIM_DragQuery: return mColoradjustDragQuery(cl,obj,(APTR)msg);
+    case MUIM_DragDrop:  return mColoradjustDragDrop(cl,obj,(APTR)msg);
+    default:             return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
@@ -954,10 +972,10 @@ initColoradjust(void)
         (GradientSliderBase = OpenLibrary("gadgets/gradientslider.gadget",0)) &&
         initColorwheel() &&
         initGradientslider() &&
-        (lib_coloradjust = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct coloradjustData),coloradjustDispatcher)))
+        (lib_coloradjust = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct coloradjustData), ENTRY(coloradjustDispatcher))))
     {
         if (lib_flags & BASEFLG_MUI20)
-            lib_class->mcc_Class->cl_ID = "Coloradjust";
+            lib_coloradjust->mcc_Class->cl_ID = (STRPTR)"Coloradjust";
 
         return TRUE;
     }

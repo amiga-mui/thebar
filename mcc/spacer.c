@@ -21,11 +21,11 @@
 ***************************************************************************/
 
 #include "class.h"
-
 #include "private.h"
 
-#include "SDI_hook.h"
+#include <mui/muiundoc.h>
 
+#include "SDI_hook.h"
 #include "Debug.h"
 
 /***********************************************************************/

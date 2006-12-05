@@ -1,8 +1,27 @@
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
+
 #ifndef _CLASS_H
 #define _CLASS_H
-
-#define __NOLIBBASE__
-#define __USE_SYSBASE
 
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -17,29 +36,12 @@
 #include <clib/debug_protos.h>
 #include <libraries/gadtools.h>
 
-#include <mui/muiundoc.h>
-
-#ifndef __MORPHOS_
-#include <dos/dos.h>
-#endif
-
 #include <string.h>
 
-#include <TheBarPrefs.h>
-#include <TheBar_mcc.h>
-#include <TheButton_mcc.h>
+#include <mui/TheBar_mcc.h>
 
-#include "base.h"
-
-#define CATCOMP_NUMBERS
-#include "loc.h"
-
-#ifdef __MORPHOS__
-#undef NewObject
-APTR NewObject( struct IClass *classPtr, CONST_STRPTR classID, ULONG tag1, ... );
-#undef MUI_NewObject
-Object *MUI_NewObject(char *classname,Tag tag1,...);
-#endif
+#include "TheBar_mcp.h"
+#include "SDI_compiler.h"
 
 /***********************************************************************/
 
@@ -215,20 +217,6 @@ struct MUIS_Popbackground_Status
 #endif
 
 /***********************************************************************/
-/*
-** Menus macros
-*/
-
-#define MTITLE(t)           {NM_TITLE,(STRPTR)(t),0,0,0,0}
-#define MITEM(d)            {NM_ITEM,NULL,0,0,0,(APTR)(d)}
-#define MBAR                {NM_ITEM,(STRPTR)NM_BARLABEL,0,0,0,NULL}
-#define MEND                {NM_END,NULL,0,0,0,NULL}
-
-/***********************************************************************/
-
-#define IDSSIZE(ids) (sizeof(ids)/sizeof(ULONG))
-
-/***********************************************************************/
 
 #ifndef MUIM_Mccprefs_RegisterGadget
 #define MUIM_Mccprefs_RegisterGadget 0x80424828
@@ -253,7 +241,77 @@ struct MUIS_Popbackground_Status
 
 /***********************************************************************/
 
-#include "class_protos.h"
+#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))
+#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
+#define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(ULONG)(value),size,item)
+#define copymem(to,from,len)            memcpy((to), (from), (len))
+
+#define MUIVER20 20
+
+/***********************************************************************/
+
+// xget()
+// Gets an attribute value from a MUI object
+ULONG xget(Object *obj, const ULONG attr);
+#if defined(__GNUC__)
+  // please note that we do not evaluate the return value of GetAttr()
+  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
+  // when they are supported by the object. But setting b=0 right before
+  // the GetAttr() should catch the case when attr doesn't exist at all
+  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+#endif
+
+/****************************************************************************/
+
+/* utils.c */
+#ifndef __MORPHOS__
+Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
+#endif
+size_t stccpy(char *p, const char *q, size_t n);
+ULONG stch_l(char *chr_ptr, ULONG *u_ptr);
+
+/* utils.c */
+#define olabel(id)    Label(GetStr(id))
+#define olabel1(id)   Label1(GetStr(id))
+#define ollabel1(id)  LLabel1(GetStr(id))
+#define olabel2(id)   Label2(GetStr(id))
+#define oflabel(id)   FreeLabel(GetStr(id))
+#define oclabel(id)   CLabel(GetStr(id))
+#define owspace(w)    RectangleObject, MUIA_Weight, (w), End
+#define ofhspace(str) RectangleObject, MUIA_FixHeightTxt, (str), End
+
+Object *obutton(APTR text, APTR help);
+Object *ocycle(const char **array, APTR key, APTR help);
+Object *ocheck(APTR key, APTR help);
+Object *oslider(APTR key, APTR help, LONG min, LONG max);
+Object *opop(ULONG type, APTR key);
+Object *opoppen(APTR key, APTR title, APTR help);
+Object *opopfri(APTR key, APTR title, APTR help);
+Object *opopback(ULONG gradient, APTR key, APTR title, APTR help);
+Object *opopframe(APTR key, APTR title, APTR help);
+void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
+
+#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+/* coloradjust.c */
+void freeColoradjust ( void );
+ULONG initColoradjust ( void );
+
+/* penadjust.c */
+void freePenadjust ( void );
+ULONG initPenadjust ( void );
+
+/* backgroundadjust.c */
+void freeBackgroundadjust ( void );
+ULONG initBackgroundadjust ( void );
+
+/* poppen.c */
+void freePoppen ( void );
+ULONG initPoppen ( void );
+
+/* popbackground.c */
+void freePopbackground ( void );
+ULONG initPopbackground ( void );
+#endif
 
 /***********************************************************************/
 

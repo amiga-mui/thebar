@@ -1,15 +1,27 @@
-#ifndef THEBAR_MCC_H
-#define THEBAR_MCC_H
+#ifndef _THEBAR_MCC_H_
+#define _THEBAR_MCC_H_
 
-/*
-**  $VER: TheBar_mcc.h 20.6 (22.7.2005)
-**  Includes Release 20.6
-**
-**  (C) Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-**      All rights reserved
-**
-**      Destributed Under The Terms Of The LGPL II
-*/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #ifndef LIBRARIES_MUI_H
 #include <libraries/mui.h>
@@ -25,14 +37,14 @@
 
 /***********************************************************************/
 
-#define MUIC_TheButton  "TheButton.mcc"
-#define TheButtonObject MUI_NewObject(MUIC_TheButton
+#define MUIC_TheButton    "TheButton.mcc"
+#define TheButtonObject   MUI_NewObject(MUIC_TheButton
 
-#define MUIC_TheBar  "TheBar.mcc"
-#define TheBarObject MUI_NewObject(MUIC_TheBar
+#define MUIC_TheBar       "TheBar.mcc"
+#define TheBarObject      MUI_NewObject(MUIC_TheBar
 
-#define MUIC_TheBarVirt  "TheBarVirt.mcc"
-#define TheBarVirtObject MUI_NewObject(MUIC_TheBarVirt
+#define MUIC_TheBarVirt   "TheBarVirt.mcc"
+#define TheBarVirtObject  MUI_NewObject(MUIC_TheBarVirt
 
 #define THEBAR_VERSION     20
 #define THEBARVIRT_VERSION 20
@@ -524,4 +536,4 @@ enum
   #endif
 #endif
 
-#endif /* THEBAR_MCC_H */
+#endif /* _THEBAR_MCC_H_ */
