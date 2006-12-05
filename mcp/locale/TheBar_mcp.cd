@@ -514,18 +514,7 @@ How to verify if the mouse is over a button:\n\
 - MouseMove: it is verified at every mouse move
 ;
 ;
-Msg_Info_First (600//)
-%s\n\
-Copyright 2003-2005 by Alfonso Ranieri.
-;
-Msg_Info_Reserved (//)
-All Rights Are Reserved.
-;
-Msg_Info_Rest (//)
-Please write to <alforan@tin.it> for\n\
-developers docs and licensing terms.
-;
-Msg_Info_Translator (//)
+Msg_Info_Translator (603//)
 
 ;
 Msg_Item_Globals (//)

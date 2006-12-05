@@ -77,7 +77,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if((obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg)))
     {
         struct InstData    *data = INST_DATA(cl,obj);
-        char           buf[128];
         const char *t;
         Object         *prefs, *trans, *groups[16], *hidden[16];
 
@@ -126,8 +125,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         labelPoss[2] = GetStr(Msg_LabelPos_Right);
         labelPoss[3] = GetStr(Msg_LabelPos_Left);
         labelPoss[4] = NULL;
-
-        snprintf(buf, sizeof(buf), GetStr(Msg_Info_First), "\33bTheBar " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
 
         if((t = GetStr(Msg_Info_Translator)) && *t)
         {
@@ -459,29 +456,15 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 Child, TextObject,
                     MUIA_Text_PreParse, "\033c",
-                    MUIA_Text_Contents, buf,
-                End,
-
-                Child, TextObject,
-                    MUIA_Text_PreParse, "\033c",
-                    MUIA_Text_Contents, GetStr(Msg_Info_Reserved),
-                End,
-
-                Child, ofhspace("a"),
-
-                Child, TextObject,
-                    MUIA_Text_PreParse, "\033c",
-                    MUIA_Text_Contents, GetStr(Msg_Info_Rest),
+                    MUIA_Text_Contents, "\33bTheBar " LIB_REV_STRING "\33n (" LIB_DATE ")\33n\n"
+                                        LIB_COPYRIGHT "\n\n"
+                                        "For recent versions and updates visit:\n"
+                                        "http://www.sourceforge.net/projects/thebar/\n\n",
                 End,
 
                 Child, ofhspace("a"),
 
                 trans ? Child : TAG_IGNORE, trans,
-
-                Child, TextObject,
-                    MUIA_Text_PreParse, "\033c",
-                    MUIA_Text_Contents, buf,
-                End,
 
             End, // <Crawling
 
