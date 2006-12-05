@@ -41,7 +41,7 @@ const char *GetStr(APTR fcstr)
 {
   const char *defaultstr = ((struct FC_Type *)fcstr)->Str;
 
-  if(LocaleBase)
+  if(LocaleBase && TB_Catalog)
   {
     return (const char *)GetCatalogStr(TB_Catalog, ((struct FC_Type *)fcstr)->ID, (STRPTR)defaultstr);
   }
