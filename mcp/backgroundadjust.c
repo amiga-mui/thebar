@@ -1,20 +1,39 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #include "class.h"
+#include "private.h"
+#include "locale.h"
+
 #include <proto/datatypes.h>
 #include <datatypes/pictureclass.h>
 #include <libraries/asl.h>
+
+#include <mui/muiundoc.h>
+
 #include <stdlib.h>
+#include <stdio.h>
+
+#include "SDI_hook.h"
 
 /***********************************************************************/
 
@@ -40,7 +59,7 @@ struct patternsData
     Object                      *pop;
     Object                      *back;
     Object                      *patterns[16];
-    char                        specs[17][16];
+    char                        specs[18][16];
     LONG                        pattern;
     struct MUI_EventHandlerNode eh;
     ULONG                       secs;
@@ -52,9 +71,9 @@ struct patternsData
 static ULONG
 mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register Object *pgroup;
+    Object *pgroup;
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if((obj = (Object *)DoSuperNew(cl,obj,
             Child, owspace(1),
             Child, HGroup,
                 Child, owspace(1),
@@ -62,14 +81,14 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 Child, owspace(1),
             End,
             Child, owspace(1),
-            TAG_MORE, msg->ops_AttrList))
+            TAG_MORE, msg->ops_AttrList)))
     {
-        register struct patternsData *data = INST_DATA(cl,obj);
-        register int                 i;
+        struct patternsData *data = INST_DATA(cl,obj);
+        int                 i;
 
         for (i = 0; i<18; i++)
         {
-            sprintf(data->specs[i],"0:%ld",i+MUII_BACKGROUND);
+            snprintf(data->specs[i], sizeof(data->specs[i]), "0:%d", i+MUII_BACKGROUND);
 
             data->patterns[i] = ImageObject,
                 ButtonFrame,
@@ -98,8 +117,8 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
             }
         }
 
-        data->pop  = (Object *)GetTagData(MUIA_Popbackground_PopObj,NULL,msg->ops_AttrList);
-        data->back = (Object *)GetTagData(MUIA_Popbackground_BackObj,NULL,msg->ops_AttrList);
+        data->pop  = (Object *)GetTagData(MUIA_Popbackground_PopObj, 0, msg->ops_AttrList);
+        data->back = (Object *)GetTagData(MUIA_Popbackground_BackObj, 0, msg->ops_AttrList);
         data->pattern = -1;
     }
 
@@ -111,7 +130,7 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mPatternsShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct patternsData *data = INST_DATA(cl,obj);
+    struct patternsData *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
@@ -130,7 +149,7 @@ mPatternsShow(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mPatternsHide(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct patternsData *data = INST_DATA(cl,obj);
+    struct patternsData *data = INST_DATA(cl,obj);
 
     DoMethod(_win(obj),MUIM_Window_RemEventHandler,&data->eh);
 
@@ -144,13 +163,13 @@ mPatternsHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 {
     if (msg->imsg)
     {
-        register struct patternsData *data = INST_DATA(cl,obj);
-        register LONG                p = data->pattern;
+        struct patternsData *data = INST_DATA(cl,obj);
+        LONG                p = data->pattern;
 
         if (msg->imsg->Class==IDCMP_MOUSEBUTTONS)
         {
-            register Object *o = data->patterns[p];
-            register UWORD  mx = msg->imsg->MouseX, my = msg->imsg->MouseY;
+            Object *o = data->patterns[p];
+            UWORD  mx = msg->imsg->MouseX, my = msg->imsg->MouseY;
 
             if ((p>=0) &&
                  msg->imsg->Qualifier==0xc000 &&
@@ -221,9 +240,9 @@ mPatternsHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 static ULONG
 mPatternsSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpec *msg)
 {
-    register struct patternsData *data = INST_DATA(cl,obj);
-    register char                *spec = msg->spec;
-    register LONG        v;
+    struct patternsData *data = INST_DATA(cl,obj);
+    char                *spec = msg->spec;
+    LONG        v;
 
     if (!spec || (*spec++!='0') || (!*spec++==':') || !*spec) return MUIV_Popbackground_SetSpec_Fail;
 
@@ -240,7 +259,7 @@ mPatternsSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpec
 static ULONG
 mPatternsGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *msg)
 {
-    register struct patternsData *data = INST_DATA(cl,obj);
+    struct patternsData *data = INST_DATA(cl,obj);
 
     if (data->pattern>=0)
     {
@@ -257,10 +276,10 @@ mPatternsGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec
 static ULONG
 mPatternsSelectPattern(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SelectPattern *msg)
 {
-    register struct patternsData *data = INST_DATA(cl,obj);
-    ULONG                        x;
+    struct patternsData *data = INST_DATA(cl,obj);
+    ULONG x;
 
-    if ((data->pattern>=0) && (data->pattern!=msg->id))
+    if((data->pattern >= 0) && (data->pattern != (LONG)msg->id))
         set(data->patterns[data->pattern],MUIA_Selected,FALSE);
 
     get(data->patterns[msg->id],MUIA_Selected,&x);
@@ -273,20 +292,19 @@ mPatternsSelectPattern(struct IClass *cl,Object *obj,struct MUIP_Popbackground_S
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
-patternsDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(patternsDispatcher)
 {
-    switch (msg->MethodID)
-    {
-        case OM_NEW:                           return mPatternsNew(cl,obj,(APTR)msg);
-        case MUIM_Show:                        return mPatternsShow(cl,obj,(APTR)msg);
-        case MUIM_Hide:                        return mPatternsHide(cl,obj,(APTR)msg);
-        case MUIM_HandleEvent:                 return mPatternsHandleEvent(cl,obj,(APTR)msg);
-        case MUIM_Popbackground_SetSpec:       return mPatternsSetSpec(cl,obj,(APTR)msg);
-        case MUIM_Popbackground_GetSpec:       return mPatternsGetSpec(cl,obj,(APTR)msg);
-        case MUIM_Popbackground_SelectPattern: return mPatternsSelectPattern(cl,obj,(APTR)msg);
-        default:                               return DoSuperMethodA(cl,obj,msg);
-    }
+  switch (msg->MethodID)
+  {
+    case OM_NEW:                           return mPatternsNew(cl,obj,(APTR)msg);
+    case MUIM_Show:                        return mPatternsShow(cl,obj,(APTR)msg);
+    case MUIM_Hide:                        return mPatternsHide(cl,obj,(APTR)msg);
+    case MUIM_HandleEvent:                 return mPatternsHandleEvent(cl,obj,(APTR)msg);
+    case MUIM_Popbackground_SetSpec:       return mPatternsSetSpec(cl,obj,(APTR)msg);
+    case MUIM_Popbackground_GetSpec:       return mPatternsGetSpec(cl,obj,(APTR)msg);
+    case MUIM_Popbackground_SelectPattern: return mPatternsSelectPattern(cl,obj,(APTR)msg);
+    default:                               return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
@@ -306,15 +324,15 @@ freePatterns(void)
 static ULONG
 initPatterns(void)
 {
-    if (patterns = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct patternsData),patternsDispatcher))
-    {
-        if (lib_flags & BASEFLG_MUI20)
-            patterns->mcc_Class->cl_ID = "Backgroundadjust_Patterns";
+  if((patterns = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct patternsData), ENTRY(patternsDispatcher))))
+  {
+    if(lib_flags & BASEFLG_MUI20)
+      patterns->mcc_Class->cl_ID = (STRPTR)"Backgroundadjust_Patterns";
 
-        return TRUE;
-    }
+    return TRUE;
+  }
 
-    return FALSE;
+  return FALSE;
 }
 
 /***********************************************************************/
@@ -352,15 +370,15 @@ freeDTO(struct dtpicData *data)
 /***********************************************************************/
 
 static BOOL
-build(struct IClass *cl,Object *obj,struct dtpicData *data)
+build(UNUSED struct IClass *cl,Object *obj,struct dtpicData *data)
 {
     freeDTO(data);
 
     if ((data->flags & FLG_Setup) && *data->file)
     {
-        register struct Process *me = (struct Process *)FindTask(NULL);
-        register APTR           win = me->pr_WindowPtr;
-        register ULONG          cyber = CyberGfxBase && IsCyberModeID(GetVPModeID(&_screen(obj)->ViewPort));
+        struct Process *me = (struct Process *)FindTask(NULL);
+        APTR           win = me->pr_WindowPtr;
+        ULONG          cyber = CyberGfxBase && IsCyberModeID(GetVPModeID(&_screen(obj)->ViewPort));
 
         me->pr_WindowPtr = (APTR)-1;
 
@@ -375,7 +393,9 @@ build(struct IClass *cl,Object *obj,struct dtpicData *data)
 
         if (data->dto)
         {
-            struct FrameInfo fri = {NULL};
+            struct FrameInfo fri;
+
+            memset(&fri, 0, sizeof(struct FrameInfo));
 
             DoMethod(data->dto,DTM_FRAMEBOX,NULL,&fri,&fri,sizeof(struct FrameInfo),0);
 
@@ -410,7 +430,7 @@ build(struct IClass *cl,Object *obj,struct dtpicData *data)
 static ULONG
 mDTPicNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    if (obj = (Object *)DoSuperMethodA(cl,obj,(Msg)msg))
+    if((obj = (Object *)DoSuperMethodA(cl,obj,(Msg)msg)))
     {
         msg->MethodID = OM_SET;
         DoMethodA(obj,(Msg)msg);
@@ -425,7 +445,7 @@ mDTPicNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mDTPicDispose(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct dtpicData *data = INST_DATA(cl, obj);
+    struct dtpicData *data = INST_DATA(cl, obj);
 
     if (data->dto) DisposeDTObject(data->dto);
 
@@ -437,24 +457,28 @@ mDTPicDispose(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mDTPicSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct dtpicData *data = INST_DATA(cl, obj);
-    struct TagItem          *tags;
-    register struct TagItem *tag;
-    register ULONG          res, rebuild, redraw;
+    struct dtpicData *data = INST_DATA(cl, obj);
+    struct TagItem *tags;
+    struct TagItem *tag;
+    ULONG res, rebuild, redraw;
 
     rebuild = redraw = FALSE;
 
-    for (tags = msg->ops_AttrList; tag = NextTagItem(&tags); )
+    for(tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
             case MUIA_Popbackground_File:
-                if (tidata) stccpy(data->file,(STRPTR)tidata,sizeof(data->file));
-                else *data->file = 0;
+            {
+                if(tidata)
+                  stccpy(data->file,(STRPTR)tidata,sizeof(data->file));
+                else
+                  *data->file = 0;
                 rebuild = TRUE;
-                break;
+            }
+            break;
         }
     }
 
@@ -465,7 +489,7 @@ mDTPicSets(struct IClass *cl,Object *obj,struct opSet *msg)
         if (rebuild)
         {
             Object                 *parent;
-            register struct BitMap *bm = data->bitmap;
+            struct BitMap *bm = data->bitmap;
 
             set(_app(obj),MUIA_Application_Sleep,TRUE);
 
@@ -499,7 +523,7 @@ mDTPicSets(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mDTPicSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct dtpicData *data = INST_DATA(cl,obj);
+    struct dtpicData *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,(Msg)msg)) return FALSE;
 
@@ -514,7 +538,7 @@ mDTPicSetup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mDTPicCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct dtpicData *data = INST_DATA(cl,obj);
+    struct dtpicData *data = INST_DATA(cl,obj);
 
     freeDTO(data);
     data->flags &= ~FLG_Setup;
@@ -527,8 +551,8 @@ mDTPicCleanup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mDTPicAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
-    register struct dtpicData    *data = INST_DATA(cl,obj);
-    register struct MUI_MinMax *mi;
+    struct dtpicData    *data = INST_DATA(cl,obj);
+    struct MUI_MinMax *mi;
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -553,7 +577,7 @@ mDTPicAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 static ULONG
 mDTPicDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-    register struct dtpicData *data = INST_DATA(cl,obj);
+    struct dtpicData *data = INST_DATA(cl,obj);
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -580,20 +604,19 @@ mDTPicDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
-dtpicDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(dtpicDispatcher)
 {
-    switch(msg->MethodID)
-    {
-        case OM_NEW:         return mDTPicNew(cl,obj,(APTR)msg);
-        case OM_DISPOSE:     return mDTPicDispose(cl,obj,(APTR)msg);
-        case OM_SET:         return mDTPicSets(cl,obj,(APTR)msg);
-        case MUIM_Draw:      return mDTPicDraw(cl,obj,(APTR)msg);
-        case MUIM_AskMinMax: return mDTPicAskMinMax(cl,obj,(APTR)msg);
-        case MUIM_Setup:     return mDTPicSetup(cl,obj,(APTR)msg);
-        case MUIM_Cleanup:   return mDTPicCleanup(cl,obj,(APTR)msg);
-        default:             return DoSuperMethodA(cl,obj,msg);
-    }
+  switch(msg->MethodID)
+  {
+    case OM_NEW:         return mDTPicNew(cl,obj,(APTR)msg);
+    case OM_DISPOSE:     return mDTPicDispose(cl,obj,(APTR)msg);
+    case OM_SET:         return mDTPicSets(cl,obj,(APTR)msg);
+    case MUIM_Draw:      return mDTPicDraw(cl,obj,(APTR)msg);
+    case MUIM_AskMinMax: return mDTPicAskMinMax(cl,obj,(APTR)msg);
+    case MUIM_Setup:     return mDTPicSetup(cl,obj,(APTR)msg);
+    case MUIM_Cleanup:   return mDTPicCleanup(cl,obj,(APTR)msg);
+    default:             return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
@@ -614,15 +637,15 @@ freeDTPic(void)
 static ULONG
 initDTPic(void)
 {
-    if (dtpic = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,sizeof(struct dtpicData),dtpicDispatcher))
-    {
-        if (lib_flags & BASEFLG_MUI20)
-            dtpic->mcc_Class->cl_ID = "Backgroundadjust_dtpic";
+  if((dtpic = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct dtpicData), ENTRY(dtpicDispatcher))))
+  {
+    if(lib_flags & BASEFLG_MUI20)
+      dtpic->mcc_Class->cl_ID = (STRPTR)"Backgroundadjust_dtpic";
 
-        return TRUE;
-    }
+    return TRUE;
+  }
 
-    return FALSE;
+  return FALSE;
 }
 
 /***********************************************************************/
@@ -638,9 +661,9 @@ struct bitmapData
 static ULONG
 mBitmapNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register Object *pic, *bitmap, *abt, *pbt;
+    Object *pic, *bitmap, *abt, *pbt;
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if((obj = (Object *)DoSuperNew(cl,obj,
             Child, ScrollgroupObject,
                 MUIA_Scrollgroup_Contents, VirtgroupObject,
                     MUIA_Frame, MUIV_Frame_Virtual,
@@ -660,9 +683,9 @@ mBitmapNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 End,
                 Child, pbt = PopButton(MUII_PopUp),
             End,
-            TAG_MORE, msg->ops_AttrList))
+            TAG_MORE, msg->ops_AttrList)))
     {
-        register struct bitmapData *data = INST_DATA(cl,obj);
+        struct bitmapData *data = INST_DATA(cl,obj);
 
         data->pic    = pic;
         data->bitmap = bitmap;
@@ -679,8 +702,8 @@ mBitmapNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mBitmapSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpec *msg)
 {
-    register struct bitmapData *data = INST_DATA(cl,obj);
-    register char              *spec = msg->spec;
+    struct bitmapData *data = INST_DATA(cl,obj);
+    char              *spec = msg->spec;
 
     if (!spec || (*spec++!='5') || (!*spec++==':') || !*spec) return MUIV_Popbackground_SetSpec_Fail;
 
@@ -694,7 +717,7 @@ mBitmapSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpec *
 static ULONG
 mBitmapGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *msg)
 {
-    register struct bitmapData *data = INST_DATA(cl,obj);
+    struct bitmapData *data = INST_DATA(cl,obj);
     STRPTR                      x;
 
     get(data->bitmap,MUIA_String_Contents,&x);
@@ -705,9 +728,9 @@ mBitmapGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *
 /***********************************************************************/
 
 static ULONG
-mBitmapShowBitmap(struct IClass *cl,Object *obj,Msg msg)
+mBitmapShowBitmap(struct IClass *cl,Object *obj, UNUSED Msg msg)
 {
-    register struct bitmapData *data = INST_DATA(cl,obj);
+    struct bitmapData *data = INST_DATA(cl,obj);
     STRPTR                     x;
 
     get(data->bitmap,MUIA_String_Contents,&x);
@@ -754,7 +777,7 @@ initBitmap(void)
         (bitmap = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct bitmapData),bitmapDispatcher)))
     {
         if (lib_flags & BASEFLG_MUI20)
-            bitmap->mcc_Class->cl_ID = "Backgroundadjust_Bitmap";
+            bitmap->mcc_Class->cl_ID = (STRPTR)"Backgroundadjust_Bitmap";
 
         return TRUE;
     }
@@ -782,14 +805,14 @@ enum
 static ULONG
 mGradientFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_InnerLeft,   2,
             MUIA_InnerTop,    2,
             MUIA_InnerRight,  2,
             MUIA_InnerBottom, 2,
-            TAG_MORE,msg->ops_AttrList))
+            TAG_MORE,msg->ops_AttrList)))
     {
-        register struct gradientFieldData *data = INST_DATA(cl,obj);
+        struct gradientFieldData *data = INST_DATA(cl,obj);
 
         if (GetTagData(MUIA_Popbackground_Horiz,TRUE,msg->ops_AttrList))
             data->grad.flags |= MUIV_TheBar_Gradient_Horiz;
@@ -806,14 +829,14 @@ mGradientFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mGradientFieldSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct gradientFieldData *data = INST_DATA(cl,obj);
-    register struct TagItem           *tag;
+    struct gradientFieldData *data = INST_DATA(cl,obj);
+    struct TagItem           *tag;
     struct TagItem                    *tstate;
-    register ULONG                    redraw = FALSE;
+    ULONG                    redraw = FALSE;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -845,7 +868,7 @@ mGradientFieldSets(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mGradientFieldSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct gradientFieldData *data = INST_DATA(cl,obj);
+    struct gradientFieldData *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,(Msg)msg)) return FALSE;
 
@@ -862,7 +885,7 @@ mGradientFieldSetup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mGradientFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-    register struct gradientFieldData *data = INST_DATA(cl,obj);
+    struct gradientFieldData *data = INST_DATA(cl,obj);
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -874,17 +897,16 @@ mGradientFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
-gradientFieldDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(gradientFieldDispatcher)
 {
-    switch (msg->MethodID)
-    {
-        case OM_NEW:     return mGradientFieldNew(cl,obj,(APTR)msg);
-        case OM_SET:     return mGradientFieldSets(cl,obj,(APTR)msg);
-        case MUIM_Setup: return mGradientFieldSetup(cl,obj,(APTR)msg);
-        case MUIM_Draw:  return mGradientFieldDraw(cl,obj,(APTR)msg);
-        default:         return DoSuperMethodA(cl,obj,msg);
-    }
+  switch (msg->MethodID)
+  {
+    case OM_NEW:     return mGradientFieldNew(cl,obj,(APTR)msg);
+    case OM_SET:     return mGradientFieldSets(cl,obj,(APTR)msg);
+    case MUIM_Setup: return mGradientFieldSetup(cl,obj,(APTR)msg);
+    case MUIM_Draw:  return mGradientFieldDraw(cl,obj,(APTR)msg);
+    default:         return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
@@ -904,15 +926,15 @@ freeGradientfield(void)
 static ULONG
 initGradientfield(void)
 {
-    if (gradientfield = MUI_CreateCustomClass(NULL,MUIC_Rectangle,NULL,sizeof(struct gradientFieldData),gradientFieldDispatcher))
-    {
-        if (lib_flags & BASEFLG_MUI20)
-            gradientfield->mcc_Class->cl_ID = "Gradientfield";
+  if((gradientfield = MUI_CreateCustomClass(NULL, MUIC_Rectangle, NULL, sizeof(struct gradientFieldData), ENTRY(gradientFieldDispatcher))))
+  {
+    if(lib_flags & BASEFLG_MUI20)
+      gradientfield->mcc_Class->cl_ID = (STRPTR)"Gradientfield";
 
-        return TRUE;
-    }
+    return TRUE;
+  }
 
-    return FALSE;
+  return FALSE;
 }
 
 /***********************************************************************/
@@ -930,13 +952,13 @@ struct gradientData
 static ULONG
 mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register Object *vgrad, *hgrad, *from, *to, *swap;
+    Object *vgrad, *hgrad, *from, *to, *swap;
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_Group_Horiz, TRUE,
 
             Child, vgrad = gradientfieldObject,
-                MUIA_ShortHelp,           getString(Msg_Popback_VertGradientHelp),
+                MUIA_ShortHelp,           GetStr(Msg_Popback_VertGradientHelp),
                 ButtonFrame,
                 MUIA_Background,          MUII_ButtonBack,
                 MUIA_InputMode,           MUIV_InputMode_Immediate,
@@ -946,7 +968,7 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
             Child, VGroup,
                 Child, hgrad = gradientfieldObject,
-                    MUIA_ShortHelp,  getString(Msg_Popback_HorizGradientHelp),
+                    MUIA_ShortHelp,  GetStr(Msg_Popback_HorizGradientHelp),
                     ButtonFrame,
                     MUIA_Background, MUII_ButtonBack,
                     MUIA_InputMode,  MUIV_InputMode_Immediate,
@@ -970,9 +992,9 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     Child, HSpace(0),
                 End,
             End,
-            TAG_MORE, msg->ops_AttrList))
+            TAG_MORE, msg->ops_AttrList)))
     {
-        register struct gradientData *data = INST_DATA(cl,obj);
+        struct gradientData *data = INST_DATA(cl,obj);
 
         data->from  = from;
         data->to    = to;
@@ -996,10 +1018,10 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mGradientSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpec *msg)
 {
-    register struct gradientData *data = INST_DATA(cl,obj);
+    struct gradientData *data = INST_DATA(cl,obj);
     struct MUIS_TheBar_Gradient  *grad = msg->grad;
     struct MUI_RGBcolor          rgb1, rgb2;
-    register                     ULONG x;
+                        ULONG x;
 
     if (!grad) return MUIV_Popbackground_SetSpec_Fail;
 
@@ -1031,7 +1053,7 @@ mGradientSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpec
 static ULONG
 mGradientGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *msg)
 {
-    register struct gradientData *data = INST_DATA(cl,obj);
+    struct gradientData *data = INST_DATA(cl,obj);
     struct MUIS_TheBar_Gradient  *grad = msg->grad;
     struct MUI_RGBcolor          *rgb1, *rgb2;
     ULONG                        x;
@@ -1054,11 +1076,11 @@ mGradientGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec
 static ULONG
 mGradientGradientCol(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GradientCol *msg)
 {
-    register struct gradientData *data = INST_DATA(cl,obj);
+    struct gradientData *data = INST_DATA(cl,obj);
     struct MUI_RGBcolor          *rgb;
-    register Object              *c;
-    register Tag                 tag;
-    register ULONG               col;
+    Object              *c;
+    Tag                 tag;
+    ULONG               col;
 
     if (msg->from)
     {
@@ -1083,9 +1105,9 @@ mGradientGradientCol(struct IClass *cl,Object *obj,struct MUIP_Popbackground_Gra
 /***********************************************************************/
 
 static ULONG
-mGradientSwap(struct IClass *cl,Object *obj,Msg msg)
+mGradientSwap(struct IClass *cl,Object *obj, UNUSED Msg msg)
 {
-    register struct gradientData *data = INST_DATA(cl,obj);
+    struct gradientData *data = INST_DATA(cl,obj);
     struct MUI_RGBcolor          *rgb1, *rgb2, rgb;
 
     get(data->from,MUIA_Coloradjust_RGB,&rgb1);
@@ -1101,18 +1123,17 @@ mGradientSwap(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
-gradientDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(gradientDispatcher)
 {
-    switch (msg->MethodID)
-    {
-        case OM_NEW:                         return mGradientNew(cl,obj,(APTR)msg);
-        case MUIM_Popbackground_GradientCol: return mGradientGradientCol(cl,obj,(APTR)msg);
-        case MUIM_Popbackground_Swap:        return mGradientSwap(cl,obj,(APTR)msg);
-        case MUIM_Popbackground_SetSpec:     return mGradientSetSpec(cl,obj,(APTR)msg);
-        case MUIM_Popbackground_GetSpec:     return mGradientGetSpec(cl,obj,(APTR)msg);
-        default:                             return DoSuperMethodA(cl,obj,msg);
-    }
+  switch (msg->MethodID)
+  {
+    case OM_NEW:                         return mGradientNew(cl,obj,(APTR)msg);
+    case MUIM_Popbackground_GradientCol: return mGradientGradientCol(cl,obj,(APTR)msg);
+    case MUIM_Popbackground_Swap:        return mGradientSwap(cl,obj,(APTR)msg);
+    case MUIM_Popbackground_SetSpec:     return mGradientSetSpec(cl,obj,(APTR)msg);
+    case MUIM_Popbackground_GetSpec:     return mGradientGetSpec(cl,obj,(APTR)msg);
+    default:                             return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
@@ -1135,10 +1156,10 @@ static ULONG
 initGradient(void)
 {
     if (initGradientfield() &&
-        (gradient = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct gradientData),gradientDispatcher)))
+        (gradient = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct gradientData), ENTRY(gradientDispatcher))))
     {
         if (lib_flags & BASEFLG_MUI20)
-            gradient->mcc_Class->cl_ID = "Gradient";
+            gradient->mcc_Class->cl_ID = (STRPTR)"Gradient";
 
         return TRUE;
     }
@@ -1149,25 +1170,6 @@ initGradient(void)
 }
 
 /***********************************************************************/
-
-static ULONG titleIDs[] =
-{
-    Msg_Popback_Pattern,
-    Msg_Popback_Color,
-    Msg_Popback_Bitmap,
-    Msg_Popback_Gradient,
-    0
-};
-static STRPTR titles[IDSSIZE(titleIDs)];
-
-static ULONG ngtitleIDs[] =
-{
-    Msg_Popback_Pattern,
-    Msg_Popback_Color,
-    Msg_Popback_Bitmap,
-    0
-};
-static STRPTR ngtitles[IDSSIZE(ngtitleIDs)];
 
 enum
 {
@@ -1199,20 +1201,35 @@ enum
 static ULONG
 mBackNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct backData *data;
-    register Object          *pop;
-    register STRPTR          *t;
-    register ULONG           useGradient;
+    struct backData *data;
+    Object          *pop;
+    const char **t;
+    ULONG           useGradient;
 
     if (GetTagData(MUIA_Popbackground_Gradient,FALSE,msg->ops_AttrList))
     {
-        useGradient = TRUE;
-        t = titles;
+      static const char *titles[5];
+
+      titles[0] = GetStr(Msg_Popback_Pattern);
+      titles[1] = GetStr(Msg_Popback_Color);
+      titles[2] = GetStr(Msg_Popback_Bitmap);
+      titles[3] = GetStr(Msg_Popback_Gradient);
+      titles[4] = NULL;
+
+      useGradient = TRUE;
+      t = titles;
     }
     else
     {
-        useGradient = FALSE;
-        t = ngtitles;
+      static const char *ngtitles[4];
+
+      ngtitles[0] = GetStr(Msg_Popback_Pattern);
+      ngtitles[1] = GetStr(Msg_Popback_Color);
+      ngtitles[2] = GetStr(Msg_Popback_Bitmap);
+      ngtitles[3] = NULL;
+
+      useGradient = FALSE;
+      t = ngtitles;
     }
 
     if (!(obj = (Object *)DoSuperNew(cl,obj,MUIA_Register_Titles,t,MUIA_CycleChain,TRUE,TAG_MORE,msg->ops_AttrList)))
@@ -1267,9 +1284,10 @@ mBackNew(struct IClass *cl,Object *obj,struct opSet *msg)
 /***********************************************************************/
 
 static ULONG
-specToGadgets(struct IClass *cl,Object *obj,struct backData *data,STRPTR spec,struct MUIS_TheBar_Gradient *grad)
+specToGadgets(struct IClass *cl,Object *obj,STRPTR spec,struct MUIS_TheBar_Gradient *grad)
 {
-    register int i;
+    struct backData *data = INST_DATA(cl,obj);
+    int i;
 
     for (i = 0; data->pages[i]; i++)
     {
@@ -1298,7 +1316,7 @@ specToGadgets(struct IClass *cl,Object *obj,struct backData *data,STRPTR spec,st
 /***********************************************************************/
 
 static void
-gadgetsToSpec(struct IClass *cl,Object *obj,struct backData *data)
+gadgetsToSpec(struct backData *data)
 {
     switch(DoMethod(data->pages[data->page],MUIM_Popbackground_GetSpec,&data->spec,&data->grad,MUIV_Popbackground_GetSpec_Image))
     {
@@ -1321,18 +1339,18 @@ gadgetsToSpec(struct IClass *cl,Object *obj,struct backData *data)
 static ULONG
 mBackGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-    register struct backData *data = INST_DATA(cl,obj);
+    struct backData *data = INST_DATA(cl,obj);
 
     switch (msg->opg_AttrID)
     {
         case MUIA_Imagedisplay_Spec:
-            gadgetsToSpec(cl,obj,data);
+            gadgetsToSpec(data);
             if (data->flags & FLG_GradientMode) return FALSE;
             *msg->opg_Storage = (ULONG)data->spec;
             return TRUE;
 
         case MUIA_Popbackground_Grad:
-            gadgetsToSpec(cl,obj,data);
+            gadgetsToSpec(data);
             if (!(data->flags & FLG_GradientMode)) return FALSE;
             *msg->opg_Storage = (ULONG)&data->grad;
             return TRUE;
@@ -1347,13 +1365,13 @@ mBackGet(struct IClass *cl,Object *obj,struct opGet *msg)
 static ULONG
 mBackSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct backData *data = INST_DATA(cl,obj);
-    register struct TagItem  *tag;
+    struct backData *data = INST_DATA(cl,obj);
+    struct TagItem  *tag;
     struct TagItem           *tstate;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -1362,11 +1380,11 @@ mBackSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 break;
 
             case MUIA_Imagedisplay_Spec:
-                specToGadgets(cl,obj,data,(STRPTR)tidata,NULL);
+                specToGadgets(cl,obj,(STRPTR)tidata,NULL);
                 break;
 
             case MUIA_Popbackground_Grad:
-                specToGadgets(cl,obj,data,NULL,(struct MUIS_TheBar_Gradient *)tidata);
+                specToGadgets(cl,obj,NULL,(struct MUIS_TheBar_Gradient *)tidata);
                 break;
         }
     }
@@ -1377,7 +1395,7 @@ mBackSets(struct IClass *cl,Object *obj,struct opSet *msg)
 /***********************************************************************/
 
 static ULONG
-mBackDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
+mBackDragQuery(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
     STRPTR x;
 
@@ -1395,7 +1413,7 @@ mBackDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 static ULONG
 mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
-    register struct backData *data = INST_DATA(cl,obj);
+    struct backData *data = INST_DATA(cl,obj);
     ULONG                    x = NULL;
 
     if ((data->flags & FLG_Gradient) && get(msg->obj,MUIA_Popbackground_Grad,&x))
@@ -1405,7 +1423,7 @@ mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
         else
             if (get(msg->obj,MUIA_Pendisplay_Spec,&x))
             {
-                register char buf[32];
+                char buf[32];
 
                 snprintf(buf,sizeof(buf),"2:%s",x);
                 set(obj,MUIA_Imagedisplay_Spec,buf);
@@ -1457,10 +1475,7 @@ initBackgroundadjust(void)
         (lib_backgroundadjust = MUI_CreateCustomClass(NULL,MUIC_Register,NULL,sizeof(struct backData),backDispatcher)))
     {
         if (lib_flags & BASEFLG_MUI20)
-            lib_backgroundadjust->mcc_Class->cl_ID = "Backgroundadjust";
-
-        localizeArray(titles,titleIDs);
-        localizeArray(ngtitles,ngtitleIDs);
+            lib_backgroundadjust->mcc_Class->cl_ID = (STRPTR)"Backgroundadjust";
 
         return TRUE;
     }

@@ -1,39 +1,42 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #include "class.h"
+
 #include <stdlib.h>
+#include <stdio.h>
+
+#include <mui/muiundoc.h>
+
+#include "locale.h"
+#include "private.h"
+
+#include "SDI_hook.h"
 
 /***********************************************************************/
 
 static struct MUI_CustomClass *penslist = NULL;
 
 #define penslistObject NewObject(penslist->mcc_Class,NULL
-
-/***********************************************************************/
-
-static ULONG penIDs[] =
-{
-    Msg_Poppen_Shine,
-    Msg_Poppen_Halfshine,
-    Msg_Poppen_Background,
-    Msg_Poppen_Halfshadow,
-    Msg_Poppen_Shadow,
-    Msg_Poppen_Text,
-    Msg_Poppen_Fill,
-    Msg_Poppen_Mark,
-    0
-};
-static STRPTR pens[IDSSIZE(penIDs)];
 
 /***********************************************************************/
 
@@ -50,9 +53,9 @@ struct penslistData
 static ULONG
 mPenslistNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register Object *list;
+    Object *list;
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_CycleChain,    TRUE,
             MUIA_Listview_List, list = ListObject,
                 InputListFrame,
@@ -60,9 +63,9 @@ mPenslistNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 MUIA_List_ConstructHook, MUIV_List_ConstructHook_String,
                 MUIA_List_DestructHook,  MUIV_List_DestructHook_String,
             End,
-            TAG_MORE,msg->ops_AttrList))
+            TAG_MORE,msg->ops_AttrList)))
     {
-        register struct penslistData *data = INST_DATA(cl,obj);
+        struct penslistData *data = INST_DATA(cl,obj);
 
         data->list   = list;
         data->active = -1;
@@ -76,13 +79,13 @@ mPenslistNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mPenslistSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct penslistData *data = INST_DATA(cl,obj);
-    register struct TagItem      *tag;
+    struct penslistData *data = INST_DATA(cl,obj);
+    struct TagItem      *tag;
     struct TagItem               *tstate;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -100,24 +103,36 @@ mPenslistSets(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct penslistData *data = INST_DATA(cl,obj);
-    register int                 i;
+    struct penslistData *data = INST_DATA(cl,obj);
+    int                 i;
     struct RastPort              rp;
     struct TextExtent            te;
     UWORD                        w, h;
+
+    static const char *pens[9];
+
+    pens[0] = GetStr(Msg_Poppen_Shine);
+    pens[1] = GetStr(Msg_Poppen_Halfshine);
+    pens[2] = GetStr(Msg_Poppen_Background);
+    pens[3] = GetStr(Msg_Poppen_Halfshadow);
+    pens[4] = GetStr(Msg_Poppen_Shadow);
+    pens[5] = GetStr(Msg_Poppen_Text);
+    pens[6] = GetStr(Msg_Poppen_Fill);
+    pens[7] = GetStr(Msg_Poppen_Mark);
+    pens[8] = NULL;
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
     copymem(&rp,&_screen(obj)->RastPort,sizeof(rp));
     SetFont(&rp,_font(obj));
     TextExtent(&rp,"X",1,&te);
-    w =  te.te_Height;
-    h =  te.te_Height;
+    w = te.te_Height;
+    h = te.te_Height;
     if (h>4) h -= 2;
 
     for (i = 0; i<8; i++)
     {
-        register char buf[64];
+        char buf[64];
 
         snprintf(buf,sizeof(buf),"2:m%ld",i);
 
@@ -147,8 +162,8 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mPenslistCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct penslistData *data = INST_DATA(cl,obj);
-    register int                 i;
+    struct penslistData *data = INST_DATA(cl,obj);
+    int                 i;
 
     for (i = 0; i<7; i++)
     {
@@ -183,18 +198,17 @@ mPenslistShow(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
-penslistDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(penslistDispatcher)
 {
-    switch (msg->MethodID)
-    {
-        case OM_NEW:       return mPenslistNew(cl,obj,(APTR)msg);
-        case OM_SET:       return mPenslistSets(cl,obj,(APTR)msg);
-        case MUIM_Setup:   return mPenslistSetup(cl,obj,(APTR)msg);
-        case MUIM_Cleanup: return mPenslistCleanup(cl,obj,(APTR)msg);
-        case MUIM_Show:    return mPenslistShow(cl,obj,(APTR)msg);
-        default:           return DoSuperMethodA(cl,obj,msg);
-    }
+  switch (msg->MethodID)
+  {
+    case OM_NEW:       return mPenslistNew(cl,obj,(APTR)msg);
+    case OM_SET:       return mPenslistSets(cl,obj,(APTR)msg);
+    case MUIM_Setup:   return mPenslistSetup(cl,obj,(APTR)msg);
+    case MUIM_Cleanup: return mPenslistCleanup(cl,obj,(APTR)msg);
+    case MUIM_Show:    return mPenslistShow(cl,obj,(APTR)msg);
+    default:           return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
@@ -202,12 +216,10 @@ penslistDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg)
 static ULONG
 initPenslist(void)
 {
-    if (penslist = MUI_CreateCustomClass(NULL,MUIC_Listview,NULL,sizeof(struct penslistData),penslistDispatcher))
+    if((penslist = MUI_CreateCustomClass(NULL, MUIC_Listview, NULL, sizeof(struct penslistData), ENTRY(penslistDispatcher))))
     {
         if (lib_flags & BASEFLG_MUI20)
-            penslist->mcc_Class->cl_ID = "Penslist";
-
-        localizeArray(pens,penIDs);
+            penslist->mcc_Class->cl_ID = (STRPTR)"Penslist";
 
         return TRUE;
     }
@@ -216,15 +228,6 @@ initPenslist(void)
 }
 
 /***********************************************************************/
-
-static ULONG titleIDs[] =
-{
-    Msg_Poppen_MUI,
-    Msg_Poppen_Colormap,
-    Msg_Poppen_RGB,
-    0
-};
-static STRPTR titles[IDSSIZE(titleIDs)];
 
 enum
 {
@@ -249,9 +252,16 @@ struct penadjustData
 static ULONG
 mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register Object *mui, *colormap, *rgb;
+    Object *mui, *colormap, *rgb;
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    static const char *titles[4];
+
+    titles[0] = GetStr(Msg_Poppen_MUI);
+    titles[1] = GetStr(Msg_Poppen_Colormap);
+    titles[2] = GetStr(Msg_Poppen_RGB);
+    titles[3] = NULL;
+
+    if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_Register_Titles, titles,
             MUIA_CycleChain,      TRUE,
 
@@ -268,10 +278,10 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
             /* RGB */
             Child, rgb = coloradjustObject, End,
 
-            TAG_MORE, msg->ops_AttrList))
+            TAG_MORE, msg->ops_AttrList)))
     {
-        register struct penadjustData *data = INST_DATA(cl,obj);
-        register Object               *pop;
+        struct penadjustData *data = INST_DATA(cl,obj);
+        Object               *pop;
 
         data->mui      = mui;
         data->colormap = colormap;
@@ -289,7 +299,7 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mPenadjustGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-    register struct penadjustData *data = INST_DATA(cl,obj);
+    struct penadjustData *data = INST_DATA(cl,obj);
 
     switch (msg->opg_AttrID)
     {
@@ -309,13 +319,13 @@ mPenadjustGet(struct IClass *cl,Object *obj,struct opGet *msg)
 static ULONG
 mPenadjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct penadjustData *data = INST_DATA(cl,obj);
-    register struct TagItem       *tag;
+    struct penadjustData *data = INST_DATA(cl,obj);
+    struct TagItem       *tag;
     struct TagItem                *tstate;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -332,7 +342,7 @@ mPenadjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 /***********************************************************************/
 
 static ULONG
-mPenadjustDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
+mPenadjustDragQuery(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
     STRPTR x;
 
@@ -351,7 +361,7 @@ mPenadjustDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 /***********************************************************************/
 
 static ULONG
-mPenadjustDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
+mPenadjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
     STRPTR x;
 
@@ -361,8 +371,8 @@ mPenadjustDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
         else
             if (get(msg->obj,MUIA_Popbackground_Grad,&x))
             {
-                register char  spec[sizeof(struct MUI_PenSpec)];
-                register ULONG c, r, g, b;
+                char  spec[sizeof(struct MUI_PenSpec)];
+                ULONG c, r, g, b;
 
                 c = (((struct MUIS_TheBar_Gradient *)x)->flags & MUIV_TheBar_Gradient_DragTo) ? ((struct MUIS_TheBar_Gradient *)x)->to : ((struct MUIS_TheBar_Gradient *)x)->from;
                 r = c>>16;
@@ -381,8 +391,8 @@ mPenadjustDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 static ULONG
 mPenadjustSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpec *msg)
 {
-    register struct penadjustData *data = INST_DATA(cl,obj);
-    register char                 *spec = msg->spec, c;
+    struct penadjustData *data = INST_DATA(cl,obj);
+    char                 *spec = msg->spec, c;
 
     if (msg->flags & MUIV_Popbackground_SetSpec_Image)
     {
@@ -397,7 +407,7 @@ mPenadjustSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpe
         /* MUI */
         case 'm':
         {
-            register LONG v;
+            LONG v;
 
             v = atoi(spec);
             if (v<0 || v>7) return MUIV_Popbackground_SetSpec_Fail;
@@ -410,7 +420,7 @@ mPenadjustSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpe
         /* Colormap */
         case 'p':
         {
-            register LONG v;
+            LONG v;
 
             v = atoi(spec);
             if (v<-128 || v>127) return MUIV_Popbackground_SetSpec_Fail;
@@ -424,7 +434,7 @@ mPenadjustSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpe
         case 'r':
         {
             struct MUI_RGBcolor rgb;
-            register char       *p, *s;
+            char       *p, *s;
 
             p = strchr(spec,',');
             if (!p) return MUIV_Popbackground_SetSpec_Fail;
@@ -457,9 +467,9 @@ mPenadjustSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpe
 static ULONG
 mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *msg)
 {
-    register struct penadjustData *data = INST_DATA(cl,obj);
-    register char                 spec[32];
-    register ULONG                res = MUIV_Popbackground_GetSpec_Spec;
+    struct penadjustData *data = INST_DATA(cl,obj);
+    char                 spec[32];
+    ULONG                res = MUIV_Popbackground_GetSpec_Spec;
     LONG                          x;
 
     superget(cl,obj,MUIA_Group_ActivePage,&x);
@@ -501,20 +511,19 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
-penadjustDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(penadjustDispatcher)
 {
-    switch (msg->MethodID)
-    {
-        case OM_NEW:                     return mPenadjustNew(cl,obj,(APTR)msg);
-        case OM_GET:                     return mPenadjustGet(cl,obj,(APTR)msg);
-        case OM_SET:                     return mPenadjustSets(cl,obj,(APTR)msg);
-        case MUIM_DragQuery:             return mPenadjustDragQuery(cl,obj,(APTR)msg);
-        case MUIM_DragDrop:              return mPenadjustDragDrop(cl,obj,(APTR)msg);
-        case MUIM_Popbackground_SetSpec: return mPenadjustSetSpec(cl,obj,(APTR)msg);
-        case MUIM_Popbackground_GetSpec: return mPenadjustGetSpec(cl,obj,(APTR)msg);
-        default:                         return DoSuperMethodA(cl,obj,msg);
-    }
+  switch (msg->MethodID)
+  {
+    case OM_NEW:                     return mPenadjustNew(cl,obj,(APTR)msg);
+    case OM_GET:                     return mPenadjustGet(cl,obj,(APTR)msg);
+    case OM_SET:                     return mPenadjustSets(cl,obj,(APTR)msg);
+    case MUIM_DragQuery:             return mPenadjustDragQuery(cl,obj,(APTR)msg);
+    case MUIM_DragDrop:              return mPenadjustDragDrop(cl,obj,(APTR)msg);
+    case MUIM_Popbackground_SetSpec: return mPenadjustSetSpec(cl,obj,(APTR)msg);
+    case MUIM_Popbackground_GetSpec: return mPenadjustGetSpec(cl,obj,(APTR)msg);
+    default:                         return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /***********************************************************************/
@@ -541,12 +550,10 @@ ULONG
 initPenadjust(void)
 {
     if (initPenslist() &&
-        (lib_penadjust = MUI_CreateCustomClass(NULL,MUIC_Register,NULL,sizeof(struct penadjustData),penadjustDispatcher)))
+        (lib_penadjust = MUI_CreateCustomClass(NULL, MUIC_Register, NULL, sizeof(struct penadjustData), ENTRY(penadjustDispatcher))))
     {
         if (lib_flags & BASEFLG_MUI20)
-            lib_penadjust->mcc_Class->cl_ID = "Penadjust";
-
-        localizeArray(titles,titleIDs);
+            lib_penadjust->mcc_Class->cl_ID = (STRPTR)"Penadjust";
 
         return TRUE;
     }

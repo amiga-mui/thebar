@@ -1,13 +1,27 @@
-#ifndef THEBARPREFS_H
-#define THEBARPREFS_H
+#ifndef _THEBAR_MCP_H_
+#define _THEBAR_MCP_H_
 
-/*
-**  $VER: TheBarPrefs.h 18.4 (11.1.2005)
-**  Includes Release 18.4
-**
-**  (C) Copyright 2003-2005 Alfonso [alfie] Ranieri <alforan@tin.it>
-**      All rights reserved
-*/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #ifndef LIBRARIES_MUI_H
 #include <libraries/mui.h>
@@ -168,4 +182,4 @@ enum
   #endif
 #endif
 
-#endif /* THEBARPREFS_H */
+#endif /* _THEBAR_MCP_H_ */

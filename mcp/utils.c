@@ -1,123 +1,93 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #include "class.h"
+#include "private.h"
+#include "locale.h"
+
+#include <mui/muiundoc.h>
+
+#include <ctype.h>
+
+#include "SDI_stdarg.h"
+#include "SDI_compiler.h"
 
 /***********************************************************************/
 
 #ifndef __MORPHOS__
-ULONG STDARGS
-DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
+// DoSuperNew()
+// Calls parent NEW method within a subclass
+Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
-    return DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL);
+  Object *rc;
+  VA_LIST args;
+
+  VA_START(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  VA_END(args);
+
+  return rc;
 }
 #endif
 
 /***********************************************************************/
 
-LONG
-xget(Object *obj,ULONG attribute)
+/* Copy the q to the n chars buffer pointed by p.
+   The result is null terminated.
+   Returns the number of copied bytes, including '\0'. */
+size_t stccpy(char *p, const char *q, size_t n)
 {
-    LONG x;
+  char *t = p;
+  while ((*p++ = *q++) && --n > 0);
+    p[-1] = '\0';
 
-    return get(obj,attribute,&x) ? x : 0;
+  return p - t;
+}
+
+/***********************************************************************/
+
+#define HEX(c) ((c>'9')?c-'A'+10:c-'0')
+
+ULONG stch_l(char *chr_ptr, ULONG *u_ptr)
+{
+  *u_ptr=0;
+  while (isxdigit(*chr_ptr))
+  {
+    *u_ptr=*u_ptr*16+HEX(*chr_ptr);
+    chr_ptr++;
+  }
+
+  return *u_ptr;
 }
 
 /***********************************************************************/
 
 Object *
-olabel(ULONG id)
-{
-    return Label((ULONG)getString(id));
-}
-
-/****************************************************************************/
-
-Object *
-olabel1(ULONG id)
-{
-    return Label1((ULONG)getString(id));
-}
-
-/****************************************************************************/
-
-Object *
-ollabel1(ULONG id)
-{
-    return LLabel1((ULONG)getString(id));
-}
-
-/***********************************************************************/
-
-Object *
-olabel2(ULONG id)
-{
-    return Label2((ULONG)getString(id));
-}
-
-/***********************************************************************/
-
-Object *
-oflabel(ULONG id)
-{
-    return FreeLabel((ULONG)getString(id));
-}
-
-/***********************************************************************/
-
-Object *
-oclabel(ULONG id)
-{
-    return CLabel((ULONG)getString(id));
-}
-
-/***********************************************************************/
-
-Object *
-owspace(ULONG weight)
-{
-    return RectangleObject, MUIA_Weight, weight, End;
-}
-
-/***********************************************************************/
-
-Object *
-ofhspace(STRPTR string)
-{
-    return RectangleObject, MUIA_FixHeightTxt, string, End;
-}
-
-/***********************************************************************/
-
-Object *
-obutton(ULONG text,ULONG help)
-{
-    register Object *obj;
-
-    if (obj = MUI_MakeObject(MUIO_Button,(ULONG)getString(text)))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)getString(help),TAG_DONE);
-
-    return obj;
-}
-
-/***********************************************************************/
-
-Object *
-ocycle(STRPTR *array,ULONG key,ULONG help)
+obutton(APTR text, APTR help)
 {
     Object *obj;
 
-    if (obj = MUI_MakeObject(MUIO_Cycle,(ULONG)getString(key),(ULONG)array))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)getString(help),TAG_DONE);
+    if((obj = MUI_MakeObject(MUIO_Button,(ULONG)GetStr(text))))
+        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)GetStr(help),TAG_DONE);
 
     return obj;
 }
@@ -125,12 +95,12 @@ ocycle(STRPTR *array,ULONG key,ULONG help)
 /***********************************************************************/
 
 Object *
-ocheck(ULONG key,ULONG help)
+ocycle(const char **array, APTR key, APTR help)
 {
-    register Object *obj;
+    Object *obj;
 
-    if (obj = MUI_MakeObject(MUIO_Checkmark,(ULONG)getString(key)))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)getString(help),TAG_DONE);
+    if((obj = MUI_MakeObject(MUIO_Cycle,(ULONG)GetStr(key),(ULONG)array)))
+        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)GetStr(help),TAG_DONE);
 
     return obj;
 }
@@ -138,12 +108,12 @@ ocheck(ULONG key,ULONG help)
 /***********************************************************************/
 
 Object *
-oslider(ULONG key,ULONG help,LONG min,LONG max)
+ocheck(APTR key, APTR help)
 {
-    register Object *obj;
+    Object *obj;
 
-    if (obj = MUI_MakeObject(MUIO_Slider,(ULONG)getString(key),min,max))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)getString(help),TAG_DONE);
+    if((obj = MUI_MakeObject(MUIO_Checkmark,(ULONG)GetStr(key))))
+        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)GetStr(help),TAG_DONE);
 
     return obj;
 }
@@ -151,14 +121,27 @@ oslider(ULONG key,ULONG help,LONG min,LONG max)
 /***********************************************************************/
 
 Object *
-opop(ULONG type,ULONG key)
+oslider(APTR key, APTR help, LONG min, LONG max)
 {
-    register Object *obj;
+    Object *obj;
+
+    if((obj = MUI_MakeObject(MUIO_Slider,(ULONG)GetStr(key),min,max)))
+        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)GetStr(help),TAG_DONE);
+
+    return obj;
+}
+
+/***********************************************************************/
+
+Object *
+opop(ULONG type, APTR key)
+{
+    Object *obj;
 
     if (!(lib_flags & BASEFLG_MUI4) && (type==MUII_PopFont))
         type = MUII_PopUp;
 
-    if (obj = MUI_MakeObject(MUIO_PopButton,type))
+    if((obj = MUI_MakeObject(MUIO_PopButton,type)))
     {
         set(obj,MUIA_CycleChain,TRUE);
 
@@ -166,7 +149,7 @@ opop(ULONG type,ULONG key)
         {
             ULONG k;
 
-            if (k = getKeyChar(getString(key)))
+            if((k = GetKeyChar(GetStr(key))))
                 set(obj,MUIA_ControlChar,ToLower(k));
         }
     }
@@ -177,35 +160,35 @@ opop(ULONG type,ULONG key)
 /***********************************************************************/
 
 Object *
-opoppen(ULONG key,ULONG title,ULONG help)
+opoppen(APTR key, APTR title, APTR help)
 {
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     return PoppenObject,
-        MUIA_Window_Title, (ULONG)getString(title),
-        MUIA_ControlChar,  (ULONG)getKeyChar(getString(key)),
+        MUIA_Window_Title, (ULONG)GetStr(title),
+        MUIA_ControlChar,  (ULONG)GetKeyChar(GetStr(key)),
         MUIA_Draggable,    TRUE,
         MUIA_CycleChain,   TRUE,
-        MUIA_ShortHelp,    (ULONG)getString(help),
+        MUIA_ShortHelp,    (ULONG)GetStr(help),
     End;
     #else
     if (lib_flags & BASEFLG_MUI20)
     {
         return PoppenObject,
-            MUIA_Window_Title, (ULONG)getString(title),
-            MUIA_ControlChar,  (ULONG)getKeyChar(getString(key)),
+            MUIA_Window_Title, (ULONG)GetStr(title),
+            MUIA_ControlChar,  (ULONG)GetKeyChar(GetStr(key)),
             MUIA_Draggable,    TRUE,
             MUIA_CycleChain,   TRUE,
-            MUIA_ShortHelp,    (ULONG)getString(help),
+            MUIA_ShortHelp,    (ULONG)GetStr(help),
         End;
     }
     else
     {
         return poppenObject,
-            MUIA_Window_Title, (ULONG)getString(title),
-            MUIA_ControlChar,  (ULONG)getKeyChar(getString(key)),
+            MUIA_Window_Title, (ULONG)GetStr(title),
+            MUIA_ControlChar,  (ULONG)GetKeyChar(GetStr(key)),
             MUIA_Draggable,    TRUE,
             MUIA_CycleChain,   TRUE,
-            MUIA_ShortHelp,    (ULONG)getString(help),
+            MUIA_ShortHelp,    (ULONG)GetStr(help),
         End;
     }
     #endif
@@ -214,13 +197,13 @@ opoppen(ULONG key,ULONG title,ULONG help)
 /***********************************************************************/
 
 Object *
-opopfri(ULONG key,ULONG title,ULONG help)
+opopfri(APTR key, APTR title, APTR help)
 {
     return MUI_NewObject("Popfrimage.mui",
-        MUIA_Window_Title,     (ULONG)getString(title),
-        MUIA_ControlChar,      (ULONG)getKeyChar(getString(key)),
+        MUIA_Window_Title,     (ULONG)GetStr(title),
+        MUIA_ControlChar,      (ULONG)GetKeyChar(GetStr(key)),
         MUIA_CycleChain,       TRUE,
-        MUIA_ShortHelp,        (ULONG)getString(help),
+        MUIA_ShortHelp,        (ULONG)GetStr(help),
         0x80421794, 0,
         0x8042a547, 0,
         0x80426a55, 1,
@@ -231,37 +214,37 @@ opopfri(ULONG key,ULONG title,ULONG help)
 /***********************************************************************/
 
 Object *
-opopback(ULONG gradient,ULONG key,ULONG title,ULONG help)
+opopback(UNUSED ULONG gradient, APTR key, APTR title, APTR help)
 {
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     return MUI_NewObject(MUIC_Popimage,
         MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
-        MUIA_Window_Title,     (ULONG)getString(title),
-        MUIA_ControlChar,      (ULONG)getKeyChar(getString(key)),
+        MUIA_Window_Title,     (ULONG)GetStr(title),
+        MUIA_ControlChar,      (ULONG)GetKeyChar(GetStr(key)),
         MUIA_Draggable,        TRUE,
         MUIA_CycleChain,       TRUE,
-        MUIA_ShortHelp,        (ULONG)getString(help),
+        MUIA_ShortHelp,        (ULONG)GetStr(help),
     End;
     #else
     if (lib_flags & BASEFLG_MUI20)
     {
         return MUI_NewObject(MUIC_Popimage,
             MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
-            MUIA_Window_Title,     (ULONG)getString(title),
-            MUIA_ControlChar,      (ULONG)getKeyChar(getString(key)),
+            MUIA_Window_Title,     (ULONG)GetStr(title),
+            MUIA_ControlChar,      (ULONG)GetKeyChar(GetStr(key)),
             MUIA_Draggable,        TRUE,
             MUIA_CycleChain,       TRUE,
-            MUIA_ShortHelp,        (ULONG)getString(help),
+            MUIA_ShortHelp,        (ULONG)GetStr(help),
         End;
     }
     else
     {
         return popbackObject,
-            MUIA_Window_Title,           (ULONG)getString(title),
-            MUIA_ControlChar,            (ULONG)getKeyChar(getString(key)),
+            MUIA_Window_Title,           (ULONG)GetStr(title),
+            MUIA_ControlChar,            (ULONG)GetKeyChar(GetStr(key)),
             MUIA_Draggable,              TRUE,
             MUIA_CycleChain,             TRUE,
-            MUIA_ShortHelp,              (ULONG)getString(help),
+            MUIA_ShortHelp,              (ULONG)GetStr(help),
             MUIA_Popbackground_Gradient, gradient,
         End;
     }
@@ -275,118 +258,27 @@ opopback(ULONG gradient,ULONG key,ULONG title,ULONG help)
 #endif
 
 Object *
-opopframe(ULONG key,ULONG title,ULONG help)
+opopframe(APTR key, APTR title, APTR help)
 {
     return PopframeObject,
-        MUIA_Window_Title, (ULONG)getString(title),
+        MUIA_Window_Title, (ULONG)GetStr(title),
         MUIA_Draggable,    TRUE,
         MUIA_CycleChain,   1,
-	    MUIA_ShortHelp,    (ULONG)getString(help),
-	    MUIA_ControlChar,  (ULONG)getKeyChar(getString(key)),
+	    MUIA_ShortHelp,    (ULONG)GetStr(help),
+	    MUIA_ControlChar,  (ULONG)GetKeyChar(GetStr(key)),
     End;
 }
 
 /***********************************************************************/
 
 #ifndef __MORPHOS__
-static UWORD fmtfunc[] = { 0x16c0, 0x4e75 };
-void
-sprintf(char *to,char *fmt,...)
-{
-    RawDoFmt(fmt,&fmt+1,(APTR)fmtfunc,to);
-}
-#endif
-
-/***********************************************************************/
-
-struct stream
-{
-    char    *buf;
-    int     size;
-    int     counter;
-    int     stop;
-};
-
-#ifndef __MORPHOS__
-static void SAVEDS ASM
-snprintfStuff(REG(d0,char c),REG(a3,struct stream *s))
-{
-    if (!s->stop)
-    {
-        if (++s->counter>=s->size)
-        {
-            *(s->buf) = 0;
-            s->stop   = 1;
-        }
-        else *(s->buf++) = c;
-    }
-}
-
-int STDARGS
-snprintf(char *buf,int size,char *fmt,...)
-{
-    struct stream s;
-
-    s.buf     = buf;
-    s.size    = size;
-    s.counter = 0;
-    s.stop    = 0;
-
-    RawDoFmt(fmt,&fmt+1,(APTR)snprintfStuff,&s);
-
-    return s.counter-1;
-}
-#else
-static void
-snprintfStuff(void)
-{
-    register struct stream *s = (struct stream *)REG_A3;
-    register UBYTE         c  = (UBYTE)REG_D0;
-
-    if (!s->stop)
-    {
-        if (++s->counter>=s->size)
-        {
-            *(s->buf) = 0;
-            s->stop   = 1;
-        }
-        else *(s->buf++) = c;
-    }
-}
-
-static struct EmulLibEntry snprintfStuffTrap = {TRAP_LIB,0,(void *)&snprintfStuff};
-
-int
-snprintf(STRPTR buf,int size,STRPTR fmt,...)
-{
-    struct stream s;
-    va_list       va;
-
-    va_start(va,fmt);
-
-    s.buf     = buf;
-    s.size    = size;
-    s.counter = 0;
-    s.stop    = 0;
-
-    RawDoFmt(fmt,va->overflow_arg_area,(APTR)&snprintfStuffTrap,&s);
-
-    va_end(va);
-
-    return s.counter-1;
-}
-#endif
-
-/****************************************************************************/
-
-#ifndef __MORPHOS__
 void
 drawGradient(Object *obj,struct MUIS_TheBar_Gradient *grad)
 {
-    register struct RastPort *rp;
-    register ULONG           rs, gs, bs, horiz, from, to;
-    register int             i, x, d, step, rdif, gdif, bdif, r1, g1, b1, r2, g2, b2, r, g, b, rd, gd, bd, ridx, gidx, bidx;
-    register UWORD           l = _mleft(obj), t = _mtop(obj), w = _mwidth(obj), h = _mheight(obj);
+    struct RastPort *rp;
+    ULONG           rs, gs, bs, horiz, from, to;
+    int             i, x, d, step, rdif, gdif, bdif, r1, g1, b1, r2, g2, b2, r, g, b, rd, gd, bd, ridx, gidx, bidx;
+    UWORD           l = _mleft(obj), t = _mtop(obj), w = _mwidth(obj), h = _mheight(obj);
 
 #ifdef __SASC
 rd = rdif= ridx = gd = gidx = bd = bidx = 0;
@@ -503,7 +395,7 @@ rd = rdif= ridx = gd = gidx = bd = bidx = 0;
 
     for (i = 0; i<step; i++)
     {
-        register ULONG col = (r<<16) | (g<<8) | b;
+        ULONG col = (r<<16) | (g<<8) | b;
 
         /* Fill; if last step fill all rest */
         if (horiz)

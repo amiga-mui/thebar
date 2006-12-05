@@ -1,20 +1,31 @@
-/*
-**
-** TheBar - Next Generation MUI Buttons Bar Class
-**
-** Copyright 2003-2005 by Alfonso [alfie] Ranieri <alforan@tin.it>
-** All Rights Are Reserved.
-**
-** Destributed Under The Terms Of The LGPL II
-**
-**
-**/
+/***************************************************************************
+
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
 
 #include "class.h"
+#include "private.h"
 
 /***********************************************************************/
 
-struct colorWheelData
+struct data
 {
     struct MUI_RGBcolor rgb;
     LONG                pen;
@@ -35,9 +46,9 @@ enum
 static ULONG
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    if (obj = (Object *)DoSuperMethodA(cl,obj,(Msg)msg))
+    if((obj = (Object *)DoSuperMethodA(cl,obj,(Msg)msg)))
     {
-        register struct data *data = INST_DATA(cl,obj);
+        //struct data *data = INST_DATA(cl,obj);
 
         msg->MethodID = OM_SET;
         DoMethodA(obj,(Msg)msg);
@@ -52,7 +63,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     switch (msg->opg_AttrID)
     {
@@ -60,6 +71,8 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
             *msg->opg_Storage = (ULONG)&data->rgb;
             return TRUE;
     }
+
+    return FALSE;
 }
 
 /***********************************************************************/
@@ -67,14 +80,14 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 static ULONG
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register struct TagItem *tag;
+    struct data    *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
     struct TagItem          *tstate;
-    register ULONG          rgb;
+    ULONG          rgb;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -114,7 +127,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 static ULONG
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     if ((GetBitMapAttr(_screen(obj)->RastPort.BitMap,BMA_DEPTH)>8) &&
         CyberGfxBase && IsCyberModeID(GetVPModeID(&_screen(obj)->ViewPort)))
@@ -129,7 +142,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 

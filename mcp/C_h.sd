@@ -1,3 +1,5 @@
+##stringtype C
+##shortstrings
 /***************************************************************************
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
@@ -20,28 +22,22 @@
 
 ***************************************************************************/
 
-#define LIB_VERSION    20
-#define LIB_REVISION   9
+/****************************************************************
+   This file was created automatically by `FlexCat V1.3'
+****************************************************************/
 
-#define LIB_REV_STRING "20.9"
-#define LIB_DATE       "05.12.2006"
+#ifndef %b_LOCALE_H
+#define %b_LOCALE_H
+#include <exec/types.h>
 
-#if defined(__PPC__)
-  #if defined(__MORPHOS__)
-    #define CPU " [MOS/PPC]"
-  #else
-    #define CPU " [OS4/PPC]"
-  #endif
-#elif defined(_M68060) || defined(__M68060) || defined(__mc68060)
-  #define CPU " [060]"
-#elif defined(_M68040) || defined(__M68040) || defined(__mc68040)
-  #define CPU " [040]"
-#elif defined(_M68030) || defined(__M68030) || defined(__mc68030)
-  #define CPU " [030]"
-#elif defined(_M68020) || defined(__M68020) || defined(__mc68020)
-  #define CPU " [020]"
-#else
-  #define CPU ""
-#endif
+#define MSG_Space ((APTR)1)
 
-#define LIB_COPYRIGHT  "Copyright (C) 2005-2006 TheBar.mcc Open Source Team"
+extern const char *GetStr(APTR);
+extern const char *GetStripStr(APTR);
+extern char GetKeyChar(const char *);
+extern void OpenCat(void);
+extern void CloseCat(void);
+
+extern const APTR _%i;\n#define %i ((APTR) &_%i)
+
+#endif /* %b_LOCALE_H */
