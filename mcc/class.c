@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -1429,8 +1429,10 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         win = me->pr_WindowPtr;
         me->pr_WindowPtr = (struct Window *)-1;
 
-        if (pt.idrawer && (idrawer = Lock(pt.idrawer,SHARED_LOCK))) odir = CurrentDir(idrawer);
-        else idrawer = 0;
+        if(pt.idrawer != NULL && (idrawer = Lock(pt.idrawer, SHARED_LOCK)))
+          odir = CurrentDir(idrawer);
+        else
+          idrawer = 0;
 
         if (pt.stripBrush || pt.strip)
         {
@@ -1643,9 +1645,15 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         if (pt.sbrushes) sp = pt.spics;
                         if (pt.dbrushes) dp = pt.dpics;
 
-                        for (i = 0; *p; i++, p++)
+                        for(i=0; *p; i++, p++)
                         {
-                            if (!loadDTBrush(pool,pt.brushes[i] = brush+i,*p)) break;
+                            if(!loadDTBrush(pool, pt.brushes[i] = brush+i, *p))
+                            {
+                              E(DBF_STARTUP, "couldn't load brush '%s' (%d)", *p, i);
+                              break;
+                            }
+                            else
+                              W(DBF_STARTUP, "successfully loaded brush '%s' (%d)", *p, i);
 
                             if (pt.sbrushes)
                             {

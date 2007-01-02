@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -44,4 +44,4 @@
   #define CPU ""
 #endif
 
-#define LIB_COPYRIGHT  "Copyright (C) 2005-2006 TheBar.mcc Open Source Team"
+#define LIB_COPYRIGHT  "Copyright (C) 2005-2007 TheBar.mcc Open Source Team"
