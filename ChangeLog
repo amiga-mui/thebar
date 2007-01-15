@@ -7,6 +7,7 @@ $URL$
 
 2007-01-15  Jens Langner <Jens.Langner@light-speed.de>
 
+  * mcp/library.c: forgot to define the mcp prefs image.
   * mcc: for being able to directly use a TheBar object for setting a new
     notify on a certain attribute change, new MUIM_TheBar_Notify and
     MUIM_TheBar_KillNotify wrapper methods were added. However both, the old
