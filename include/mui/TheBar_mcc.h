@@ -5,7 +5,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2006 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,6 +20,7 @@
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
  $Id$
+ $URL$
 
 ***************************************************************************/
 
@@ -46,9 +47,9 @@
 #define MUIC_TheBarVirt   "TheBarVirt.mcc"
 #define TheBarVirtObject  MUI_NewObject(MUIC_TheBarVirt
 
-#define THEBAR_VERSION     20
-#define THEBARVIRT_VERSION 20
-#define THEBUTTON_VERSION  20
+#define THEBAR_VERSION     21
+#define THEBARVIRT_VERSION 21
+#define THEBUTTON_VERSION  21
 
 /***********************************************************************/
 
@@ -60,7 +61,10 @@
 ** Methods
 */
 
-#define MUIM_TheButton_Build               (TBUTTAGBASE+0)   /* v13 */
+#define MUIM_TheButton_Build               (TBUTTAGBASE+0)   /* v13         */
+#define MUIM_TheButton_SendNotify          (TBUTTAGBASE+1)   /* v21 PRIVATE */
+
+struct MUIP_TheButton_SendNotify           { ULONG MethodID; APTR notify; };
 
 /***********************************************************************/
 /*
@@ -69,7 +73,7 @@
 
 #define MUIA_TheButton_MinVer              (TBUTTAGBASE+0)   /* v11  ULONG,                         [I...]    */
 #define MUIA_TheButton_MouseOver           (TBUTTAGBASE+1)   /* v11  BOOL                           [I...]    */ /* PRIVATE */
-#define MUIA_TheButton_QuietNotify         (TBUTTAGBASE+2)   /* v11  BOOL                           [.S..]    */ /* PRIVATE */
+#define MUIA_TheButton_Quiet               (TBUTTAGBASE+2)   /* v11  BOOL                           [.S..]    */
 #define MUIA_TheButton_Spacer              (TBUTTAGBASE+3)   /* v11  BOOL                           [I.G.]    */ /* PRIVATE */
 #define MUIA_TheButton_TheBar              (TBUTTAGBASE+4)   /* v11  Object *,                      [ISG.]    */
 #define MUIA_TheButton_Image               (TBUTTAGBASE+5)   /* v11  struct MUIS_TheBar_Brush  *,   [I...]    */
@@ -108,6 +112,7 @@
 #define MUIA_TheButton_StripCols           (TBUTTAGBASE+38)  /* v20  ULONG,                         [I...]    */
 #define MUIA_TheButton_StripHorizSpace     (TBUTTAGBASE+39)  /* v20  ULONG,                         [I...]    */
 #define MUIA_TheButton_StripVertSpace      (TBUTTAGBASE+40)  /* v20  ULONG,                         [I...]    */
+#define MUIA_TheButton_NotifyList          (TBUTTAGBASE+41)  /* v21  struct MinList *,              [..G.]    */ /* PRIVATE */
 
 /***********************************************************************/
 /*
@@ -117,71 +122,71 @@
 /* MUIA_TheButton_ViewMode */
 enum
 {
-    MUIV_TheButton_ViewMode_TextGfx,
-    MUIV_TheButton_ViewMode_Gfx,
-    MUIV_TheButton_ViewMode_Text,
+  MUIV_TheButton_ViewMode_TextGfx,
+  MUIV_TheButton_ViewMode_Gfx,
+  MUIV_TheButton_ViewMode_Text,
 
-    MUIV_TheButton_ViewMode_Last
+  MUIV_TheButton_ViewMode_Last
 };
 
 /* MUIA_TheButton_LabelPos */
 enum
 {
-    MUIV_TheButton_LabelPos_Bottom,
-    MUIV_TheButton_LabelPos_Top,
-    MUIV_TheButton_LabelPos_Right,
-    MUIV_TheButton_LabelPos_Left,
+  MUIV_TheButton_LabelPos_Bottom,
+  MUIV_TheButton_LabelPos_Top,
+  MUIV_TheButton_LabelPos_Right,
+  MUIV_TheButton_LabelPos_Left,
 
-    MUIV_TheButton_LabelPos_Last
+  MUIV_TheButton_LabelPos_Last
 };
 
 /* MUIA_TheButton_Spacer */
 enum
 {
-    MUIV_TheButton_Spacer_None,
-    MUIV_TheButton_Spacer_Bar,
-    MUIV_TheButton_Spacer_Button,
-    MUIV_TheButton_Spacer_Image,
-    MUIV_TheButton_Spacer_DragBar,
+  MUIV_TheButton_Spacer_None,
+  MUIV_TheButton_Spacer_Bar,
+  MUIV_TheButton_Spacer_Button,
+  MUIV_TheButton_Spacer_Image,
+  MUIV_TheButton_Spacer_DragBar,
 };
 
 /* MUICFG_TheButton_FrameStyle */
 enum
 {
-    MUIV_TheButton_FrameStyle_Recessed,
-    MUIV_TheButton_FrameStyle_Normal,
+  MUIV_TheButton_FrameStyle_Recessed,
+  MUIV_TheButton_FrameStyle_Normal,
 };
 
 /* MUIA_TheButton_Event */
 enum
 {
-    MUIV_TheButton_Event_IntuiTicks,
-    MUIV_TheButton_Event_MouseMove,
-    MUIV_TheButton_Event_MouseObject,
+  MUIV_TheButton_Event_IntuiTicks,
+  MUIV_TheButton_Event_MouseMove,
+  MUIV_TheButton_Event_MouseObject,
 
-    MUIV_TheButton_Event_Last,
+  MUIV_TheButton_Event_Last,
 };
 
 /* MUIA_TheButton_Precision */
 enum
 {
-    MUIV_TheButton_Precision_GUI,
-    MUIV_TheButton_Precision_Icon,
-    MUIV_TheButton_Precision_Image,
-    MUIV_TheButton_Precision_Exact,
+  MUIV_TheButton_Precision_GUI,
+  MUIV_TheButton_Precision_Icon,
+  MUIV_TheButton_Precision_Image,
+  MUIV_TheButton_Precision_Exact,
 
-    MUIV_TheButton_Precision_Last,
+  MUIV_TheButton_Precision_Last,
 };
 
 /* MUIA_TheButton_DisMode */
 enum
 {
-    MUIV_TheButton_DisMode_Shape,
-    MUIV_TheButton_DisMode_Grid,
-    MUIV_TheButton_DisMode_FullGrid,
-    MUIV_TheButton_DisMode_Sunny,
+  MUIV_TheButton_DisMode_Shape,
+  MUIV_TheButton_DisMode_Grid,
+  MUIV_TheButton_DisMode_FullGrid,
+  MUIV_TheButton_DisMode_Sunny,
 
-    MUIV_TheButton_DisMode_Last,
+  MUIV_TheButton_DisMode_Last,
 };
 
 /***********************************************************************/
@@ -198,7 +203,6 @@ enum
 */
 
 #define MUIM_TheBar_Rebuild         (TBTAGBASE+0)   /* v11 PRIVATE */
-#define MUIM_TheBar_AddNotify       (TBTAGBASE+1)   /* v11 PRIVATE */
 #define MUIM_TheBar_DeActivate      (TBTAGBASE+2)   /* v11 PRIVATE */
 #define MUIM_TheBar_AddButton       (TBTAGBASE+3)   /* v11         */
 #define MUIM_TheBar_AddSpacer       (TBTAGBASE+4)   /* v11         */
@@ -210,13 +214,14 @@ enum
 #define MUIM_TheBar_Sort            (TBTAGBASE+10)  /* v11         */
 #define MUIM_TheBar_Remove          (TBTAGBASE+11)  /* v11         */
 #define MUIM_TheBar_GetDragImage    (TBTAGBASE+12)  /* v11         */
+#define MUIM_TheBar_Notify          (TBTAGBASE+13)  /* v21         */
+#define MUIM_TheBar_KillNotify      (TBTAGBASE+14)  /* v21         */
 
 /***********************************************************************/
 /*
 ** TheBar.mcc Methods structures
 */
 
-struct MUIP_TheBar_AddNotify       { ULONG MethodID; Object *dest; struct MUIP_Notify *msg; };
 struct MUIP_TheBar_AddButton       { ULONG MethodID; struct MUIS_TheBar_Button *button; };
 struct MUIP_TheBar_AddSpacer       { ULONG MethodID; ULONG ID; ULONG type; };
 struct MUIP_TheBar_GetObject       { ULONG MethodID; ULONG ID; };
@@ -226,12 +231,17 @@ struct MUIP_TheBar_GetAttr         { ULONG MethodID; ULONG ID; Tag attr; ULONG *
 struct MUIP_TheBar_Sort            { ULONG MethodID; LONG obj[1]; };
 struct MUIP_TheBar_Remove          { ULONG MethodID; ULONG ID; };
 struct MUIP_TheBar_GetDragImage    { ULONG MethodID; ULONG horiz; ULONG flags; };
+struct MUIP_TheBar_Notify          { ULONG MethodID; ULONG ID; Tag attr; ULONG value; Object *dest; ULONG followParams; /* ... */ };
+struct MUIP_TheBar_KillNotify      { ULONG MethodID; ULONG ID; Tag attr; Object *dest; };
 
-/* MUIM_TheBar_SetAttr, MUIM_TheBar_GetAttr attr */
-#define MUIV_TheBar_Attr_Hide      (TBTAGBASE+0) /* v11 */
-#define MUIV_TheBar_Attr_Sleep     (TBTAGBASE+1) /* v11 */
-#define MUIV_TheBar_Attr_Disabled  (TBTAGBASE+2) /* v11 */
-#define MUIV_TheBar_Attr_Selected  (TBTAGBASE+3) /* v11 */
+/* MUIM_TheBar_SetAttr, MUIM_TheBar_GetAttr attributes */
+#define MUIA_TheBar_Attr_Hide      (TBTAGBASE+0) /* v11 */
+#define MUIA_TheBar_Attr_Sleep     (TBTAGBASE+1) /* v11 */
+#define MUIA_TheBar_Attr_Disabled  (TBTAGBASE+2) /* v11 */
+#define MUIA_TheBar_Attr_Selected  (TBTAGBASE+3) /* v11 */
+
+/* MUIM_Notify special Qualifier value */
+#define MUIV_TheBar_Qualifier      (0x49893135)  /* v21 */
 
 /***********************************************************************/
 /*
@@ -303,9 +313,9 @@ struct MUIP_TheBar_GetDragImage    { ULONG MethodID; ULONG horiz; ULONG flags; }
 #define MUIA_TheBar_MouseOver             (TBTAGBASE+72)  /* v18 ULONG,                         [ISGN]   */
 #define MUIA_TheBar_NtRaiseActive         (TBTAGBASE+73)  /* v18 BOOL,                          [ISGN]   */
 #define MUIA_TheBar_SpacersSize           (TBTAGBASE+74)  /* v18 BOOL,                          [ISGN]   */
-#define MUIA_TheBar_Appareance            (TBTAGBASE+75)  /* v19 struct MUIS_TheBar_Appareance, [..G.]   */
-#define MUIA_TheBar_IgnoreAppareance      (TBTAGBASE+76)  /* v19 BOOL                           [ISGN]   */
-#define MUIA_TheBar_ForceWindowActivity   (TBTAGBASE+77)  /* v20 BOOL                           [ISGN]   */ /* Private!!! */
+#define MUIA_TheBar_Appearance            (TBTAGBASE+75)  /* v19 struct MUIS_TheBar_Appearance, [..G.]   */
+#define MUIA_TheBar_IgnoreAppearance      (TBTAGBASE+76)  /* v19 BOOL                           [ISGN]   */
+#define MUIA_TheBar_ForceWindowActivity   (TBTAGBASE+77)  /* v20 BOOL                           [ISGN]   */ /* PRIVATE */
 
 /***********************************************************************/
 /*
@@ -315,33 +325,32 @@ struct MUIP_TheBar_GetDragImage    { ULONG MethodID; ULONG horiz; ULONG flags; }
 /* MUIA_TheBar_ViewMode */
 enum
 {
-    MUIV_TheBar_ViewMode_TextGfx,
-    MUIV_TheBar_ViewMode_Gfx,
-    MUIV_TheBar_ViewMode_Text,
+  MUIV_TheBar_ViewMode_TextGfx,
+  MUIV_TheBar_ViewMode_Gfx,
+  MUIV_TheBar_ViewMode_Text,
 
-    MUIV_TheBar_ViewMode_Last
-
+  MUIV_TheBar_ViewMode_Last
 };
 
 /* MUIA_TheBar_LabelPos */
 enum
 {
-    MUIV_TheBar_LabelPos_Bottom,
-    MUIV_TheBar_LabelPos_Top,
-    MUIV_TheBar_LabelPos_Right,
-    MUIV_TheBar_LabelPos_Left,
+  MUIV_TheBar_LabelPos_Bottom,
+  MUIV_TheBar_LabelPos_Top,
+  MUIV_TheBar_LabelPos_Right,
+  MUIV_TheBar_LabelPos_Left,
 
-    MUIV_TheBar_LabelPos_Last,
+  MUIV_TheBar_LabelPos_Last,
 };
 
 /* MUIA_TheBar_BarPos */
 enum
 {
-    MUIV_TheBar_BarPos_Left,
-    MUIV_TheBar_BarPos_Center,
-    MUIV_TheBar_BarPos_Right,
+  MUIV_TheBar_BarPos_Left,
+  MUIV_TheBar_BarPos_Center,
+  MUIV_TheBar_BarPos_Right,
 
-    MUIV_TheBar_BarPos_Last,
+  MUIV_TheBar_BarPos_Last,
 };
 
 #define MUIV_TheBar_BarPos_Up   MUIV_TheBar_BarPos_Left
@@ -350,53 +359,53 @@ enum
 /* MUIA_TheBar_Remove */
 enum
 {
-    MUIV_TheBar_Remove_BarSpacers    = 1<<0, /* v11 */
-    MUIV_TheBar_Remove_ButtonSpacers = 1<<1, /* v11 */
-    MUIV_TheBar_Remove_ImageSpacers  = 1<<2, /* v11 */
+  MUIV_TheBar_Remove_BarSpacers    = 1<<0, /* v11 */
+  MUIV_TheBar_Remove_ButtonSpacers = 1<<1, /* v11 */
+  MUIV_TheBar_Remove_ImageSpacers  = 1<<2, /* v11 */
 
-    MUIV_TheBar_Remove_All           = MUIV_TheBar_Remove_BarSpacers|MUIV_TheBar_Remove_ButtonSpacers|MUIV_TheBar_Remove_ImageSpacers,
+  MUIV_TheBar_Remove_All           = MUIV_TheBar_Remove_BarSpacers|MUIV_TheBar_Remove_ButtonSpacers|MUIV_TheBar_Remove_ImageSpacers,
 };
 
 /* MUIA_TheBar_Event */
 enum
 {
-    MUIV_TheBar_Event_IntuiTicks,
-    MUIV_TheBar_Event_MouseMove,
-    MUIV_TheBar_Event_MouseObject, /* Only valid for MUI >=3.9 */
+  MUIV_TheBar_Event_IntuiTicks,
+  MUIV_TheBar_Event_MouseMove,
+  MUIV_TheBar_Event_MouseObject, /* Only valid for MUI >=3.9 */
 
-    MUIV_TheBar_Event_Last,
+  MUIV_TheBar_Event_Last,
 };
 
 /* MUIA_TheBar_Precision */
 enum
 {
-    MUIV_TheBar_Precision_GUI,
-    MUIV_TheBar_Precision_Icon,
-    MUIV_TheBar_Precision_Image,
-    MUIV_TheBar_Precision_Exact,
+  MUIV_TheBar_Precision_GUI,
+  MUIV_TheBar_Precision_Icon,
+  MUIV_TheBar_Precision_Image,
+  MUIV_TheBar_Precision_Exact,
 
-    MUIV_TheBar_Precision_Last,
+  MUIV_TheBar_Precision_Last,
 };
 
 /* MUIA_TheBar_DisMode */
 enum
 {
-    MUIV_TheBar_DisMode_Shape,
-    MUIV_TheBar_DisMode_Grid,
-    MUIV_TheBar_DisMode_FullGrid,
-    MUIV_TheBar_DisMode_Sunny,
+  MUIV_TheBar_DisMode_Shape,
+  MUIV_TheBar_DisMode_Grid,
+  MUIV_TheBar_DisMode_FullGrid,
+  MUIV_TheBar_DisMode_Sunny,
 
-    MUIV_TheBar_DisMode_Last,
+  MUIV_TheBar_DisMode_Last,
 };
 
 /* MUIA_TheBar_SpacersSize */
 enum
 {
-     MUIV_TheBar_SpacersSize_Quarter,
-     MUIV_TheBar_SpacersSize_Half,
-     MUIV_TheBar_SpacersSize_One,
+  MUIV_TheBar_SpacersSize_Quarter,
+  MUIV_TheBar_SpacersSize_Half,
+  MUIV_TheBar_SpacersSize_One,
 
-     MUIV_TheBar_SpacersSize_Last,
+  MUIV_TheBar_SpacersSize_Last,
 };
 
 #define MUIV_TheBar_SkipPic ((STRPTR)(-1))
@@ -412,29 +421,29 @@ enum
 **/
 struct MUIS_TheBar_Brush
 {
-    APTR  data;             /* Source data - actually it may be only a UBYTE *            */
-    UWORD dataWidth;        /* Width of data                                              */
-    UWORD dataHeight;       /* Height of data                                             */
-    UWORD dataTotalWidth;   /* Total width of data                                        */
-    UWORD left;             /* Left offset in data of this brush                          */
-    UWORD top;              /* Top offset in data of this brush                           */
-    UWORD width;            /* Width of this brush                                        */
-    UWORD height;           /* Height of this brush                                       */
-    ULONG *colors;          /* R,G,B or 0x00RRGGBB ULONG table                            */
-    ULONG numColors;        /* Number of colors in colors                                 */
-    ULONG trColor;          /* Transparent color number; 0<=trColor<256 !                 */
-    ULONG compressedSize;   /* If data is byte run 1 compressed, it is its POSITIVE size  */
-    ULONG flags;            /* As it says                                                 */
-    ULONG reserved[4];      /* Avoid recompilation                                        */
+  APTR  data;             /* Source data - actually it may be only a UBYTE *            */
+  UWORD dataWidth;        /* Width of data                                              */
+  UWORD dataHeight;       /* Height of data                                             */
+  UWORD dataTotalWidth;   /* Total width of data                                        */
+  UWORD left;             /* Left offset in data of this brush                          */
+  UWORD top;              /* Top offset in data of this brush                           */
+  UWORD width;            /* Width of this brush                                        */
+  UWORD height;           /* Height of this brush                                       */
+  ULONG *colors;          /* R,G,B or 0x00RRGGBB ULONG table                            */
+  ULONG numColors;        /* Number of colors in colors                                 */
+  ULONG trColor;          /* Transparent color number; 0<=trColor<256 !                 */
+  ULONG compressedSize;   /* If data is byte run 1 compressed, it is its POSITIVE size  */
+  ULONG flags;            /* As it says                                                 */
+  ULONG reserved[4];      /* Avoid recompilation                                        */
 };
 
 enum
 {
-    BRFLG_ARGB      = 1<<0,
-    BRFLG_AlphaMask = 1<<1,
-    BRFLG_ColorRGB8 = 1<<2,
+  BRFLG_ARGB      = 1<<0,
+  BRFLG_AlphaMask = 1<<1,
+  BRFLG_ColorRGB8 = 1<<2,
 
-    BRFLG_EmpytAlpha = 1<<16,
+  BRFLG_EmpytAlpha = 1<<16,
 };
 
 /*
@@ -442,24 +451,24 @@ enum
 **/
 struct MUIS_TheBar_Strip
 {
-    struct BitMap *normalBM;    /* Normal BitMap        */
-    struct BitMap *greyBM;      /* Grey normal BitMap   */
-    struct BitMap *mask;        /* Normal mask          */
+  struct BitMap *normalBM;    /* Normal BitMap        */
+  struct BitMap *greyBM;      /* Grey normal BitMap   */
+  struct BitMap *mask;        /* Normal mask          */
 
-    struct BitMap *snormalBM;   /* Selected BitMap      */
-    struct BitMap *sgreyBM;     /* Selected grey BitMap */
-    struct BitMap *smask;       /* Selected mask        */
+  struct BitMap *snormalBM;   /* Selected BitMap      */
+  struct BitMap *sgreyBM;     /* Selected grey BitMap */
+  struct BitMap *smask;       /* Selected mask        */
 
-    struct BitMap *dnormalBM;   /* Disabled BitMap      */
-    struct BitMap *dgreyBM;     /* Grey disabled BitMap */
-    struct BitMap *dmask;       /* Grey mask            */
+  struct BitMap *dnormalBM;   /* Disabled BitMap      */
+  struct BitMap *dgreyBM;     /* Grey disabled BitMap */
+  struct BitMap *dmask;       /* Grey mask            */
 
-    UBYTE	  *nchunky;
-    UBYTE	  *gchunky;
-    UBYTE         *snchunky;
-    UBYTE         *sgchunky;
-    UBYTE         *dnchunky;
-    UBYTE	  *dgchunky;
+  UBYTE	*nchunky;
+  UBYTE	*gchunky;
+  UBYTE *snchunky;
+  UBYTE *sgchunky;
+  UBYTE *dnchunky;
+  UBYTE	*dgchunky;
 };
 
 
@@ -481,13 +490,13 @@ struct MUIS_TheBar_Button
 /* flags */
 enum
 {
-    MUIV_TheBar_ButtonFlag_NoClick   = 1<<0, /* v11 MUIA_InputMode is MUIV_InputMode_None      */
-    MUIV_TheBar_ButtonFlag_Immediate = 1<<1, /* v11 MUIA_InputMode is MUIV_InputMode_Immediate */
-    MUIV_TheBar_ButtonFlag_Toggle    = 1<<2, /* v11 MUIA_InputMode is MUIV_InputMode_Toggle    */
-    MUIV_TheBar_ButtonFlag_Disabled  = 1<<3, /* v11 MUIA_Disabled is TRUE                      */
-    MUIV_TheBar_ButtonFlag_Selected  = 1<<4, /* v11 MUIA_Selected is TRUE                      */
-    MUIV_TheBar_ButtonFlag_Sleep     = 1<<5, /* v11 MUIA_ShowMe is FALSE                       */
-    MUIV_TheBar_ButtonFlag_Hide      = 1<<6, /* v11 MUIA_ShowMe is FALSE                       */
+  MUIV_TheBar_ButtonFlag_NoClick   = 1<<0, /* v11 MUIA_InputMode is MUIV_InputMode_None      */
+  MUIV_TheBar_ButtonFlag_Immediate = 1<<1, /* v11 MUIA_InputMode is MUIV_InputMode_Immediate */
+  MUIV_TheBar_ButtonFlag_Toggle    = 1<<2, /* v11 MUIA_InputMode is MUIV_InputMode_Toggle    */
+  MUIV_TheBar_ButtonFlag_Disabled  = 1<<3, /* v11 MUIA_Disabled is TRUE                      */
+  MUIV_TheBar_ButtonFlag_Selected  = 1<<4, /* v11 MUIA_Selected is TRUE                      */
+  MUIV_TheBar_ButtonFlag_Sleep     = 1<<5, /* v11 MUIA_ShowMe is FALSE                       */
+  MUIV_TheBar_ButtonFlag_Hide      = 1<<6, /* v11 MUIA_ShowMe is FALSE                       */
 };
 
 /* Special img values */
@@ -499,31 +508,31 @@ enum
 /* Returned by MUIM_TheBar_GetDragImage */
 struct MUIS_TheBar_DragImage
 {
-    ULONG                width;
-    ULONG                height;
-    struct BitMap        *bitMap;
-    struct MUI_DragImage *di;       /* Defined in MUIundoc.h */
-    ULONG                dummy[8];  /* Avoid recompilation   */
+  ULONG                width;
+  ULONG                height;
+  struct BitMap        *bitMap;
+  struct MUI_DragImage *di;       /* Defined in MUIundoc.h */
+  ULONG                dummy[8];  /* Avoid recompilation   */
 };
 
-/* MUIA_TheBar_Appareance */
-struct MUIS_TheBar_Appareance
+/* MUIA_TheBar_Appearance */
+struct MUIS_TheBar_Appearance
 {
-    ULONG viewMode;
-    ULONG flags;
-    ULONG labelPos;
-    ULONG dummy[2];
+  ULONG viewMode;
+  ULONG flags;
+  ULONG labelPos;
+  ULONG dummy[2];
 };
 
 /* flags */
 enum
 {
-    MUIV_TheBar_Appareance_Borderless = 1<<0,
-    MUIV_TheBar_Appareance_Raised     = 1<<1,
-    MUIV_TheBar_Appareance_Sunny      = 1<<2,
-    MUIV_TheBar_Appareance_Scaled     = 1<<3,
-    MUIV_TheBar_Appareance_BarSpacer  = 1<<4,
-    MUIV_TheBar_Appareance_EnableKeys = 1<<5,
+  MUIV_TheBar_Appearance_Borderless = 1<<0,
+  MUIV_TheBar_Appearance_Raised     = 1<<1,
+  MUIV_TheBar_Appearance_Sunny      = 1<<2,
+  MUIV_TheBar_Appearance_Scaled     = 1<<3,
+  MUIV_TheBar_Appearance_BarSpacer  = 1<<4,
+  MUIV_TheBar_Appearance_EnableKeys = 1<<5,
 };
 
 /***********************************************************************/

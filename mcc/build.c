@@ -172,7 +172,7 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
         }
         else
         {
-            copymem(chunky,image->data,size);
+            memcpy(chunky,image->data,size);
 
             if (alpha)
             {
@@ -211,7 +211,7 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
             }
         }
 
-        if (flags & MFLG_Grey) copymem(copy->grey = chunky+size,chunky,size);
+        if (flags & MFLG_Grey) memcpy(copy->grey = chunky+size,chunky,size);
     }
 
     RETURN(chunky);
@@ -477,7 +477,7 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
 
             maskDone = TRUE;
         }
-        else copymem(chunky,image->data,size);
+        else memcpy(chunky,image->data,size);
 
 
         if (!maskDone && (alpha || gdest))

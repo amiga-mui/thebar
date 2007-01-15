@@ -41,25 +41,6 @@
 
 #include "SDI_hook.h"
 
-// global data
-static const char *appareances[] = { "Images and text", "Images", "Text", NULL};
-static const char *labelPoss[] = { "Bottom", "Top", "Right", "Left", NULL};
-
-static struct MUIS_TheBar_Button buttons[] =
-{
-  { 0, 0, "_Pred", "Pread mail.",    0, 0, NULL, NULL },
-  { 1, 1, "_Next", "Next mail.",     0, 0, NULL, NULL },
-  { 2, 2, "_Move", "Move somewhere.",0, 0, NULL, NULL },
-  { MUIV_TheBar_BarSpacer, 3, NULL, NULL, 0, 0, NULL, NULL },
-  { 3, 4, "_Forw", "Forward somewhere.", 0, 0, NULL, NULL },
-  { 4, 5, "F_ind", "Find something.", 0, 0, NULL, NULL },
-  { 5, 6, "_Save", "Save mail.", 0, 0, NULL, NULL },
-  { MUIV_TheBar_End , 0, NULL, NULL, 0, 0, NULL, NULL },
-};
-
-
-// static hooks
-
 #if defined(__amigaos4__)
 struct Library *GfxBase = NULL;
 struct Library *IntuitionBase = NULL;
@@ -98,6 +79,45 @@ struct MUI_CustomClass *lib_spacerClass = NULL;
 struct MUI_CustomClass *lib_dragBarClass = NULL;
 ULONG lib_flags = 0;
 
+// global data
+static const char *appearances[] = { "Images and text", "Images", "Text", NULL};
+static const char *labelPoss[] = { "Bottom", "Top", "Right", "Left", NULL};
+
+static struct MUIS_TheBar_Button buttons[] =
+{
+  { 0, 0, "_Pred", "Pread mail.",    0, 0, NULL, NULL },
+  { 1, 1, "_Next", "Next mail.",     0, 0, NULL, NULL },
+  { 2, 2, "_Move", "Move somewhere.",0, 0, NULL, NULL },
+  { MUIV_TheBar_BarSpacer, 3, NULL, NULL, 0, 0, NULL, NULL },
+  { 3, 4, "_Forw", "Forward somewhere.", 0, 0, NULL, NULL },
+  { 4, 5, "F_ind", "Find something.", 0, 0, NULL, NULL },
+  { 5, 6, "_Save", "Save mail.", 0, 0, NULL, NULL },
+  { MUIV_TheBar_End , 0, NULL, NULL, 0, 0, NULL, NULL },
+};
+
+// static hooks
+HOOKPROTONHNO(SaveFunc, ULONG, ULONG *qual)
+{
+  printf("SaveHook triggered: %08lx\n", *qual);
+
+  return 0;
+}
+MakeStaticHook(SaveHook, SaveFunc);
+
+HOOKPROTONHNO(SleepFunc, ULONG, Object **sb)
+{
+  ULONG sleeping;
+
+  DoMethod(*sb, MUIM_TheBar_GetAttr, 6, MUIA_TheBar_Attr_Sleep, &sleeping);
+
+  printf("SleepHook triggered: %08lx %ld\n", (ULONG)*sb, sleeping);
+
+  DoMethod(*sb, MUIM_TheBar_SetAttr, 6, MUIA_TheBar_Attr_Sleep, !sleeping);
+
+  return 0;
+}
+MakeStaticHook(SleepHook, SleepFunc);
+
 int main(void)
 {
   if((GfxBase = (APTR)OpenLibrary("graphics.library", 38)) &&
@@ -126,7 +146,7 @@ int main(void)
     if((MUIMasterBase = OpenLibrary("muimaster.library", MUIMASTER_VMIN)) &&
       GETINTERFACE(IMUIMaster, MUIMasterBase))
     {
-      Object *app, *win, *sb, *appareance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
+      Object *app, *win, *sb, *appearance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
 
       // now we init our subclasses
       initSpacerClass();
@@ -159,8 +179,8 @@ int main(void)
                              Child, VGroup,
                                GroupFrameT("Settings"),
                                Child, HGroup,
-                                 Child, Label2("Appareance"),
-                                 Child, appareance = MUI_MakeObject(MUIO_Cycle,NULL,appareances),
+                                 Child, Label2("Appearance"),
+                                 Child, appearance = MUI_MakeObject(MUIO_Cycle,NULL,appearances),
                                  Child, Label2("Label pos"),
                                  Child, labelPos = MUI_MakeObject(MUIO_Cycle,NULL,labelPoss),
                                End,
@@ -192,20 +212,24 @@ int main(void)
 
         set(win,MUIA_Window_Open,TRUE);
 
+        // now we generate some notifies
+        DoMethod(sb, MUIM_TheBar_Notify, 5, MUIA_Pressed, FALSE, sb, 3, MUIM_CallHook, &SleepHook, sb);
+        DoMethod(sb, MUIM_TheBar_Notify, 6, MUIA_Pressed, FALSE, sb, 3, MUIM_CallHook, &SaveHook, MUIV_TheBar_Qualifier);
+
         while((LONG)(id = DoMethod(app,MUIM_Application_NewInput,&sigs)) != MUIV_Application_ReturnID_Quit)
         {
           if(id==TAG_USER)
           {
-            ULONG appareanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
+            ULONG appearanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
 
-            get(appareance,MUIA_Cycle_Active,&appareanceV);
+            get(appearance,MUIA_Cycle_Active,&appearanceV);
             get(labelPos,MUIA_Cycle_Active,&labelPosV);
             get(borderless,MUIA_Selected,&borderlessV);
             get(sunny,MUIA_Selected,&sunnyV);
             get(raised,MUIA_Selected,&raisedV);
             get(scaled,MUIA_Selected,&scaledV);
 
-            SetAttrs(sb,MUIA_TheBar_ViewMode,   appareanceV,
+            SetAttrs(sb,MUIA_TheBar_ViewMode,   appearanceV,
                         MUIA_TheBar_LabelPos,   labelPosV,
                         MUIA_TheBar_Borderless, borderlessV,
                         MUIA_TheBar_Sunny,      sunnyV,

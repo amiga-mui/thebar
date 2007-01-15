@@ -114,7 +114,7 @@ main(int argc,char **argv)
                         End,
 
                         Child, VGroup,
-                            GroupFrameT("Appareance"),
+                            GroupFrameT("Appearance"),
                             Child, ColGroup(2),
                                 Child, Label2("Rows"),
                                 Child, HGroup,

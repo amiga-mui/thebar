@@ -89,7 +89,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         static const char *labelPoss[5];
 
         regs[0] = GetStr(Msg_Reg_Colors);
-        regs[1] = GetStr(Msg_Reg_Appareance);
+        regs[1] = GetStr(Msg_Reg_Appearance);
         regs[2] = GetStr(Msg_Reg_Spacing);
         regs[3] = GetStr(Msg_Reg_Options);
         regs[4] = NULL;
@@ -273,7 +273,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 End, // <Colors
 
-                Child, VGroup, // >Appareance
+                Child, VGroup, // >Appearance
                     MUIA_Frame, MUIV_Frame_Virtual,
                     Child, ColGroup(2),
                         Child, olabel2(Msg_TextFont),
@@ -308,7 +308,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     	//MUIA_Weight, 0,
                         TextFrame,
                     	MUIA_Background,    MUII_TextBack,
-                    	MUIA_Text_Contents, GetStr(Msg_Appareance_Text),
+                    	MUIA_Text_Contents, GetStr(Msg_Appearance_Text),
                     End,*/
 
                     Child, HGroup,
@@ -341,7 +341,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                             Child, owspace(1),
                         End,
                     End,
-                End, // <Appareance
+                End, // <Appearance
 
                 Child, ColGroup(2),  // >Spacing
                     Child, VGroup, // >Group spacing
@@ -500,14 +500,14 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->textFont,MUICFG_TheBar_TextFont,1,(ULONG)GetStr(Msg_TextFont));
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->textGfxFont,MUICFG_TheBar_TextGfxFont,1,(ULONG)GetStr(Msg_TextGfxFont));
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->textOverUseShine,MUICFG_TheBar_TextOverUseShine,1,(ULONG)GetStr(Msg_TextOverUseShine));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->viewMode,MUICFG_TheBar_Appareance,1,(ULONG)(at = GetStr(Msg_Reg_Appareance)));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->labelPos,MUICFG_TheBar_Appareance,1,(ULONG)at);
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->borderless,MUICFG_TheBar_Appareance,1,(ULONG)at);
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->raised,MUICFG_TheBar_Appareance,1,(ULONG)at);
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->sunny,MUICFG_TheBar_Appareance,1,(ULONG)at);
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->scaled,MUICFG_TheBar_Appareance,1,(ULONG)at);
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacer,MUICFG_TheBar_Appareance,1,(ULONG)at);
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->enableKeys,MUICFG_TheBar_Appareance,1,(ULONG)at);
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->viewMode,MUICFG_TheBar_Appearance,1,(ULONG)(at = GetStr(Msg_Reg_Appearance)));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->labelPos,MUICFG_TheBar_Appearance,1,(ULONG)at);
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->borderless,MUICFG_TheBar_Appearance,1,(ULONG)at);
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->raised,MUICFG_TheBar_Appearance,1,(ULONG)at);
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->sunny,MUICFG_TheBar_Appearance,1,(ULONG)at);
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->scaled,MUICFG_TheBar_Appearance,1,(ULONG)at);
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacer,MUICFG_TheBar_Appearance,1,(ULONG)at);
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->enableKeys,MUICFG_TheBar_Appearance,1,(ULONG)at);
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->horizSpacing,MUICFG_TheBar_HorizSpacing,1,(ULONG)GetStr(Msg_HorizGroupSpacing));
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->vertSpacing,MUICFG_TheBar_VertSpacing,1,(ULONG)GetStr(Msg_VertGroupSpacing));
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->barSpacerSpacing,MUICFG_TheBar_BarSpacerSpacing,1,(ULONG)GetStr(Msg_BarSpacerSpacing));
@@ -610,8 +610,8 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static struct MUIS_TheBar_Appareance staticAp = { MUIDEF_TheBar_Appareance_ViewMode,
-                                                  MUIDEF_TheBar_Appareance_Flags,
+static struct MUIS_TheBar_Appearance staticAp = { MUIDEF_TheBar_Appearance_ViewMode,
+                                                  MUIDEF_TheBar_Appearance_Flags,
                                                   0,
                                                   { 0, 0 }
                                                 };
@@ -622,7 +622,7 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     struct InstData                   *data = INST_DATA(cl, obj );
     Object                        *cfg = msg->configdata;
     APTR                                   ptr;
-    struct MUIS_TheBar_Appareance *ap;
+    struct MUIS_TheBar_Appearance *ap;
     ULONG                         v;
     ULONG                                  *val;
 
@@ -717,17 +717,17 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
         ptr = MUIDEF_TheBar_TextGfxFont;
     set(data->textGfxFont,MUIA_String_Contents,ptr);
 
-    if (!(ap = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Appareance)))
+    if (!(ap = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Appearance)))
         ap = &staticAp;
 
     set(data->viewMode,MUIA_Cycle_Active,ap->viewMode);
     set(data->labelPos,MUIA_Cycle_Active,ap->labelPos);
-    set(data->borderless,MUIA_Selected,ap->flags & MUIV_TheBar_Appareance_Borderless);
-    set(data->raised,MUIA_Selected,ap->flags & MUIV_TheBar_Appareance_Raised);
-    set(data->sunny,MUIA_Selected,ap->flags & MUIV_TheBar_Appareance_Sunny);
-    set(data->scaled,MUIA_Selected,ap->flags & MUIV_TheBar_Appareance_Scaled);
-    set(data->barSpacer,MUIA_Selected,ap->flags & MUIV_TheBar_Appareance_BarSpacer);
-    set(data->enableKeys,MUIA_Selected,ap->flags & MUIV_TheBar_Appareance_EnableKeys);
+    set(data->borderless,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Borderless);
+    set(data->raised,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Raised);
+    set(data->sunny,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Sunny);
+    set(data->scaled,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Scaled);
+    set(data->barSpacer,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_BarSpacer);
+    set(data->enableKeys,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_EnableKeys);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_HorizSpacing)) ?
         *val : MUIDEF_TheBar_HorizSpacing;
@@ -831,7 +831,7 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
 {
     struct InstData           *data = INST_DATA(cl,obj);
     Object                *cfg = msg->configdata;
-    struct MUIS_TheBar_Appareance      ap;
+    struct MUIS_TheBar_Appearance      ap;
     STRPTR                         ptr;
     ULONG                          val;
 
@@ -912,13 +912,13 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     get(data->viewMode,MUIA_Cycle_Active,&ap.viewMode);
     get(data->labelPos,MUIA_Cycle_Active,&ap.labelPos);
     ap.flags = 0;
-    if (xget(data->borderless,MUIA_Selected)) ap.flags |= MUIV_TheBar_Appareance_Borderless;
-    if (xget(data->raised,MUIA_Selected))     ap.flags |= MUIV_TheBar_Appareance_Raised;
-    if (xget(data->sunny,MUIA_Selected))      ap.flags |= MUIV_TheBar_Appareance_Sunny;
-    if (xget(data->scaled,MUIA_Selected))     ap.flags |= MUIV_TheBar_Appareance_Scaled;
-    if (xget(data->barSpacer,MUIA_Selected))  ap.flags |= MUIV_TheBar_Appareance_BarSpacer;
-    if (xget(data->enableKeys,MUIA_Selected)) ap.flags |= MUIV_TheBar_Appareance_EnableKeys;
-    addconfigitem(cfg,&ap,sizeof(ap),MUICFG_TheBar_Appareance);
+    if (xget(data->borderless,MUIA_Selected)) ap.flags |= MUIV_TheBar_Appearance_Borderless;
+    if (xget(data->raised,MUIA_Selected))     ap.flags |= MUIV_TheBar_Appearance_Raised;
+    if (xget(data->sunny,MUIA_Selected))      ap.flags |= MUIV_TheBar_Appearance_Sunny;
+    if (xget(data->scaled,MUIA_Selected))     ap.flags |= MUIV_TheBar_Appearance_Scaled;
+    if (xget(data->barSpacer,MUIA_Selected))  ap.flags |= MUIV_TheBar_Appearance_BarSpacer;
+    if (xget(data->enableKeys,MUIA_Selected)) ap.flags |= MUIV_TheBar_Appearance_EnableKeys;
+    addconfigitem(cfg,&ap,sizeof(ap),MUICFG_TheBar_Appearance);
 
     get(data->horizSpacing,MUIA_Numeric_Value,&val);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_HorizSpacing);
@@ -1080,15 +1080,15 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
 
             set(data->textFont,MUIA_String_Contents,MUIDEF_TheBar_TextFont);
             set(data->textGfxFont,MUIA_String_Contents,MUIDEF_TheBar_TextGfxFont);
-            set(data->viewMode,MUIA_Cycle_Active,MUIDEF_TheBar_Appareance_ViewMode);
-            set(data->labelPos,MUIA_Cycle_Active,MUIDEF_TheBar_Appareance_LabelPos);
+            set(data->viewMode,MUIA_Cycle_Active,MUIDEF_TheBar_Appearance_ViewMode);
+            set(data->labelPos,MUIA_Cycle_Active,MUIDEF_TheBar_Appearance_LabelPos);
             set(data->scale,MUIA_Numeric_Value,MUIDEF_TheBar_Scale);
-            set(data->borderless,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_Borderless);
-            set(data->raised,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_Raised);
-            set(data->sunny,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_Sunny);
-            set(data->scaled,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_Scaled);
-            set(data->barSpacer,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_BarSpacer);
-            set(data->enableKeys,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_EnableKeys);
+            set(data->borderless,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Borderless);
+            set(data->raised,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Raised);
+            set(data->sunny,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Sunny);
+            set(data->scaled,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Scaled);
+            set(data->barSpacer,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_BarSpacer);
+            set(data->enableKeys,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_EnableKeys);
 
             set(data->horizSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_HorizSpacing);
             set(data->vertSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_VertSpacing);
@@ -1139,15 +1139,15 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
 
             set(data->textFont,MUIA_String_Contents,MUIDEF_TheBar_TextFont);
             set(data->textGfxFont,MUIA_String_Contents,MUIDEF_TheBar_TextGfxFont);
-            set(data->viewMode,MUIA_Cycle_Active,MUIDEF_TheBar_Appareance_ViewMode);
-            set(data->labelPos,MUIA_Cycle_Active,MUIDEF_TheBar_Appareance_LabelPos);
+            set(data->viewMode,MUIA_Cycle_Active,MUIDEF_TheBar_Appearance_ViewMode);
+            set(data->labelPos,MUIA_Cycle_Active,MUIDEF_TheBar_Appearance_LabelPos);
             set(data->scale,MUIA_Numeric_Value,MUIDEF_TheBar_Scale);
-            set(data->borderless,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_Borderless);
-            set(data->raised,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_Raised);
-            set(data->sunny,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_Sunny);
-            set(data->scaled,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_Scaled);
-            set(data->barSpacer,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_BarSpacer);
-            set(data->enableKeys,MUIA_Selected,MUIDEF_TheBar_Appareance_Flags & MUIV_TheBar_Appareance_EnableKeys);
+            set(data->borderless,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Borderless);
+            set(data->raised,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Raised);
+            set(data->sunny,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Sunny);
+            set(data->scaled,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Scaled);
+            set(data->barSpacer,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_BarSpacer);
+            set(data->enableKeys,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_EnableKeys);
 
             set(data->horizSpacing,MUIA_Numeric_Value,ALFIE_HorizSpacing);
             set(data->vertSpacing,MUIA_Numeric_Value,ALFIE_VertSpacing);

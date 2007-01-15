@@ -93,7 +93,7 @@ main(int argc,char **argv)
                     WindowContents, VGroup,
 
                         Child, VGroup,
-                            GroupFrameT("Appareance"),
+                            GroupFrameT("Appearance"),
                             Child, ColGroup(2),
                                 Child, Label2("Rows"),
                                 Child, HGroup,

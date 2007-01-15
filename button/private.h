@@ -47,6 +47,7 @@ struct pen
 
 struct InstData
 {
+    APTR                        pool;                   // private memory pool for allocations
     Object                      *tb;                    // Parent TheBar object, if any
     ULONG                       id;                     // As it says
 
@@ -125,12 +126,16 @@ struct InstData
     ULONG                       flags2;                 // As it says
     ULONG                       userFlags;              // As it says
 
-    UBYTE	                *nchunky;               // Normal chunky
-    UBYTE	                *gchunky;               // Sunny chunky
-    UBYTE               	*snchunky;              // Selected chunky
-    UBYTE               	*sgchunky;              // Selected sunny chunky
-    UBYTE        	        *dnchunky;              // Disabled chunky
-    UBYTE	                *dgchunky;              // Disabled sunny chunky
+    UBYTE	                      *nchunky;               // Normal chunky
+    UBYTE	                      *gchunky;               // Sunny chunky
+    UBYTE               	      *snchunky;              // Selected chunky
+    UBYTE               	      *sgchunky;              // Selected sunny chunky
+    UBYTE        	              *dnchunky;              // Disabled chunky
+    UBYTE	                      *dgchunky;              // Disabled sunny chunky
+
+    struct MinList              notifyList;             // list of set notifies on the button
+
+    ULONG                       qualifier;              // cureently active RAWKEY-Qualifiers
 };
 
 /* flags */
@@ -201,6 +206,13 @@ enum
     UFLG_NtRaiseActive           = 1<<20,
 };
 
+// Notify
+struct ButtonNotify
+{
+  struct MinNode     node;  // to link it in the notifies list of a button
+  struct MUIP_Notify msg;   // the cached MUI Notify message
+};
+
 /***********************************************************************/
 
 #define MUIVER20 20
@@ -210,7 +222,6 @@ enum
 // some general macros
 #define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
 #define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
-#define copymem(to,from,len)            memcpy((to), (from), (len))
 #define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))

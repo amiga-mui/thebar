@@ -2,7 +2,7 @@ TABLE OF CONTENTS
 
 TheBar.mcc/TheBar.mcc
 TheBar.mcc/MUIA_TheBar_Active
-TheBar.mcc/MUIA_TheBar_Appareance
+TheBar.mcc/MUIA_TheBar_Appearance
 TheBar.mcc/MUIA_TheBar_BarPos
 TheBar.mcc/MUIA_TheBar_BarSpacer
 TheBar.mcc/MUIA_TheBar_BarSpacerSpacing
@@ -24,7 +24,7 @@ TheBar.mcc/MUIA_TheBar_FreeHoriz
 TheBar.mcc/MUIA_TheBar_FreeVert
 TheBar.mcc/MUIA_TheBar_HorizSpacing
 TheBar.mcc/MUIA_TheBar_HorizTextGfxSpacing
-TheBar.mcc/MUIA_TheBar_IgnoreAppareance
+TheBar.mcc/MUIA_TheBar_IgnoreAppearance
 TheBar.mcc/MUIA_TheBar_IgnoreDisImages
 TheBar.mcc/MUIA_TheBar_IgnoreSelImages
 TheBar.mcc/MUIA_TheBar_Images
@@ -129,20 +129,20 @@ TheBar.mcc/MUIM_TheBar_Sort
      attribute will always contain the ID of the last selected
      button.
 
-TheBar.mcc/MUIA_TheBar_Appareance
+TheBar.mcc/MUIA_TheBar_Appearance
 
     NAME
-     MUIA_TheBar_Appareance -- struct MUIS_TheBar_Apapreance, [..G.]
+     MUIA_TheBar_Appearance -- struct MUIS_TheBar_Apapreance, [..G.]
 
 
     FUNCTION
-     Since version 19, the user is able to change the appareance
+     Since version 19, the user is able to change the appearance
      of the object in the MUI preference. If you want to get the
-     actual appareance you may use this attribute.
+     actual appearance you may use this attribute.
 
      It returns a pointer to the structure:
 
-     struct MUIS_TheBar_Appareance
+     struct MUIS_TheBar_Appearance
      {
          ULONG viewMode;
          ULONG labelPos;
@@ -155,16 +155,16 @@ TheBar.mcc/MUIM_TheBar_Sort
 
      - flags is a combination of:
 
-       MUIV_TheBar_Appareance_Borderless
-       MUIV_TheBar_Appareance_Raised
-       MUIV_TheBar_Appareance_Sunny
-       MUIV_TheBar_Appareance_Scaled
-       MUIV_TheBar_Appareance_BarSpacer
-       MUIV_TheBar_Appareance_EnableKeys
+       MUIV_TheBar_Appearance_Borderless
+       MUIV_TheBar_Appearance_Raised
+       MUIV_TheBar_Appearance_Sunny
+       MUIV_TheBar_Appearance_Scaled
+       MUIV_TheBar_Appearance_BarSpacer
+       MUIV_TheBar_Appearance_EnableKeys
 
 
     SEE
-     MUIA_TheBar_IgnoreAppareance
+     MUIA_TheBar_IgnoreAppearance
 
 TheBar.mcc/MUIA_TheBar_BarPos
 
@@ -645,25 +645,25 @@ TheBar.mcc/MUIM_TheBar_Sort
      Note that this overwrites the user preferences and so must
      be used sparely.
 
-TheBar.mcc/MUIA_TheBar_IgnoreAppareance
+TheBar.mcc/MUIA_TheBar_IgnoreAppearance
 
     NAME
-     MUIA_TheBar_IgnoreAppareance -- BOOL, [ISGN]
+     MUIA_TheBar_IgnoreAppearance -- BOOL, [ISGN]
 
 
     FUNCTION
-     Since version 19, the user is able to change the appareance
+     Since version 19, the user is able to change the appearance
      of the object in the MUI preference.
 
-     If this attribute is TRUE, MCP appareance preferences are
-     ignored. If this attribute is FALSE, MCP appareance
+     If this attribute is TRUE, MCP appearance preferences are
+     ignored. If this attribute is FALSE, MCP appearance
      preferences are used.
 
      Default TRUE.
 
 
     SEE
-     MUIA_TheBase_Appareance
+     MUIA_TheBase_Appearance
 
 TheBar.mcc/MUIA_TheBar_IgnoreDisImages
 

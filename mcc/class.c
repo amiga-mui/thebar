@@ -33,7 +33,7 @@
 /***********************************************************************/
 
 static Object *
-makeButton(struct button *button,Object *obj,struct InstData *data)
+makeButton(struct Button *button,Object *obj,struct InstData *data)
 {
     Object                   *o;
     struct MUIS_TheBar_Brush *brush, *sbrush, *dbrush;
@@ -291,13 +291,13 @@ static ULONG
 orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
 {
     struct MUIP_Group_Sort *smsg;
-    struct button          *button, *succ;
+    struct Button          *button, *succ;
     Object                 **o;
     ULONG                  n;
 
     ENTER();
 
-    for(n = 0, button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+    for(n = 0, button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
         if (!(button->flags & (BFLG_Sleep|BFLG_Hide))) n++;
 
     if (data->db) n++;
@@ -318,7 +318,7 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
     }
     else o = smsg->obj;
 
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
         if (!(button->flags & (BFLG_Sleep|BFLG_Hide))) *o++ = button->obj;
 
     *o = NULL;
@@ -1075,7 +1075,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                     {
                         brush->dataTotalWidth = tw;
 
-                        if (colors && numColors) copymem(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                        if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                         brush->numColors = numColors;
 
                         if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
@@ -1110,7 +1110,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                         }
                         else
                         {
-                            if (colors && numColors) copymem(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                            if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                             brush->numColors = numColors;
 
                             if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
@@ -1130,18 +1130,82 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 
 /***********************************************************************/
 
-static struct button *
-findButton(struct InstData *data,ULONG ID)
+static struct Button *
+findButton(struct InstData *data, ULONG ID)
 {
-    struct button *button, *succ;
+  struct MinNode *node;
+  struct Button *result = NULL;
 
-    ENTER();
+  ENTER();
 
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
-        if (button->ID==ID) return button;
+  for(node = data->buttons.mlh_Head; node->mln_Succ; node = node->mln_Succ)
+  {
+    struct Button *button = (struct Button *)node;
 
-    RETURN(NULL);
-    return NULL;
+    if(button->ID == ID)
+    {
+      result = button;
+      break;
+    }
+  }
+
+  RETURN(result);
+  return result;
+}
+
+/***********************************************************************/
+
+static void
+removeButton(struct IClass *cl, Object *obj, struct Button *button)
+{
+  struct InstData *data = INST_DATA(cl,obj);
+  APTR pool = data->pool;
+
+  ENTER();
+
+  D(DBF_STARTUP, "freeing button %d: %08lx", button->ID, button);
+
+  // remove the MUI object as well
+  if(button->obj)
+  {
+    D(DBF_STARTUP, " freeing button's MUI object...");
+
+    // if the button is not hided it might still be a member of
+    // the thebar object hierarchy
+    if(!(button->flags & BFLG_Hide))
+      DoSuperMethod(cl, obj, OM_REMMEMBER, (ULONG)button->obj);
+
+    MUI_DisposeObject(button->obj);
+    button->obj = NULL;
+  }
+
+  // cleanup the notifyListClone
+  if(IsMinListEmpty(&button->notifyListClone) == FALSE)
+  {
+    struct MinNode *notifyNode;
+
+    D(DBF_STARTUP, " freeing notifyListClone...");
+
+    for(notifyNode = button->notifyListClone.mlh_Head; notifyNode->mln_Succ; )
+    {
+      struct ButtonNotify *notify = (struct ButtonNotify *)notifyNode;
+
+      // go on in the list in advance
+      notifyNode = notifyNode->mln_Succ;
+
+      // remove from list and free
+      Remove((struct Node *)notify);
+      freeVecPooled(pool, notify);
+    }
+  }
+
+  // remove the button from our list
+  Remove((struct Node *)button);
+
+  // free the buttons' occupied memory
+  FreePooled(pool, button, sizeof(struct Button));
+
+  LEAVE();
 }
 
 /***********************************************************************/
@@ -1149,11 +1213,11 @@ findButton(struct InstData *data,ULONG ID)
 static void
 updateRemove(struct IClass *cl,Object *obj,struct InstData *data)
 {
-    struct button *button, *succ;
+    struct Button *button, *succ;
 
     ENTER();
 
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
     {
         ULONG sp;
 
@@ -1303,7 +1367,7 @@ ULONG ptable[] =
     #endif
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_BarSpacer,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_BarSpacer),
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_AutoSpacerOrient,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_AutoSpacerOrient),
-    PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_IgnoreAppareance,pack,flags2,PKCTRL_BIT|PKCTRL_PACKONLY,FLG2_IgnoreAppareance),
+    PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_IgnoreAppearance,pack,flags2,PKCTRL_BIT|PKCTRL_PACKONLY,FLG2_IgnoreAppearance),
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_ForceWindowActivity,pack,flags2,PKCTRL_BIT|PKCTRL_PACKONLY,FLG2_ForceWindowActivity ),
 
     /* Flags existance */
@@ -1402,7 +1466,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     pt.labelPos = MUIV_TheBar_LabelPos_Bottom;
     pt.barPos   = MUIV_TheBar_BarPos_Left;
     pt.spacer   = pt.stripCols = pt.stripRows = pt.stripHSpace = pt.stripVSpace = -1;
-    pt.flags2   = FLG2_IgnoreAppareance;
+    pt.flags2   = FLG2_IgnoreAppearance;
 
     PackStructureTags(&pt,ptable,attrs);
 
@@ -1532,7 +1596,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                             for (j = hofs = 0; j<cols; j++, hofs += w+horizSpace)
                             {
-                                copymem(pt.brushes[x] = brush,&sb,sizeof(struct MUIS_TheBar_Brush));
+                                memcpy(pt.brushes[x] = brush,&sb,sizeof(struct MUIS_TheBar_Brush));
                                 brush->left   = hofs;
                                 brush->top    = vofs;
                                 brush->width  = w;
@@ -1541,7 +1605,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                                 if (sbrush)
                                 {
-                                    copymem(pt.sbrushes[x] = sbrush,&ssb,sizeof(struct MUIS_TheBar_Brush));
+                                    memcpy(pt.sbrushes[x] = sbrush,&ssb,sizeof(struct MUIS_TheBar_Brush));
                                     sbrush->left   = hofs;
                                     sbrush->top    = vofs;
                                     sbrush->width  = w;
@@ -1551,7 +1615,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                                 if (dbrush)
                                 {
-                                    copymem(pt.dbrushes[x] = dbrush,&dsb,sizeof(struct MUIS_TheBar_Brush));
+                                    memcpy(pt.dbrushes[x] = dbrush,&dsb,sizeof(struct MUIS_TheBar_Brush));
                                     dbrush->left   = hofs;
                                     dbrush->top    = vofs;
                                     dbrush->width  = w;
@@ -1739,9 +1803,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         if (data->flags & FLG_FreeStrip)
         {
-            if (sb.data)  copymem(&data->image,&sb,sizeof(data->image));
-            if (ssb.data) copymem(&data->simage,&ssb,sizeof(data->simage));
-            if (dsb.data) copymem(&data->dimage,&dsb,sizeof(data->dimage));
+            if (sb.data)  memcpy(&data->image,&sb,sizeof(data->image));
+            if (ssb.data) memcpy(&data->simage,&ssb,sizeof(data->simage));
+            if (dsb.data) memcpy(&data->dimage,&dsb,sizeof(data->dimage));
         }
 
         data->userFlags  = pt.userFlags;
@@ -1914,24 +1978,35 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 /***********************************************************************/
 
 static ULONG
-mDispose(struct IClass *cl,Object *obj,Msg msg)
+mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    struct button *button, *succ;
-    APTR          pool = data->pool;
-    ULONG         res;
+  struct InstData *data = INST_DATA(cl,obj);
+  struct MinNode *node;
+  APTR pool = data->pool;
+  ULONG res;
 
-    ENTER();
+  ENTER();
 
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
-        if (button->flags & BFLG_Hide) MUI_DisposeObject(button->obj);
+  D(DBF_STARTUP, "disposing TheBar object: %08lx", obj);
 
-    res = DoSuperMethodA(cl,obj,msg);
+  // delete all hided buttons and the notifyListClones of all buttons as well
+  for(node = data->buttons.mlh_Head; node->mln_Succ; )
+  {
+    struct Button *button = (struct Button *)node;
 
-    DeletePool(pool);
+    node = node->mln_Succ;
 
-    RETURN(res);
-    return res;
+    removeButton(cl, obj, button);
+  }
+
+  // call the super method to let MUI clear everything else
+  res = DoSuperMethodA(cl, obj, msg);
+
+  // delete our previously allocated memory pool
+  DeletePool(pool);
+
+  RETURN(res);
+  return res;
 }
 
 /***********************************************************************/
@@ -1973,7 +2048,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_TheBar_Frame:            *msg->opg_Storage = (data->flags & FLG_Framed) ? TRUE : FALSE; result=TRUE; break;
     #endif
     case MUIA_TheBar_DragBar:          *msg->opg_Storage = (data->flags & FLG_DragBar) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_IgnoreAppareance: *msg->opg_Storage = (data->flags2 & FLG2_IgnoreAppareance) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_IgnoreAppearance: *msg->opg_Storage = (data->flags2 & FLG2_IgnoreAppearance) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_DisMode:          *msg->opg_Storage = data->disMode; result=TRUE; break;
     case MUIA_TheBar_NtRaiseActive:    *msg->opg_Storage = (data->userFlags2 & UFLG2_NtRaiseActive) ? TRUE : FALSE; result=TRUE; break;
 
@@ -2068,7 +2143,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 if (tidata==data->active) tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    struct button *b, *button, *succ;
+                    struct Button *b, *button, *succ;
 
                     data->active = tidata;
 
@@ -2078,7 +2153,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                         break;
                     }
 
-                    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+                    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
                     {
                         if (b==button) continue;
 
@@ -2362,12 +2437,12 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 break;
 
-            case MUIA_TheBar_IgnoreAppareance:
-                if (BOOLSAME(tidata,data->flags2 & FLG2_IgnoreAppareance)) tag->ti_Tag = TAG_IGNORE;
+            case MUIA_TheBar_IgnoreAppearance:
+                if (BOOLSAME(tidata,data->flags2 & FLG2_IgnoreAppearance)) tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags2 |= FLG2_IgnoreAppareance;
-                    else data->flags2 &= ~FLG2_IgnoreAppareance;
+                    if (tidata) data->flags2 |= FLG2_IgnoreAppearance;
+                    else data->flags2 &= ~FLG2_IgnoreAppearance;
                 }
                 break;
 
@@ -2394,11 +2469,11 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
             if (!(data->flags & FLG_Table))
             {
-                struct button *button, *succ;
+                struct Button *button, *succ;
 
                 data->flags |= FLG_Table;
 
-                for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+                for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
                 {
                     if (button->flags & BFLG_Sleep) continue;
                     set(button->obj,MUIA_Group_Horiz,TRUE);
@@ -2409,11 +2484,11 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         {
             if (data->flags & FLG_Table)
             {
-                struct button *button, *succ;
+                struct Button *button, *succ;
 
                 data->flags &= ~FLG_Table;
 
-                for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+                for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
                 {
                     if (button->flags & BFLG_Sleep) continue;
                     set(button->obj,MUIA_Group_Horiz,data->flags & FLG_Horiz);
@@ -2430,9 +2505,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
         if (!(flags & SFLG_Rebuild))
         {
-            struct button *button, *succ;
+            struct Button *button, *succ;
 
-            for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+            for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
             {
                 if (button->flags & BFLG_Sleep) continue;
                 set(button->obj,MUIA_Group_Horiz,horiz);
@@ -2446,7 +2521,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     else
         if (flags & SFLG_ButtonAttrs)
         {
-            struct         button *button, *succ;
+            struct Button *button;
+            struct Button *succ;
             struct TagItem attrs[8] = { { TAG_IGNORE, 0 },
                                         { TAG_IGNORE, 0 },
                                         { TAG_IGNORE, 0 },
@@ -2500,7 +2576,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
             DoSuperMethod(cl,obj,OM_SET,(ULONG)attrs,NULL);
 
-            for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+            for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
                 if (!(button->flags & BFLG_Sleep)) DoMethod(button->obj,OM_SET,(ULONG)attrs,NULL);
         }
 
@@ -2514,9 +2590,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static struct MUIS_TheBar_Appareance staticAp = { MUIDEF_TheBar_Appareance_ViewMode,
-                                                  MUIDEF_TheBar_Appareance_Flags,
-                                                  MUIDEF_TheBar_Appareance_LabelPos,
+static struct MUIS_TheBar_Appearance staticAp = { MUIDEF_TheBar_Appearance_ViewMode,
+                                                  MUIDEF_TheBar_Appearance_Flags,
+                                                  MUIDEF_TheBar_Appearance_LabelPos,
                                                   { 0, 0 }
                                                 };
 
@@ -2532,22 +2608,22 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
     ENTER();
 
-    /* Appareance */
-    if (!(data->flags2 & FLG2_IgnoreAppareance))
+    /* Appearance */
+    if (!(data->flags2 & FLG2_IgnoreAppearance))
     {
-        struct MUIS_TheBar_Appareance *ap;
+        struct MUIS_TheBar_Appearance *ap;
 
-        if (!getconfigitem(cl,obj,MUICFG_TheBar_Appareance,&ap))
+        if (!getconfigitem(cl,obj,MUICFG_TheBar_Appearance,&ap))
             ap = &staticAp;
 
         SetAttrs(obj,MUIA_TheBar_ViewMode,     ap->viewMode,
                      MUIA_TheBar_LabelPos,     ap->labelPos,
-                     MUIA_TheBar_Borderless,   (ULONG)(ap->flags & MUIV_TheBar_Appareance_Borderless),
-                     MUIA_TheBar_Raised,       (ULONG)(ap->flags & MUIV_TheBar_Appareance_Raised),
-                     MUIA_TheBar_Sunny,        (ULONG)(ap->flags & MUIV_TheBar_Appareance_Sunny),
-                     MUIA_TheBar_Scaled,       (ULONG)(ap->flags & MUIV_TheBar_Appareance_Scaled),
-                     MUIA_TheBar_BarSpacer,    (ULONG)(ap->flags & MUIV_TheBar_Appareance_BarSpacer),
-                     MUIA_TheBar_EnableKeys,   (ULONG)(ap->flags & MUIV_TheBar_Appareance_EnableKeys),
+                     MUIA_TheBar_Borderless,   (ULONG)(ap->flags & MUIV_TheBar_Appearance_Borderless),
+                     MUIA_TheBar_Raised,       (ULONG)(ap->flags & MUIV_TheBar_Appearance_Raised),
+                     MUIA_TheBar_Sunny,        (ULONG)(ap->flags & MUIV_TheBar_Appearance_Sunny),
+                     MUIA_TheBar_Scaled,       (ULONG)(ap->flags & MUIV_TheBar_Appearance_Scaled),
+                     MUIA_TheBar_BarSpacer,    (ULONG)(ap->flags & MUIV_TheBar_Appearance_BarSpacer),
+                     MUIA_TheBar_EnableKeys,   (ULONG)(ap->flags & MUIV_TheBar_Appearance_EnableKeys),
                      TAG_DONE);
     }
 
@@ -2569,7 +2645,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             {
                 if (!(lib_flags & BASEFLG_MUI20) && getconfigitem(cl,obj,MUICFG_TheBar_Gradient,&ptr))
                 {
-                    copymem(&data->grad,ptr,sizeof(data->grad));
+                    memcpy(&data->grad,ptr,sizeof(data->grad));
                     SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,NULL,TAG_DONE);
                     data->flags2 |= FLG2_Gradient;
                     done = TRUE;
@@ -2595,7 +2671,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     #ifdef __MORPHOS__
     if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
     {
-        copymem(&data->frameSpec,ptr,sizeof(data->frameSpec));
+        memcpy(&data->frameSpec,ptr,sizeof(data->frameSpec));
         SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)&data->frameSpec,TAG_DONE);
     }
     else
@@ -2709,11 +2785,11 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
     if (data->flags & FLG_FreeStrip)
     {
-        struct button *button, *succ;
+        struct Button *button, *succ;
 
         build(data);
 
-        for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+        for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
             if (!(button->flags & BFLG_Sleep)) DoMethod(button->obj,MUIM_TheButton_Build);
     }
 
@@ -3027,7 +3103,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     {
         struct RastPort rp;
 
-        copymem(&rp,_rp(obj),sizeof(rp));
+        memcpy(&rp,_rp(obj),sizeof(rp));
 
         SetAPen(&rp,MUIPEN(data->barFrameShinePen));
         Move(&rp,_left(obj),_bottom(obj));
@@ -3142,103 +3218,224 @@ mExitChange(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    struct button *button, *succ;
+  struct InstData *data = INST_DATA(cl,obj);
+  struct MinNode *node;
 
-    ENTER();
+  ENTER();
 
-    if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
+  D(DBF_STARTUP, "Rebuild: %08lx", obj);
 
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+  if(data->flags & FLG_Setup)
+    DoMethod(obj,MUIM_Group_InitChange);
+
+  // cleanup all buttons in our list
+  for(node = data->buttons.mlh_Head; node->mln_Succ; node = node->mln_Succ)
+  {
+    struct MinList *notifyList;
+    struct Button *button = (struct Button *)node;
+
+    // if the button is flagged as sleeping
+    // we can continue
+    if(button->flags & BFLG_Sleep)
+      continue;
+
+    // clear some flags
+    button->flags &= ~(BFLG_Disabled|BFLG_Selected);
+
+    // save some variables
+    if(xget(button->obj, MUIA_Disabled))
+      button->flags |= BFLG_Disabled;
+
+    if(xget(button->obj, MUIA_Selected))
+      button->flags |= BFLG_Selected;
+
+    // remove object from group if necessary
+    if(!(button->flags & BFLG_Hide))
+      DoSuperMethod(cl, obj, OM_REMMEMBER, (ULONG)button->obj);
+
+    // before we finally dispose the button object we have to create a clone
+    // of the notifyList it currently maintains.
+    if((notifyList = (struct MinList *)xget(button->obj, MUIA_TheButton_NotifyList)))
     {
-        Object *o;
+      struct MinNode *node;
 
-        if (button->flags & BFLG_Sleep) continue;
+      // now we cleanup the old clone list
+      NewList((struct List *)&button->notifyListClone);
 
-        o = button->obj;
+      // walk through the notifyList of the button and clone it
+      // as we walk by
+      for(node = notifyList->mlh_Head; node->mln_Succ; node = node->mln_Succ)
+      {
+        struct ButtonNotify *notify = (struct ButtonNotify *)node;
+        struct ButtonNotify *clone;
+        ULONG size;
 
-        button->flags &= ~(BFLG_Disabled|BFLG_Selected);
+        size = sizeof(struct ButtonNotify)+sizeof(ULONG)*notify->msg.FollowParams;
 
-        if (xget(o,MUIA_Disabled)) button->flags |= BFLG_Disabled;
-        if (xget(o,MUIA_Selected)) button->flags |= BFLG_Selected;
-
-        if (!(button->flags & BFLG_Hide)) DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)o);
-
-        MUI_DisposeObject(o);
-    }
-
-    if ((data->flags & FLG_Setup) && !(data->flags & FLG_CyberDeep))  MUI_Redraw(obj,MADF_DRAWOBJECT);
-
-    if (data->flags & FLG_RebuildbitMaps)
-    {
-        freeBitMaps(data);
-        build(data);
-
-        data->flags &= ~FLG_RebuildbitMaps;
-    }
-
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
-    {
-        if (button->flags & BFLG_Sleep) continue;
-
-        if((button->obj = makeButton(button,obj,data)))
+        // clone
+        if((clone = allocVecPooled(data->pool, size)))
         {
-            struct notify *notify, *nsucc;
+          // copy the data of the notify
+          memcpy(clone, notify, size);
 
-            if (!(button->flags & BFLG_Hide)) DoSuperMethod(cl,obj,OM_ADDMEMBER,(ULONG)button->obj);
-
-            SetAttrs(button->obj,MUIA_TheButton_QuietNotify,TRUE,TAG_DONE);
-
-            for(notify = NOTIFY(button->notifies.mlh_Head); (nsucc = NOTIFY(notify->link.mln_Succ)); notify = nsucc)
-                DoMethodA(button->obj,(Msg)&notify->notify);
-
-            set(button->obj,MUIA_TheButton_QuietNotify,FALSE);
-
-            if ((data->flags & FLG_Setup) && (data->flags & FLG_FreeStrip))
-                DoMethod(button->obj,MUIM_TheButton_Build);
+          // add it to our clone list
+          AddTail((struct List *)&button->notifyListClone, (struct Node *)clone);
         }
+        else
+          break;
+      }
     }
 
-    if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_ExitChange);
+    // dispose button MUI object
+    MUI_DisposeObject(button->obj);
+    button->obj = NULL;
+  }
 
-    RETURN(0);
-    return 0;
+  // for a MUI redraw
+  if((data->flags & FLG_Setup) && !(data->flags & FLG_CyberDeep))
+    MUI_Redraw(obj, MADF_DRAWOBJECT);
+
+  // rebuild all bitmaps in case required
+  if(data->flags & FLG_RebuildbitMaps)
+  {
+    freeBitMaps(data);
+    build(data);
+
+    data->flags &= ~FLG_RebuildbitMaps;
+  }
+
+  // now we go and rebuild all buttons again
+  for(node = data->buttons.mlh_Head; node->mln_Succ; node = node->mln_Succ)
+  {
+    struct Button *button = (struct Button *)node;
+
+    // if the button is flagged as sleeping
+    // we can continue
+    if(button->flags & BFLG_Sleep)
+      continue;
+
+    // generate a new button object
+    if((button->obj = makeButton(button, obj, data)))
+    {
+      struct MinNode *node;
+
+      // add the button object to our group
+      // if it isn't flagged as being hided
+      if(!(button->flags & BFLG_Hide))
+        DoSuperMethod(cl, obj, OM_ADDMEMBER, (ULONG)button->obj);
+
+      // now we put the notifies from our clone list
+      // back active for the new button
+      for(node = button->notifyListClone.mlh_Head; node->mln_Succ; )
+      {
+        struct ButtonNotify *notify = (struct ButtonNotify *)node;
+
+        node = node->mln_Succ;
+
+        // now we set the notify as we have identifed the button
+        DoMethodA(button->obj, (Msg)&notify->msg);
+
+        // remove the clone notify from the list
+        Remove((struct Node *)notify);
+
+        // free the clone notify
+        freeVecPooled(data->pool, notify);
+      }
+
+      if((data->flags & FLG_Setup) && (data->flags & FLG_FreeStrip))
+        DoMethod(button->obj, MUIM_TheButton_Build);
+    }
+  }
+
+  if(data->flags & FLG_Setup)
+    DoMethod(obj, MUIM_Group_ExitChange);
+
+  RETURN(0);
+  return 0;
+}
+
+/***********************************************************************/
+
+static BOOL
+mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
+{
+  struct InstData *data = INST_DATA(cl,obj);
+  struct MinNode *node;
+  BOOL result = FALSE;
+
+  ENTER();
+
+  // now we first find the button object with its ID
+  for(node = data->buttons.mlh_Head; node->mln_Succ; node = node->mln_Succ)
+  {
+    struct Button *button = (struct Button *)node;
+
+    // if the ID matches we found the correct toolbar
+    // button to which we add the notify.
+    if(button->ID == msg->ID)
+    {
+      struct MUIP_Notify *notify;
+
+      // lets allocate a temporary buffer for sending
+      // the notify method to the button correctly.
+      if((notify = allocVecPooled(data->pool, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->followParams))))
+      {
+        // now we fill the notify structure
+        notify->MethodID      = MUIM_Notify;
+        notify->TrigAttr      = msg->attr;
+        notify->TrigVal       = msg->value;
+        notify->DestObj       = msg->dest;
+
+        // fill the rest with memcpy
+        memcpy(&notify->FollowParams, &msg->followParams, sizeof(ULONG)*(msg->followParams+1));
+
+        // now we set the notify as we have identifed the button
+        result = DoMethodA(button->obj, (Msg)notify);
+
+        // free the temporary buffer again
+        freeVecPooled(data->pool, notify);
+      }
+
+      break;
+    }
+  }
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
 
 static ULONG
-mAddNotify(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddNotify *msg)
+mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    struct button *button, *succ;
-    APTR          pool = data->pool;
+  struct InstData *data = INST_DATA(cl,obj);
+  struct MinNode *node;
+  BOOL result = FALSE;
 
-    ENTER();
+  ENTER();
 
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+  // now we first find the button object with its ID
+  for(node = data->buttons.mlh_Head; node->mln_Succ; node = node->mln_Succ)
+  {
+    struct Button *button = (struct Button *)node;
+
+    // if the ID matches we found the correct toolbar
+    // button to which we add the notify.
+    if(button->ID == msg->ID)
     {
-        if (button->flags & BFLG_Sleep) continue;
+      // now we kill the notify as we have identifed the button
+      if(msg->dest != NULL)
+        DoMethod(button->obj, MUIM_KillNotifyObj, msg->attr, msg->dest);
+      else
+        DoMethod(button->obj, MUIM_KillNotify, msg->attr);
 
-        if (button->obj==msg->dest)
-        {
-            struct notify *notify;
-            ULONG         size;
-
-            size = sizeof(struct notify)+(sizeof(ULONG)*msg->msg->FollowParams);
-
-            if((notify = allocVecPooled(pool,size)))
-            {
-                AddTail((struct List *)&button->notifies, (struct Node *)notify);
-                copymem(&notify->notify,msg->msg,size-sizeof(struct MinNode));
-            }
-
-            break;
-        }
+      break;
     }
+  }
 
-    RETURN(0);
-    return 0;
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -3247,11 +3444,11 @@ static ULONG
 mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    struct button *button;
+    struct Button *button;
 
     ENTER();
 
-    if((button = AllocPooled(data->pool,sizeof(struct button))))
+    if((button = AllocPooled(data->pool, sizeof(struct Button))))
     {
         button->img     = msg->button->img;
         button->ID      = msg->button->ID;
@@ -3260,8 +3457,10 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
         button->exclude = msg->button->exclude;
         button->class   = msg->button->class;
         button->obj     = NULL;
+        button->flags   = 0;
 
-        button->flags = 0;
+        NewList((struct List *)&button->notifyListClone);
+
         if (msg->button->flags & MUIV_TheBar_ButtonFlag_NoClick)   button->flags |= BFLG_NoClick;
         if (msg->button->flags & MUIV_TheBar_ButtonFlag_Immediate) button->flags |= BFLG_Immediate;
         if (msg->button->flags & MUIV_TheBar_ButtonFlag_Toggle)    button->flags |= BFLG_Toggle ;
@@ -3279,8 +3478,6 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
         if ((button->flags & BFLG_Sleep) || (button->obj = makeButton(button,obj,data)))
         {
             AddTail((struct List *)&data->buttons, (struct Node *)button);
-
-            NewList((struct List *)&button->notifies);
 
             if (!(button->flags & BFLG_Sleep))
             {
@@ -3304,7 +3501,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
         }
         else
         {
-            FreePooled(data->pool,button,sizeof(struct button));
+            FreePooled(data->pool,button,sizeof(struct Button));
             button = NULL;
         }
     }
@@ -3319,7 +3516,7 @@ static ULONG
 mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  struct button *bt;
+  struct Button *bt;
   BOOL result = FALSE;
 
   ENTER();
@@ -3328,21 +3525,21 @@ mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
   {
     switch (msg->attr)
     {
-      case MUIV_TheBar_Attr_Hide:
+      case MUIA_TheBar_Attr_Hide:
       {
         *msg->storage = bt->flags & BFLG_Hide;
         result = TRUE;
       }
       break;
 
-      case MUIV_TheBar_Attr_Sleep:
+      case MUIA_TheBar_Attr_Sleep:
       {
         *msg->storage = bt->flags & BFLG_Sleep;
         result = TRUE;
       }
       break;
 
-      case MUIV_TheBar_Attr_Disabled:
+      case MUIA_TheBar_Attr_Disabled:
       {
         if(bt->obj)
           *msg->storage = xget(bt->obj, MUIA_Disabled);
@@ -3353,7 +3550,7 @@ mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
       }
       break;
 
-      case MUIV_TheBar_Attr_Selected:
+      case MUIA_TheBar_Attr_Selected:
       {
         if(bt->obj)
           *msg->storage = xget(bt->obj, MUIA_Selected);
@@ -3373,7 +3570,7 @@ mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
 /***********************************************************************/
 
 static ULONG
-hideButton(struct IClass *cl,Object *obj,struct InstData *data,struct button *bt,ULONG value)
+hideButton(struct IClass *cl,Object *obj,struct InstData *data,struct Button *bt,ULONG value)
 {
     ULONG res = FALSE;
 
@@ -3418,91 +3615,158 @@ hideButton(struct IClass *cl,Object *obj,struct InstData *data,struct button *bt
 /***********************************************************************/
 
 static ULONG
-sleepButton(struct IClass *cl,Object *obj,struct InstData *data,struct button *bt,ULONG value)
+sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button *bt, ULONG value)
 {
-    ULONG res = FALSE;
+  ULONG res = FALSE;
 
-    ENTER();
+  ENTER();
 
-    if (!BOOLSAME(value,bt->flags & BFLG_Sleep))
+  D(DBF_STARTUP, "sleepButton: %d", value);
+
+  if(!BOOLSAME(value,bt->flags & BFLG_Sleep))
+  {
+    // should the button put to sleep or awakend
+    if(value)
     {
-        if (value)
+      struct MinList *notifyList;
+
+      // remove the button object from the group
+      if(!(bt->flags & BFLG_Hide))
+      {
+        if(data->flags & FLG_Setup)
+          DoMethod(obj, MUIM_Group_InitChange);
+
+        DoSuperMethod(cl, obj, OM_REMMEMBER, (ULONG)bt->obj);
+
+        if(data->flags & FLG_Setup)
+          DoMethod(obj, MUIM_Group_ExitChange);
+      }
+
+      bt->flags &= ~(BFLG_Disabled|BFLG_Selected);
+
+      if(xget(bt->obj, MUIA_Disabled))
+        bt->flags |= BFLG_Disabled;
+
+      if(xget(bt->obj, MUIA_Selected))
+        bt->flags |= BFLG_Selected;
+
+      // before we finally put the button to sleep we have to create a clone
+      // of the notifyList it currently maintains.
+      if((notifyList = (struct MinList *)xget(bt->obj, MUIA_TheButton_NotifyList)))
+      {
+        struct MinNode *node;
+
+        // now we cleanup the old clone list
+        NewList((struct List *)&bt->notifyListClone);
+
+        // walk through the notifyList of the button and clone it
+        // as we walk by
+        for(node = notifyList->mlh_Head; node->mln_Succ; node = node->mln_Succ)
         {
-            if (!(bt->flags & BFLG_Hide))
-            {
-                if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
-                DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)bt->obj);
-                if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_ExitChange);
-            }
+          struct ButtonNotify *notify = (struct ButtonNotify *)node;
+          struct ButtonNotify *clone;
+          ULONG size;
 
-            bt->flags &= ~(BFLG_Disabled|BFLG_Selected);
+          size = sizeof(struct ButtonNotify)+sizeof(ULONG)*notify->msg.FollowParams;
 
-            if (xget(bt->obj,MUIA_Disabled)) bt->flags |= BFLG_Disabled;
-            if (xget(bt->obj,MUIA_Selected)) bt->flags |= BFLG_Selected;
+          // clone
+          if((clone = allocVecPooled(data->pool, size)))
+          {
+            // copy the data of the notify
+            memcpy(clone, notify, size);
 
-            MUI_DisposeObject(bt->obj);
-            bt->obj = NULL;
-
-            /*while (notify = (struct notify *)RemTail(LIST(&bt->notifies)))
-                freeVecPooled(pool,notify);*/
-
-            bt->flags |= BFLG_Sleep;
-
-            res = TRUE;
+            // add it to our clone list
+            AddTail((struct List *)&bt->notifyListClone, (struct Node *)clone);
+          }
+          else
+            break;
         }
+      }
+
+      MUI_DisposeObject(bt->obj);
+      bt->obj = NULL;
+
+      bt->flags |= BFLG_Sleep;
+
+      res = TRUE;
+    }
+    else // bring the button back from sleep
+    {
+      if((bt->obj = makeButton(bt, obj, data)))
+      {
+        SetAttrs(bt->obj, MUIA_TheButton_TheBar, (ULONG)obj,
+                          MUIA_Group_Horiz,      data->flags & FLG_Horiz,
+                          TAG_DONE);
+
+        if(bt->exclude)
+          DoMethod(bt->obj, MUIM_Notify, MUIA_Selected, TRUE, (ULONG)obj, 3, MUIM_Set, MUIA_TheBar_Active, bt->ID);
+
+        if(bt->flags & BFLG_Hide)
+          res = TRUE;
         else
         {
-            if((bt->obj = makeButton(bt,obj,data)))
-            {
-                bt->flags &= ~BFLG_Sleep;
-                SetAttrs(bt->obj,MUIA_TheButton_TheBar,(ULONG)obj,MUIA_Group_Horiz,data->flags & FLG_Horiz,TAG_DONE);
-                if (bt->exclude) DoMethod(bt->obj,MUIM_Notify,MUIA_Selected,TRUE,(ULONG)obj,3,MUIM_Set,MUIA_TheBar_Active,bt->ID);
+          if(data->flags & FLG_Setup)
+            DoMethod(obj, MUIM_Group_InitChange);
 
-                if (bt->flags & BFLG_Hide) res = TRUE;
-                else
-                {
-                    if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
+          DoSuperMethod(cl, obj, OM_ADDMEMBER, (ULONG)bt->obj);
 
-                    DoSuperMethod(cl,obj,OM_ADDMEMBER,(ULONG)bt->obj);
+          // put the buttons in order
+          if(orderButtons(cl, obj, data))
+            res = TRUE;
+          else
+          {
+            // otherwise remove it again
+            DoSuperMethod(cl, obj, OM_REMMEMBER,(ULONG)bt->obj);
+            MUI_DisposeObject(bt->obj);
+            bt->obj = NULL;
+          }
 
-                    if (orderButtons(cl,obj,data))
-                    {
-                        res = TRUE;
-                    }
-                    else
-                    {
-                        DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)bt->obj);
-                        MUI_DisposeObject(bt->obj);
-                        bt->obj = NULL;
-                    }
+          if(data->flags & FLG_Setup)
+          {
+            if(data->flags & FLG_FreeStrip)
+              DoMethod(obj,MUIM_TheButton_Build);
 
-                    if (data->flags & FLG_Setup)
-                    {
-                        if (data->flags & FLG_FreeStrip) DoMethod(obj,MUIM_TheButton_Build);
-                        DoMethod(obj,MUIM_Group_ExitChange);
-                    }
+            DoMethod(obj,MUIM_Group_ExitChange);
+          }
 
-                    if (res && bt->exclude && (bt->flags & BFLG_Selected)) set(obj,MUIA_TheBar_Active,bt->ID);
-                }
-
-                if (res)
-                {
-                    struct notify *notify, *nsucc;
-
-                    set(bt->obj,MUIA_TheButton_QuietNotify,TRUE);
-
-                    for(notify = NOTIFY(bt->notifies.mlh_Head); (nsucc = NOTIFY(notify->link.mln_Succ)); notify = nsucc)
-                        DoMethodA(bt->obj,(Msg)&notify->notify);
-
-                    set(bt->obj,MUIA_TheButton_QuietNotify,FALSE);
-                }
-            }
+          // make the button the active one
+          if(res && bt->exclude && (bt->flags & BFLG_Selected))
+            set(obj, MUIA_TheBar_Active, bt->ID);
         }
-    }
-    else res = TRUE;
 
-    RETURN(res);
-    return res;
+        if(res)
+        {
+          struct MinNode *node;
+
+          // now we put the notifies from our clone list
+          // back active for the new button
+          for(node = bt->notifyListClone.mlh_Head; node->mln_Succ; )
+          {
+            struct ButtonNotify *notify = (struct ButtonNotify *)node;
+
+            node = node->mln_Succ;
+
+            // now we set the notify as we have identifed the button
+            DoMethodA(bt->obj, (Msg)&notify->msg);
+
+            // remove the clone notify from the list
+            Remove((struct Node *)notify);
+
+            // free the clone notify
+            freeVecPooled(data->pool, notify);
+          }
+
+          // remove the sleep flag
+          bt->flags &= ~BFLG_Sleep;
+        }
+      }
+    }
+  }
+  else
+    res = TRUE;
+
+  RETURN(res);
+  return res;
 }
 
 /***********************************************************************/
@@ -3511,7 +3775,7 @@ static ULONG
 mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    struct button *bt;
+    struct Button *bt;
     ULONG         res = FALSE;
 
     ENTER();
@@ -3522,22 +3786,22 @@ mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 
         switch (msg->attr)
         {
-            case MUIV_TheBar_Attr_Hide:
+            case MUIA_TheBar_Attr_Hide:
                 res = hideButton(cl,obj,data,bt,value);
                 break;
 
-            case MUIV_TheBar_Attr_Sleep:
+            case MUIA_TheBar_Attr_Sleep:
                 res = sleepButton(cl,obj,data,bt,value);
                 break;
 
-            case MUIV_TheBar_Attr_Disabled:
+            case MUIA_TheBar_Attr_Disabled:
                 if (bt->obj) set(bt->obj,MUIA_Disabled,value);
                 if (value) bt->flags |= BFLG_Disabled;
                 else bt->flags &= ~BFLG_Disabled;
                 res = TRUE;
                 break;
 
-            case MUIV_TheBar_Attr_Selected:
+            case MUIA_TheBar_Attr_Selected:
                 if (bt->exclude) set(obj,MUIA_TheBar_Active,bt->ID);
                 else if (bt->obj) set(bt->obj,MUIA_Selected,value);
                 if (value) bt->flags |= BFLG_Selected;
@@ -3554,39 +3818,34 @@ mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 /***********************************************************************/
 
 static ULONG
-mRemove(struct IClass *cl,Object *obj,struct MUIP_TheBar_Remove *msg)
+mRemove(struct IClass *cl, Object *obj, struct MUIP_TheBar_Remove *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    struct button *button;
-    BOOL result = FALSE;
+  struct InstData *data = INST_DATA(cl,obj);
+  struct Button *button;
+  BOOL result = FALSE;
 
-    ENTER();
+  ENTER();
 
-    if((button = findButton(data,msg->ID)))
+  if((button = findButton(data, msg->ID)))
+  {
+    if(button->obj)
     {
-        APTR pool = data->pool;
+      if(data->flags & FLG_Setup)
+        DoMethod(obj, MUIM_Group_InitChange);
 
-        if (!(button->flags & BFLG_Sleep))
-        {
-            struct notify *notify;
+      removeButton(cl, obj, button);
 
-            if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
-            if (!(button->flags & BFLG_Hide)) DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)button->obj);
-            if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_ExitChange);
-            MUI_DisposeObject(button->obj);
-
-            while((notify = (struct notify *)RemTail((struct List *)&button->notifies)))
-                freeVecPooled(pool,notify);
-        }
-
-        Remove((struct Node *)button);
-        FreePooled(pool,button,sizeof(struct button));
-
-        result = TRUE;
+      if(data->flags & FLG_Setup)
+        DoMethod(obj, MUIM_Group_ExitChange);
     }
+    else
+      removeButton(cl, obj, button);
 
-    RETURN(result);
-    return result;
+    result = TRUE;
+  }
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -3595,7 +3854,7 @@ static ULONG
 mGetObject(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetObject *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  struct button *button;
+  struct Button *button;
   Object *result;
 
   ENTER();
@@ -3612,7 +3871,7 @@ static ULONG
 mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  struct button *button;
+  struct Button *button;
   ULONG result;
 
   ENTER();
@@ -3628,36 +3887,30 @@ mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 static ULONG
 mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    struct button *button;
-    APTR            pool = data->pool;
+  struct InstData *data = INST_DATA(cl,obj);
+  struct MinNode *node;
 
-    ENTER();
+  ENTER();
 
-    if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
+  if(data->flags & FLG_Setup)
+    DoMethod(obj,MUIM_Group_InitChange);
 
-    while((button = (struct button *)RemTail((struct List *)&data->buttons)))
-    {
-        if (!(button->flags & BFLG_Hide)) DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)button->obj);
+  for(node = data->buttons.mlh_Head; node->mln_Succ; )
+  {
+    struct Button *button = (struct Button *)node;
 
-        if (!(button->flags & BFLG_Sleep))
-        {
-            struct notify *notify;
+    // advance further
+    node = node->mln_Succ;
 
-            MUI_DisposeObject(button->obj);
+    removeButton(cl, obj, button);
+  }
 
-            while((notify = (struct notify *)RemTail((struct List *)&button->notifies)))
-                freeVecPooled(pool,notify);
-        }
-
-        FreePooled(pool,button,sizeof(struct button));
-    }
-
-    if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_ExitChange);
+  if(data->flags & FLG_Setup)
+    DoMethod(obj,MUIM_Group_ExitChange);
 
 
-    RETURN(0);
-    return 0;
+  RETURN(0);
+  return 0;
 }
 
 /***********************************************************************/
@@ -3666,11 +3919,11 @@ static ULONG
 mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    struct button *button, *succ;
+    struct Button *button, *succ;
 
     ENTER();
 
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
     {
         if (button->flags & BFLG_Sleep) continue;
         set(button->obj,MUIA_TheButton_MouseOver,FALSE);
@@ -3688,7 +3941,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
     struct InstData *data = INST_DATA(cl,obj);
     struct MinList                  temp;
     struct MUIP_Group_Sort *smsg;
-    struct button          *button, *succ;
+    struct Button          *button, *succ;
     Object                 **o;
     ULONG                  n;
     LONG                   *id;
@@ -3696,7 +3949,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
     ENTER();
 
     /* Counts buttons */
-    for(n = 0, button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+    for(n = 0, button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
         if (!(button->flags & (BFLG_Sleep|BFLG_Hide))) n++;
 
     if (data->db) n++;
@@ -3739,7 +3992,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
     }
 
     /* Insert missing */
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ, o++)
+    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ, o++)
     {
         Remove((struct Node *)button);
         AddHead((struct List *)&temp, (struct Node *)button);
@@ -3749,7 +4002,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
     *o = NULL;
 
     /* Re-insert buttons */
-    for(button = BUTTON(temp.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+    for(button = (struct Button *)(temp.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
     {
         Remove((struct Node *)button);
         AddHead((struct List *)&data->buttons, (struct Node *)button);
@@ -3809,11 +4062,11 @@ static ULONG
 mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    struct button *button, *succ;
+    struct Button *button, *succ;
 
     ENTER();
 
-    for(button = BUTTON(data->buttons.mlh_Head); (succ = BUTTON(button->link.mln_Succ)); button = succ)
+    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
     {
         if (button->flags & BFLG_Sleep) continue;
         set(button->obj,MUIA_TheButton_MouseOver,FALSE);
@@ -3827,43 +4080,46 @@ mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg
 
 DISPATCHER(_Dispatcher)
 {
-    switch(msg->MethodID)
-    {
-        case OM_NEW:                        return mNew(cl,obj,(APTR)msg);
-        case OM_DISPOSE:                    return mDispose(cl,obj,(APTR)msg);
-        case OM_GET:                        return mGet(cl,obj,(APTR)msg);
-        case OM_SET:                        return mSets(cl,obj,(APTR)msg);
+  switch(msg->MethodID)
+  {
+    case OM_NEW:                        return mNew(cl,obj,(APTR)msg);
+    case OM_DISPOSE:                    return mDispose(cl,obj,(APTR)msg);
+    case OM_GET:                        return mGet(cl,obj,(APTR)msg);
+    case OM_SET:                        return mSets(cl,obj,(APTR)msg);
 
-        case MUIM_Setup:                    return mSetup(cl,obj,(APTR)msg);
-        case MUIM_Cleanup:                  return mCleanup(cl,obj,(APTR)msg);
-        case MUIM_Show:                     return mShow(cl,obj,(APTR)msg);
-        case MUIM_Hide:                     return mHide(cl,obj,(APTR)msg);
-  	    #ifndef __MORPHOS__
-        case MUIM_Draw:                     return mDraw(cl,obj,(APTR)msg);
-        #endif
-        case MUIM_CustomBackfill:           return mCustomBackfill(cl,obj,(APTR)msg);
-        case MUIM_CreateDragImage:          return mCreateDragImage(cl,obj,(APTR)msg);
-        case MUIM_DeleteDragImage:          return mDeleteDragImage(cl,obj,(APTR)msg);
-        case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);
+    case MUIM_Setup:                    return mSetup(cl,obj,(APTR)msg);
+    case MUIM_Cleanup:                  return mCleanup(cl,obj,(APTR)msg);
+    case MUIM_Show:                     return mShow(cl,obj,(APTR)msg);
+    case MUIM_Hide:                     return mHide(cl,obj,(APTR)msg);
+    #ifndef __MORPHOS__
+    case MUIM_Draw:                     return mDraw(cl,obj,(APTR)msg);
+    #endif
+    case MUIM_CustomBackfill:           return mCustomBackfill(cl,obj,(APTR)msg);
+    case MUIM_CreateDragImage:          return mCreateDragImage(cl,obj,(APTR)msg);
+    case MUIM_DeleteDragImage:          return mDeleteDragImage(cl,obj,(APTR)msg);
+    case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);
 
-        case MUIM_Group_InitChange:         return mInitChange(cl,obj,(APTR)msg);
-        case MUIM_Group_ExitChange:         return mExitChange(cl,obj,(APTR)msg);
+    case MUIM_Group_InitChange:         return mInitChange(cl,obj,(APTR)msg);
+    case MUIM_Group_ExitChange:         return mExitChange(cl,obj,(APTR)msg);
 
-        case MUIM_TheBar_Rebuild:           return mRebuild(cl,obj,(APTR)msg);
-        case MUIM_TheBar_AddNotify:         return mAddNotify(cl,obj,(APTR)msg);
-        case MUIM_TheBar_AddButton:         return mAddButton(cl,obj,(APTR)msg);
-        case MUIM_TheBar_GetAttr:           return mGetAttr(cl,obj,(APTR)msg);
-        case MUIM_TheBar_SetAttr:           return mSetAttr(cl,obj,(APTR)msg);
-        case MUIM_TheBar_Remove:            return mRemove(cl,obj,(APTR)msg);
-        case MUIM_TheBar_GetObject:         return mGetObject(cl,obj,(APTR)msg);
-        case MUIM_TheBar_DoOnButton:        return mDoOnButton(cl,obj,(APTR)msg);
-        case MUIM_TheBar_Clear:             return mClear(cl,obj,(APTR)msg);
-        case MUIM_TheBar_DeActivate:        return mDeActivate(cl,obj,(APTR)msg);
-        case MUIM_TheBar_Sort:              return mSort(cl,obj,(APTR)msg);
-        case MUIM_TheBar_GetDragImage:      return mGetDragImage(cl,obj,(APTR)msg);
+    case MUIM_TheBar_Rebuild:           return mRebuild(cl,obj,(APTR)msg);
+    case MUIM_TheBar_AddButton:         return mAddButton(cl,obj,(APTR)msg);
+    case MUIM_TheBar_GetAttr:           return mGetAttr(cl,obj,(APTR)msg);
+    case MUIM_TheBar_SetAttr:           return mSetAttr(cl,obj,(APTR)msg);
+    case MUIM_TheBar_Remove:            return mRemove(cl,obj,(APTR)msg);
+    case MUIM_TheBar_GetObject:         return mGetObject(cl,obj,(APTR)msg);
+    case MUIM_TheBar_DoOnButton:        return mDoOnButton(cl,obj,(APTR)msg);
+    case MUIM_TheBar_Clear:             return mClear(cl,obj,(APTR)msg);
+    case MUIM_TheBar_DeActivate:        return mDeActivate(cl,obj,(APTR)msg);
+    case MUIM_TheBar_Sort:              return mSort(cl,obj,(APTR)msg);
+    case MUIM_TheBar_GetDragImage:      return mGetDragImage(cl,obj,(APTR)msg);
 
-        default:                            return DoSuperMethodA(cl,obj,msg);
-    }
+    // notify methods
+    case MUIM_TheBar_Notify:            return mNotify(cl, obj, (APTR)msg);
+    case MUIM_TheBar_KillNotify:        return mKillNotify(cl, obj, (APTR)msg);
+
+    default:                            return DoSuperMethodA(cl,obj,msg);
+  }
 }
 
 /**********************************************************************/
