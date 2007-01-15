@@ -21,29 +21,30 @@
 #***************************************************************************/
 
 # Programs
-CC    = ppc-morphos-gcc
-STRIP = ppc-morphos-strip
+CC    = ppc-amigaos-gcc
+STRIP = ppc-amigaos-strip
 RM    = rm -f
 RMDIR = rm -rf
 MKDIR = mkdir
 CP    = cp
 
 # Directories
-OBJDIR = .obj_mos
-BINDIR = bin_mos
+OBJDIR = .obj_os4
+BINDIR = bin_os4
 
 # Compiler/Linker flags
-CPU      = -mcpu=750
+CRT      = newlib
+CPU      = -mcpu=604e
 CPUFLAGS = -mmultiple
 CDEFS    = -D__TB_VERDATE=\"`date +%d.%m.%Y`\" -D__TB_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
 WARN     = -W -Wall -Wwrite-strings
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
 REDEFINE =
-CFLAGS   = -I. -I../mcp -I../include $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
-           $(DEBUG) $(REDEFINE) -g -c
-LDFLAGS  = -noixemul $(CPU) -nostartfiles
-LDLIBS   = -ldebug
+CFLAGS   = -mcrt=$(CRT) -g -I. -I../../mcp -I../../include $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
+           $(DEBUG) -D__USE_INLINE__ $(REDEFINE) -c
+LDFLAGS  = $(CPU) -mcrt=$(CRT) -nostartfiles
+LDLIBS   =
 
 # CPU and DEBUG can be defined outside, defaults to above
 # using e.g. "make DEBUG= CPU=-mcpu=603e" produces optimized non-debug PPC-603e version
@@ -56,6 +57,8 @@ LDLIBS   = -ldebug
 
 MCCTARGET = $(BINDIR)/TheButton.mcc
 TESTTARGET= $(BINDIR)/TheButton-Test
+
+M68KSTUBS = $(OBJDIR)/mccclass_68k.o
 
 MCCOBJS = $(OBJDIR)/library.o \
           $(OBJDIR)/brc1.o \
@@ -96,11 +99,15 @@ $(OBJDIR)/%.o: %.c
 	@printf '\033[32mCompiling $<\033[0m\n'
 	@$(CC) $(CFLAGS) $< -o $@ -DNO_PPCINLINE_STDARG
 
+$(OBJDIR)/mccclass_68k.o: ../../include/mccclass_68k.c
+	@printf '\033[32mCompiling $<\033[0m\n'
+	@$(CC) $(CFLAGS) $< -o $@
+
 #
 
-$(MCCTARGET): $(MCCOBJS)
+$(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) $(LDFLAGS) -o $@.debug $(MCCOBJS) $(LDLIBS)
+	@$(CC) $(LDFLAGS) -o $@.debug $(MCCOBJS) $(M68KSTUBS) $(LDLIBS)
 	@$(STRIP) -R .comment -S -o $@ $@.debug
 
 $(TESTTARGET): $(TESTOBJS)
@@ -108,14 +115,14 @@ $(TESTTARGET): $(TESTOBJS)
 	@$(CC) -o $@.debug $(TESTOBJS) $(LDLIBS)
 	@$(STRIP) -R .comment -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../include/mccheader.c \
-  ../include/mui/TheBar_mcc.h private.h rev.h
+$(OBJDIR)/library.o: library.c ../../include/mccheader.c \
+  ../../include/mui/TheBar_mcc.h private.h rev.h
 
 #
 
 .PHONY: clean
 clean:
-	-$(RM) $(MCCTARGET) $(MCCTARGET).debug $(TESTTARGET) $(TESTTARGET).debug $(MCCOBJS) $(TESTOBJS)
+	-$(RM) $(MCCTARGET) $(MCCTARGET).debug $(TESTTARGET) $(TESTTARGET).debug $(MCCOBJS) $(TESTOBJS) $(M68KSTUBS)
 
 .PHONY: distclean
 distclean: clean
