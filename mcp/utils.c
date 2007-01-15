@@ -280,9 +280,7 @@ drawGradient(Object *obj,struct MUIS_TheBar_Gradient *grad)
     int             i, x, d, step, rdif, gdif, bdif, r1, g1, b1, r2, g2, b2, r, g, b, rd, gd, bd, ridx, gidx, bidx;
     UWORD           l = _mleft(obj), t = _mtop(obj), w = _mwidth(obj), h = _mheight(obj);
 
-#ifdef __SASC
-rd = rdif= ridx = gd = gidx = bd = bidx = 0;
-#endif
+    rd = rdif= ridx = gd = gidx = bd = bidx = 0;
 
     rp = _rp(obj);
 
