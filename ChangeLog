@@ -3,7 +3,35 @@ MUI TheBar MCC class - ChangeLog
 --------------------------------
 
 $Id$
-$URL: $
+$URL$
+
+2007-01-15  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc: for being able to directly use a TheBar object for setting a new
+    notify on a certain attribute change, new MUIM_TheBar_Notify and
+    MUIM_TheBar_KillNotify wrapper methods were added. However both, the old
+    way of first receiving the button object via GetObject and the new more
+    direct and nicer way are supported equally.
+  * button: reworked the overloaded MUIM_Notify method to catch all notifies by
+    signaling the super class to always send all registered notifies to the
+    button object instead of sending it to the destination directly. This
+    allowed to introduce a new private SendNotify method which will generate
+    a proper destination message where a user can now use a new variable
+    (MUIV_TheBar_Qualifier) in their notifies which will automatically be
+    replaced by the currently active qualifiers value when the notify was
+    emitted. This should finally allow to receive key qualifier information
+    with every notify message received. To complete the feature new
+    MUIM_KillNotify and MUIM_KillNotifyObj overloading method were added.
+  * mcc,button: significantly improved the internal button list management to
+    correctly take care of freeing the whole list including their membery
+    during the normal OM_DISPOSE phase of a TheBar object.
+  * misc: bumped VERSION to 21 because of the huge API change.
+  * misc: replaced all copymem() macro uses by direct memcpy() ones. The c-library
+    should be the one to trust here.
+
+2007-01-11  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: fixed all "Appareance" typos to use "Appearance" instead.
 
 2007-01-02  Jens Langner <Jens.Langner@light-speed.de>
 

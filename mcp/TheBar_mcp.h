@@ -90,7 +90,7 @@
 #define MUICFG_TheBar_Gradient              (TBPTAGBASE+80)  /* v17 ULONG             */
 #define MUICFG_TheBar_NtRaiseActive         (TBPTAGBASE+81)  /* v18 BOOL              */
 #define MUICFG_TheBar_SpacersSize           (TBPTAGBASE+82)  /* v18 ULONG             */
-#define MUICFG_TheBar_Appareance            (TBPTAGBASE+83)  /* v19 struct Appareance */
+#define MUICFG_TheBar_Appearance            (TBPTAGBASE+83)  /* v19 struct Appearance */
 
 #define MUICFG_TheBar_Frame                 (TBPTAGBASE+84)  /* v19 struct Framespec  */
 
@@ -160,9 +160,9 @@ enum
 
 #define MUIDEF_TheBar_SpacersSize           MUIV_TheBar_SpacersSize_One
 
-#define MUIDEF_TheBar_Appareance_ViewMode   MUIV_TheBar_ViewMode_TextGfx
-#define MUIDEF_TheBar_Appareance_LabelPos   MUIV_TheBar_LabelPos_Bottom
-#define MUIDEF_TheBar_Appareance_Flags	    0
+#define MUIDEF_TheBar_Appearance_ViewMode   MUIV_TheBar_ViewMode_TextGfx
+#define MUIDEF_TheBar_Appearance_LabelPos   MUIV_TheBar_LabelPos_Bottom
+#define MUIDEF_TheBar_Appearance_Flags	    0
 
 #define MUIDEF_TheBar_Frame                 ((APTR)"000000")
 

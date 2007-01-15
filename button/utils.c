@@ -23,8 +23,11 @@
 #include "class.h"
 
 #include "SDI_stdarg.h"
+#include "mcc_common.h"
 
 #include <stdlib.h>
+
+#include <proto/input.h>
 
 /***********************************************************************/
 
@@ -204,6 +207,38 @@ freeArbitrateVecPooled(APTR mem)
     ReleaseSemaphore(&lib_poolSem);
 
     return mem;
+}
+
+/***********************************************************************/
+
+ULONG peekQualifier(void)
+{
+	ULONG rc = 0;
+
+	struct MsgPort *port;
+	if((port = CreateMsgPort()))
+	{
+		struct IORequest *iorequest;
+		if((iorequest = CreateIORequest(port, sizeof(*iorequest))))
+		{
+			if(!OpenDevice("input.device", 0, iorequest, 0))
+			{
+				struct Library *InputBase = (struct Library *)iorequest->io_Device;
+				#ifdef __amigaos4__
+				struct InputIFace *IInput;
+				GETINTERFACE(IInput, InputBase);
+				#endif
+				rc = PeekQualifier();
+
+				DROPINTERFACE(IInput);
+				CloseDevice(iorequest);
+			}
+			DeleteIORequest(iorequest);
+		}
+		DeleteMsgPort(port);
+	}
+
+	return(rc);
 }
 
 /***********************************************************************/

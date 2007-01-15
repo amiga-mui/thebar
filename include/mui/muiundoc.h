@@ -145,6 +145,7 @@ extern char MUIC_Crawling[];
 
 #define MUIA_Window_DisableKeys   0x80424c36 /* V15 isg ULONG */
 
+#define MUI_EHF_GUIMODE               (1<<1)     // set this if you dont want your handler to be called
 
 /****************************************************************************/
 /** Area                                                                   **/

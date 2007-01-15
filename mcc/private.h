@@ -132,7 +132,7 @@ struct InstData
     struct BitMap                  *gradbm;
     struct MUIS_TheBar_Gradient    grad;
 
-    struct MUIS_TheBar_Appareance  ap;
+    struct MUIS_TheBar_Appearance  ap;
 
     ULONG                          id;
 
@@ -189,7 +189,7 @@ enum
 enum
 {
     FLG2_Gradient            = 1<<0,
-    FLG2_IgnoreAppareance    = 1<<1,
+    FLG2_IgnoreAppearance    = 1<<1,
     FLG2_ForceWindowActivity = 1<<2,
     FLG2_EventHandler        = 1<<3,
 };
@@ -235,19 +235,27 @@ enum
 
 /***********************************************************************/
 
-struct button
+// Button
+struct Button
 {
-  struct MinNode link;
+  struct MinNode node;
   ULONG          ID;
   Object         *obj;
   ULONG          img;
   const char     *text;
   const char     *help;
   struct IClass  *class;
-  struct MinList notifies;
   ULONG          exclude;
+  struct MinList notifyListClone;
 
   ULONG          flags;
+};
+
+// Notify
+struct ButtonNotify
+{
+  struct MinNode     node;  // to link it in the notifies list of a button
+  struct MUIP_Notify msg;   // the cached MUI Notify message
 };
 
 enum
@@ -262,16 +270,6 @@ enum
 
     BFLG_TableHide = 1<<23,
 };
-
-#define BUTTON(b) ((struct button *)(b))
-
-struct notify
-{
-    struct MinNode     link;
-    struct MUIP_Notify notify;
-};
-
-#define NOTIFY(n) ((struct notify *)(n))
 
 /***********************************************************************/
 
@@ -288,7 +286,6 @@ void freeBitMaps(struct InstData *data);
 // some general macros
 #define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
 #define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
-#define copymem(to,from,len)            memcpy((to), (from), (len))
 #define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
 
 #endif /* _PRIVATE_H */

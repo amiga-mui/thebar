@@ -6,9 +6,9 @@ Msg_Reg_Colors
 
 ; Colors
 ;
-Msg_Reg_Appareance
+Msg_Reg_Appearance
 
-; Appareance
+; Appearance
 ;
 Msg_Reg_Spacing
 
@@ -272,9 +272,9 @@ Msg_ViewMode
 ;
 Msg_ViewMode_Help
 
-; Adjust the appareance of the buttons.
+; Adjust the appearance of the buttons.
 ;
-Msg_Appareance_Text
+Msg_Appearance_Text
 
 ; The options below are used by TheBar if and only if the\nobject requested for it at creation time. It means that\nif the programmer didn't decide otherwise, they are simply\nignored.
 ;

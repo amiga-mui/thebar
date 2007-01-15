@@ -96,6 +96,7 @@ APTR allocArbitratePooled(ULONG size);
 APTR freeArbitratePooled(APTR mem, ULONG size);
 APTR allocArbitrateVecPooled(ULONG size);
 APTR freeArbitrateVecPooled(APTR mem);
+ULONG peekQualifier(void);
 
 /* brc1.c */
 USHORT BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);

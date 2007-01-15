@@ -29,6 +29,7 @@
 #include "TheBar_mcp.h"
 
 #include "SDI_hook.h"
+#include "Debug.h"
 
 #undef GetOutlinePen
 #include <graphics/gfxmacros.h>
@@ -164,14 +165,20 @@ ULONG packTable[] =
     PACK_ENDTABLE
 };
 
+/***********************************************************************/
+
 static ULONG
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
+    APTR pool;
     struct pack             pack;
     struct TagItem *attrs = msg->ops_AttrList;
     ULONG          nflags, imode;
 
     if(GetTagData(MUIA_TheButton_MinVer, 0, attrs) > LIB_VERSION)
+      return 0;
+
+    if(!(pool = CreatePool(MEMF_ANY, 2048, 1024)))
       return 0;
 
     memset(&pack,0,sizeof(pack));
@@ -211,6 +218,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         STRPTR      label;
         ULONG       userFlags;
 
+        data->pool   = pool;
         data->tb     = pack.tb;
         data->id     = pack.id;
         data->strip  = pack.strip;
@@ -298,6 +306,13 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
             data->labelLen = strlen((char *)data->blabel);
         }
+
+        // cleanup the notifyList
+        NewList((struct List *)&data->notifyList);
+    }
+    else
+    {
+      DeletePool(pool);
     }
 
     return (ULONG)obj;
@@ -306,50 +321,107 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 /***********************************************************************/
 
 static ULONG
+mDispose(struct IClass *cl, Object *obj, Msg msg)
+{
+  struct InstData *data = INST_DATA(cl,obj);
+  struct MinNode *node;
+  APTR  pool = data->pool;
+  ULONG res;
+
+  ENTER();
+
+  // cleanup the notifyList
+  for(node = data->notifyList.mlh_Head; node->mln_Succ; )
+  {
+    struct ButtonNotify *notify = (struct ButtonNotify *)node;
+
+    // before we remove the node we have to save the pointer to the next one
+    node = node->mln_Succ;
+
+    // Remove node from list
+    Remove((struct Node *)notify);
+
+    // Free everything of the node
+    freeVecPooled(pool, notify);
+  }
+
+  // call the super method
+  res = DoSuperMethodA(cl, obj, msg);
+
+  // delete our memory pool
+  DeletePool(pool);
+
+  RETURN(res);
+  return res;
+}
+
+/***********************************************************************/
+
+static ULONG
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl,obj);
 
-    switch (msg->opg_AttrID)
-    {
-        case MUIA_TheButton_Spacer:    *msg->opg_Storage = (data->flags & FLG_IsSpacer) ? MUIV_TheButton_Spacer_Image : MUIV_TheButton_Spacer_None; return TRUE;
-        case MUIA_ShowMe:              *msg->opg_Storage = (data->flags & FLG_ShowMe) ? TRUE : FALSE; return TRUE;
-        case MUIA_TheButton_TheBar:    *msg->opg_Storage = (ULONG)data->tb; return TRUE;
-        case MUIA_TheButton_ViewMode:  *msg->opg_Storage = data->vMode; return TRUE;
-        case MUIA_TheButton_Raised:    *msg->opg_Storage = (data->flags & FLG_Raised) ? TRUE : FALSE; return TRUE;
-        case MUIA_TheButton_Scaled:    *msg->opg_Storage = (data->flags & FLG_Scaled) ? TRUE : FALSE; return TRUE;
-        case MUIA_TheButton_LabelPos:  *msg->opg_Storage = data->lPos; return TRUE;
-        case MUIA_TheButton_EnableKey: *msg->opg_Storage = (data->flags & FLG_EnableKey) ? TRUE : FALSE; return TRUE;
-        case MUIA_TheButton_DisMode:   *msg->opg_Storage = data->disMode; return TRUE;
-        case MUIA_TheButton_NtRaiseActive: *msg->opg_Storage = (data->userFlags & UFLG_NtRaiseActive) ? TRUE : FALSE; return TRUE;
-        case MUIA_Version:             *msg->opg_Storage = LIB_VERSION; return TRUE;
-        case MUIA_Revision:            *msg->opg_Storage = LIB_REVISION; return TRUE;
-        default:                       return DoSuperMethodA(cl,obj,(Msg)msg);
-    }
+
+  switch(msg->opg_AttrID)
+  {
+    case MUIA_ShowMe:                  *msg->opg_Storage = (data->flags & FLG_ShowMe) ? TRUE : FALSE; return TRUE;
+
+    case MUIA_TheButton_Spacer:        *msg->opg_Storage = (data->flags & FLG_IsSpacer) ? MUIV_TheButton_Spacer_Image : MUIV_TheButton_Spacer_None; return TRUE;
+    case MUIA_TheButton_TheBar:        *msg->opg_Storage = (ULONG)data->tb; return TRUE;
+    case MUIA_TheButton_ViewMode:      *msg->opg_Storage = data->vMode; return TRUE;
+    case MUIA_TheButton_Raised:        *msg->opg_Storage = (data->flags & FLG_Raised) ? TRUE : FALSE; return TRUE;
+    case MUIA_TheButton_Scaled:        *msg->opg_Storage = (data->flags & FLG_Scaled) ? TRUE : FALSE; return TRUE;
+    case MUIA_TheButton_LabelPos:      *msg->opg_Storage = data->lPos; return TRUE;
+    case MUIA_TheButton_EnableKey:     *msg->opg_Storage = (data->flags & FLG_EnableKey) ? TRUE : FALSE; return TRUE;
+    case MUIA_TheButton_DisMode:       *msg->opg_Storage = data->disMode; return TRUE;
+    case MUIA_TheButton_NtRaiseActive: *msg->opg_Storage = (data->userFlags & UFLG_NtRaiseActive) ? TRUE : FALSE; return TRUE;
+    case MUIA_TheButton_NotifyList:    *msg->opg_Storage = (ULONG)&data->notifyList; return TRUE;
+
+    case MUIA_Version:                 *msg->opg_Storage = LIB_VERSION; return TRUE;
+    case MUIA_Revision:                *msg->opg_Storage = LIB_REVISION; return TRUE;
+
+    default:
+      return DoSuperMethodA(cl,obj,(Msg)msg);
+  }
 }
 
 /***********************************************************************/
 
 static void
-addRemHandler(Object *obj,struct InstData *data)
+addRemEventHandler(Object *obj, struct InstData *data)
 {
+  ENTER();
+
+  // we only do modifications if the button is
+  // visible at all
   if(data->flags & FLG_Visible)
   {
-    //if (!(data->flags & FLG_Disabled) && ((data->flags & (FLG_Raised|FLG_Sunny)) || (data->flags2 & FLG2_Special)))
-    if (!(data->flags & FLG_Disabled) && (((data->flags & (FLG_Raised|FLG_Sunny)) && !(data->flags & FLG_Selected)) || (data->flags2 & FLG2_Special)))
+    ULONG catchableEvents = IDCMP_RAWKEY; // we always catch RAWKEY
+
+    if(!(data->flags & FLG_Disabled) &&
+       (((data->flags & (FLG_Raised|FLG_Sunny)) && !(data->flags & FLG_Selected)) || (data->flags2 & FLG2_Special)))
     {
-      if (!(data->flags & FLG_Handler))
-      {
-        DoMethod(_win(obj),MUIM_Window_AddEventHandler,(ULONG)&data->eh);
-        data->flags |= FLG_Handler;
-      }
+      // now we also catch mousemove events
+      catchableEvents |= ((lib_flags & BASEFLG_MUI20) ? IDCMP_MOUSEOBJECT : IDCMP_MOUSEMOVE);
     }
-    else if(data->flags & FLG_Handler)
+
+    // install the event handler
+    if(!(data->flags & FLG_Handler) || catchableEvents != data->eh.ehn_Events)
     {
-      DoMethod(_win(obj),MUIM_Window_RemEventHandler,(ULONG)&data->eh);
-      data->flags &= ~FLG_Handler;
+      // in case a handler is already installed we have to remove it
+      // previously
+      if(data->flags & FLG_Handler)
+        DoMethod(_win(obj), MUIM_Window_RemEventHandler, (ULONG)&data->eh);
+
+      // now add the new handler
+      data->eh.ehn_Events = catchableEvents;
+      DoMethod(_win(obj), MUIM_Window_AddEventHandler, (ULONG)&data->eh);
+      data->flags |= FLG_Handler;
     }
   }
+
+  LEAVE();
 }
 
 /***********************************************************************/
@@ -480,7 +552,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 data->tb = (Object *)tidata;
                 break;
 
-            case MUIA_TheButton_QuietNotify:
+            case MUIA_TheButton_Quiet:
                 if (tidata) data->flags |= FLG_NoNotify;
                 else data->flags &= ~FLG_NoNotify;
                 break;
@@ -553,7 +625,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 if (tidata)
                 {
                     data->flags2 |= FLG2_Limbo|FLG2_Special;
-                    addRemHandler(obj,data);
+                    addRemEventHandler(obj,data);
                 }
                 else data->flags2 &= ~FLG2_Limbo;
                 break;
@@ -580,7 +652,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     if (setidcmp)
     {
-        addRemHandler(obj,data);
+        addRemEventHandler(obj,data);
 
         if (data->flags & FLG_Disabled) data->flags &= ~FLG_MouseOver;
         else
@@ -818,10 +890,13 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             else data->userFlags &= ~UFLG_NtRaiseActive;
         }
 
+        // setup the event handler
         memset(&data->eh,0,sizeof(data->eh));
-        data->eh.ehn_Class  = cl;
-        data->eh.ehn_Object = obj;
-        data->eh.ehn_Events = (lib_flags & BASEFLG_MUI20) ? IDCMP_MOUSEOBJECT : IDCMP_MOUSEMOVE;
+
+        data->eh.ehn_Priority = 0;
+        data->eh.ehn_Flags    = MUI_EHF_GUIMODE;
+        data->eh.ehn_Object   = obj;
+        data->eh.ehn_Class    = cl;
 
         /* Compute frame size */
         data->fSize = (data->flags & FLG_Borderless) ? ((_riflags(obj) & MUIMRI_THINFRAMES) ? 1 : 2) : 0;
@@ -908,16 +983,26 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl,obj);
+  ULONG result = FALSE;
 
-    if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
+  ENTER();
 
+  if(DoSuperMethodA(cl,obj,msg))
+  {
     data->rp = *_rp(obj);
     data->flags |= FLG_Visible;
 
-    addRemHandler(obj,data);
+    addRemEventHandler(obj,data);
 
-    return TRUE;
+    // peek the current qualifier state
+    data->qualifier = peekQualifier();
+
+    result = TRUE;
+  }
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -925,13 +1010,21 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 static ULONG
 mHide(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl,obj);
+  ULONG result;
 
-    if (data->flags & FLG_Handler) DoMethod(_win(obj),MUIM_Window_RemEventHandler,(ULONG)&data->eh);
+  ENTER();
 
-    data->flags &= ~(FLG_Visible|FLG_Handler);
+  // remove the event handler if installed
+  if(data->flags & FLG_Handler)
+    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(ULONG)&data->eh);
 
-    return DoSuperMethodA(cl,obj,msg);
+  data->flags &= ~(FLG_Visible|FLG_Handler);
+
+  result = DoSuperMethodA(cl,obj,msg);
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -951,7 +1044,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     {
         struct RastPort rp;
 
-        copymem(&rp,&_screen(obj)->RastPort,sizeof(rp));
+        memcpy(&rp,&_screen(obj)->RastPort,sizeof(rp));
 
         if (data->vMode==MUIV_TheButton_ViewMode_Text) SetFont(&rp,data->tf);
         else SetFont(&rp,data->tgf);
@@ -1544,7 +1637,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                                 BltBitMap(bm,x,y,tbm,0,0,iw,ih,0xc0,0xff,NULL);
 
-                                copymem(&trp,rp,sizeof(trp));
+                                memcpy(&trp,rp,sizeof(trp));
                                 trp.Layer  = NULL;
                                 trp.BitMap = tbm;
 
@@ -1681,42 +1774,281 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 /***********************************************************************/
 
 static ULONG
-mHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
+mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl,obj);
 
-    if (data->flags2 & FLG2_Special)
+  ENTER();
+
+
+  if(data->flags2 & FLG2_Special)
+  {
+    data->flags2 &= ~FLG2_Special;
+    addRemEventHandler(obj,data);
+  }
+
+  if((data->flags & FLG_Handler) && !(data->flags & FLG_IsSpacer))
+  {
+    if(msg->imsg)
     {
-        data->flags2 &= ~FLG2_Special;
-        addRemHandler(obj,data);
-    }
+      switch(msg->imsg->Class)
+      {
+        case IDCMP_RAWKEY:
+        {
+          // we only catch the qualifiers as the rest
+          // is done by the Area MUI class
+          data->qualifier = msg->imsg->Qualifier;
+        }
+        break;
 
-    if (!(data->flags & FLG_Handler) || (data->flags & FLG_IsSpacer)) return 0;
+        default:
+        {
+          ULONG in = checkIn(obj,data,msg->imsg->MouseX,msg->imsg->MouseY);
 
-    if (msg->imsg)
-    {
-        ULONG in;
-
-        in = checkIn(obj,data,msg->imsg->MouseX,msg->imsg->MouseY);
-
-        if (!BOOLSAME(in,data->flags & FLG_MouseOver))
+          if(!BOOLSAME(in,data->flags & FLG_MouseOver))
             set(obj,MUIA_TheButton_MouseOver,in);
+        }
+      }
     }
+  }
 
-    return 0;
+  RETURN(0);
+  return 0;
 }
 
 /***********************************************************************/
 
 static ULONG
-mNotify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
+mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl,obj);
+  ULONG result = 0;
 
-    if (data->tb && !(data->flags & FLG_NoNotify))
-        DoMethod(data->tb,MUIM_TheBar_AddNotify,(ULONG)obj,(ULONG)msg);
+  ENTER();
 
-    return DoSuperMethodA(cl,obj,(Msg)msg);
+  // we catch the MUIM_Notify and send our super class a different
+  // modified notify method so that it informs us first and we will later
+  // on (in CheckNotify) inform the original Notify destination
+
+  // first we add the new notify to the notifyList of this button
+  if(msg->FollowParams > 0)
+  {
+    struct ButtonNotify *notify;
+    ULONG size;
+
+    // calculate the size of the notify structure with some additional
+    // space at the end to put in the parameters as well...
+    size = sizeof(struct ButtonNotify)+(sizeof(ULONG)*msg->FollowParams);
+
+    // now we allocate a new ButtonNotify and add
+    // it to the notify list of the button
+    if((notify = allocVecPooled(data->pool, size)))
+    {
+      // now we fill the notify structure
+      memcpy(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
+
+      // add the new notify to the notifies list of the button
+      AddTail((struct List *)&data->notifyList, (struct Node *)notify);
+
+      // now that we have added the new notify to our list
+      // we go and create a "faked" notify message we send
+      result = DoSuperMethod(cl, obj, MUIM_Notify, msg->TrigAttr, msg->TrigVal, obj, 2, MUIM_TheButton_SendNotify, notify);
+
+      // in case the DoSuperMethod returns an error we go and cleanup the notify again
+      if(result == 0)
+      {
+        Remove((struct Node *)notify);
+        freeVecPooled(data->pool, notify);
+      }
+    }
+  }
+
+  RETURN(result);
+  return result;
+}
+
+/***********************************************************************/
+
+static ULONG
+mKillNotify(struct IClass *cl, Object *obj, struct MUIP_KillNotify *msg)
+{
+  struct InstData *data = INST_DATA(cl,obj);
+  ULONG result;
+  struct MinNode *node;
+
+  ENTER();
+
+  // now we have to walk through our notifyList and find all notifies
+  // that trigger on a specific attribute and delete it.
+  for(node = data->notifyList.mlh_Head; node->mln_Succ; )
+  {
+    struct ButtonNotify *notify = (struct ButtonNotify *)node;
+
+    // walk on in advance so we don't invalidate the list
+    node = node->mln_Succ;
+
+    // check if the attribute of the notify
+    // matches the one of this method
+    if(notify->msg.TrigAttr == msg->TrigAttr)
+    {
+      // Remove node from list
+      Remove((struct Node *)notify);
+
+      // Free everything of the node
+      freeVecPooled(data->pool, notify);
+
+      // we walk on as there might be more than
+      // one notify on an attribute.
+    }
+  }
+
+  result = DoSuperMethodA(cl, obj, (APTR)msg);
+
+  RETURN(result);
+  return result;
+}
+
+/***********************************************************************/
+
+static ULONG
+mKillNotifyObj(struct IClass *cl, Object *obj, struct MUIP_KillNotifyObj *msg)
+{
+  struct InstData *data = INST_DATA(cl,obj);
+  ULONG result;
+  struct MinNode *node;
+
+  ENTER();
+
+  // now we have to walk through our notifyList and find all notifies
+  // that trigger on a specific attribute and delete it.
+  for(node = data->notifyList.mlh_Head; node->mln_Succ; )
+  {
+    struct ButtonNotify *notify = (struct ButtonNotify *)node;
+
+    // walk on in advance so we don't invalidate the list
+    node = node->mln_Succ;
+
+    // check if the attribute and destination object of the notify
+    // matches the one of this method
+    if(notify->msg.TrigAttr == msg->TrigAttr &&
+       notify->msg.DestObj == msg->dest)
+    {
+      // Remove node from list
+      Remove((struct Node *)notify);
+
+      // Free everything of the node
+      freeVecPooled(data->pool, notify);
+
+      // we walk on as there might be more than
+      // one notify on an attribute.
+    }
+  }
+
+  result = DoSuperMethodA(cl, obj, (APTR)msg);
+
+  RETURN(result);
+  return result;
+}
+
+/***********************************************************************/
+
+static ULONG
+mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *msg)
+{
+  struct InstData *data = INST_DATA(cl,obj);
+  struct MinNode *node;
+  BOOL result = FALSE;
+
+  ENTER();
+
+  // check if we should send notifies at all
+  if(!(data->flags & FLG_NoNotify))
+  {
+    // now we first check if that notify is still part of our notifyList
+    // and if so we directly forward it to the original destination. However,
+    // we do care about the special MUIV_TheBar_Qualifier on which we put
+    // the current qualifier in instead.
+    for(node = data->notifyList.mlh_Head; node->mln_Succ; node = node->mln_Succ)
+    {
+      struct ButtonNotify *notify = (struct ButtonNotify *)node;
+
+      if(notify == msg->notify)
+      {
+        ULONG *destMessage; // Msg is defined in intuition/classusr.h
+
+        // now we create a full temporary clone of the notify
+        // message which we can modify before we send it to
+        // the destination
+        if((destMessage = allocVecPooled(data->pool, sizeof(ULONG)*(notify->msg.FollowParams))))
+        {
+          ULONG i;
+          Object *destObj = NULL;
+          ULONG *para = (ULONG *)(((LONG)&notify->msg.FollowParams)+sizeof(ULONG));
+
+          // now we fill the notify structure
+          memcpy(destMessage, para, sizeof(ULONG)*(notify->msg.FollowParams));
+
+          // parse through the destMessage and replace certain
+          // variable with their correct values.
+          switch((ULONG)notify->msg.DestObj)
+          {
+            case MUIV_Notify_Self:
+              destObj = obj;
+            break;
+
+            case MUIV_Notify_Window:
+              destObj = _win(obj);
+            break;
+
+            case MUIV_Notify_Application:
+              destObj = _app(obj);
+            break;
+
+            default:
+              destObj = notify->msg.DestObj;
+          }
+
+          // we have to find special Values that we need to replace
+          // with the real values. But here we start with 1 as the first
+          // parameter is ALWAYS the Method name and that can't be
+          // replaced.
+          for(i=1; i < notify->msg.FollowParams; i++)
+          {
+            switch(destMessage[i])
+            {
+              case MUIV_TriggerValue:
+                destMessage[i] = notify->msg.TrigVal;
+              break;
+
+              case MUIV_NotTriggerValue:
+                destMessage[i] = !notify->msg.TrigVal;
+              break;
+
+              case MUIV_TheBar_Qualifier:
+                destMessage[i] = data->qualifier;
+              break;
+            }
+          }
+
+          // send the destMessage to the object
+          if(destObj)
+          {
+            DoMethodA(destObj, (Msg)destMessage);
+            result = TRUE;
+          }
+
+          // cleanup the temporary clone.
+          freeVecPooled(data->pool, destMessage);
+        }
+
+        // break out
+        break;
+      }
+    }
+  }
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -1757,22 +2089,29 @@ DISPATCHER(_Dispatcher)
 {
   switch(msg->MethodID)
   {
-    case OM_NEW:               return mNew(cl,obj,(APTR)msg);
-    case OM_GET:               return mGet(cl,obj,(APTR)msg);
-    case OM_SET:               return mSets(cl,obj,(APTR)msg);
+    case OM_NEW:                     return mNew(cl, obj, (APTR)msg);
+    case OM_DISPOSE:                 return mDispose(cl, obj, (APTR)msg);
+    case OM_GET:                     return mGet(cl, obj, (APTR)msg);
+    case OM_SET:                     return mSets(cl, obj, (APTR)msg);
 
-    case MUIM_Draw:            return mDraw(cl,obj,(APTR)msg);
-    case MUIM_CustomBackfill:  return mCustomBackfill(cl,obj,(APTR)msg);
-    case MUIM_HandleEvent:     return mHandleEvent(cl,obj,(APTR)msg);
-    case MUIM_AskMinMax:       return mAskMinMax(cl,obj,(APTR)msg);
-    case MUIM_Setup:           return mSetup(cl,obj,(APTR)msg);
-    case MUIM_Cleanup:         return mCleanup(cl,obj,(APTR)msg);
-    case MUIM_Show:            return mShow(cl,obj,(APTR)msg);
-    case MUIM_Hide:            return mHide(cl,obj,(APTR)msg);
-    case MUIM_Notify:          return mNotify(cl,obj,(APTR)msg);
-    case MUIM_TheButton_Build: return mBuild(cl,obj,(APTR)msg);
+    case MUIM_Draw:                  return mDraw(cl, obj, (APTR)msg);
+    case MUIM_CustomBackfill:        return mCustomBackfill(cl, obj, (APTR)msg);
+    case MUIM_HandleEvent:           return mHandleEvent(cl, obj, (APTR)msg);
+    case MUIM_AskMinMax:             return mAskMinMax(cl, obj, (APTR)msg);
+    case MUIM_Setup:                 return mSetup(cl, obj, (APTR)msg);
+    case MUIM_Cleanup:               return mCleanup(cl, obj, (APTR)msg);
+    case MUIM_Show:                  return mShow(cl, obj, (APTR)msg);
+    case MUIM_Hide:                  return mHide(cl, obj, (APTR)msg);
 
-    default:                   return DoSuperMethodA(cl,obj,msg);
+    case MUIM_Notify:                return mNotify(cl, obj, (APTR)msg);
+    case MUIM_KillNotify:            return mKillNotify(cl, obj, (APTR)msg);
+    case MUIM_KillNotifyObj:         return mKillNotifyObj(cl, obj, (APTR)msg);
+
+    case MUIM_TheButton_Build:       return mBuild(cl, obj, (APTR)msg);
+    case MUIM_TheButton_SendNotify:  return mSendNotify(cl, obj, (APTR)msg);
+
+    default:
+      return DoSuperMethodA(cl, obj, msg);
   }
 }
 

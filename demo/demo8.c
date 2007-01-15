@@ -48,7 +48,7 @@ struct MUIS_TheBar_Button buttons[] =
 
 /***********************************************************************/
 
-char *appareances[] = {"Images and text","Images","Text",NULL};
+char *appearances[] = {"Images and text","Images","Text",NULL};
 char *labelPoss[] = {"Bottom","Top","Right","Left",NULL};
 
 int
@@ -58,7 +58,7 @@ main(int argc,char **argv)
 
     if (MUIMasterBase = OpenLibrary("muimaster.library",19))
     {
-        Object *app, *win, *sb, *appareance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
+        Object *app, *win, *sb, *appearance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
 
         if (app = ApplicationObject,
                 MUIA_Application_Title,         "TheBar Demo6",
@@ -81,8 +81,8 @@ main(int argc,char **argv)
                         Child, VGroup,
                             GroupFrameT("Settings"),
                             Child, HGroup,
-                                Child, Label2("Appareance"),
-                                Child, appareance = MUI_MakeObject(MUIO_Cycle,NULL,appareances),
+                                Child, Label2("Appearance"),
+                                Child, appearance = MUI_MakeObject(MUIO_Cycle,NULL,appearances),
                                 Child, Label2("Label pos"),
                                 Child, labelPos = MUI_MakeObject(MUIO_Cycle,NULL,labelPoss),
                             End,
@@ -118,16 +118,16 @@ main(int argc,char **argv)
             {
                 if (id==TAG_USER)
                 {
-                    ULONG appareanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
+                    ULONG appearanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
 
-                    get(appareance,MUIA_Cycle_Active,&appareanceV);
+                    get(appearance,MUIA_Cycle_Active,&appearanceV);
                     get(labelPos,MUIA_Cycle_Active,&labelPosV);
                     get(borderless,MUIA_Selected,&borderlessV);
                     get(sunny,MUIA_Selected,&sunnyV);
                     get(raised,MUIA_Selected,&raisedV);
                     get(scaled,MUIA_Selected,&scaledV);
 
-                    SetAttrs(sb,MUIA_TheBar_ViewMode,   appareanceV,
+                    SetAttrs(sb,MUIA_TheBar_ViewMode,   appearanceV,
                                 MUIA_TheBar_LabelPos,   labelPosV,
                                 MUIA_TheBar_Borderless, borderlessV,
                                 MUIA_TheBar_Sunny,      sunnyV,
