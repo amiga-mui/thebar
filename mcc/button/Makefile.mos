@@ -21,29 +21,29 @@
 #***************************************************************************/
 
 # Programs
-CC    = m68k-amigaos-gcc
-STRIP = m68k-amigaos-strip
+CC    = ppc-morphos-gcc
+STRIP = ppc-morphos-strip
 RM    = rm -f
 RMDIR = rm -rf
 MKDIR = mkdir
 CP    = cp
 
 # Directories
-OBJDIR = .obj_os3
-BINDIR = bin_os3
+OBJDIR = .obj_mos
+BINDIR = bin_mos
 
 # Compiler/Linker flags
-CPU	     = -m68020-60
-CPUFLAGS = -msoft-float
+CPU      = -mcpu=750
+CPUFLAGS = -mmultiple
 CDEFS    = -D__TB_VERDATE=\"`date +%d.%m.%Y`\" -D__TB_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
 WARN     = -W -Wall -Wwrite-strings
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
 REDEFINE =
-CFLAGS   = -I. -I../mcp -I../include $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
+CFLAGS   = -I. -I../../mcp -I../../include $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
            $(DEBUG) $(REDEFINE) -g -c
 LDFLAGS  = -noixemul $(CPU) -nostartfiles
-LDLIBS   = -lmui -lm
+LDLIBS   = -ldebug
 
 # CPU and DEBUG can be defined outside, defaults to above
 # using e.g. "make DEBUG= CPU=-mcpu=603e" produces optimized non-debug PPC-603e version
@@ -94,7 +94,7 @@ $(BINDIR):
 
 $(OBJDIR)/%.o: %.c
 	@printf '\033[32mCompiling $<\033[0m\n'
-	@$(CC) $(CFLAGS) $< -o $@ -DNO_INLINE_STDARG
+	@$(CC) $(CFLAGS) $< -o $@ -DNO_PPCINLINE_STDARG
 
 #
 
@@ -108,8 +108,8 @@ $(TESTTARGET): $(TESTOBJS)
 	@$(CC) -o $@.debug $(TESTOBJS) $(LDLIBS)
 	@$(STRIP) -R .comment -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../include/mccheader.c \
-  ../include/mui/TheBar_mcc.h private.h rev.h
+$(OBJDIR)/library.o: library.c ../../include/mccheader.c \
+  ../../include/mui/TheBar_mcc.h private.h rev.h
 
 #
 
