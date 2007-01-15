@@ -835,7 +835,7 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     STRPTR                         ptr;
     ULONG                          val;
 
-    if (!(lib_flags & BASEFLG_MUI20) && get(data->groupBack,MUIA_Popbackground_Grad,&ptr))
+    if(!(lib_flags & BASEFLG_MUI20) && (ptr = (STRPTR)xget(data->groupBack, MUIA_Popbackground_Grad)))
     {
         DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_GroupBack);
         addconfigitem(cfg,ptr,sizeof(struct MUIS_TheBar_Gradient),MUICFG_TheBar_Gradient);
@@ -843,149 +843,156 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     else
     {
         DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_Gradient);
-        get(data->groupBack,MUIA_Imagedisplay_Spec,&ptr);
+        ptr = (STRPTR)xget(data->groupBack, MUIA_Imagedisplay_Spec);
         addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_ImageSpec),MUICFG_TheBar_GroupBack);
     }
 
-    get(data->useGroupBack,MUIA_Selected,&val);
+    val = xget(data->useGroupBack, MUIA_Selected);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseGroupBack);
 
-    get(data->buttonBack,MUIA_Imagedisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->buttonBack, MUIA_Imagedisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_ImageSpec),MUICFG_TheBar_ButtonBack);
 
-    get(data->useButtonBack,MUIA_Selected,&val);
+    val = xget(data->useButtonBack, MUIA_Selected);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseButtonBack);
 
-    get(data->frameShinePen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->frameShinePen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_FrameShinePen);
 
-    get(data->frameShadowPen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->frameShadowPen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_FrameShadowPen);
 
-    get(data->frameStyle,MUIA_Cycle_Active,&val);
+    val = xget(data->frameStyle, MUIA_Cycle_Active);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_FrameStyle);
 
-    get(data->disBodyPen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->disBodyPen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_DisBodyPen);
 
-    get(data->disShadowPen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->disShadowPen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_DisShadowPen);
 
-    get(data->barSpacerShinePen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->barSpacerShinePen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_BarSpacerShinePen);
 
-    get(data->barSpacerShadowPen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->barSpacerShadowPen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_BarSpacerShadowPen);
 
     #if defined(__MORPHOS__) || defined(__amigaos4__)
-    if (lib_flags & BASEFLG_MUI4) get(data->groupBack,MUIA_Framedisplay_Spec,&ptr);
-    else get(data->frame,MUIA_Framedisplay_Spec,&ptr);
+    if(lib_flags & BASEFLG_MUI4)
+      ptr = (STRPTR)xget(data->groupBack, MUIA_Framedisplay_Spec);
+    else
+      ptr = (STRPTR)xget(data->frame, MUIA_Framedisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_FrameSpec),MUICFG_TheBar_Frame);
     #else
-    get(data->barFrameShinePen,MUIA_Pendisplay_Spec,&ptr);
+
+    ptr = (STRPTR)xget(data->barFrameShinePen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_BarFrameShinePen);
 
-    get(data->barFrameShadowPen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->barFrameShadowPen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_BarFrameShadowPen);
     #endif
 
-    get(data->dragBarShinePen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->dragBarShinePen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_DragBarShinePen);
 
-    get(data->dragBarShadowPen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->dragBarShadowPen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_DragBarShadowPen);
 
-    get(data->dragBarFillPen,MUIA_Pendisplay_Spec,&ptr);
+    ptr = (STRPTR)xget(data->dragBarFillPen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,SIZEOF(ptr,MUI_PenSpec),MUICFG_TheBar_DragBarFillPen);
 
-    get(data->useDragBarFillPen,MUIA_Selected,&val);
+    val = xget(data->useDragBarFillPen, MUIA_Selected);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseDragBarFillPen);
 
-    get(data->textFont,MUIA_String_Contents,&ptr);
-    if (*((STRPTR)ptr)) addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_TextFont);
-    else DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_TextFont);
+    ptr = (STRPTR)xget(data->textFont, MUIA_String_Contents);
+    if(*((STRPTR)ptr))
+      addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_TextFont);
+    else
+      DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_TextFont);
 
-    get(data->textGfxFont,MUIA_String_Contents,&ptr);
-    if (*((STRPTR)ptr)) addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_TextGfxFont);
-    else DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_TextGfxFont);
+    ptr = (STRPTR)xget(data->textGfxFont, MUIA_String_Contents);
+    if(*((STRPTR)ptr))
+      addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_TextGfxFont);
+    else
+      DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_TextGfxFont);
 
-    get(data->viewMode,MUIA_Cycle_Active,&ap.viewMode);
-    get(data->labelPos,MUIA_Cycle_Active,&ap.labelPos);
+    ap.viewMode = xget(data->viewMode, MUIA_Cycle_Active);
+    ap.labelPos = xget(data->labelPos, MUIA_Cycle_Active);
     ap.flags = 0;
-    if (xget(data->borderless,MUIA_Selected)) ap.flags |= MUIV_TheBar_Appearance_Borderless;
-    if (xget(data->raised,MUIA_Selected))     ap.flags |= MUIV_TheBar_Appearance_Raised;
-    if (xget(data->sunny,MUIA_Selected))      ap.flags |= MUIV_TheBar_Appearance_Sunny;
-    if (xget(data->scaled,MUIA_Selected))     ap.flags |= MUIV_TheBar_Appearance_Scaled;
-    if (xget(data->barSpacer,MUIA_Selected))  ap.flags |= MUIV_TheBar_Appearance_BarSpacer;
-    if (xget(data->enableKeys,MUIA_Selected)) ap.flags |= MUIV_TheBar_Appearance_EnableKeys;
+    if(xget(data->borderless,MUIA_Selected)) ap.flags |= MUIV_TheBar_Appearance_Borderless;
+    if(xget(data->raised,MUIA_Selected))     ap.flags |= MUIV_TheBar_Appearance_Raised;
+    if(xget(data->sunny,MUIA_Selected))      ap.flags |= MUIV_TheBar_Appearance_Sunny;
+    if(xget(data->scaled,MUIA_Selected))     ap.flags |= MUIV_TheBar_Appearance_Scaled;
+    if(xget(data->barSpacer,MUIA_Selected))  ap.flags |= MUIV_TheBar_Appearance_BarSpacer;
+    if(xget(data->enableKeys,MUIA_Selected)) ap.flags |= MUIV_TheBar_Appearance_EnableKeys;
     addconfigitem(cfg,&ap,sizeof(ap),MUICFG_TheBar_Appearance);
 
-    get(data->horizSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->horizSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_HorizSpacing);
 
-    get(data->vertSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->vertSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_VertSpacing);
 
-    get(data->barSpacerSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->barSpacerSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_BarSpacerSpacing);
 
-    get(data->horizInnerSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->horizInnerSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_HorizInnerSpacing);
 
-    get(data->topInnerSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->topInnerSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_TopInnerSpacing);
 
-    get(data->bottomInnerSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->bottomInnerSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_BottomInnerSpacing);
 
-    get(data->horizTexGfxSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->horizTexGfxSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_HorizTextGfxSpacing);
 
-    get(data->vertTexGfxSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->vertTexGfxSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_VertTextGfxSpacing);
 
     #if !defined(__MORPHOS__) && !defined(__amigaos4__)
-    get(data->leftBarFrameSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->leftBarFrameSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_LeftBarFrameSpacing);
 
-    get(data->rightBarFrameSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->rightBarFrameSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_RightBarFrameSpacing);
 
-    get(data->topBarFrameSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->topBarFrameSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_TopBarFrameSpacing);
 
-    get(data->bottomBarFrameSpacing,MUIA_Numeric_Value,&val);
+    val = xget(data->bottomBarFrameSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_BottomBarFrameSpacing);
     #endif
 
-    get(data->precision,MUIA_Cycle_Active,&val);
+    val = xget(data->precision, MUIA_Cycle_Active);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_Precision);
 
-    get(data->disMode,MUIA_Cycle_Active,&val);
+    val = xget(data->disMode, MUIA_Cycle_Active);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_DisMode);
 
-    get(data->scale,MUIA_Numeric_Value,&val);
+    val = xget(data->scale, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_Scale);
 
-    get(data->specialSelect,MUIA_Selected,&val);
+    val = xget(data->specialSelect, MUIA_Selected);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_SpecialSelect);
 
-    get(data->textOverUseShine,MUIA_Selected,&val);
+    val = xget(data->textOverUseShine, MUIA_Selected);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_TextOverUseShine);
 
-    get(data->ignoreSel,MUIA_Selected,&val);
+    val = xget(data->ignoreSel, MUIA_Selected);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_IgnoreSelImages);
 
-    get(data->ignoreDis,MUIA_Selected,&val);
+    val = xget(data->ignoreDis, MUIA_Selected);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_IgnoreDisImages);
 
-    get(data->dontMove,MUIA_Selected,&val);
+    val = xget(data->dontMove, MUIA_Selected);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_DontMove);
 
-    get(data->ntRaiseActive,MUIA_Selected,&val);
+    val = xget(data->ntRaiseActive, MUIA_Selected);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_NtRaiseActive);
 
-    get(data->spacersSize,MUIA_Cycle_Active,&val);
+    val = xget(data->spacersSize, MUIA_Cycle_Active);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_SpacersSize);
 
     return 0;
