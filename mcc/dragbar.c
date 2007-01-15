@@ -111,9 +111,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
             case MUIA_Pressed:
                 if (tidata)
                 {
-                    struct Window *window;
-
-                    get(_win(obj),MUIA_Window_Window,&window);
+                    struct Window *window = (struct Window *)xget(_win(obj), MUIA_Window_Window);
                     DoMethod(_app(obj),MUIM_Application_PushMethod,(ULONG)data->bar,4,MUIM_DoDrag,window->MouseX-_mleft(obj),window->MouseY-_mtop(obj),0);
                 }
                 break;

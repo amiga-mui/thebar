@@ -2807,8 +2807,10 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     #else
     for (parent = obj; ;)
     {
-        if (!get(parent,MUIA_Parent,&parent) || !parent) break;
-        if (get(parent,MUIA_Virtgroup_Top,&ptr))
+        if((parent = (Object *)xget(parent, MUIA_Parent)) == NULL)
+          break;
+
+        if((ptr = (STRPTR)xget(parent, MUIA_Virtgroup_Top)))
         {
             data->flags |= FLG_IsInVirtgroup;
             break;
