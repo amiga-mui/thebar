@@ -432,26 +432,29 @@ addRemEventHandler(Object *obj, struct InstData *data)
 static ULONG
 checkIn(Object *obj,struct InstData *data,WORD x,WORD y)
 {
-    ULONG  in;
+  ULONG in;
 
-    if ((in = _isinobject(obj,x,y)) && (data->flags & FLG_IsInVirtgroup))
+  ENTER();
+
+  if((in = _isinobject(obj,x,y)) && (data->flags & FLG_IsInVirtgroup))
+  {
+    Object *p = obj;
+
+    for (;;)
     {
-        Object *p = obj;
+      if((p = (Object *)xget(p, MUIA_Parent)) == NULL)
+        break;
 
-        for (;;)
-        {
-            get(p,MUIA_Parent,&p);
-            if (!p) break;
-
-            if (!_isinobject(p,x,y))
-            {
-                in = FALSE;
-                break;
-            }
-        }
+      if(!_isinobject(p,x,y))
+      {
+        in = FALSE;
+        break;
+      }
     }
+  }
 
-    return in;
+  RETURN(in);
+  return in;
 }
 
 /***********************************************************************/
@@ -921,10 +924,10 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         parent = obj;
         for (;;)
         {
-            if (!get(parent,MUIA_Parent,&parent) || !parent)
+            if((parent = (Object *)xget(parent, MUIA_Parent)) == NULL)
                 break;
 
-            if (get(parent,MUIA_Virtgroup_Top,&pen))
+            if((pen = (APTR)xget(parent, MUIA_Virtgroup_Top)))
             {
                 data->flags |= FLG_IsInVirtgroup;
                 break;
