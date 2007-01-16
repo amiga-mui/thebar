@@ -5,6 +5,14 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-01-16  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/button: changed the window event handler to also always catch
+    IDCMP_MOUSEBUTTONS to make it possible to catch the qualifier state in
+    HandleEvent(). This should fix a bug where it might have happened that
+    the wrong qualifier spec was active at the time a user pressed on a
+    toolbar button.
+
 2007-01-15  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcp/library.c: forgot to define the mcp prefs image.
