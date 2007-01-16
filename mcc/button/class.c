@@ -397,7 +397,7 @@ addRemEventHandler(struct IClass *cl, Object *obj, struct InstData *data)
   // visible at all
   if(data->flags & FLG_Visible)
   {
-    ULONG catchableEvents = 0
+    ULONG catchableEvents = 0;
 
     if(!(data->flags & FLG_Disabled) &&
        (((data->flags & (FLG_Raised|FLG_Sunny)) && !(data->flags & FLG_Selected)) || (data->flags2 & FLG2_Special)))
