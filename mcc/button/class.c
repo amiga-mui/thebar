@@ -389,7 +389,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 /***********************************************************************/
 
 static void
-addRemEventHandler(Object *obj, struct InstData *data)
+addRemEventHandler(struct IClass *cl, Object *obj, struct InstData *data)
 {
   ENTER();
 
@@ -397,7 +397,7 @@ addRemEventHandler(Object *obj, struct InstData *data)
   // visible at all
   if(data->flags & FLG_Visible)
   {
-    ULONG catchableEvents = IDCMP_RAWKEY; // we always catch RAWKEY
+    ULONG catchableEvents = 0
 
     if(!(data->flags & FLG_Disabled) &&
        (((data->flags & (FLG_Raised|FLG_Sunny)) && !(data->flags & FLG_Selected)) || (data->flags2 & FLG2_Special)))
@@ -415,8 +415,14 @@ addRemEventHandler(Object *obj, struct InstData *data)
         DoMethod(_win(obj), MUIM_Window_RemEventHandler, (ULONG)&data->eh);
 
       // now add the new handler
-      data->eh.ehn_Events = catchableEvents;
+      data->eh.ehn_Priority = 0;
+      data->eh.ehn_Flags    = MUI_EHF_GUIMODE;
+      data->eh.ehn_Object   = obj;
+      data->eh.ehn_Class    = cl;
+      data->eh.ehn_Events   = catchableEvents | IDCMP_RAWKEY | IDCMP_MOUSEBUTTONS; // always catch RAWKEY&MOUSEBUTTONS
       DoMethod(_win(obj), MUIM_Window_AddEventHandler, (ULONG)&data->eh);
+
+      // flag the event handler as being installed
       data->flags |= FLG_Handler;
     }
   }
@@ -628,7 +634,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 if (tidata)
                 {
                     data->flags2 |= FLG2_Limbo|FLG2_Special;
-                    addRemEventHandler(obj,data);
+                    addRemEventHandler(cl, obj, data);
                 }
                 else data->flags2 &= ~FLG2_Limbo;
                 break;
@@ -655,7 +661,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     if (setidcmp)
     {
-        addRemEventHandler(obj,data);
+        addRemEventHandler(cl,obj,data);
 
         if (data->flags & FLG_Disabled) data->flags &= ~FLG_MouseOver;
         else
@@ -893,14 +899,6 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             else data->userFlags &= ~UFLG_NtRaiseActive;
         }
 
-        // setup the event handler
-        memset(&data->eh,0,sizeof(data->eh));
-
-        data->eh.ehn_Priority = 0;
-        data->eh.ehn_Flags    = MUI_EHF_GUIMODE;
-        data->eh.ehn_Object   = obj;
-        data->eh.ehn_Class    = cl;
-
         /* Compute frame size */
         data->fSize = (data->flags & FLG_Borderless) ? ((_riflags(obj) & MUIMRI_THINFRAMES) ? 1 : 2) : 0;
 
@@ -996,7 +994,7 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
     data->rp = *_rp(obj);
     data->flags |= FLG_Visible;
 
-    addRemEventHandler(obj,data);
+    addRemEventHandler(cl,obj,data);
 
     // peek the current qualifier state
     data->qualifier = peekQualifier();
@@ -1787,7 +1785,7 @@ mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
   if(data->flags2 & FLG2_Special)
   {
     data->flags2 &= ~FLG2_Special;
-    addRemEventHandler(obj,data);
+    addRemEventHandler(cl,obj,data);
   }
 
   if((data->flags & FLG_Handler) && !(data->flags & FLG_IsSpacer))
@@ -1797,6 +1795,7 @@ mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
       switch(msg->imsg->Class)
       {
         case IDCMP_RAWKEY:
+        case IDCMP_MOUSEBUTTONS:
         {
           // we only catch the qualifiers as the rest
           // is done by the Area MUI class
@@ -1806,10 +1805,10 @@ mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 
         default:
         {
-          ULONG in = checkIn(obj,data,msg->imsg->MouseX,msg->imsg->MouseY);
+          ULONG in = checkIn(obj, data, msg->imsg->MouseX, msg->imsg->MouseY);
 
-          if(!BOOLSAME(in,data->flags & FLG_MouseOver))
-            set(obj,MUIA_TheButton_MouseOver,in);
+          if(!BOOLSAME(in, data->flags & FLG_MouseOver))
+            set(obj, MUIA_TheButton_MouseOver, in);
         }
       }
     }

@@ -98,7 +98,7 @@ static struct MUIS_TheBar_Button buttons[] =
 // static hooks
 HOOKPROTONHNO(SaveFunc, ULONG, ULONG *qual)
 {
-  printf("SaveHook triggered: %08lx\n", *qual);
+  D(DBF_STARTUP, "SaveHook triggered: %08lx\n", *qual);
 
   return 0;
 }
@@ -110,7 +110,7 @@ HOOKPROTONHNO(SleepFunc, ULONG, Object **sb)
 
   DoMethod(*sb, MUIM_TheBar_GetAttr, 6, MUIA_TheBar_Attr_Sleep, &sleeping);
 
-  printf("SleepHook triggered: %08lx %ld\n", (ULONG)*sb, sleeping);
+  D(DBF_STARTUP, "SleepHook triggered: %08lx %ld\n", (ULONG)*sb, sleeping);
 
   DoMethod(*sb, MUIM_TheBar_SetAttr, 6, MUIA_TheBar_Attr_Sleep, !sleeping);
 
