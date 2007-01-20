@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-01-20  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: cleaned up certain areas of the sources according to found
+    incompatibilities to the revised docuementation.
+  * doc/MCC_TheBar.doc: updated autodocs to latest changed to the API
+    of TheBar.mcc.
+
 2007-01-16  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/button: changed the window event handler to also always catch

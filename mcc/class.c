@@ -1366,9 +1366,7 @@ ULONG ptable[] =
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_Frame,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Framed),
     #endif
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_BarSpacer,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_BarSpacer),
-    PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_AutoSpacerOrient,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_AutoSpacerOrient),
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_IgnoreAppearance,pack,flags2,PKCTRL_BIT|PKCTRL_PACKONLY,FLG2_IgnoreAppearance),
-    PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_ForceWindowActivity,pack,flags2,PKCTRL_BIT|PKCTRL_PACKONLY,FLG2_ForceWindowActivity ),
 
     /* Flags existance */
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_Free,pack,pflags,PKCTRL_BIT|PKCTRL_PACKONLY,(PFLG_FreeHoriz|PFLG_FreeVert)),
@@ -1463,10 +1461,12 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     memset(&pt,0,sizeof(pt));
 
+    // set some default values before we actually see what the
+    // user set during creation of that object
     pt.labelPos = MUIV_TheBar_LabelPos_Bottom;
     pt.barPos   = MUIV_TheBar_BarPos_Left;
     pt.spacer   = pt.stripCols = pt.stripRows = pt.stripHSpace = pt.stripVSpace = -1;
-    pt.flags2   = FLG2_IgnoreAppearance;
+    pt.flags    = FLG_EnableKeys;
 
     PackStructureTags(&pt,ptable,attrs);
 
@@ -2040,7 +2040,6 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_TheBar_FreeHoriz:        *msg->opg_Storage = (data->flags & FLG_FreeHoriz) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_FreeVert:         *msg->opg_Storage = (data->flags & FLG_FreeVert) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_BarSpacer:        *msg->opg_Storage = (data->flags & FLG_BarSpacer) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_AutoSpacerOrient: *msg->opg_Storage = (data->flags & FLG_AutoSpacerOrient) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_Remove:           *msg->opg_Storage = data->remove; result=TRUE; break;
     #ifdef __MORPHOS__
     case MUIA_TheBar_Frame:            *msg->opg_Storage = FALSE; result=TRUE; break;
@@ -2426,17 +2425,6 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 break;
 
-            case MUIA_TheBar_AutoSpacerOrient:
-                if (BOOLSAME(tidata,data->flags & FLG_AutoSpacerOrient)) tag->ti_Tag = TAG_IGNORE;
-                else
-                {
-                    if (tidata) data->flags |= FLG_AutoSpacerOrient;
-                    else data->flags &= ~FLG_AutoSpacerOrient;
-
-                    flags |= SFLG_Rebuild;
-                }
-                break;
-
             case MUIA_TheBar_IgnoreAppearance:
                 if (BOOLSAME(tidata,data->flags2 & FLG2_IgnoreAppearance)) tag->ti_Tag = TAG_IGNORE;
                 else
@@ -2792,9 +2780,6 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
             if (!(button->flags & BFLG_Sleep)) DoMethod(button->obj,MUIM_TheButton_Build);
     }
-
-    //if ((data->flags2 & FLG2_ForceWindowActivity) || !(lib_flags & BASEFLG_MUI20))
-    //    DoMethod(_win(obj),MUIM_Notify,MUIA_Window_Activate,FALSE,(ULONG)obj,1,MUIM_TheBar_DeActivate);
 
     memset(&data->eh,0,sizeof(data->eh));
     data->eh.ehn_Class  = cl;
