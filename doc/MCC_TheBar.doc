@@ -83,7 +83,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     *******************************************************************
     Copyright (c) 2006-2007 by TheBar.mcc Open Source Team
     $Id$
-    $URL: $
+    $URL$
 
     TheBar.mcc is a MUI custom class which provides facilities to
     generate a dynamic graphical toolbar for MUI applications. Beside
