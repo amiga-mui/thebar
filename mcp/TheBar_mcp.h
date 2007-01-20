@@ -146,7 +146,7 @@ enum
 #define MUIDEF_TheBar_HorizTextGfxSpacing   1
 #define MUIDEF_TheBar_VertTextGfxSpacing    1
 
-#define MUIDEF_TheBar_Precision             MUIV_TheBar_Precision_GUI
+#define MUIDEF_TheBar_Precision             MUIV_TheBar_Precision_Image
 #define MUIDEF_TheBar_NotMUI20Event         MUIV_TheBar_Event_MouseMove
 #define MUIDEF_TheBar_Event                 MUIV_TheBar_Event_MouseObject
 #define MUIDEF_TheBar_Scale                 66
@@ -162,7 +162,7 @@ enum
 
 #define MUIDEF_TheBar_Appearance_ViewMode   MUIV_TheBar_ViewMode_TextGfx
 #define MUIDEF_TheBar_Appearance_LabelPos   MUIV_TheBar_LabelPos_Bottom
-#define MUIDEF_TheBar_Appearance_Flags	    0
+#define MUIDEF_TheBar_Appearance_Flags      MUIV_TheBar_Appearance_EnableKeys
 
 #define MUIDEF_TheBar_Frame                 ((APTR)"000000")
 
