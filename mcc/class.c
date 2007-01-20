@@ -1225,9 +1225,9 @@ updateRemove(struct IClass *cl,Object *obj,struct InstData *data)
 
         sp = xget(button->obj,MUIA_TheButton_Spacer);
 
-        if (((data->remove & MUIV_TheBar_Remove_BarSpacers) && (sp==MUIV_TheButton_Spacer_Bar)) ||
-            ((data->remove & MUIV_TheBar_Remove_ButtonSpacers) && (sp==MUIV_TheButton_Spacer_Button)) ||
-            ((data->remove & MUIV_TheBar_Remove_ImageSpacers) && (sp==MUIV_TheButton_Spacer_Image)))
+        if (((data->remove & MUIV_TheBar_RemoveSpacers_Bar) && (sp==MUIV_TheButton_Spacer_Bar)) ||
+            ((data->remove & MUIV_TheBar_RemoveSpacers_Button) && (sp==MUIV_TheButton_Spacer_Button)) ||
+            ((data->remove & MUIV_TheBar_RemoveSpacers_Image) && (sp==MUIV_TheButton_Spacer_Image)))
         {
             if (!(button->flags & BFLG_Hide))
             {
@@ -1347,11 +1347,11 @@ ULONG ptable[] =
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_BarPos,pack,barPos,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Columns,pack,cols,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Rows,pack,rows,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Remove,pack,remove,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_RemoveSpacers,pack,remove,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_StripCols,pack,stripCols,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_StripRows,pack,stripRows,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_StripHorizSpace,pack,stripHSpace,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_StripVertSpace,pack,stripVSpace,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_StripHSpace,pack,stripHSpace,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_StripVSpace,pack,stripVSpace,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_MouseOver,pack,id,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SpacersSize,pack,id,PKCTRL_LONG|PKCTRL_PACKONLY),
 
@@ -2040,7 +2040,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_TheBar_FreeHoriz:        *msg->opg_Storage = (data->flags & FLG_FreeHoriz) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_FreeVert:         *msg->opg_Storage = (data->flags & FLG_FreeVert) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_BarSpacer:        *msg->opg_Storage = (data->flags & FLG_BarSpacer) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_Remove:           *msg->opg_Storage = data->remove; result=TRUE; break;
+    case MUIA_TheBar_RemoveSpacers:    *msg->opg_Storage = data->remove; result=TRUE; break;
     #ifdef __MORPHOS__
     case MUIA_TheBar_Frame:            *msg->opg_Storage = FALSE; result=TRUE; break;
     #else
@@ -2434,7 +2434,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 break;
 
-            case MUIA_TheBar_Remove:
+            case MUIA_TheBar_RemoveSpacers:
                 if (data->remove==tidata) tag->ti_Tag = TAG_IGNORE;
                 else
                 {
