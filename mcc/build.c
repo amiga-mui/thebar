@@ -1114,7 +1114,7 @@ LUT8ToBitMap(struct InstData *data,
 
     ENTER();
 
-    if((dest = AllocBitMap(width,height, MIN(8, data->screenDepth),((data->flags & FLG_CyberMap) ? BMF_MINPLANES : 0)|BMF_CLEAR,(data->flags & FLG_CyberMap) ? data->screen->RastPort.BitMap : NULL)))
+    if((dest = AllocBitMap(width,height, MIN(8, (LONG)data->screenDepth),((data->flags & FLG_CyberMap) ? BMF_MINPLANES : 0)|BMF_CLEAR,(data->flags & FLG_CyberMap) ? data->screen->RastPort.BitMap : NULL)))
     {
         struct RastPort rport;
 

@@ -281,7 +281,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     if(button->class)
       return NewObjectA(button->class,NULL,attrs);
     else
-      return MUI_NewObjectA(MUIC_TheButton,attrs);
+      return MUI_NewObjectA((STRPTR)MUIC_TheButton,attrs);
 }
 
 

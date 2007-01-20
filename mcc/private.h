@@ -27,6 +27,8 @@
 
 #include "TheBar_mcp.h"
 
+#include <mui/muiundoc.h>
+
 /***************************************************************************/
 
 extern ULONG lib_flags;
@@ -286,6 +288,10 @@ void freeBitMaps(struct InstData *data);
 #define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
 #define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
 #define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
+
+#if !defined(IsMinListEmpty)
+#define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
+#endif
 
 #endif /* _PRIVATE_H */
 
