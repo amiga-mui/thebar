@@ -725,12 +725,12 @@ static BOOL UserLibOpen(struct Library *base)
 
 
     #ifdef SUPERCLASS
-    ThisClass = MUI_CreateCustomClass(base, SUPERCLASS, NULL, sizeof(struct INSTDATA), ENTRY(_Dispatcher));
+    ThisClass = MUI_CreateCustomClass(base, (STRPTR)SUPERCLASS, NULL, sizeof(struct INSTDATA), ENTRY(_Dispatcher));
     if(ThisClass)
     #endif
     {
       #ifdef SUPERCLASSP
-      if((ThisClassP = MUI_CreateCustomClass(base, SUPERCLASSP, NULL, sizeof(struct INSTDATAP), ENTRY(_DispatcherP))))
+      if((ThisClassP = MUI_CreateCustomClass(base, (STRPTR)SUPERCLASSP, NULL, sizeof(struct INSTDATAP), ENTRY(_DispatcherP))))
       #endif
       {
         #ifdef SUPERCLASS
