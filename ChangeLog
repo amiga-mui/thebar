@@ -5,6 +5,8 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v21.1 RELEASE ############################################################
+
 2007-01-20  Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: cleaned up certain areas of the sources according to found
@@ -42,8 +44,8 @@ $URL$
     correctly take care of freeing the whole list including their membery
     during the normal OM_DISPOSE phase of a TheBar object.
   * misc: bumped VERSION to 21 because of the huge API change.
-  * misc: replaced all copymem() macro uses by direct memcpy() ones. The c-library
-    should be the one to trust here.
+  * misc: replaced all copymem() macro uses by direct memcpy() ones.
+    The c-library should be the one to trust here.
 
 2007-01-11  Jens Langner <Jens.Langner@light-speed.de>
 
