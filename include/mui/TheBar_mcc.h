@@ -58,154 +58,13 @@
 
 /***********************************************************************/
 /*
-** Methods
-*/
-
-#define MUIM_TheButton_Build               (TBUTTAGBASE+0)   /* v13         */
-#define MUIM_TheButton_SendNotify          (TBUTTAGBASE+1)   /* v21 PRIVATE */
-
-struct MUIP_TheButton_SendNotify           { ULONG MethodID; APTR notify; };
-
-/***********************************************************************/
-/*
-** TheButton.mcc Attributes
-*/
-
-#define MUIA_TheButton_MinVer              (TBUTTAGBASE+0)   /* v11  ULONG,                         [I...]    */
-#define MUIA_TheButton_MouseOver           (TBUTTAGBASE+1)   /* v11  BOOL                           [I...]    */ /* PRIVATE */
-#define MUIA_TheButton_Quiet               (TBUTTAGBASE+2)   /* v11  BOOL                           [.S..]    */
-#define MUIA_TheButton_Spacer              (TBUTTAGBASE+3)   /* v11  BOOL                           [I.G.]    */ /* PRIVATE */
-#define MUIA_TheButton_TheBar              (TBUTTAGBASE+4)   /* v11  Object *,                      [ISG.]    */
-#define MUIA_TheButton_Image               (TBUTTAGBASE+5)   /* v11  struct MUIS_TheBar_Brush  *,   [I...]    */
-#define MUIA_TheButton_Label               (TBUTTAGBASE+6)   /* v11  STRPTR,                        [I...]    */
-#define MUIA_TheButton_InVirtgroup         (TBUTTAGBASE+7)   /* v11  BOOL,                          [I...]    */
-#define MUIA_TheButton_ViewMode            (TBUTTAGBASE+8)   /* v11  ULONG,                         [ISGN]    */
-#define MUIA_TheButton_Borderless          (TBUTTAGBASE+9)   /* v11  BOOL,                          [I...]    */
-#define MUIA_TheButton_Raised              (TBUTTAGBASE+10)  /* v11  BOOL,                          [ISGN]    */
-#define MUIA_TheButton_Sunny               (TBUTTAGBASE+11)  /* v11  BOOL,                          [I...]    */
-#define MUIA_TheButton_Scaled              (TBUTTAGBASE+12)  /* v11  BOOL,                          [ISGN]    */
-#define MUIA_TheButton_NoClick             (TBUTTAGBASE+13)  /* v11  BOOL,                          [I...]    */
-#define MUIA_TheButton_Toggle              (TBUTTAGBASE+14)  /* v11  BOOL,                          [I...]    */
-#define MUIA_TheButton_Immediate           (TBUTTAGBASE+15)  /* v11  BOOL,                          [I...]    */
-#define MUIA_TheButton_EnableKey           (TBUTTAGBASE+16)  /* v11  BOOL,                          [ISG.]    */
-#define MUIA_TheButton_LabelPos            (TBUTTAGBASE+17)  /* v11  ULONG,                         [ISGN]    */
-#define MUIA_TheButton_SelImage            (TBUTTAGBASE+18)  /* v12  struct MUIS_TheBar_Brush  *,   [I...]    */
-#define MUIA_TheButton_DisImage            (TBUTTAGBASE+19)  /* v12  struct MUIS_TheBar_Brush  *,   [I...]    */
-#define MUIA_TheButton_HorizTextGfxSpacing (TBUTTAGBASE+20)  /* v12  ULONG,                         [I...]    */
-#define MUIA_TheButton_VertTextGfxSpacing  (TBUTTAGBASE+21)  /* v12  ULONG,                         [I...]    */
-#define MUIA_TheButton_HorizInnerSpacing   (TBUTTAGBASE+22)  /* v12  ULONG,                         [I...]    */
-#define MUIA_TheButton_TopInnerSpacing     (TBUTTAGBASE+23)  /* v12  ULONG,                         [I...]    */
-#define MUIA_TheButton_BottomInnerSpacing  (TBUTTAGBASE+24)  /* v12  ULONG,                         [I...]    */
-#define MUIA_TheButton_Precision           (TBUTTAGBASE+25)  /* v12  ULONG,                         [I...]    */
-#define MUIA_TheButton_Event               (TBUTTAGBASE+26)  /* v12  ULONG,                         [I...]    */
-#define MUIA_TheButton_Scale               (TBUTTAGBASE+27)  /* v12  ULONG,                         [I...]    */
-#define MUIA_TheButton_DisMode             (TBUTTAGBASE+28)  /* v12  ULONG,                         [I...]    */
-#define MUIA_TheButton_SpecialSelect       (TBUTTAGBASE+29)  /* v12  BOOL,                          [I...]    */
-#define MUIA_TheButton_TextOverUseShine    (TBUTTAGBASE+30)  /* v12  BOOL,                          [I...]    */
-#define MUIA_TheButton_IgnoreSelImages     (TBUTTAGBASE+31)  /* v12  BOOL,                          [I...]    */
-#define MUIA_TheButton_IgnoreDisImages     (TBUTTAGBASE+32)  /* v12  BOOL,                          [I...]    */
-#define MUIA_TheButton_Strip               (TBUTTAGBASE+33)  /* v13  struct MUIS_TheBar_Strip *,    [I...]    */
-#define MUIA_TheButton_DontMove            (TBUTTAGBASE+34)  /* v15  BOOL,                          [I...]    */
-#define MUIA_TheButton_ID                  (TBUTTAGBASE+35)  /* v18  ULONG,                         [I...]    */
-#define MUIA_TheButton_NtRaiseActive       (TBUTTAGBASE+36)  /* v18  ULONG,                         [I...]    */
-#define MUIA_TheButton_StripRows           (TBUTTAGBASE+37)  /* v20  ULONG,                         [I...]    */
-#define MUIA_TheButton_StripCols           (TBUTTAGBASE+38)  /* v20  ULONG,                         [I...]    */
-#define MUIA_TheButton_StripHorizSpace     (TBUTTAGBASE+39)  /* v20  ULONG,                         [I...]    */
-#define MUIA_TheButton_StripVertSpace      (TBUTTAGBASE+40)  /* v20  ULONG,                         [I...]    */
-#define MUIA_TheButton_NotifyList          (TBUTTAGBASE+41)  /* v21  struct MinList *,              [..G.]    */ /* PRIVATE */
-
-/***********************************************************************/
-/*
-** TheButton.mcc Attributes values
-*/
-
-/* MUIA_TheButton_ViewMode */
-enum
-{
-  MUIV_TheButton_ViewMode_TextGfx,
-  MUIV_TheButton_ViewMode_Gfx,
-  MUIV_TheButton_ViewMode_Text,
-
-  MUIV_TheButton_ViewMode_Last
-};
-
-/* MUIA_TheButton_LabelPos */
-enum
-{
-  MUIV_TheButton_LabelPos_Bottom,
-  MUIV_TheButton_LabelPos_Top,
-  MUIV_TheButton_LabelPos_Right,
-  MUIV_TheButton_LabelPos_Left,
-
-  MUIV_TheButton_LabelPos_Last
-};
-
-/* MUIA_TheButton_Spacer */
-enum
-{
-  MUIV_TheButton_Spacer_None,
-  MUIV_TheButton_Spacer_Bar,
-  MUIV_TheButton_Spacer_Button,
-  MUIV_TheButton_Spacer_Image,
-  MUIV_TheButton_Spacer_DragBar,
-};
-
-/* MUICFG_TheButton_FrameStyle */
-enum
-{
-  MUIV_TheButton_FrameStyle_Recessed,
-  MUIV_TheButton_FrameStyle_Normal,
-};
-
-/* MUIA_TheButton_Event */
-enum
-{
-  MUIV_TheButton_Event_IntuiTicks,
-  MUIV_TheButton_Event_MouseMove,
-  MUIV_TheButton_Event_MouseObject,
-
-  MUIV_TheButton_Event_Last,
-};
-
-/* MUIA_TheButton_Precision */
-enum
-{
-  MUIV_TheButton_Precision_GUI,
-  MUIV_TheButton_Precision_Icon,
-  MUIV_TheButton_Precision_Image,
-  MUIV_TheButton_Precision_Exact,
-
-  MUIV_TheButton_Precision_Last,
-};
-
-/* MUIA_TheButton_DisMode */
-enum
-{
-  MUIV_TheButton_DisMode_Shape,
-  MUIV_TheButton_DisMode_Grid,
-  MUIV_TheButton_DisMode_FullGrid,
-  MUIV_TheButton_DisMode_Sunny,
-
-  MUIV_TheButton_DisMode_Last,
-};
-
-/***********************************************************************/
-/*
-** TheButton.mcc Misc
-*/
-
-/* MUIA_TheButton_Label max size */
-#define TB_MAXLABELLEN 32
-
-/***********************************************************************/
-/*
 ** TheBar.mcc Methods
 */
 
 #define MUIM_TheBar_Rebuild         (TBTAGBASE+0)   /* v11 PRIVATE */
 #define MUIM_TheBar_DeActivate      (TBTAGBASE+2)   /* v11 PRIVATE */
 #define MUIM_TheBar_AddButton       (TBTAGBASE+3)   /* v11         */
-#define MUIM_TheBar_AddSpacer       (TBTAGBASE+4)   /* v11         */
+#define MUIM_TheBar_AddSpacer       (TBTAGBASE+4)   /* v11 PRIVATE */
 #define MUIM_TheBar_GetObject       (TBTAGBASE+5)   /* v11         */
 #define MUIM_TheBar_DoOnButton      (TBTAGBASE+6)   /* v11         */
 #define MUIM_TheBar_SetAttr         (TBTAGBASE+7)   /* v11         */
@@ -258,12 +117,12 @@ struct MUIP_TheBar_KillNotify      { ULONG MethodID; ULONG ID; Tag attr; Object 
 #define MUIA_TheBar_Raised                (TBTAGBASE+17)  /* v11 BOOL,                          [ISGN]   */
 #define MUIA_TheBar_Sunny                 (TBTAGBASE+18)  /* v11 BOOL,                          [ISGN]   */
 #define MUIA_TheBar_Scaled                (TBTAGBASE+19)  /* v11 BOOL,                          [ISGN]   */
-#define MUIA_TheBar_SpacerIndex           (TBTAGBASE+20)  /* v11 UWORD,                         [I.G.]   */
+#define MUIA_TheBar_SpacerIndex           (TBTAGBASE+20)  /* v11 ULONG,                         [I.G.]   */
 #define MUIA_TheBar_Strip                 (TBTAGBASE+21)  /* v11 STRPTR,                        [I...]   */
-#define MUIA_TheBar_StripBrush            (TBTAGBASE+22)  /* v11 STRPTR,                        [I...]   */
-#define MUIA_TheBar_EnableKeys            (TBTAGBASE+23)  /* v11 BOOL,                          [IS..]   */
+#define MUIA_TheBar_StripBrush            (TBTAGBASE+22)  /* v11 struct MUIS_TheBar_Brush *,    [I...]   */
+#define MUIA_TheBar_EnableKeys            (TBTAGBASE+23)  /* v11 BOOL,                          [ISGN]   */
 #define MUIA_TheBar_TextOnly              (TBTAGBASE+24)  /* v11 BOOL,                          [..G.]   */
-#define MUIA_TheBar_LabelPos              (TBTAGBASE+25)  /* v11 UWORD,                         [ISGN]   */
+#define MUIA_TheBar_LabelPos              (TBTAGBASE+25)  /* v11 ULONG,                         [ISGN]   */
 #define MUIA_TheBar_BarPos                (TBTAGBASE+26)  /* v11 ULONG,                         [ISGN]   */
 #define MUIA_TheBar_DragBar               (TBTAGBASE+27)  /* v11 BOOL,                          [ISGN]   */
 #define MUIA_TheBar_Frame                 (TBTAGBASE+28)  /* v11 BOOL,                          [ISGN]   */
@@ -275,20 +134,19 @@ struct MUIP_TheBar_KillNotify      { ULONG MethodID; ULONG ID; Tag attr; Object 
 #define MUIA_TheBar_FreeVert              (TBTAGBASE+34)  /* v11 ULONG,                         [ISGN]   */
 #define MUIA_TheBar_Free                  (TBTAGBASE+35)  /* v11 ULONG,                         [ISGN]   */
 #define MUIA_TheBar_BarSpacer             (TBTAGBASE+36)  /* v11 ULONG,                         [ISGN]   */
-#define MUIA_TheBar_Remove                (TBTAGBASE+37)  /* v11 ULONG,                         [ISGN]   */
-#define MUIA_TheBar_AutoSpacerOrient      (TBTAGBASE+38)  /* v11 ULONG,                         [ISGN]   */
+#define MUIA_TheBar_RemoveSpacers         (TBTAGBASE+37)  /* v11 ULONG,                         [ISGN]   */
 #define MUIA_TheBar_SelImages             (TBTAGBASE+39)  /* v12 struct MUIS_TheBar_Brush **,   [I.G.]   */
 #define MUIA_TheBar_DisImages             (TBTAGBASE+40)  /* v12 struct MUIS_TheBar_Brush **,   [I.G.]   */
 #define MUIA_TheBar_SelPics               (TBTAGBASE+41)  /* v12 STRTR *,                       [I...]   */
 #define MUIA_TheBar_DisPics               (TBTAGBASE+42)  /* v12 STRTR *,                       [I...]   */
 #define MUIA_TheBar_SelStrip              (TBTAGBASE+43)  /* v12 STRPTR,                        [I...]   */
 #define MUIA_TheBar_DisStrip              (TBTAGBASE+44)  /* v12 STRPTR,                        [I...]   */
-#define MUIA_TheBar_SelStripBrush         (TBTAGBASE+45)  /* v12 STRPTR,                        [I...]   */
-#define MUIA_TheBar_DisStripBrush         (TBTAGBASE+46)  /* v12 STRPTR,                        [I...]   */
+#define MUIA_TheBar_SelStripBrush         (TBTAGBASE+45)  /* v12 struct MUIS_TheBar_Brush *,    [I...]   */
+#define MUIA_TheBar_DisStripBrush         (TBTAGBASE+46)  /* v12 struct MUIS_TheBar_Brush *,    [I...]   */
 #define MUIA_TheBar_StripRows             (TBTAGBASE+47)  /* v12 ULONG,                         [I...]   */
 #define MUIA_TheBar_StripCols             (TBTAGBASE+48)  /* v12 ULONG,                         [I...]   */
-#define MUIA_TheBar_StripHorizSpace       (TBTAGBASE+49)  /* v12 ULONG,                         [I...]   */
-#define MUIA_TheBar_StripVertSpace        (TBTAGBASE+50)  /* v12 ULONG,                         [I...]   */
+#define MUIA_TheBar_StripHSpace           (TBTAGBASE+49)  /* v12 ULONG,                         [I...]   */
+#define MUIA_TheBar_StripVSpace           (TBTAGBASE+50)  /* v12 ULONG,                         [I...]   */
 #define MUIA_TheBar_HorizSpacing          (TBTAGBASE+51)  /* v12 ULONG,                         [I...]   */
 #define MUIA_TheBar_VertSpacing           (TBTAGBASE+52)  /* v12 ULONG,                         [I...]   */
 #define MUIA_TheBar_BarSpacerSpacing      (TBTAGBASE+53)  /* v12 ULONG,                         [I...]   */
@@ -302,7 +160,6 @@ struct MUIP_TheBar_KillNotify      { ULONG MethodID; ULONG ID; Tag attr; Object 
 #define MUIA_TheBar_HorizTextGfxSpacing   (TBTAGBASE+61)  /* v12 ULONG,                         [I...]   */
 #define MUIA_TheBar_VertTextGfxSpacing    (TBTAGBASE+62)  /* v12 ULONG,                         [I...]   */
 #define MUIA_TheBar_Precision             (TBTAGBASE+63)  /* v12 ULONG,                         [I...]   */
-#define MUIA_TheBar_Event                 (TBTAGBASE+64)  /* v12 ULONG,                         [I...]   */
 #define MUIA_TheBar_Scale                 (TBTAGBASE+65)  /* v12 ULONG,                         [I...]   */
 #define MUIA_TheBar_DisMode               (TBTAGBASE+66)  /* v12 ULONG,                         [I...]   */
 #define MUIA_TheBar_SpecialSelect         (TBTAGBASE+67)  /* v12 BOOL,                          [I...]   */
@@ -315,7 +172,6 @@ struct MUIP_TheBar_KillNotify      { ULONG MethodID; ULONG ID; Tag attr; Object 
 #define MUIA_TheBar_SpacersSize           (TBTAGBASE+74)  /* v18 BOOL,                          [ISGN]   */
 #define MUIA_TheBar_Appearance            (TBTAGBASE+75)  /* v19 struct MUIS_TheBar_Appearance, [..G.]   */
 #define MUIA_TheBar_IgnoreAppearance      (TBTAGBASE+76)  /* v19 BOOL                           [ISGN]   */
-#define MUIA_TheBar_ForceWindowActivity   (TBTAGBASE+77)  /* v20 BOOL                           [ISGN]   */ /* PRIVATE */
 
 /***********************************************************************/
 /*
@@ -356,24 +212,16 @@ enum
 #define MUIV_TheBar_BarPos_Up   MUIV_TheBar_BarPos_Left
 #define MUIV_TheBar_BarPos_Down MUIV_TheBar_BarPos_Right
 
-/* MUIA_TheBar_Remove */
+/* MUIA_TheBar_RemoveSpacers */
 enum
 {
-  MUIV_TheBar_Remove_BarSpacers    = 1<<0, /* v11 */
-  MUIV_TheBar_Remove_ButtonSpacers = 1<<1, /* v11 */
-  MUIV_TheBar_Remove_ImageSpacers  = 1<<2, /* v11 */
+  MUIV_TheBar_RemoveSpacers_Bar    = 1<<0, /* v11 */
+  MUIV_TheBar_RemoveSpacers_Button = 1<<1, /* v11 */
+  MUIV_TheBar_RemoveSpacers_Image  = 1<<2, /* v11 */
 
-  MUIV_TheBar_Remove_All           = MUIV_TheBar_Remove_BarSpacers|MUIV_TheBar_Remove_ButtonSpacers|MUIV_TheBar_Remove_ImageSpacers,
-};
-
-/* MUIA_TheBar_Event */
-enum
-{
-  MUIV_TheBar_Event_IntuiTicks,
-  MUIV_TheBar_Event_MouseMove,
-  MUIV_TheBar_Event_MouseObject, /* Only valid for MUI >=3.9 */
-
-  MUIV_TheBar_Event_Last,
+  MUIV_TheBar_RemoveSpacers_All    = MUIV_TheBar_RemoveSpacers_Bar|\
+                                     MUIV_TheBar_RemoveSpacers_Button|\
+                                     MUIV_TheBar_RemoveSpacers_Image,
 };
 
 /* MUIA_TheBar_Precision */
@@ -536,6 +384,148 @@ enum
 };
 
 /***********************************************************************/
+/*
+** Methods
+*/
+
+#define MUIM_TheButton_Build               (TBUTTAGBASE+0)   /* v13         */
+#define MUIM_TheButton_SendNotify          (TBUTTAGBASE+1)   /* v21 PRIVATE */
+
+struct MUIP_TheButton_SendNotify           { ULONG MethodID; APTR notify; };
+
+/***********************************************************************/
+/*
+** TheButton.mcc Attributes
+*/
+
+#define MUIA_TheButton_MinVer              (TBUTTAGBASE+0)   /* v11  ULONG,                         [I...]    */
+#define MUIA_TheButton_MouseOver           (TBUTTAGBASE+1)   /* v11  BOOL                           [I...]    */ /* PRIVATE */
+#define MUIA_TheButton_Quiet               (TBUTTAGBASE+2)   /* v11  BOOL                           [.S..]    */
+#define MUIA_TheButton_Spacer              (TBUTTAGBASE+3)   /* v11  BOOL                           [I.G.]    */ /* PRIVATE */
+#define MUIA_TheButton_TheBar              (TBUTTAGBASE+4)   /* v11  Object *,                      [ISG.]    */
+#define MUIA_TheButton_Image               (TBUTTAGBASE+5)   /* v11  struct MUIS_TheBar_Brush  *,   [I...]    */
+#define MUIA_TheButton_Label               (TBUTTAGBASE+6)   /* v11  STRPTR,                        [I...]    */
+#define MUIA_TheButton_InVirtgroup         (TBUTTAGBASE+7)   /* v11  BOOL,                          [I...]    */
+#define MUIA_TheButton_ViewMode            (TBUTTAGBASE+8)   /* v11  ULONG,                         [ISGN]    */
+#define MUIA_TheButton_Borderless          (TBUTTAGBASE+9)   /* v11  BOOL,                          [I...]    */
+#define MUIA_TheButton_Raised              (TBUTTAGBASE+10)  /* v11  BOOL,                          [ISGN]    */
+#define MUIA_TheButton_Sunny               (TBUTTAGBASE+11)  /* v11  BOOL,                          [I...]    */
+#define MUIA_TheButton_Scaled              (TBUTTAGBASE+12)  /* v11  BOOL,                          [ISGN]    */
+#define MUIA_TheButton_NoClick             (TBUTTAGBASE+13)  /* v11  BOOL,                          [I...]    */
+#define MUIA_TheButton_Toggle              (TBUTTAGBASE+14)  /* v11  BOOL,                          [I...]    */
+#define MUIA_TheButton_Immediate           (TBUTTAGBASE+15)  /* v11  BOOL,                          [I...]    */
+#define MUIA_TheButton_EnableKey           (TBUTTAGBASE+16)  /* v11  BOOL,                          [ISG.]    */
+#define MUIA_TheButton_LabelPos            (TBUTTAGBASE+17)  /* v11  ULONG,                         [ISGN]    */
+#define MUIA_TheButton_SelImage            (TBUTTAGBASE+18)  /* v12  struct MUIS_TheBar_Brush  *,   [I...]    */
+#define MUIA_TheButton_DisImage            (TBUTTAGBASE+19)  /* v12  struct MUIS_TheBar_Brush  *,   [I...]    */
+#define MUIA_TheButton_HorizTextGfxSpacing (TBUTTAGBASE+20)  /* v12  ULONG,                         [I...]    */
+#define MUIA_TheButton_VertTextGfxSpacing  (TBUTTAGBASE+21)  /* v12  ULONG,                         [I...]    */
+#define MUIA_TheButton_HorizInnerSpacing   (TBUTTAGBASE+22)  /* v12  ULONG,                         [I...]    */
+#define MUIA_TheButton_TopInnerSpacing     (TBUTTAGBASE+23)  /* v12  ULONG,                         [I...]    */
+#define MUIA_TheButton_BottomInnerSpacing  (TBUTTAGBASE+24)  /* v12  ULONG,                         [I...]    */
+#define MUIA_TheButton_Precision           (TBUTTAGBASE+25)  /* v12  ULONG,                         [I...]    */
+#define MUIA_TheButton_Event               (TBUTTAGBASE+26)  /* v12  ULONG,                         [I...]    */
+#define MUIA_TheButton_Scale               (TBUTTAGBASE+27)  /* v12  ULONG,                         [I...]    */
+#define MUIA_TheButton_DisMode             (TBUTTAGBASE+28)  /* v12  ULONG,                         [I...]    */
+#define MUIA_TheButton_SpecialSelect       (TBUTTAGBASE+29)  /* v12  BOOL,                          [I...]    */
+#define MUIA_TheButton_TextOverUseShine    (TBUTTAGBASE+30)  /* v12  BOOL,                          [I...]    */
+#define MUIA_TheButton_IgnoreSelImages     (TBUTTAGBASE+31)  /* v12  BOOL,                          [I...]    */
+#define MUIA_TheButton_IgnoreDisImages     (TBUTTAGBASE+32)  /* v12  BOOL,                          [I...]    */
+#define MUIA_TheButton_Strip               (TBUTTAGBASE+33)  /* v13  struct MUIS_TheBar_Strip *,    [I...]    */
+#define MUIA_TheButton_DontMove            (TBUTTAGBASE+34)  /* v15  BOOL,                          [I...]    */
+#define MUIA_TheButton_ID                  (TBUTTAGBASE+35)  /* v18  ULONG,                         [I...]    */
+#define MUIA_TheButton_NtRaiseActive       (TBUTTAGBASE+36)  /* v18  ULONG,                         [I...]    */
+#define MUIA_TheButton_StripRows           (TBUTTAGBASE+37)  /* v20  ULONG,                         [I...]    */
+#define MUIA_TheButton_StripCols           (TBUTTAGBASE+38)  /* v20  ULONG,                         [I...]    */
+#define MUIA_TheButton_StripHorizSpace     (TBUTTAGBASE+39)  /* v20  ULONG,                         [I...]    */
+#define MUIA_TheButton_StripVertSpace      (TBUTTAGBASE+40)  /* v20  ULONG,                         [I...]    */
+#define MUIA_TheButton_NotifyList          (TBUTTAGBASE+41)  /* v21  struct MinList *,              [..G.]    */ /* PRIVATE */
+
+/***********************************************************************/
+/*
+** TheButton.mcc Attributes values
+*/
+
+/* MUIA_TheButton_ViewMode */
+enum
+{
+  MUIV_TheButton_ViewMode_TextGfx,
+  MUIV_TheButton_ViewMode_Gfx,
+  MUIV_TheButton_ViewMode_Text,
+
+  MUIV_TheButton_ViewMode_Last
+};
+
+/* MUIA_TheButton_LabelPos */
+enum
+{
+  MUIV_TheButton_LabelPos_Bottom,
+  MUIV_TheButton_LabelPos_Top,
+  MUIV_TheButton_LabelPos_Right,
+  MUIV_TheButton_LabelPos_Left,
+
+  MUIV_TheButton_LabelPos_Last
+};
+
+/* MUIA_TheButton_Spacer */
+enum
+{
+  MUIV_TheButton_Spacer_None,
+  MUIV_TheButton_Spacer_Bar,
+  MUIV_TheButton_Spacer_Button,
+  MUIV_TheButton_Spacer_Image,
+  MUIV_TheButton_Spacer_DragBar,
+};
+
+/* MUICFG_TheButton_FrameStyle */
+enum
+{
+  MUIV_TheButton_FrameStyle_Recessed,
+  MUIV_TheButton_FrameStyle_Normal,
+};
+
+/* MUIA_TheButton_Event */
+enum
+{
+  MUIV_TheButton_Event_IntuiTicks,
+  MUIV_TheButton_Event_MouseMove,
+  MUIV_TheButton_Event_MouseObject,
+
+  MUIV_TheButton_Event_Last,
+};
+
+/* MUIA_TheButton_Precision */
+enum
+{
+  MUIV_TheButton_Precision_GUI,
+  MUIV_TheButton_Precision_Icon,
+  MUIV_TheButton_Precision_Image,
+  MUIV_TheButton_Precision_Exact,
+
+  MUIV_TheButton_Precision_Last,
+};
+
+/* MUIA_TheButton_DisMode */
+enum
+{
+  MUIV_TheButton_DisMode_Shape,
+  MUIV_TheButton_DisMode_Grid,
+  MUIV_TheButton_DisMode_FullGrid,
+  MUIV_TheButton_DisMode_Sunny,
+
+  MUIV_TheButton_DisMode_Last,
+};
+
+/***********************************************************************/
+/*
+** TheButton.mcc Misc
+*/
+
+/* MUIA_TheButton_Label max size */
+#define TB_MAXLABELLEN 32
+
+/***********************************************************************/
+
 
 #if defined(__PPC__)
   #if defined(__GNUC__)

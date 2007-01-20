@@ -178,7 +178,6 @@ enum
     FLG_FreeHoriz          = 1<<16,
     FLG_FreeVert           = 1<<17,
     FLG_BarSpacer          = 1<<18,
-    FLG_AutoSpacerOrient   = 1<<19,
     FLG_Strip              = 1<<20,
     FLG_CyberMap           = 1<<21,
     FLG_CyberDeep          = 1<<22,
