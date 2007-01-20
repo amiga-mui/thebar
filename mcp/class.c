@@ -1124,65 +1124,7 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
 
             set(data->spacersSize,MUIA_Cycle_Active,MUIDEF_TheBar_SpacersSize);
             break;
-/*
-        case (ULONG)Msg_Item_alfie_Defaults:
-            set(data->groupBack,MUIA_Imagedisplay_Spec,MUIDEF_TheBar_GroupBack);
-            set(data->useGroupBack,MUIA_Selected,MUIDEF_TheBar_UseGroupBack);
-            set(data->buttonBack,MUIA_Imagedisplay_Spec,ALFIE_ButtonBack);
-            set(data->useButtonBack,MUIA_Selected,ALFIE_UseButtonBack);
-            set(data->frameShinePen,MUIA_Pendisplay_Spec,ALFIE_FrameShinePen);
-            set(data->frameShadowPen,MUIA_Pendisplay_Spec,ALFIE_FrameShadowPen);
-            set(data->frameStyle,MUIA_Cycle_Active,MUIDEF_TheBar_FrameStyle);
-            set(data->disBodyPen,MUIA_Pendisplay_Spec,ALFIE_DisBodyPen);
-            set(data->disShadowPen,MUIA_Pendisplay_Spec,ALFIE_DisShadowPen);
-            set(data->barSpacerShinePen,MUIA_Pendisplay_Spec,ALFIE_BarSpacerShinePen);
-            set(data->barSpacerShadowPen,MUIA_Pendisplay_Spec,ALFIE_BarSpacerShadowPen);
-#ifndef __MORPHOS__
-            set(data->barFrameShinePen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarFrameShinePen);
-            set(data->barFrameShadowPen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarFrameShadowPen);
-#endif
-            set(data->dragBarShinePen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_DragBarShinePen);
-            set(data->dragBarShadowPen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_DragBarShadowPen);
 
-            set(data->textFont,MUIA_String_Contents,MUIDEF_TheBar_TextFont);
-            set(data->textGfxFont,MUIA_String_Contents,MUIDEF_TheBar_TextGfxFont);
-            set(data->viewMode,MUIA_Cycle_Active,MUIDEF_TheBar_Appearance_ViewMode);
-            set(data->labelPos,MUIA_Cycle_Active,MUIDEF_TheBar_Appearance_LabelPos);
-            set(data->scale,MUIA_Numeric_Value,MUIDEF_TheBar_Scale);
-            set(data->borderless,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Borderless);
-            set(data->raised,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Raised);
-            set(data->sunny,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Sunny);
-            set(data->scaled,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_Scaled);
-            set(data->barSpacer,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_BarSpacer);
-            set(data->enableKeys,MUIA_Selected,MUIDEF_TheBar_Appearance_Flags & MUIV_TheBar_Appearance_EnableKeys);
-
-            set(data->horizSpacing,MUIA_Numeric_Value,ALFIE_HorizSpacing);
-            set(data->vertSpacing,MUIA_Numeric_Value,ALFIE_VertSpacing);
-            set(data->barSpacerSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_BarSpacerSpacing);
-            set(data->horizInnerSpacing,MUIA_Numeric_Value,ALFIE_HorizInnerSpacing);
-            set(data->topInnerSpacing,MUIA_Numeric_Value,ALFIE_TopInnerSpacing);
-            set(data->bottomInnerSpacing,MUIA_Numeric_Value,ALFIE_BottomInnerSpacing);
-#ifndef __MORPHOS__
-	    set(data->leftBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_LeftBarFrameSpacing);
-            set(data->rightBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_RightBarFrameSpacing);
-            set(data->topBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_TopBarFrameSpacing);
-            set(data->bottomBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_BottomBarFrameSpacing);
-#endif
-            set(data->horizTexGfxSpacing,MUIA_Numeric_Value,ALFIE_HorizTextGfxSpacing);
-            set(data->vertTexGfxSpacing,MUIA_Numeric_Value,ALFIE_VertTextGfxSpacing);
-
-            set(data->precision,MUIA_Cycle_Active,MUIDEF_TheBar_Precision);
-            set(data->disMode,MUIA_Cycle_Active,ALFIE_DisMode);
-            set(data->specialSelect,MUIA_Selected,MUIDEF_TheBar_SpecialSelect);
-            set(data->textOverUseShine,MUIA_Selected,MUIDEF_TheBar_TextOverUseShine);
-
-            set(data->ignoreSel,MUIA_Selected,MUIDEF_TheBar_IgnoreSelImages);
-            set(data->ignoreDis,MUIA_Selected,MUIDEF_TheBar_IgnoreDisImages);
-            set(data->dontMove,MUIA_Selected,MUIDEF_TheBar_DontMove);
-            set(data->ntRaiseActive,MUIA_Selected,MUIDEF_TheBar_NtRaiseActive);
-
-            break;
-*/
         case MI_GLOBALS:
             loadPrefs(obj,"ENVARC:MUI/«Global».prefs");
             break;
