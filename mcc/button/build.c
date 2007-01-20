@@ -1392,8 +1392,9 @@ enum
 static struct BitMap *
 scaleBitMap(APTR src,struct scaleBitMap *scale,ULONG flags)
 {
-    struct BitMap          msbm, mdbm;
-    struct BitMap *sbm, *dbm;
+    struct BitMap msbm, mdbm;
+    struct BitMap *sbm=NULL;
+    struct BitMap *dbm=NULL;
     APTR          dest;
 
     if (flags & SCALEFLG_Mask)
