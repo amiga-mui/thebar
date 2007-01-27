@@ -65,6 +65,8 @@ size_t stccpy(char *p, const char *q, size_t n)
 
 /***********************************************************************/
 
+#ifndef __MORPHOS__
+
 #define HEX(c) ((c>'9')?c-'A'+10:c-'0')
 
 ULONG stch_l(char *chr_ptr, ULONG *u_ptr)
@@ -78,6 +80,8 @@ ULONG stch_l(char *chr_ptr, ULONG *u_ptr)
 
   return *u_ptr;
 }
+
+#endif
 
 /***********************************************************************/
 
