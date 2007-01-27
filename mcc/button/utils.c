@@ -75,6 +75,8 @@ stripUnderscore(STRPTR dest,STRPTR from,ULONG mode)
 
 /***********************************************************************/
 
+#ifndef __MORPHOS__
+
 static int stcd_l(const char *in, long *value)
 {
   if(in)
@@ -105,6 +107,8 @@ static int stcd_l(const char *in, long *value)
 
   return 0;
 }
+
+#endif
 
 /***********************************************************************/
 
