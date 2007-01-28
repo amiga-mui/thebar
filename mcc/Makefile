@@ -139,7 +139,7 @@ DEBUG    = -DDEBUG -O0
 CFLAGS   = -I. -I../mcp -I../include $(CPU) $(WARN) $(OPTFLAGS) \
            $(DEBUG) -g -c
 LDFLAGS  = $(CPU) -nostartfiles
-LDLIBS   = -lm
+LDLIBS   =
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -297,7 +297,7 @@ $(MCCVTARGET): $(M68KSTUBS) $(MCCVOBJS)
 
 $(TESTTARGET): $(TESTOBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -o $@.debug $(TESTOBJS) $(LDLIBS)
+	@$(CC) -noixemul -o $@.debug $(TESTOBJS) $(LDLIBS)
 	@$(STRIP) -R .comment -S -o $@ $@.debug
 
 $(OBJDIR)/library.o: library.c ../include/mccheader.c \

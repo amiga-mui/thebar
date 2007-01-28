@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-01-28  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp: renamed the GetStr() locale translation function to the much shorter
+    tr() naming and also fixed bug #1640924 where we did use the wrong 
+    catalog file naming.
+
 2007-01-27  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcp/utils.c: our own static stch_l() function is not required for a MOS

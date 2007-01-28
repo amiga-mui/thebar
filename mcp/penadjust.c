@@ -111,14 +111,14 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
 
     static const char *pens[9];
 
-    pens[0] = GetStr(Msg_Poppen_Shine);
-    pens[1] = GetStr(Msg_Poppen_Halfshine);
-    pens[2] = GetStr(Msg_Poppen_Background);
-    pens[3] = GetStr(Msg_Poppen_Halfshadow);
-    pens[4] = GetStr(Msg_Poppen_Shadow);
-    pens[5] = GetStr(Msg_Poppen_Text);
-    pens[6] = GetStr(Msg_Poppen_Fill);
-    pens[7] = GetStr(Msg_Poppen_Mark);
+    pens[0] = tr(Msg_Poppen_Shine);
+    pens[1] = tr(Msg_Poppen_Halfshine);
+    pens[2] = tr(Msg_Poppen_Background);
+    pens[3] = tr(Msg_Poppen_Halfshadow);
+    pens[4] = tr(Msg_Poppen_Shadow);
+    pens[5] = tr(Msg_Poppen_Text);
+    pens[6] = tr(Msg_Poppen_Fill);
+    pens[7] = tr(Msg_Poppen_Mark);
     pens[8] = NULL;
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
@@ -256,9 +256,9 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     static const char *titles[4];
 
-    titles[0] = GetStr(Msg_Poppen_MUI);
-    titles[1] = GetStr(Msg_Poppen_Colormap);
-    titles[2] = GetStr(Msg_Poppen_RGB);
+    titles[0] = tr(Msg_Poppen_MUI);
+    titles[1] = tr(Msg_Poppen_Colormap);
+    titles[2] = tr(Msg_Poppen_RGB);
     titles[3] = NULL;
 
     if((obj = (Object *)DoSuperNew(cl,obj,

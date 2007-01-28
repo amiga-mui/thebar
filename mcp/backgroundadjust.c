@@ -958,7 +958,7 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
             MUIA_Group_Horiz, TRUE,
 
             Child, vgrad = gradientfieldObject,
-                MUIA_ShortHelp,           GetStr(Msg_Popback_VertGradientHelp),
+                MUIA_ShortHelp,           tr(Msg_Popback_VertGradientHelp),
                 ButtonFrame,
                 MUIA_Background,          MUII_ButtonBack,
                 MUIA_InputMode,           MUIV_InputMode_Immediate,
@@ -968,7 +968,7 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
             Child, VGroup,
                 Child, hgrad = gradientfieldObject,
-                    MUIA_ShortHelp,  GetStr(Msg_Popback_HorizGradientHelp),
+                    MUIA_ShortHelp,  tr(Msg_Popback_HorizGradientHelp),
                     ButtonFrame,
                     MUIA_Background, MUII_ButtonBack,
                     MUIA_InputMode,  MUIV_InputMode_Immediate,
@@ -1210,10 +1210,10 @@ mBackNew(struct IClass *cl,Object *obj,struct opSet *msg)
     {
       static const char *titles[5];
 
-      titles[0] = GetStr(Msg_Popback_Pattern);
-      titles[1] = GetStr(Msg_Popback_Color);
-      titles[2] = GetStr(Msg_Popback_Bitmap);
-      titles[3] = GetStr(Msg_Popback_Gradient);
+      titles[0] = tr(Msg_Popback_Pattern);
+      titles[1] = tr(Msg_Popback_Color);
+      titles[2] = tr(Msg_Popback_Bitmap);
+      titles[3] = tr(Msg_Popback_Gradient);
       titles[4] = NULL;
 
       useGradient = TRUE;
@@ -1223,9 +1223,9 @@ mBackNew(struct IClass *cl,Object *obj,struct opSet *msg)
     {
       static const char *ngtitles[4];
 
-      ngtitles[0] = GetStr(Msg_Popback_Pattern);
-      ngtitles[1] = GetStr(Msg_Popback_Color);
-      ngtitles[2] = GetStr(Msg_Popback_Bitmap);
+      ngtitles[0] = tr(Msg_Popback_Pattern);
+      ngtitles[1] = tr(Msg_Popback_Color);
+      ngtitles[2] = tr(Msg_Popback_Bitmap);
       ngtitles[3] = NULL;
 
       useGradient = FALSE;
