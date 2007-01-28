@@ -271,24 +271,24 @@ ULONG stch_l(char *chr_ptr, ULONG *u_ptr);
 size_t stccpy(char *p, const char *q, size_t n);
 
 /* utils.c */
-#define olabel(id)    Label(GetStr(id))
-#define olabel1(id)   Label1(GetStr(id))
-#define ollabel1(id)  LLabel1(GetStr(id))
-#define olabel2(id)   Label2(GetStr(id))
-#define oflabel(id)   FreeLabel(GetStr(id))
-#define oclabel(id)   CLabel(GetStr(id))
+#define olabel(id)    Label(tr(id))
+#define olabel1(id)   Label1(tr(id))
+#define ollabel1(id)  LLabel1(tr(id))
+#define olabel2(id)   Label2(tr(id))
+#define oflabel(id)   FreeLabel(tr(id))
+#define oclabel(id)   CLabel(tr(id))
 #define owspace(w)    RectangleObject, MUIA_Weight, (w), End
 #define ofhspace(str) RectangleObject, MUIA_FixHeightTxt, (str), End
 
-Object *obutton(APTR text, APTR help);
-Object *ocycle(const char **array, APTR key, APTR help);
-Object *ocheck(APTR key, APTR help);
-Object *oslider(APTR key, APTR help, LONG min, LONG max);
-Object *opop(ULONG type, APTR key);
-Object *opoppen(APTR key, APTR title, APTR help);
-Object *opopfri(APTR key, APTR title, APTR help);
-Object *opopback(ULONG gradient, APTR key, APTR title, APTR help);
-Object *opopframe(APTR key, APTR title, APTR help);
+Object *obutton(const void *text, const void *help);
+Object *ocycle(const char **array, const void *key, const void *help);
+Object *ocheck(const void *key, const void *help);
+Object *oslider(const void * key, const void *help, LONG min, LONG max);
+Object *opop(ULONG type, const void *key);
+Object *opoppen(const void *key, const void *title, const void *help);
+Object *opopfri(const void *key, const void *title, const void *help);
+Object *opopback(ULONG gradient, const void *key, const void *title, const void *help);
+Object *opopframe(const void *key, const void *title, const void *help);
 void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
 
 #if !defined(__MORPHOS__) && !defined(__amigaos4__)
