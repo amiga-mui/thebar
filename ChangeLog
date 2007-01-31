@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-01-31  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/class.c: the BASEFLG_MORPHOS flag wasn't set which may have caused
+    that the PDTM_READPIXELARRAY operation while loading an image via the
+    datatypes system failed or caused to show the images distorted on
+    MorphOS. This should hopefully fix bug #1641342.
+
 2007-01-28  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcp: renamed the GetStr() locale translation function to the much shorter

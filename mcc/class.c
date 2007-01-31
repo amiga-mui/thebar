@@ -1022,10 +1022,14 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 
                 if (cdepth)
                 {
-                    res = DoMethod(dto,PDTM_READPIXELARRAY,(ULONG)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
-    	    	    if (lib_flags & BASEFLG_MORPHOS) res = TRUE;
-        		}
-                else res = DoMethod(dto,PDTM_READPIXELARRAY,(ULONG)chunky,PBPAFMT_LUT8,width,0,0,width,height);
+                  res = DoMethod(dto,PDTM_READPIXELARRAY,(ULONG)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
+
+                  #ifdef __MORPHOS__
+                  res = TRUE;
+                  #endif
+        		    }
+                else
+                  res = DoMethod(dto,PDTM_READPIXELARRAY,(ULONG)chunky,PBPAFMT_LUT8,width,0,0,width,height);
 
                 if (!res)
                 {

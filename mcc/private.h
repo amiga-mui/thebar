@@ -39,10 +39,9 @@ extern struct MUI_CustomClass *lib_dragBarClass;
 
 enum
 {
-    BASEFLG_Init    = 1<<0,
-    BASEFLG_MUI20   = 1<<1,
-    BASEFLG_MUI4    = 1<<2,
-    BASEFLG_MORPHOS = 1<<3,
+  BASEFLG_Init  = 1<<0,
+  BASEFLG_MUI20 = 1<<1,
+  BASEFLG_MUI4  = 1<<2,
 };
 
 /***************************************************************************/
