@@ -2027,6 +2027,8 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
   {
     case MUIA_TheBar_MouseOver:        *msg->opg_Storage = data->id; result=TRUE; break;
     case MUIA_TheBar_Images:           *msg->opg_Storage = (ULONG)data->brushes; result=TRUE; break;
+    case MUIA_TheBar_DisImages:        *msg->opg_Storage = (ULONG)data->dbrushes; result=TRUE; break;
+    case MUIA_TheBar_SelImages:        *msg->opg_Storage = (ULONG)data->sbrushes; result=TRUE; break;
     case MUIA_TheBar_ViewMode:         *msg->opg_Storage = data->viewMode; result=TRUE; break;
     case MUIA_TheBar_Borderless:       *msg->opg_Storage = (data->flags & FLG_Borderless) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_Raised:           *msg->opg_Storage = (data->flags & FLG_Raised) ? TRUE : FALSE; result=TRUE; break;
