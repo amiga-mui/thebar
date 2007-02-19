@@ -25,6 +25,8 @@
 #include "SDI_stdarg.h"
 #include "mcc_common.h"
 
+#include "Debug.h"
+
 #include <stdlib.h>
 
 #include <proto/input.h>
@@ -49,28 +51,34 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 
 /***********************************************************************/
 
-void
-stripUnderscore(STRPTR dest,STRPTR from,ULONG mode)
+void stripUnderscore(STRPTR dest, STRPTR from, ULONG mode)
 {
-    ULONG done = 0;
-    int   i = TB_MAXLABELLEN;
+  BOOL done = FALSE;
+  int i = TB_MAXLABELLEN;
 
-    while (*from && --i)
+  ENTER();
+
+  while(*from != '\0' && --i)
+  {
+    if(*from == '_')
     {
-        if (*from=='_')
-        {
-            if (done)
-            {
-                if (mode==STRIP_First) *dest++ = *from;
-            }
-            else done = 1;
-        }
-        else *dest++ = *from;
-
-        from++;
+      if(done)
+      {
+        if (mode == STRIP_First)
+          *dest++ = *from;
+      }
+      else
+        done = TRUE;
     }
+    else
+      *dest++ = *from;
 
-    *dest = '\0';
+    from++;
+  }
+
+  *dest = '\0';
+
+  LEAVE();
 }
 
 /***********************************************************************/
@@ -112,137 +120,169 @@ static int stcd_l(const char *in, long *value)
 
 /***********************************************************************/
 
-struct TextFont *
-openFont(STRPTR name)
+struct TextFont *openFont(STRPTR name)
 {
-    char buf[256];
-    STRPTR t, s;
-    struct TextAttr ta;
-    long            ys;
+  char buf[256];
+  STRPTR t, s;
+  struct TextAttr ta;
+  long ys;
+  struct TextFont *font;
 
-    strcpy(buf,name);
+  ENTER();
 
-    if((t = strchr(buf,'/')))
-    {
-        *t++ = 0;
-        if (!stcd_l(t,&ys) || ys<=0) ys = 8;
-    }
-    else ys = 8;
+  strlcpy(buf, name, sizeof(buf));
 
-    for (s = NULL, t = buf; *t; t++) if (*t=='.') s = t;
-    if (!s || stricmp(++s,"font")) strcat(buf,".font");
+  SHOWSTRING(DBF_GUI, buf);
 
-    ta.ta_Name  = buf;
-    ta.ta_YSize = ys;
-    ta.ta_Style = 0;
-    ta.ta_Flags = 0;
+  if((t = strchr(buf,'/')) != NULL)
+  {
+    *t++ = 0;
+    if(!stcd_l(t,&ys) || ys<=0)
+      ys = 8;
+  }
+  else
+    ys = 8;
 
-    return OpenDiskFont(&ta);
+  for(s = NULL, t = buf; *t; t++)
+    if(*t == '.')
+      s = t;
+  if(s == NULL || stricmp(++s, "font"))
+    strlcat(buf, ".font", sizeof(buf));
+
+  SHOWSTRING(DBF_GUI, buf);
+
+  memset(&ta, 0, sizeof(ta));
+  ta.ta_Name  = buf;
+  ta.ta_YSize = ys;
+  ta.ta_Style = 0;
+  ta.ta_Flags = 0;
+
+  font = OpenDiskFont(&ta);
+
+  RETURN(font);
+  return font;
 }
 
 /***********************************************************************/
 
-APTR
-allocVecPooled(APTR pool,ULONG size)
+APTR allocVecPooled(APTR pool, ULONG size)
 {
-    ULONG *mem;
+  ULONG *mem;
 
-    if((mem = AllocPooled(pool,size = size+sizeof(ULONG))))
-        *mem++ = size;
+  ENTER();
 
-    return mem;
+  size += sizeof(ULONG);
+
+  if((mem = AllocPooled(pool, size)) != NULL)
+      *mem++ = size;
+
+  RETURN(mem);
+  return mem;
 }
 
 /****************************************************************************/
 
-void
-freeVecPooled(APTR pool,APTR mem)
+void freeVecPooled(APTR pool, APTR mem)
 {
-    FreePooled(pool,(LONG *)mem-1,*((LONG *)mem-1));
+  ENTER();
+
+  FreePooled(pool, (LONG *)mem-1, *((LONG *)mem-1));
+
+  LEAVE();
 }
 
 /****************************************************************************/
 
-APTR
-allocArbitratePooled(ULONG size)
+APTR allocArbitratePooled(ULONG size)
 {
-    APTR mem;
+  APTR mem;
 
-    ObtainSemaphore(&lib_poolSem);
-    mem = AllocPooled(lib_pool,size);
-    ReleaseSemaphore(&lib_poolSem);
+  ENTER();
 
-    return mem;
+  ObtainSemaphore(&lib_poolSem);
+  mem = AllocPooled(lib_pool,size);
+  ReleaseSemaphore(&lib_poolSem);
+
+  RETURN(mem);
+  return mem;
 }
 
 /***********************************************************************/
 
-APTR
-freeArbitratePooled(APTR mem,ULONG size)
+void freeArbitratePooled(APTR mem, ULONG size)
 {
-    ObtainSemaphore(&lib_poolSem);
-    FreePooled(lib_pool,mem,size);
-    ReleaseSemaphore(&lib_poolSem);
+  ENTER();
 
-    return mem;
+  ObtainSemaphore(&lib_poolSem);
+  FreePooled(lib_pool,mem,size);
+  ReleaseSemaphore(&lib_poolSem);
+
+  LEAVE();
 }
 
 /***********************************************************************/
 
-APTR
-allocArbitrateVecPooled(ULONG size)
+APTR allocArbitrateVecPooled(ULONG size)
 {
-    APTR mem;
+  APTR mem;
 
-    ObtainSemaphore(&lib_poolSem);
-    mem = allocVecPooled(lib_pool,size);
-    ReleaseSemaphore(&lib_poolSem);
+  ENTER();
 
-    return mem;
+  ObtainSemaphore(&lib_poolSem);
+  mem = allocVecPooled(lib_pool,size);
+  ReleaseSemaphore(&lib_poolSem);
+
+  RETURN(mem);
+  return mem;
 }
 
 /***********************************************************************/
 
-APTR
-freeArbitrateVecPooled(APTR mem)
+void freeArbitrateVecPooled(APTR mem)
 {
-    ObtainSemaphore(&lib_poolSem);
-    freeVecPooled(lib_pool,mem);
-    ReleaseSemaphore(&lib_poolSem);
+  ENTER();
 
-    return mem;
+  ObtainSemaphore(&lib_poolSem);
+  freeVecPooled(lib_pool,mem);
+  ReleaseSemaphore(&lib_poolSem);
+
+  LEAVE();
 }
 
 /***********************************************************************/
 
 ULONG peekQualifier(void)
 {
-	ULONG rc = 0;
+  ENTER();
 
-	struct MsgPort *port;
-	if((port = CreateMsgPort()))
-	{
-		struct IORequest *iorequest;
-		if((iorequest = CreateIORequest(port, sizeof(*iorequest))))
-		{
-			if(!OpenDevice("input.device", 0, iorequest, 0))
-			{
-				struct Library *InputBase = (struct Library *)iorequest->io_Device;
-				#ifdef __amigaos4__
-				struct InputIFace *IInput;
-				GETINTERFACE(IInput, InputBase);
-				#endif
-				rc = PeekQualifier();
+  ULONG rc = 0;
 
-				DROPINTERFACE(IInput);
-				CloseDevice(iorequest);
-			}
-			DeleteIORequest(iorequest);
-		}
-		DeleteMsgPort(port);
-	}
+  struct MsgPort *port;
+  if((port = CreateMsgPort()) != NULL)
+  {
+    struct IORequest *iorequest;
 
-	return(rc);
+    if((iorequest = CreateIORequest(port, sizeof(*iorequest))) != NULL)
+    {
+      if(OpenDevice("input.device", 0, iorequest, 0) == 0)
+      {
+        struct Library *InputBase = (struct Library *)iorequest->io_Device;
+        #ifdef __amigaos4__
+        struct InputIFace *IInput;
+        GETINTERFACE(IInput, InputBase);
+        #endif
+        rc = PeekQualifier();
+
+        DROPINTERFACE(IInput);
+        CloseDevice(iorequest);
+      }
+      DeleteIORequest(iorequest);
+    }
+    DeleteMsgPort(port);
+  }
+
+  RETURN(rc);
+  return(rc);
 }
 
 /***********************************************************************/

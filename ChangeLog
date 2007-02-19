@@ -7,6 +7,8 @@ $URL$
 
 2007-02-19  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/button/Debug.c, mcc/button/utils.c: added "GUI" as debugging flag and
+    cleaned up source a little bit.
   * mcc/button/library.c: IDatatypes was obtained twice, but IDiskfont was
     never obtained, hence all attempts to load a font via OpenDiskFont() did
     crash. This fixes bug #1662653.

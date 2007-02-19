@@ -106,9 +106,9 @@ void freeVecPooled(APTR pool, APTR mem);
 void stripUnderscore(STRPTR dest , STRPTR from, ULONG mode);
 struct TextFont *openFont(STRPTR name);
 APTR allocArbitratePooled(ULONG size);
-APTR freeArbitratePooled(APTR mem, ULONG size);
+void freeArbitratePooled(APTR mem, ULONG size);
 APTR allocArbitrateVecPooled(ULONG size);
-APTR freeArbitrateVecPooled(APTR mem);
+void freeArbitrateVecPooled(APTR mem);
 ULONG peekQualifier(void);
 
 /* brc1.c */
