@@ -56,9 +56,7 @@
 // debug flags
 #define DBF_ALWAYS    (1<<0)
 #define DBF_STARTUP   (1<<1)     // for startup/shutdown events
-#define DBF_INPUT     (1<<2)     // HandleInput.c
-#define DBF_REXX      (1<<3)     // HandleARexx.c
-#define DBF_CLIPBOARD (1<<4)     // EditorStuff.c, BlockOperators.c
+#define DBF_GUI       (1<<2)
 #define DBF_ALL       0xffffffff
 
 void SetupDebug(void);
