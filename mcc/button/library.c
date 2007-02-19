@@ -84,7 +84,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
        GETINTERFACE(IDataTypes, DataTypesBase))
     {
       if((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
-         GETINTERFACE(IDataTypes, DataTypesBase))
+         GETINTERFACE(IDiskfont, DiskfontBase))
       {
         STRPTR buf[16];
 
