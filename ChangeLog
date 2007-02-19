@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-02-19  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/library.c: IDatatypes was obtained twice, but IDiskfont was
+    never obtained, hence all attempts to load a font via OpenDiskFont() did
+    crash. This fixes bug #1662653.
+
 2007-01-31  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/class.c: MUIA_TheBar_DisImages and MUIA_TheBar_SelImages is now also
