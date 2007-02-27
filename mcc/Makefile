@@ -176,7 +176,7 @@ ifeq ($(OS), os3)
   CPU	    = -m68020-60 -msoft-float
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
-  LDLIBS  += -ldebug -lmui
+  LDLIBS  += -ldebug -lmui -lm
 
 else
 ifeq ($(OS), mos)

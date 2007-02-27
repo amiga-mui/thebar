@@ -253,11 +253,11 @@ void freeArbitrateVecPooled(APTR mem)
 
 ULONG peekQualifier(void)
 {
+  ULONG rc = 0;
+  struct MsgPort *port;
+
   ENTER();
 
-  ULONG rc = 0;
-
-  struct MsgPort *port;
   if((port = CreateMsgPort()) != NULL)
   {
     struct IORequest *iorequest;
