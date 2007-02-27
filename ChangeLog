@@ -5,6 +5,8 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v21.2 RELEASE ############################################################
+
 2007-02-27  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/class.c: The MUIA_TheBar_SelImages/DisImages attribute wasn't
