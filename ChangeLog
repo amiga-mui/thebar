@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-03-06  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp/locale: added french and german catalog translation kindly provided
+    by the authors of these translations.
+
 2007-02-28  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcp/class.c: fixed a stupid illegal memory access where the ocheck()
