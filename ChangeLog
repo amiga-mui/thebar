@@ -5,6 +5,8 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v21.3 RELEASE ############################################################
+
 2007-03-06  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcp/locale: added french and german catalog translation kindly provided
