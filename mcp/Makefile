@@ -231,6 +231,10 @@ MCCOBJS = $(OBJDIR)/library.o \
           $(EXTRAOBJS) \
           $(OBJDIR)/Debug.o
 
+# available catalog translations
+CATALOGS = $(LOCALE)/deutsch.catalog \
+           $(LOCALE)/francais.catalog
+
 #
 
 all: $(BINDIR) $(OBJDIR) locale.c $(MCCTARGET) $(TESTTARGET)
@@ -274,6 +278,16 @@ locale.h: locale.c
 locale.c: locale/TheBar_mcp.cd C_h.sd C_c.sd
 	@printf '\033[33mGenerating locale file $@...\033[0m\n'
 	@$(FC) locale/TheBar_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
+
+## CATALOG GENERATION #################
+
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+	@printf '\033[33mGenerating $@\033[0m\n'
+	@$(FC) $(LOCALE)/TheBar_mcp.cd $< CATALOG $@
+
+.IGNORE: $(CATALOGS)
+
+catalogs: $(CATALOGS)
 
 #
 
