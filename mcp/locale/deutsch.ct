@@ -1,4 +1,4 @@
-## chunk AUTH Hans-Jörg Ottinger
+## chunk AUTH Jens Langner, Hans-Jörg Ottinger
 ## version $VER: TheBar_mcp.catalog 21.2 (06.03.2007)
 ## codeset 0
 ## language deutsch
@@ -83,15 +83,15 @@ Helle Rahmenfarbe
 ; Frame shine pen
 ;
 Msg_FrameShadowPen
-Dunkel
+Schatten
 ; Shadow
 ;
 Msg_FrameShadowPen_Help
-Dunkle Rahmenfarbe aktiver Knöpfe.
+Rahmenfarbe für Schatten bei aktiven Knöpfen.
 ; Active buttons frame shadow pen.
 ;
 Msg_FrameShadowPen_Title
-Dunkle Rahmenfarbe
+Rahmenfarbe für Schatten
 ; Frame shadow pen
 ;
 Msg_FrameStyle_Recessed
@@ -99,7 +99,7 @@ Vertieft
 ; Recessed
 ;
 Msg_FrameStyle_Normal
-
+Normal
 ; Normal
 ;
 Msg_FrameStyle
@@ -111,7 +111,7 @@ Rahmenstil aktiver Knöpfe.
 ; Active buttons frame style.
 ;
 Msg_Title_Disabled
-Abgeschaltete Knöpfe
+Deaktiverte Knöpfe
 ; Disabled buttons
 ;
 Msg_DisabledBody
@@ -119,7 +119,10 @@ Innen
 ; Body
 ;
 Msg_DisabledBody_Help
-Abgeschaltete Knopffarbe. Wird als Hauptfarbe\nim Formmodus für abgeschaltete Knöpfe\nbenutzt, und als Gitterfarbe für\nAbgeschaltete Knöpfe im Gittermodus.
+Knopffarbe für deaktivierte Knöpfe. Wird\n\
+als Hauptfarbe im Umrissmodus für deaktivierte\n\
+Knöpfe benutzt, und als Gitterfarbe für\n\
+Knöpfe im Gittermodus.
 ; Disabled buttons body pen. It is used as\nmain pen for disabled buttons in Shape\nmode and as grid pen for disabled\nbuttons in Grid modes.
 ;
 Msg_DisabledBody_Title
@@ -127,15 +130,18 @@ Innenfarbe
 ; Body pen
 ;
 Msg_DisabledShadow
-Dunkel
+Schatten
 ; Shadow
 ;
 Msg_DisabledShadow_Help
-Dunkle abgeschaltet-Knopffarbe. Wird als zweite\nFarbe für abgeschaltete Knöpfe im Formmodus\nbenutzt, und als Textfarbe für Abgeschaltete\nKnöpfe im Gittermodus.
+Schattenfarbe für deaktivierte Knöpfe. Wird\n\
+als zweite Farbe für deaktivierte Knöpfe im\n\
+Umrissmodus benutzt, und als Textfarbe für\n\
+Knöpfe im Gittermodus.
 ; Disabled buttons shadow pen. It is used as\nsecondary pen for disabled buttons in Shape\nmode and as text pen for disabled buttons\nin Grid modes.
 ;
 Msg_DisabledShadow_Title
-Dunkle Farbe
+Schattenfarbe
 ; Shadow pen
 ;
 Msg_Title_BarSpacer
@@ -155,15 +161,15 @@ Helle Leistentrennerfarbe
 ; Spacer shine pen
 ;
 Msg_BarSpacerShadowPen
-Dunkel
+Schatten
 ; Shadow
 ;
 Msg_BarSpacerShadowPen_Help
-Dunkle Leistentrennerfarbe.
+Schattenfarbe des Leistentrenner.
 ; Bar spacer shadow pen.
 ;
 Msg_BarSpacerShadowPen_Title
-Dunkle Leistentrennerfarbe
+Schattenfarbe des Leistentrenner
 ; Spacer shadow pen
 ;
 Msg_Title_BarFrame
@@ -183,15 +189,15 @@ Helle Rahmenfarbe
 ; Frame shine pen
 ;
 Msg_BarFrameShadow
-Dunkel
+Schatten
 ; Shadow
 ;
 Msg_BarFrameShadow_Help
-Dunkle Leistenrahmenfarbe.
+Schattenfarbe für Leistenrahmen.
 ; Bar frame shadow pen.
 ;
 Msg_BarFrameShadow_Title
-Dunkle Rahmenfarbe
+Schattenfarbe für Leistenrahmen
 ; Frame shadow pen
 ;
 Msg_Title_DragBar
@@ -211,15 +217,15 @@ Helle Ziehleistenfarbe
 ; DragBar shine pen
 ;
 Msg_DragBarShadow
-Dunkel
+Schatten
 ; Shadow
 ;
 Msg_DragBarShadow_Help
-Dunkle Farbe der Ziehleiste.
+Schattenfarbe der Ziehleiste.
 ; DragBar shadow pen.
 ;
 Msg_DragBarShadow_Title
-Dunkle Farbe der Ziehleiste
+Schattenfarbe der Ziehleiste
 ; DragBar shadow pen
 ;
 Msg_DragBarFill
@@ -255,7 +261,7 @@ Leistemrahmen
 ; Bar frame
 ;
 Msg_TextFont
-
+Text
 ; Text
 ;
 Msg_TextFont_Help
@@ -263,7 +269,7 @@ Schrift für reine Textknöpfe.
 ; Text only buttons font.
 ;
 Msg_TextGfxFont
-
+TextGfx
 ; TextGfx
 ;
 Msg_TextGfxFont_Help
@@ -283,11 +289,11 @@ Die Optionen unten werden von TheBar genutzt, und zwar ausschließlich während de
 ; The options below are used by TheBar if and only if the\nobject requested for it at creation time. It means that\nif the programmer didn't decide otherwise, they are simply\nignored.
 ;
 Msg_TextGfx
-Ikons und Text
+Symbole und Text
 ; Icons and text
 ;
 Msg_Gfx
-Nur Ikons
+Nur Symbole
 ; Icons only
 ;
 Msg_Text
@@ -311,7 +317,7 @@ Wenn Gewählt, werden S/W Knöpfe\nfarbig dargestellt, wenn\ndie Maus darüber ist.
 ; If selected, buttons, normally in black\nand white, are colored when the\nmouse is over them.
 ;
 Msg_Raised
-Erhaben
+Angehoben
 ; Raised
 ;
 Msg_Raised_Help
@@ -343,11 +349,11 @@ Wenn gewählt, werden die Tastenkürzel aktiviert.
 ; If selected, buttons short cuts\nare active.
 ;
 Msg_LabelPos
-Beschriftungsposition
+Beschriftung
 ; Labels at
 ;
 Msg_LabelPos_Help
-Stellt die Position des Textes\nIkons und Textknöpfe ein.
+Stellt die Position des Textes\nSymbole und Textknöpfe ein.
 ; Adjust the position of text in\nIcons and text buttons.
 ;
 Msg_LabelPos_Bottom
@@ -459,7 +465,7 @@ Pixel zwischen dem unteren Rahmenrand und dem Leisteninhalt.
 ; Pixels between the bottom frame border\nand the bar contents.
 ;
 Msg_Title_TextGfxSpacing
-
+Text/Gfx
 ; Text/Gfx
 ;
 Msg_HorizTextGfxSpacing
@@ -503,7 +509,7 @@ Genauigkeit der darzustellenden Farben.
 ; Precision to use when obtaining pens.
 ;
 Msg_Event_IntuiTicks
-
+IntuiTicks
 ; IntuiTicks
 ;
 Msg_Event_MouseMove
@@ -552,15 +558,16 @@ Wenn gewählt, werden gewählte Bilder ignoriert.
 ; If selected, selected images\nare ignored.
 ;
 Msg_IgnoreDisImages
-Abgeschaltete Bilder ignorieren
+Bilder für deaktivierten Modus ignorieren
 ; Ignore disabled images
 ;
 Msg_IgnoreDisImages_Help
-Wenn gewählt, werden abgeschaltete Bilder ignoriert.
+Wenn gewählt, werden die Bilder für den\n\
+deaktivierten Modus ignoriert.
 ; If selected, disabled images\nare ignored.
 ;
 Msg_DisMode_Shape
-Form
+Umriss
 ; Shape
 ;
 Msg_DisMode_Grid
@@ -572,11 +579,11 @@ Volles Gitter
 ; Full grid
 ;
 Msg_DisMode
-Abschalten
+Deaktiviert
 ; Disable
 ;
 Msg_DisMode_Help
-Wie abgeschaltete Knöpfe dargestellt werden.
+Wie deaktivierte Knöpfe dargestellt werden sollen.
 ; How to render disabled buttons.
 ;
 Msg_DontMove
@@ -616,7 +623,7 @@ Hälfte eines Knopfes
 ; Half of a button
 ;
 Msg_SpacersSize_One
-Wie ein Knopf
+Wie Knopf
 ; As a button
 ;
 Msg_Event_MouseObject
@@ -633,7 +640,7 @@ Wie die Maus über einem Knopf abgefragt wird:\n- IntuiTicks: Es wird periodisch 
 ;
 ;
 Msg_Info_Translator
-Deutsch : Hans-Jörg Ottinger\nhjo@freenet.de
+Deutsch : Jens Langner, Hans-Jörg Ottinger
 ; 
 ;
 Msg_Item_Globals
@@ -673,15 +680,15 @@ Farbe
 ; Color
 ;
 Msg_Popback_Bitmap
-
+Bitmap
 ; Bitmap
 ;
 Msg_Popback_Gradient
-
+Gradient
 ; Gradient
 ;
 Msg_Popback_HorizGradient
-
+Horizontal
 ; Horizontal
 ;
 Msg_Popback_HorizGradientHelp
@@ -713,7 +720,7 @@ Wechselt von/zu Farben.
 ; Swaps from/to colors.
 ;
 Msg_Poppen_MUI
-
+MUI
 ; MUI
 ;
 Msg_Poppen_Colormap
@@ -721,7 +728,7 @@ Farbrad
 ; Colormap
 ;
 Msg_Poppen_RGB
-
+RGB
 ; RGB
 ;
 Msg_Poppen_Shine
@@ -737,15 +744,15 @@ Hintergrund
 ; Background
 ;
 Msg_Poppen_Halfshadow
-Halbdunkel
+Halbschatten
 ; Halfshadow
 ;
 Msg_Poppen_Shadow
-Dunkel
+Schatten
 ; Shadow
 ;
 Msg_Poppen_Text
-
+Text
 ; Text
 ;
 Msg_Poppen_Fill
