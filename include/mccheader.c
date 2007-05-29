@@ -217,7 +217,7 @@ struct IntuitionBase  *IntuitionBase = NULL;
 #endif
 
 #ifdef SUPERCLASS
-static struct MUI_CustomClass *ThisClass = NULL;
+struct MUI_CustomClass *ThisClass = NULL;
 #endif
 
 #ifdef SUPERCLASSP
