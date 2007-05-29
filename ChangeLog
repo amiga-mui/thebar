@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-05-29  Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mccheader.c: reworked the LibOpen() and LibClose() functions to
+    increment/decrement the lib_Open counter before obtaining the semaphore to
+    prevent a possible race condition with LibExpunge().
+
 2007-03-23  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?/Debug.c: fixed wrong final output of debug classes and flags.
@@ -58,7 +64,7 @@ $URL$
 2007-01-28  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcp: renamed the GetStr() locale translation function to the much shorter
-    tr() naming and also fixed bug #1640924 where we did use the wrong 
+    tr() naming and also fixed bug #1640924 where we did use the wrong
     catalog file naming.
 
 2007-01-27  Jens Langner <Jens.Langner@light-speed.de>
