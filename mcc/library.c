@@ -52,14 +52,17 @@
 
 #define INSTDATA      InstData
 
-#define UserLibID     "$VER: " CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
 #define USEDCLASSESP  used_classesP
 static const char * const used_classesP[] = { "TheBar.mcp", NULL };
 
-#define ClassInit
-#define ClassExit
+#define CLASSINIT
+static BOOL ClassInit(UNUSED struct Library *base);
+
+#define CLASSEXPUNGE
+static VOID ClassExpunge(UNUSED struct Library *base);
 
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
@@ -70,11 +73,20 @@ struct CyberGfxIFace *ICyberGfx = NULL;
 #endif
 
 // some variables we carry for the whole lifetime of the lib
+struct MUI_CustomClass *lib_thisClass = NULL;
 struct MUI_CustomClass *lib_spacerClass = NULL;
 struct MUI_CustomClass *lib_dragBarClass = NULL;
 ULONG lib_flags = 0;
 
-BOOL ClassInitFunc(UNUSED struct Library *base)
+/******************************************************************************/
+/*                                                                            */
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/*                                                                            */
+/******************************************************************************/
+
+#include "mccinit.c"
+
+static BOOL ClassInit(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -100,6 +112,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
       }
 
       lib_flags |= BASEFLG_Init;
+      lib_thisClass = ThisClass;
 
       RETURN(TRUE);
       return(TRUE);
@@ -111,7 +124,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
 }
 
 
-VOID ClassExitFunc(UNUSED struct Library *base)
+static VOID ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -146,12 +159,3 @@ VOID ClassExitFunc(UNUSED struct Library *base)
 
   LEAVE();
 }
-
-/******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
-/******************************************************************************/
-
-#define USE_UTILITYBASE
-#include "mccheader.c"

@@ -74,7 +74,7 @@ struct DataTypesIFace *IDataTypes = NULL;
 #endif
 
 DISPATCHERPROTO(_Dispatcher);
-struct MUI_CustomClass *ThisClass = NULL;
+struct MUI_CustomClass *lib_thisClass = NULL;
 struct MUI_CustomClass *lib_spacerClass = NULL;
 struct MUI_CustomClass *lib_dragBarClass = NULL;
 ULONG lib_flags = 0;
@@ -152,9 +152,9 @@ int main(void)
       initSpacerClass();
       initDragBarClass();
 
-      ThisClass = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
+      lib_thisClass = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
 
-      if(ThisClass && (app = ApplicationObject,
+      if(lib_thisClass && (app = ApplicationObject,
                          MUIA_Application_Title,         "TheBar Demo1",
                          MUIA_Application_Version,       "$VER: TheBarDemo1 1.0 (24.6.2003)",
                          MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
@@ -166,7 +166,7 @@ int main(void)
                            MUIA_Window_ID,             MAKE_ID('M','A','I','N'),
                            MUIA_Window_Title,          "TheBar Demo1",
                            WindowContents, VGroup,
-                             Child, sb = NewObject(ThisClass->mcc_Class, NULL,
+                             Child, sb = NewObject(lib_thisClass->mcc_Class, NULL,
                                MUIA_Group_Horiz,       TRUE,
                                MUIA_TheBar_EnableKeys, TRUE,
                                MUIA_TheBar_Buttons,    buttons,
@@ -249,8 +249,11 @@ int main(void)
         MUI_DisposeObject(app);
         
         D(DBF_STARTUP, "cleaning up mcc...");
-        if(ThisClass)
-          MUI_DeleteCustomClass(ThisClass);
+        if(lib_thisClass)
+        {
+          MUI_DeleteCustomClass(lib_thisClass);
+          lib_thisClass = NULL;
+        }
       }
       else
         printf("Failed to create application\n");

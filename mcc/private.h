@@ -33,7 +33,7 @@
 
 extern ULONG lib_flags;
 
-extern struct MUI_CustomClass *ThisClass;
+extern struct MUI_CustomClass *lib_thisClass;
 extern struct MUI_CustomClass *lib_spacerClass;
 extern struct MUI_CustomClass *lib_dragBarClass;
 

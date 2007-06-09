@@ -137,7 +137,7 @@ OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
 CFLAGS   = -I. -I../../mcp -I../../include $(CPU) $(WARN) $(OPTFLAGS) \
            $(DEBUG) -g -c
-LDFLAGS  = $(CPU) -nostartfiles
+LDFLAGS  = $(CPU) -g -nostartfiles
 LDLIBS   = -lm
 
 # different options per target OS
@@ -272,7 +272,7 @@ $(TESTTARGET): $(TESTOBJS)
 	@$(CC) -o $@.debug $(TESTOBJS) $(LDLIBS)
 	@$(STRIP) -R .comment -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../../include/mccheader.c \
+$(OBJDIR)/library.o: library.c ../../include/mccinit.c \
   ../../include/mui/TheBar_mcc.h private.h rev.h
 
 #
