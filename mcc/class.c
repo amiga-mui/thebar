@@ -335,7 +335,7 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
 
 HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 {
-    struct InstData *data = INST_DATA(ThisClass->mcc_Class,obj);
+    struct InstData *data = INST_DATA(lib_thisClass->mcc_Class,obj);
 
     ENTER();
 

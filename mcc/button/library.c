@@ -47,14 +47,14 @@
 
 #define INSTDATA      InstData
 
-#define UserLibID     "$VER: " CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
 #define USEDCLASSESP  used_classesP
 static const char * const used_classesP[] = { "TheBar.mcp", NULL };
 
-#define ClassInit
-#define ClassExit
+#define CLASSINIT
+#define CLASSEXPUNGE
 
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
@@ -72,7 +72,7 @@ APTR  lib_pool = NULL;
 ULONG lib_flags = 0;
 ULONG lib_alpha = 0xffffffff;
 
-BOOL ClassInitFunc(UNUSED struct Library *base)
+static BOOL ClassInit(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -121,7 +121,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
 }
 
 
-VOID ClassExitFunc(UNUSED struct Library *base)
+static VOID ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -157,5 +157,4 @@ VOID ClassExitFunc(UNUSED struct Library *base)
 /*                                                                            */
 /******************************************************************************/
 
-#define USE_UTILITYBASE
-#include "mccheader.c"
+#include "mccinit.c"

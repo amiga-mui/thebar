@@ -48,11 +48,11 @@
 
 #define INSTDATAP     InstData
 
-#define UserLibID     "$VER: " CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
-#define ClassInit
-#define ClassExit
+#define CLASSINIT
+#define CLASSEXPUNGE
 
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
@@ -81,7 +81,7 @@ struct MUI_CustomClass *lib_popbackground = NULL;
 #endif
 ULONG lib_flags = 0;
 
-BOOL ClassInitFunc(UNUSED struct Library *base)
+static BOOL ClassInit(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -154,7 +154,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
 }
 
 
-VOID ClassExitFunc(UNUSED struct Library *base)
+static VOID ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -226,5 +226,4 @@ VOID ClassExitFunc(UNUSED struct Library *base)
   End
 
 
-#define USE_UTILITYBASE
-#include "mccheader.c"
+#include "mccinit.c"

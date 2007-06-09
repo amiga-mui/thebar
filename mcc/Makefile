@@ -300,7 +300,7 @@ $(TESTTARGET): $(TESTOBJS)
 	@$(CC) -noixemul -o $@.debug $(TESTOBJS) $(LDLIBS)
 	@$(STRIP) -R .comment -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../include/mccheader.c \
+$(OBJDIR)/library.o: library.c ../include/mccinit.c \
   ../include/mui/TheBar_mcc.h private.h rev.h
 
 #

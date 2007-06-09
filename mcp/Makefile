@@ -271,7 +271,7 @@ $(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(MCCOBJS) $(M68KSTUBS) $(LDLIBS)
 	@$(STRIP) -R .comment -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../include/mccheader.c \
+$(OBJDIR)/library.o: library.c ../include/mccinit.c \
   ../include/mui/TheBar_mcc.h private.h rev.h
 
 locale.h: locale.c
