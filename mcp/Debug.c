@@ -71,11 +71,11 @@ void SetupDebug(void)
 {
   char var[256];
 
-  kprintf("** TheBar.mcc v" LIB_REV_STRING " startup **********************\n");
+  kprintf("** TheBar.mcp v" LIB_REV_STRING " startup **********************\n");
   kprintf("Exec version: v%ld.%ld\n", ((struct Library *)SysBase)->lib_Version, ((struct Library *)SysBase)->lib_Revision);
   kprintf("Initializing runtime debugging:\n");
 
-  if(GetVar("thebar.mcc.debug", var, sizeof(var), 0) > 0)
+  if(GetVar("thebar.mcp.debug", var, sizeof(var), 0) > 0)
   {
     char *s = var;
 
@@ -98,9 +98,6 @@ void SetupDebug(void)
     {
       { "always",    DBF_ALWAYS    },
       { "startup",   DBF_STARTUP   },
-      { "input",     DBF_INPUT     },
-      { "rexx",      DBF_REXX      },
-      { "clipboard", DBF_CLIPBOARD },
       { "all",       DBF_ALL       },
       { NULL,        0             }
     };
@@ -189,7 +186,7 @@ void SetupDebug(void)
     }
   }
 
-  kprintf("set debug classes/flags (env:yamdebug): %08lx/%08lx\n", debug_classes, debug_flags);
+  kprintf("set debug classes/flags (env:thebar.mcp.debug): %08lx/%08lx\n", debug_classes, debug_flags);
   kprintf("** Normal processing follows ***************************************\n");
 }
 
