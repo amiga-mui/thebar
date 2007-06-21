@@ -22,6 +22,8 @@
 
 #include "class.h"
 
+#include "Debug.h"
+
 #include <math.h>
 
 /*
@@ -82,6 +84,8 @@ scale(struct scale *sce,UBYTE *src,UBYTE *dst)
         struct scaleData scdata;
         LONG             y;
 
+        D(DBF_SCALE, "sw=%d sh=%d dw=%d dh=%d", sce->sw, sce->sh, sce->dw, sce->dh);
+
         scdata.cy       = 0;
         scdata.sourcey  = 0;
 
@@ -90,6 +94,8 @@ scale(struct scale *sce,UBYTE *src,UBYTE *dst)
 
         scdata.deltay   = sce->sh-1;
         scdata.deltay  /= (sce->dh-1);
+
+        D(DBF_SCALE, "deltax=%.2f deltay=%.2f", scdata.deltax, scdata.deltay);
 
         for (y = 0; y<sce->dh; y++)
         {
@@ -140,6 +146,8 @@ scaleRGB(struct scale *sce,ULONG *src,ULONG *dst)
         struct scaleData scdata;
         LONG             y;
 
+        D(DBF_SCALE, "sw=%d sh=%d dw=%d dh=%d", sce->sw, sce->sh, sce->dw, sce->dh);
+
         scdata.cy       = 0;
         scdata.sourcey  = 0;
 
@@ -148,6 +156,8 @@ scaleRGB(struct scale *sce,ULONG *src,ULONG *dst)
 
         scdata.deltay   = sce->sh-1;
         scdata.deltay  /= (sce->dh-1);
+
+        D(DBF_SCALE, "deltax=%.2f deltay=%.2f", scdata.deltax, scdata.deltay);
 
         for (y = 0; y<sce->dh; y++)
         {

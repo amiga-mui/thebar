@@ -7,6 +7,8 @@ $URL$
 
 2007-06-21  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/Debug.c, mcc/button/Debug.c mcc/scale.c, mcc/button/scale.c: added
+    SCALE debug flag for debugging the image scaling stuff.
   * mcc/TheBar-Test.c: added an UNUSED qualifiert to the qual parameter as it is
     only used in the debug statement.
   * mcc/button/Makefile: removed the TestButton target, as the button cannot be
