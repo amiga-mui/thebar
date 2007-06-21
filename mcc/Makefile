@@ -140,7 +140,7 @@ DEBUGSYM = -gstabs
 CFLAGS   = -I. -I../mcp -I../include $(CPU) $(WARN) $(OPTFLAGS) \
            $(DEBUG) $(DEBUGSYM) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM) -nostartfiles
-LDLIBS   =
+LDLIBS   = -lm
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -178,7 +178,7 @@ ifeq ($(OS), os3)
   CPU	    = -m68020-60 -msoft-float
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
-  LDLIBS  += -ldebug -lmui -lm
+  LDLIBS  += -ldebug -lmui
 
 else
 ifeq ($(OS), mos)
@@ -271,7 +271,7 @@ $(BINDIR):
 
 $(OBJDIR)/%.o: %.c
 	@printf '\033[32mCompiling $<\033[0m\n'
-	@$(CC) $(CFLAGS) $< -o $@ 
+	@$(CC) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/mcc/%.o: %.c
 	@printf '\033[32mCompiling $<\033[0m\n'
