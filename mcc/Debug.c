@@ -98,9 +98,7 @@ void SetupDebug(void)
     {
       { "always",    DBF_ALWAYS    },
       { "startup",   DBF_STARTUP   },
-      { "input",     DBF_INPUT     },
-      { "rexx",      DBF_REXX      },
-      { "clipboard", DBF_CLIPBOARD },
+      { "scale",     DBF_SCALE },
       { "all",       DBF_ALL       },
       { NULL,        0             }
     };

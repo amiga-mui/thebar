@@ -98,7 +98,7 @@ void SetupDebug(void)
     {
       { "always",    DBF_ALWAYS    },
       { "startup",   DBF_STARTUP   },
-      { "gui",       DBF_GUI       },
+      { "scale",     DBF_SCALE     },
       { "all",       DBF_ALL       },
       { NULL,        0             }
     };
