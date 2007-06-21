@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-06-21  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/Makefile: added -lm to the linker flags for all platforms.
+
 2007-06-13  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?/Debug.c: unified the _DPRINTF() functions for all platforms.
