@@ -129,7 +129,6 @@ BINDIR = bin_$(OS)
 
 # target definition
 MCCTARGET = $(BINDIR)/TheButton.mcc
-TESTTARGET= $(BINDIR)/TheButton-Test
 
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings
@@ -227,19 +226,9 @@ MCCOBJS = $(OBJDIR)/library.o \
           $(OBJDIR)/utils.o \
           $(OBJDIR)/Debug.o
 
-TESTOBJS= $(OBJDIR)/TheButton-Test.o \
-          $(OBJDIR)/brc1.o \
-          $(OBJDIR)/build.o \
-          $(OBJDIR)/class.o \
-          $(OBJDIR)/dragbar.o \
-          $(OBJDIR)/scale.o \
-          $(OBJDIR)/spacer.o \
-          $(OBJDIR)/utils.o \
-          $(OBJDIR)/Debug.o
-
 #
 
-all: $(BINDIR) $(OBJDIR) $(MCCTARGET) $(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) $(MCCTARGET)
 
 # make the object directories
 $(OBJDIR):
@@ -269,11 +258,6 @@ $(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(MCCOBJS) $(M68KSTUBS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-$(TESTTARGET): $(TESTOBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -o $@.debug $(TESTOBJS) $(LDLIBS) -Wl,-Map,$@.map
-	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
-
 $(OBJDIR)/library.o: library.c ../../include/mccinit.c \
   ../../include/mui/TheBar_mcc.h private.h rev.h
 
@@ -282,8 +266,7 @@ $(OBJDIR)/library.o: library.c ../../include/mccinit.c \
 .PHONY: clean
 clean:
 	-$(RM) $(MCCTARGET) $(MCCTARGET).debug $(MCCTARGET).map
-	-$(RM) $(TESTTARGET) $(TESTTARGET).debug $(TESTTARGET).map
-	-$(RM) $(MCCOBJS) $(TESTOBJS) $(M68KSTUBS)
+	-$(RM) $(MCCOBJS) $(M68KSTUBS)
 
 .PHONY: distclean
 distclean: clean
