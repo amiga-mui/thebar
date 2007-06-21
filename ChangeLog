@@ -7,6 +7,7 @@ $URL$
 
 2007-06-21  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcp/Debug.c: removed superflous debug flags.
   * mcc/Debug.c, mcc/button/Debug.c mcc/scale.c, mcc/button/scale.c: added
     SCALE debug flag for debugging the image scaling stuff.
   * mcc/TheBar-Test.c: added an UNUSED qualifiert to the qual parameter as it is
