@@ -7,6 +7,8 @@ $URL$
 
 2007-06-21  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/TheBar-Test.c: added an UNUSED qualifiert to the qual parameter as it is
+    only used in the debug statement.
   * mcc/button/Makefile: removed the TestButton target, as the button cannot be
     tested as a stand-alone-component. Anyway, there has never been a TestButton
     program so far.
