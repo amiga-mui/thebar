@@ -96,7 +96,7 @@ static struct MUIS_TheBar_Button buttons[] =
 };
 
 // static hooks
-HOOKPROTONHNO(SaveFunc, ULONG, ULONG *qual)
+HOOKPROTONHNO(SaveFunc, ULONG, UNUSED ULONG *qual)
 {
   D(DBF_STARTUP, "SaveHook triggered: %08lx\n", *qual);
 
@@ -129,7 +129,7 @@ int main(void)
   if((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
     GETINTERFACE(IDataTypes, DataTypesBase))
   {
-  	// Open cybergraphics.library (optional)
+    // Open cybergraphics.library (optional)
     if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
        GETINTERFACE(ICyberGfx, CyberGfxBase) == FALSE)
     {
@@ -143,7 +143,7 @@ int main(void)
 
     ENTER();
 
-    if((MUIMasterBase = OpenLibrary("muimaster.library", MUIMASTER_VMIN)) &&
+    if((MUIMasterBase = OpenLibrary("muimaster.library", 19/*MUIMASTER_VMIN*/)) &&
       GETINTERFACE(IMUIMaster, MUIMasterBase))
     {
       Object *app, *win, *sb, *appearance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
@@ -170,7 +170,7 @@ int main(void)
                                MUIA_Group_Horiz,       TRUE,
                                MUIA_TheBar_EnableKeys, TRUE,
                                MUIA_TheBar_Buttons,    buttons,
-                               MUIA_TheBar_PicsDrawer, "PROGDIR://demo/pics",
+                               MUIA_TheBar_PicsDrawer, "AmiKit:t/thebar/demo/pics",
                                MUIA_TheBar_Strip,      "Read.toolbar",
                                MUIA_TheBar_SelStrip,   "Read_S.toolbar",
                                MUIA_TheBar_DisStrip,   "Read_G.toolbar",
@@ -247,7 +247,7 @@ int main(void)
 
         D(DBF_STARTUP, "cleaning up application object...");
         MUI_DisposeObject(app);
-        
+
         D(DBF_STARTUP, "cleaning up mcc...");
         if(lib_thisClass)
         {
