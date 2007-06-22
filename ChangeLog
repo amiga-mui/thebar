@@ -7,6 +7,11 @@ $URL$
 
 2007-06-22  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/scale.c, mcc/button/scale.c: replaced all floating point calculations
+    by fixed point integer calculations. First this is much faster (because of
+    being integer math only) and second it saves the headaches of dealing with
+    the various math libraries and all their problems. This also fixes bug
+    #1724177 which was triggered by non-initalized math library bases.
   * mcc/button/Debug.c: readded accidently removed GUI debug flag.
 
 2007-06-21  Thore Böckelmann <tboeckel@gmx.de>
