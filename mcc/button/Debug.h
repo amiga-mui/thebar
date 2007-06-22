@@ -57,6 +57,7 @@
 #define DBF_ALWAYS    (1<<0)
 #define DBF_STARTUP   (1<<1)     // for startup/shutdown events
 #define DBF_SCALE     (1<<2)
+#define DBF_GUI       (1<<3)
 #define DBF_ALL       0xffffffff
 
 void SetupDebug(void);

@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-06-22  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/Debug.c: readded accidently removed GUI debug flag.
+
 2007-06-21  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/Debug.c: removed superflous debug flags.
