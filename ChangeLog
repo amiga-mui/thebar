@@ -7,6 +7,8 @@ $URL$
 
 2007-06-22  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcp/locale/francais.ct: updated french translation which was kindly provided
+    by Alexandre Balaban.
   * mcc/scale.c, mcc/button/scale.c: replaced all floating point calculations
     by fixed point integer calculations. First this is much faster (because of
     being integer math only) and second it saves the headaches of dealing with
