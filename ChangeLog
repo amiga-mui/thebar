@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-06-27  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/demo[248].c: applied patches kindly provided by Thomas Klein.
+
 2007-06-22  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/francais.ct: updated french translation which was kindly provided

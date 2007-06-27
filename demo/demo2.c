@@ -88,7 +88,7 @@ main(int argc,char **argv)
 
                 SubWindow, cwin = WindowObject,
                     MUIA_Window_ID,    MAKE_ID('C','W','I','N'),
-                    MUIA_Window_Title, "TheBar Demo1 Control",
+                    MUIA_Window_Title, "TheBar Demo2 Control",
 
                     WindowContents, VGroup,
 
@@ -250,3 +250,5 @@ main(int argc,char **argv)
 }
 
 /***********************************************************************/
+
+ 	  	 
