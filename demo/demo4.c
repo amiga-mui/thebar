@@ -67,8 +67,8 @@ main(int argc,char **argv)
         Object *app, *win, *sb, *appearance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
 
         if (app = ApplicationObject,
-                MUIA_Application_Title,         "TheBar Demo6",
-                MUIA_Application_Version,       "$VER: TheBarDemo6 1.0 (24.6.2003)",
+                MUIA_Application_Title,         "TheBar Demo4",
+                MUIA_Application_Version,       "$VER: TheBarDemo4 1.0 (24.6.2003)",
                 MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
                 MUIA_Application_Author,        "Alfonso Ranieri <alforan@tin.it>",
                 MUIA_Application_Description,  "TheBar example",
@@ -76,7 +76,7 @@ main(int argc,char **argv)
 
                 SubWindow, win = WindowObject,
                     MUIA_Window_ID,             MAKE_ID('M','A','I','N'),
-                    MUIA_Window_Title,          "TheBar Demo6",
+                    MUIA_Window_Title,          "TheBar Demo4",
                     WindowContents, VGroup,
                         Child, sb = TheBarObject,
                             MUIA_Group_Horiz,            TRUE,
@@ -175,3 +175,5 @@ main(int argc,char **argv)
 }
 
 /***********************************************************************/
+
+ 	  	 
