@@ -7,6 +7,7 @@ $URL$
 
 2007-06-28  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/Debug.c: changed wrong final output of debug flags.
   * demo/#?: modified all demos to be buildable for all supported plattforms.
 
 2007-06-27  Thore Böckelmann <tboeckel@gmx.de>
