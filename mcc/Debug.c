@@ -187,7 +187,7 @@ void SetupDebug(void)
     }
   }
 
-  kprintf("set debug classes/flags (env:yamdebug): %08lx/%08lx\n", debug_classes, debug_flags);
+  kprintf("set debug classes/flags (env:thebar.mcc.debug): %08lx/%08lx\n", debug_classes, debug_flags);
   kprintf("** Normal processing follows ***************************************\n");
 }
 
