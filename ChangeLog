@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-06-28  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/#?: modified all demos to be buildable for all supported plattforms.
+
 2007-06-27  Thore Böckelmann <tboeckel@gmx.de>
 
   * demo/demo[248].c: applied patches kindly provided by Thomas Klein.
