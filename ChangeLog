@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-06-29  Thore Böckelmann <tboeckel@gmx.de>
+
+  * doc/MCC_TheBar.doc: corrected example code for mutual exclusive buttons. The
+    old version used the image index for mutual exclusion instead of the button
+    ID.
+
 2007-06-28  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/Debug.c: changed wrong final output of debug flags.
