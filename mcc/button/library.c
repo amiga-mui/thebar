@@ -56,6 +56,8 @@ static const char * const used_classesP[] = { "TheBar.mcp", NULL };
 #define CLASSINIT
 #define CLASSEXPUNGE
 
+#define MIN_STACKSIZE 8192
+
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DiskfontBase = NULL;
