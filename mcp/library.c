@@ -54,6 +54,8 @@
 #define CLASSINIT
 #define CLASSEXPUNGE
 
+#define MIN_STACKSIZE 8192
+
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *IFFParseBase = NULL;

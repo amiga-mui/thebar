@@ -55,6 +55,8 @@
 #define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
+#define MIN_STACKSIZE 8192
+
 #define USEDCLASSESP  used_classesP
 static const char * const used_classesP[] = { "TheBar.mcp", NULL };
 
