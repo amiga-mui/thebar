@@ -68,6 +68,19 @@ struct CyberGfxIFace *ICyberGfx = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 #endif
 
+/******************************************************************************/
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
+
+#include "mccinit.c"
+
 // some variables we carry for the whole lifetime of the lib
 struct SignalSemaphore lib_poolSem;
 APTR  lib_pool = NULL;
@@ -83,17 +96,17 @@ static BOOL ClassInit(UNUSED struct Library *base)
     InitSemaphore(&lib_poolSem);
 
     if((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-       GETINTERFACE(IDataTypes, DataTypesBase))
+       GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
     {
       if((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
-         GETINTERFACE(IDiskfont, DiskfontBase))
+         GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
       {
         STRPTR buf[16];
 
         // we open the cybgraphics.library but without failing if
         // it doesn't exist
         if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-           GETINTERFACE(ICyberGfx, CyberGfxBase))
+           GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
         { }
 
         // check the version of MUI)
@@ -153,10 +166,3 @@ static VOID ClassExpunge(UNUSED struct Library *base)
   LEAVE();
 }
 
-/******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
-/******************************************************************************/
-
-#include "mccinit.c"
