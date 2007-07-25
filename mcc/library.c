@@ -81,9 +81,14 @@ struct MUI_CustomClass *lib_dragBarClass = NULL;
 ULONG lib_flags = 0;
 
 /******************************************************************************/
-/*                                                                            */
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
 /* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
 /******************************************************************************/
 
 #include "mccinit.c"
@@ -93,7 +98,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
   ENTER();
 
   if((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-     GETINTERFACE(IDataTypes, DataTypesBase))
+     GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
   {
     // make sure to initialize our subclasses
     if(initSpacerClass() && initDragBarClass())
@@ -101,7 +106,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
       // we open the cybgraphics.library but without failing if
       // it doesn't exist
       if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-         GETINTERFACE(ICyberGfx, CyberGfxBase))
+         GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
       { }
 
       // check the version of MUI)
@@ -161,3 +166,4 @@ static VOID ClassExpunge(UNUSED struct Library *base)
 
   LEAVE();
 }
+
