@@ -7,6 +7,7 @@ $URL$
 
 2007-07-25  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/Makefile: adapted pathes for normal and virtual subclasses.
   * #?/library.c: now really uses the 3 parameter version of GETINTERFACE()
     defined in mccinit.c instead of the old obsolete version in mcc_common.h.
     The user definable functions (i.e. ClassInit()) must be declared before
