@@ -302,7 +302,10 @@ $(TESTTARGET): $(TESTOBJS)
 	@$(CC) -noixemul -o $@.debug $(TESTOBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../include/mccinit.c \
+$(OBJDIR)/mcc/library.o: library.c ../include/mccinit.c \
+  ../include/mui/TheBar_mcc.h private.h rev.h
+
+$(OBJDIR)/mccv/library.o: library.c ../include/mccinit.c \
   ../include/mui/TheBar_mcc.h private.h rev.h
 
 #
