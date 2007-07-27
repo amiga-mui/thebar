@@ -68,25 +68,26 @@ struct CyberGfxIFace *ICyberGfx = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 #endif
 
-/******************************************************************************/
-/* define the functions used by the startup code ahead of including mccinit.c */
-/******************************************************************************/
-
-static BOOL ClassInit(UNUSED struct Library *base);
-static VOID ClassExpunge(UNUSED struct Library *base);
-
-/******************************************************************************/
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/******************************************************************************/
-
-#include "mccinit.c"
-
 // some variables we carry for the whole lifetime of the lib
 struct SignalSemaphore lib_poolSem;
 APTR  lib_pool = NULL;
 ULONG lib_flags = 0;
 ULONG lib_alpha = 0xffffffff;
 
+/******************************************************************************/
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
+#include "mccinit.c"
+
+/******************************************************************************/
+/* define all implementations of our user functions                           */
+/******************************************************************************/
 static BOOL ClassInit(UNUSED struct Library *base)
 {
   ENTER();
@@ -135,7 +136,6 @@ static BOOL ClassInit(UNUSED struct Library *base)
   return(FALSE);
 }
 
-
 static VOID ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
@@ -165,4 +165,3 @@ static VOID ClassExpunge(UNUSED struct Library *base)
 
   LEAVE();
 }
-
