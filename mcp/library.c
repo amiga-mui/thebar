@@ -53,7 +53,6 @@
 
 #define CLASSINIT
 #define CLASSEXPUNGE
-
 #define MIN_STACKSIZE 8192
 
 struct Library *DataTypesBase = NULL;
@@ -73,17 +72,25 @@ struct IFFParseIFace *IIFFParse = NULL;
 struct LocaleIFace *ILocale = NULL;
 #endif
 
+// some variables we carry for the whole lifetime of the lib
+#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+struct MUI_CustomClass *lib_coloradjust = NULL;
+struct MUI_CustomClass *lib_penadjust = NULL;
+struct MUI_CustomClass *lib_backgroundadjust = NULL;
+struct MUI_CustomClass *lib_poppen = NULL;
+struct MUI_CustomClass *lib_popbackground = NULL;
+#endif
+ULONG lib_flags = 0;
+
 /******************************************************************************/
 /* define the functions used by the startup code ahead of including mccinit.c */
 /******************************************************************************/
-
 static BOOL ClassInit(UNUSED struct Library *base);
 static VOID ClassExpunge(UNUSED struct Library *base);
 
 /******************************************************************************/
 /* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
 /******************************************************************************/
-
 #define USE_PREFSIMAGE_COLORS
 #define USE_PREFSIMAGE_BODY
 #define PREFSIMAGEOBJECT \
@@ -102,16 +109,9 @@ static VOID ClassExpunge(UNUSED struct Library *base);
 #include "icon.bh"
 #include "mccinit.c"
 
-// some variables we carry for the whole lifetime of the lib
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
-struct MUI_CustomClass *lib_coloradjust = NULL;
-struct MUI_CustomClass *lib_penadjust = NULL;
-struct MUI_CustomClass *lib_backgroundadjust = NULL;
-struct MUI_CustomClass *lib_poppen = NULL;
-struct MUI_CustomClass *lib_popbackground = NULL;
-#endif
-ULONG lib_flags = 0;
-
+/******************************************************************************/
+/* define all implementations of our user functions                           */
+/******************************************************************************/
 static BOOL ClassInit(UNUSED struct Library *base)
 {
   ENTER();
@@ -232,4 +232,3 @@ static VOID ClassExpunge(UNUSED struct Library *base)
 
   LEAVE();
 }
-
