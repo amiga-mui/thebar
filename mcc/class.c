@@ -1184,7 +1184,7 @@ removeButton(struct IClass *cl, Object *obj, struct Button *button)
   }
 
   // cleanup the notifyListClone
-  if(IsMinListEmpty(&button->notifyListClone) == FALSE)
+  if(IsListEmpty((struct List *)&button->notifyListClone) == FALSE)
   {
     struct MinNode *notifyNode;
 
