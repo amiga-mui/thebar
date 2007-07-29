@@ -269,9 +269,7 @@ mDragDrop(UNUSED struct IClass *cl,UNUSED Object *obj,UNUSED struct MUIP_DragDro
 
 /***********************************************************************/
 
-DISPATCHERPROTO(_dispatcher);
-
-ULONG ASM SAVEDS _dispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(_dispatcher)
 {
     switch(msg->MethodID)
     {

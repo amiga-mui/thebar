@@ -5,6 +5,8 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v21.4 RELEASE ############################################################
+
 2007-07-25  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/Makefile: adapted pathes for normal and virtual subclasses.
