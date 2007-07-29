@@ -9,11 +9,6 @@ Msg_Reg_Colors
 Couleurs
 ; Colors
 ;
-Msg_Reg_Appareance
-Apparence
-; Appareance
-;
-;
 Msg_Reg_Spacing
 Espacement
 ; Spacing
@@ -296,10 +291,6 @@ Type
 Msg_ViewMode_Help
 Configure le type d'apparence des boutons.
 ; Adjust the appareance of the buttons.
-;
-Msg_Appareance_Text
-Les options suivantes sont utilisées par TheBar si et\nseulement si l'objet l'a demandé au moment de sa création.\nCela signifie que si le programmeur n'en a pas décidé autrement,\nelles sont simplement ignorées.
-; The options below are used by TheBar if and only if the object requested for it at creation time. It means that if the programmer didn't decide otherwise, they are simply ignored.
 ;
 Msg_TextGfx
 Icône et texte
@@ -670,30 +661,12 @@ Msg_Item_Defaults
 Réinitialiser
 ; Reset to defaults
 ;
-Msg_Item_alfie_Defaults
-Défauts d'Alfie
-; alfie's defaults
-;
 Msg_NoMUI20Event_Help
 Méthode pour vérifier si la souris est au dessus d'un bouton:\n-IntuiTicks : vérification périodique,\n- Mouvement de souris: vérification à chaque déplacement de souris
 ; How to verify if the mouse is over a button:\n\
 ; - IntuiTicks: it is verified periodically\n\
 ; - MouseMove: it is verified at every mouse move
 ;
-;
-Msg_Info_First
-%s\nCopyright 2003-2005 par Alfonso Ranieri.
-; %s\n\
-; Copyright 2003-2005 by Alfonso Ranieri.
-;
-Msg_Info_Reserved
-Tous droits réservés.
-; All Rights Are Reserved.
-;
-Msg_Info_Rest
-Veuillez écrire à <alforan@tin.it> pour\nla documentation développeur et les termes de license.
-; Please write to <alforan@tin.it> for\n\
-; developers docs and licensing terms.
 ;
 Msg_Info_Translator
 Traduction française par Alexandre Balaban <alexandre@balaban.fr>

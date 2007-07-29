@@ -235,7 +235,8 @@ MCCOBJS = $(OBJDIR)/library.o \
 
 # available catalog translations
 CATALOGS = $(LOCALE)/deutsch.catalog \
-           $(LOCALE)/francais.catalog
+           $(LOCALE)/francais.catalog \
+			  $(LOCALE)/svenska.catalog
 
 #
 
