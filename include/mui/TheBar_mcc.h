@@ -331,7 +331,7 @@ struct MUIS_TheBar_Button
   const char    *help;   /* Button help not copied!                              */
   ULONG         flags;   /* See below                                            */
   ULONG         exclude; /* Exclude mask                                         */
-  struct IClass *class;  /* Easy way of getting a bar of subclassed buttons      */
+  struct IClass *_class; /* Easy way of getting a bar of subclassed buttons      */
   Object        *obj;    /* Filled when the button is created                    */
 };
 
