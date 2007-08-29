@@ -719,7 +719,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                                 width  = _minwidth(child);
                                 height = _mheight(obj);
-				
+
                                 #ifdef __MORPHOS__
                                 xx = y = 0;
                                 #else
@@ -763,7 +763,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                     else xx = y = 0;
                                     //width  -= (data->flags & FLG_Framed) ? data->leftBarFrameSpacing+data->rightBarFrameSpacing+2 : 0;
                                     #endif
-				
+
                                     if(!MUI_Layout(child,xx,y,width,height,0))
                                     {
                                       RETURN(FALSE);
@@ -779,7 +779,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                                     width  = _minwidth(child);
                                     height = _mheight(obj);
-    				
+
                                     #ifdef __MORPHOS__
                                     xx = y = 0;
                                     #else
@@ -3450,7 +3450,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
         button->text    = msg->button->text;
         button->help    = msg->button->help;
         button->exclude = msg->button->exclude;
-        button->class   = msg->button->class;
+        button->class  =  msg->button->_class;
         button->obj     = NULL;
         button->flags   = 0;
 
