@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-09-02  Pär Boberg <pbobbenb@spray.se>
+
+  * mcp/locale/svenska.ct: Just bumped the version number to match v21.4
+    release.
+
 2007-08-29  Thore Böckelmann <tboeckel@gmx.de>
 
   * include/mui/TheBar_mcc.h, mcc/class.c: renamed the "class" member in struct
