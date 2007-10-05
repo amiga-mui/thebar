@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-10-05  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/backgroundadjust.c, mcp/penadjust.c, mcp/popbackground.c, mcp/poppen.c:
+    fixed some compiler warnings.
+
 2007-09-02  Pär Boberg <pbobbenb@spray.se>
 
   * mcp/locale/svenska.ct: Just bumped the version number to match v21.4

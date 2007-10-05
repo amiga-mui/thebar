@@ -287,7 +287,7 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->colormap = colormap;
         data->rgb      = rgb;
 
-        pop = (Object *)GetTagData(MUIA_Popbackground_PopObj,NULL,msg->ops_AttrList);
+        pop = (Object *)GetTagData(MUIA_Popbackground_PopObj, (ULONG)NULL, msg->ops_AttrList);
         DoMethod(mui,MUIM_Notify,MUIA_Listview_DoubleClick,MUIV_EveryTime,MUIV_Notify_Application,5,MUIM_Application_PushMethod,pop,2,MUIM_Popbackground_Close,TRUE);
     }
 

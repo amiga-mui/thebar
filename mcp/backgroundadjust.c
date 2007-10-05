@@ -1237,7 +1237,7 @@ mBackNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     data = INST_DATA(cl,obj);
 
-    pop = (Object *)GetTagData(MUIA_Popbackground_PopObj,NULL,msg->ops_AttrList);
+    pop = (Object *)GetTagData(MUIA_Popbackground_PopObj, (ULONG)NULL, msg->ops_AttrList);
 
     if (!(data->pages[0] = patternsObject, MUIA_Popbackground_PopObj, pop, MUIA_Popbackground_BackObj, obj, End))
     {
@@ -1414,7 +1414,7 @@ static ULONG
 mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
     struct backData *data = INST_DATA(cl,obj);
-    ULONG                    x = NULL;
+    ULONG x = (ULONG)NULL;
 
     if ((data->flags & FLG_Gradient) && get(msg->obj,MUIA_Popbackground_Grad,&x))
         set(obj,MUIA_Popbackground_Grad,x);
