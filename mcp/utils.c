@@ -480,6 +480,9 @@ struct stream
 #ifdef __MORPHOS__
 static void
 snprintfStuff(struct stream *s,UBYTE c)
+#elif defined(__amigaos4__)
+static void
+snprintfStuff(UBYTE c,struct stream *s)
 #else
 static void ASM
 snprintfStuff(REG(a3,struct stream *s),REG(d0,UBYTE c))
@@ -500,7 +503,7 @@ int
 msnprintf(STRPTR buf,int size,STRPTR fmt,...)
 {
     struct stream s;
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     va_list       va;
     va_start(va,fmt);
     #endif
