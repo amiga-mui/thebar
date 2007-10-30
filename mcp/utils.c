@@ -504,8 +504,8 @@ msnprintf(STRPTR buf,int size,STRPTR fmt,...)
 {
     struct stream s;
     #if defined(__MORPHOS__) || defined(__amigaos4__)
-    va_list       va;
-    va_start(va,fmt);
+    VA_LIST       va;
+    VA_START(va,fmt);
     #endif
 
     s.buf     = buf;
@@ -515,9 +515,14 @@ msnprintf(STRPTR buf,int size,STRPTR fmt,...)
 
     #ifdef __MORPHOS__
     VNewRawDoFmt(fmt,(APTR)snprintfStuff,(STRPTR)&s,va);
-    va_end(va);
+    #elif defined (__amigaos4___)
+    RawDoFmt(fmt,VA_ARG(va,STRPTR),(APTR)snprintfStuff,&s);
     #else
     RawDoFmt(fmt,&fmt+1,(APTR)snprintfStuff,&s);
+    #endif
+
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    VA_END(va);
     #endif
 
     return s.counter-1;
