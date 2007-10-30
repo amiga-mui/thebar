@@ -468,3 +468,55 @@ drawGradient(Object *obj,struct MUIS_TheBar_Gradient *grad)
 #endif
 
 /***********************************************************************/
+
+struct stream
+{
+    UBYTE   *buf;
+    int     size;
+    int     counter;
+    int     stop;
+};
+
+#ifdef __MORPHOS__
+static void
+snprintfStuff(struct stream *s,UBYTE c)
+#else
+static void ASM
+snprintfStuff(REG(a3,struct stream *s),REG(d0,UBYTE c))
+#endif
+{
+    if (!s->stop)
+    {
+        if (++s->counter>=s->size)
+        {
+            *(s->buf) = 0;
+            s->stop   = 1;
+        }
+        else *(s->buf++) = c;
+    }
+}
+
+int
+msnprintf(STRPTR buf,int size,STRPTR fmt,...)
+{
+    struct stream s;
+    #ifdef __MORPHOS__
+    va_list       va;
+    va_start(va,fmt);
+    #endif
+
+    s.buf     = buf;
+    s.size    = size;
+    s.counter = 0;
+    s.stop    = 0;
+
+    #ifdef __MORPHOS__
+    VNewRawDoFmt(fmt,(APTR)snprintfStuff,(STRPTR)&s,va);
+    va_end(va);
+    #else
+    RawDoFmt(fmt,&fmt+1,(APTR)snprintfStuff,&s);
+    #endif
+
+    return s.counter-1;
+}
+
