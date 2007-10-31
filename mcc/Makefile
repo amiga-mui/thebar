@@ -22,7 +22,7 @@
 
 ###########################################################################
 # This makefile is a very generic one. It tries to identify both, the host
-# and the target operating system for which YAM should be compiled.
+# and the target operating system for which TheBar should be compiled.
 # However, this auto-detection can be easily overridden by directly
 # specifying an option on the commandline while calling 'make'.
 #
@@ -52,7 +52,7 @@ endif
 
 #############################################
 # now we find out the target OS for
-# which we are going to compile YAM in case
+# which we are going to compile TheBar in case
 # the caller didn't yet define OS himself
 ifndef (OS)
   ifeq ($(HOST), AmigaOS4)
@@ -302,12 +302,6 @@ $(TESTTARGET): $(TESTOBJS)
 	@$(CC) -noixemul -o $@.debug $(TESTOBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-$(OBJDIR)/mcc/library.o: library.c ../include/mccinit.c \
-  ../include/mui/TheBar_mcc.h private.h rev.h
-
-$(OBJDIR)/mccv/library.o: library.c ../include/mccinit.c \
-  ../include/mui/TheBar_mcc.h private.h rev.h
-
 #
 
 .PHONY: clean
@@ -323,3 +317,25 @@ distclean: clean
 	-$(RMDIR) $(OBJDIR)/mcc
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)
+
+$(OBJDIR)/mcc/build.o: build.c class.h private.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/class.o: class.c class.h private.h rev.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/utils.o: utils.c class.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/brc1.o: brc1.c ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/library.o: library.c class.h private.h rev.h ../include/mccinit.c ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/scale.o: scale.c class.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/dragbar.o: dragbar.c class.h private.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/spacer.o: spacer.c class.h private.h ../include/mui/TheBar_mcc.h
+
+$(OBJDIR)/mcp/build.o: build.c class.h private.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/class.o: class.c class.h private.h rev.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/utils.o: utils.c class.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/brc1.o: brc1.c ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/library.o: library.c class.h private.h rev.h ../include/mccinit.c ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/scale.o: scale.c class.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/dragbar.o: dragbar.c class.h private.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/spacer.o: spacer.c class.h private.h ../include/mui/TheBar_mcc.h
+
+$(OBJDIR)/TheBar-Test.o: TheBar-Test.c class.h private.h ../include/mui/TheBar_mcc.h
+
+
