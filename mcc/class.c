@@ -2664,22 +2664,22 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         }
     }
 
-    #ifdef __MORPHOS__
-    if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
-    {
-        memcpy(&data->frameSpec,ptr,sizeof(data->frameSpec));
-        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)&data->frameSpec,TAG_DONE);
-    }
-    else
-        if (data->userFlags2 & UFLG2_UserFrame) SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
-    	else SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
-    #endif
-
     if(!DoSuperMethodA(cl,obj,msg))
     {
       RETURN(FALSE);
       return FALSE;
     }
+
+    #ifdef __MORPHOS__
+    if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
+    {
+        stccpy(data->frameSpec,ptr,sizeof(data->frameSpec));
+        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)data->frameSpec,TAG_DONE);
+    }
+    else
+        if (data->userFlags2 & UFLG2_UserFrame) SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
+    	else SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
+    #endif
 
     if (!(data->userFlags & UFLG_UserHorizSpacing))
     {
@@ -3125,14 +3125,12 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 
   ENTER();
 
-  if(lib_flags & BASEFLG_MUI20)
+  /*if(lib_flags & BASEFLG_MUI20)
   {
     result = DoSuperMethodA(cl,obj,(Msg)msg);
   }
-  else
+  else*/
   {
-    //Printf("BackFill %lx %ld %ld %ld %ld %ld %ld %ld\n",lib_flags & BASEFLG_MUI20,msg->left,msg->top,msg->right,msg->bottom,msg->xoffset,msg->yoffset);
-
     if(data->gradbm)
       BltBitMapRastPort(data->gradbm,msg->left-_left(obj),msg->top-_top(obj),_rp(obj),msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,0xc0);
     else
