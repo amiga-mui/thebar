@@ -516,10 +516,11 @@ How to verify if the mouse is over a button:\n\
 ;
 Msg_Info_First (600//)
 %s\n\
-Copyright by Alfonso Ranieri And TheBar Open Source Team
+Copyright (C) 2003-2005 Alfonso Ranieri\n\
+Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
 ;
 Msg_Info_Reserved (//)
-Destributed under the terms of the LGPL2.
+Distributed under the terms of the LGPL2.
 ;
 Msg_Info_Rest (//)
 For recent versions and updates visit:\n\

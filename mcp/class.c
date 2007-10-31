@@ -77,9 +77,12 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if((obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg)))
     {
         struct InstData *data = INST_DATA(cl,obj);
-        const char      *t;
-        UBYTE 			buf[128];
-        Object          *prefs, *trans, *groups[16], *hidden[16];
+        const char *t;
+        char buf[128];
+        Object *prefs;
+        Object *trans;
+        Object *groups[16];
+        Object *hidden[16];
 
         static const char *regs[5];
         static const char *frames[3];
@@ -125,9 +128,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         labelPoss[1] = tr(Msg_LabelPos_Top);
         labelPoss[2] = tr(Msg_LabelPos_Right);
         labelPoss[3] = tr(Msg_LabelPos_Left);
-		labelPoss[4] = NULL;
+    		labelPoss[4] = NULL;
 
-        msnprintf(buf,sizeof(buf),(STRPTR)tr(Msg_Info_First),"\33bTheBar " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
+        snprintf(buf, sizeof(buf), tr(Msg_Info_First), "\33bTheBar " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
 
         if((t = tr(Msg_Info_Translator)) && *t)
         {
@@ -453,7 +456,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             End, // <Register
 
             Child, CrawlingObject, // >Crawling
-                MUIA_FixHeightTxt, "\n",
+                MUIA_FixHeightTxt, "\n\n",
                 TextFrame,
                 MUIA_Background, "m1",
 
