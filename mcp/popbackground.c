@@ -121,10 +121,12 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         switch(tag->ti_Tag)
         {
             case MUIA_Imagedisplay_Spec:
-                stccpy(data->spec,(STRPTR)tidata,sizeof(data->spec));
+            {
+                strlcpy(data->spec, (STRPTR)tidata, sizeof(data->spec));
                 data->flags &= ~FLG_GradientMode;
                 redraw = TRUE;
-                break;
+            }
+            break;
 
             case MUIA_Popbackground_Grad:
                 copymem(&data->grad,(struct MUIS_TheBar_Gradient *)tidata,sizeof(data->grad));

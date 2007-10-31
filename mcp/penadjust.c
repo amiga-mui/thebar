@@ -330,9 +330,11 @@ mPenadjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
         switch(tag->ti_Tag)
         {
             case MUIA_Pendisplay_Spec:
-                if (DoMethod(obj,MUIM_Popbackground_SetSpec,tidata,NULL,0)!=MUIV_Popbackground_SetSpec_Fail)
-                    stccpy(data->spec,(STRPTR)tidata,sizeof(data->spec));
-                break;
+            {
+              if(DoMethod(obj,MUIM_Popbackground_SetSpec,tidata,NULL,0)!=MUIV_Popbackground_SetSpec_Fail)
+                strlcpy(data->spec, (STRPTR)tidata, sizeof(data->spec));
+            }
+            break;
         }
     }
 

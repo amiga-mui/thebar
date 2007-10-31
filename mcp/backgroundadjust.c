@@ -473,9 +473,10 @@ mDTPicSets(struct IClass *cl,Object *obj,struct opSet *msg)
             case MUIA_Popbackground_File:
             {
                 if(tidata)
-                  stccpy(data->file,(STRPTR)tidata,sizeof(data->file));
+                  strlcpy(data->file, (STRPTR)tidata, sizeof(data->file));
                 else
-                  *data->file = 0;
+                  *data->file = '\0';
+
                 rebuild = TRUE;
             }
             break;
@@ -1297,16 +1298,22 @@ specToGadgets(struct IClass *cl,Object *obj,STRPTR spec,struct MUIS_TheBar_Gradi
                 continue;
 
             case MUIV_Popbackground_SetSpec_Spec:
-                stccpy(data->spec,spec,sizeof(data->spec));
+            {
+                strlcpy(data->spec, spec, sizeof(data->spec));
                 set(obj,MUIA_Group_ActivePage,i);
                 data->flags &= ~FLG_GradientMode;
+
                 return TRUE;
+            }
 
             case MUIV_Popbackground_SetSpec_Grad:
+            {
                 copymem(&data->grad,grad,sizeof(data->grad));
                 set(obj,MUIA_Group_ActivePage,i);
                 data->flags |= FLG_GradientMode;
+
                 return TRUE;
+            }
         }
     }
 
