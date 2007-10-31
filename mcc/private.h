@@ -146,7 +146,7 @@ struct InstData
 
     #ifdef __MORPHOS__
     ULONG			                     userFrame;
-    struct MUI_FrameSpec 	         frameSpec;
+	UBYTE						   frameSpec[256];
     #endif
 
     ULONG                          flags;
