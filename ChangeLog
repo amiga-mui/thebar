@@ -7,6 +7,9 @@ $URL$
 
 2007-10-31 Jens Langner <Jens.Langner@light-speed.de>
 
+  * mcc/Makefile, Makefile.depend: changed dependency management to use an
+    automatically generated Makefile.depend file instead of having fixed
+    include dependencies in the main Makefile.
   * mcp/class.c, utils.c: removed the recently added properitary msnprintf()
     function and replaced it by a general snprintf() as using it with %ld
     should always be fine. So please use snprintf() instead.
