@@ -2060,7 +2060,7 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
 
-    if (lib_flags & BASEFLG_MUI20) return DoSuperMethodA(cl,obj,(Msg)msg);
+    //if (lib_flags & BASEFLG_MUI20) return DoSuperMethodA(cl,obj,(Msg)msg);
 
 
     if (data->tb &&
