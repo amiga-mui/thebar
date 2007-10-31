@@ -5,6 +5,17 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-10-31 Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp/class.c, utils.c: removed the recently added properitary msnprintf()
+    function and replaced it by a general snprintf() as using it with %ld
+    should always be fine. So please use snprintf() instead.
+  * mcp/locale/TheBar_mcp.cd: fixed some recently added typos and changed
+    the copyright text to be formatted in a more standard way.
+  * mcp/Makefile.depend: added automatically generated dependency file which
+    will be included by the main Makefile on each run. This should fix all
+    dependency issues.
+
 2007-10-05  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/backgroundadjust.c, mcp/penadjust.c, mcp/popbackground.c, mcp/poppen.c:

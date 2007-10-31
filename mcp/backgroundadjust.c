@@ -263,7 +263,7 @@ mPatternsGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec
 
     if (data->pattern>=0)
     {
-        sprintf(msg->spec,"0:%ld",data->pattern+MUII_BACKGROUND);
+        sprintf(msg->spec, "0:%ld", data->pattern+MUII_BACKGROUND);
         return MUIV_Popbackground_GetSpec_Spec;
     }
 

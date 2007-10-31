@@ -291,8 +291,6 @@ Object *opopback(ULONG gradient, const void *key, const void *title, const void 
 Object *opopframe(const void *key, const void *title, const void *help);
 void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
 
-int VARARGS68K msnprintf(STRPTR buf,int size,STRPTR fmt,...);
-
 #if !defined(__MORPHOS__) && !defined(__amigaos4__)
 /* coloradjust.c */
 void freeColoradjust ( void );

@@ -379,7 +379,7 @@ mPenadjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *ms
                 g = (c>>8) & 0xff;
                 b = c & 0xff;
 
-                sprintf(spec,"r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
+                snprintf(spec, sizeof(spc), "r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
                 set(obj,MUIA_Pendisplay_Spec,spec);
             }
 
@@ -468,42 +468,49 @@ static ULONG
 mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *msg)
 {
     struct penadjustData *data = INST_DATA(cl,obj);
-    char                 spec[32];
-    ULONG                res = MUIV_Popbackground_GetSpec_Spec;
-    LONG                          x;
+    char spec[32];
+    ULONG res = MUIV_Popbackground_GetSpec_Spec;
+    LONG x;
 
     superget(cl,obj,MUIA_Group_ActivePage,&x);
     switch(x)
     {
         /* MUI */
         case PAGE_MUI:
-            get(data->mui,MUIA_List_Active,&x);
-            if (x>=0) sprintf(spec,"m%ld",x);
-            else res = MUIV_Popbackground_GetSpec_Fail;
-            break;
+        {
+          x = xget(data->mui, MUIA_List_Active);
+          if(x>=0)
+            snprintf(spec, sizeof(spec), "m%ld",x);
+          else
+            res = MUIV_Popbackground_GetSpec_Fail;
+
+        }
+        break;
 
         /* Colormap */
         case PAGE_Colormap:
-            get(data->colormap,MUIA_Numeric_Value,&x);
-            sprintf(spec,"p%ld",x);
-            break;
+        {
+          x = xget(data->colormap, MUIA_Numeric_Value);
+          snprintf(spec, sizeof(spec), "p%ld",x);
+        }
+        break;
 
         /* RGB */
         case PAGE_RGB:
         {
-            struct MUI_RGBcolor *rgb;
-
-            get(data->rgb,MUIA_Coloradjust_RGB,&rgb);
-            sprintf(spec,"r%08lx,%08lx,%08lx",rgb->red,rgb->green,rgb->blue);
-            break;
+          struct MUI_RGBcolor *rgb = xget(data->rgb, MUIA_Coloradjust_RGB);
+          snprintf(spec, sizeof(spec), "r%08lx,%08lx,%08lx", rgb->red, rgb->green, rgb->blue);
         }
+        break;
     }
 
     if (res==MUIV_Popbackground_GetSpec_Fail) *msg->spec = 0;
     else
     {
-        if (msg->flags & MUIV_Popbackground_GetSpec_Image) sprintf(msg->spec,"2:%s",spec);
-        else strcpy(msg->spec,spec);
+        if (msg->flags & MUIV_Popbackground_GetSpec_Image)
+          sprintf(msg->spec, "2:%s", spec);
+        else
+          strcpy(msg->spec, spec);
     }
 
     return res;
