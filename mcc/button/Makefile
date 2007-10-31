@@ -16,13 +16,13 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: Makefile.os4 26 2007-01-15 23:32:18Z damato $
+# $Id: Makefile.os4 22 2007-01-02 21:30:56Z damato $
 #
 #***************************************************************************/
 
 ###########################################################################
 # This makefile is a very generic one. It tries to identify both, the host
-# and the target operating system for which YAM should be compiled.
+# and the target operating system for which TheBar should be compiled.
 # However, this auto-detection can be easily overridden by directly
 # specifying an option on the commandline while calling 'make'.
 #
@@ -52,7 +52,7 @@ endif
 
 #############################################
 # now we find out the target OS for
-# which we are going to compile YAM in case
+# which we are going to compile TheBar in case
 # the caller didn't yet define OS himself
 ifndef (OS)
   ifeq ($(HOST), AmigaOS4)
@@ -128,14 +128,16 @@ OBJDIR = .obj_$(OS)
 BINDIR = bin_$(OS)
 
 # target definition
-MCCTARGET = $(BINDIR)/TheButton.mcc
+MCCTARGET = $(BINDIR)/TheBar.mcc
+MCCVTARGET= $(BINDIR)/TheBarVirt.mcc
+TESTTARGET= $(BINDIR)/TheBar-Test
 
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
 DEBUGSYM = -gstabs
-CFLAGS   = -I. -I../../mcp -I../../include $(CPU) $(WARN) $(OPTFLAGS) \
+CFLAGS   = -I. -I../mcp -I../include $(CPU) $(WARN) $(OPTFLAGS) \
            $(DEBUG) $(DEBUGSYM) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM) -nostartfiles
 LDLIBS   = -lm
@@ -218,22 +220,46 @@ endif
 # Here starts all stuff that is common for all target platforms and
 # hosts.
 
-MCCOBJS = $(OBJDIR)/library.o \
-          $(OBJDIR)/brc1.o \
-          $(OBJDIR)/build.o \
-          $(OBJDIR)/class.o \
-          $(OBJDIR)/scale.o \
-          $(OBJDIR)/utils.o \
+MCCOBJS = $(OBJDIR)/mcc/library.o \
+          $(OBJDIR)/mcc/brc1.o \
+          $(OBJDIR)/mcc/build.o \
+          $(OBJDIR)/mcc/class.o \
+          $(OBJDIR)/mcc/dragbar.o \
+          $(OBJDIR)/mcc/scale.o \
+          $(OBJDIR)/mcc/spacer.o \
+          $(OBJDIR)/mcc/utils.o \
+          $(OBJDIR)/Debug.o
+
+MCCVOBJS= $(OBJDIR)/mccv/library.o \
+          $(OBJDIR)/mccv/brc1.o \
+          $(OBJDIR)/mccv/build.o \
+          $(OBJDIR)/mccv/class.o \
+          $(OBJDIR)/mccv/dragbar.o \
+          $(OBJDIR)/mccv/scale.o \
+          $(OBJDIR)/mccv/spacer.o \
+          $(OBJDIR)/mccv/utils.o \
+          $(OBJDIR)/Debug.o
+
+TESTOBJS= $(OBJDIR)/TheBar-Test.o \
+          $(OBJDIR)/mcc/brc1.o \
+          $(OBJDIR)/mcc/build.o \
+          $(OBJDIR)/mcc/class.o \
+          $(OBJDIR)/mcc/dragbar.o \
+          $(OBJDIR)/mcc/scale.o \
+          $(OBJDIR)/mcc/spacer.o \
+          $(OBJDIR)/mcc/utils.o \
           $(OBJDIR)/Debug.o
 
 #
 
-all: $(BINDIR) $(OBJDIR) $(MCCTARGET)
+all: $(BINDIR) $(OBJDIR) $(MCCTARGET) $(MCCVTARGET) $(TESTTARGET)
 
 # make the object directories
 $(OBJDIR):
 	@printf '\033[33mGenerating $@ directory\033[0m\n'
 	@$(MKDIR) $(OBJDIR)
+	@$(MKDIR) $(OBJDIR)/mcc
+	@$(MKDIR) $(OBJDIR)/mccv
 
 
 # make the binary directories
@@ -247,7 +273,15 @@ $(OBJDIR)/%.o: %.c
 	@printf '\033[32mCompiling $<\033[0m\n'
 	@$(CC) $(CFLAGS) $< -o $@
 
-$(OBJDIR)/mccclass_68k.o: ../../include/mccclass_68k.c
+$(OBJDIR)/mcc/%.o: %.c
+	@printf '\033[32mCompiling $<\033[0m\n'
+	@$(CC) $(CFLAGS) $< -o $@
+
+$(OBJDIR)/mccv/%.o: %.c
+	@printf '\033[32mCompiling $<\033[0m\n'
+	@$(CC) $(CFLAGS) -DVIRTUAL $< -o $@
+
+$(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@printf '\033[32mCompiling $<\033[0m\n'
 	@$(CC) $(CFLAGS) $< -o $@
 
@@ -258,17 +292,50 @@ $(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(MCCOBJS) $(M68KSTUBS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../../include/mccinit.c \
-  ../../include/mui/TheBar_mcc.h private.h rev.h
+$(MCCVTARGET): $(M68KSTUBS) $(MCCVOBJS)
+	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@$(CC) $(LDFLAGS) -o $@.debug $(MCCVOBJS) $(M68KSTUBS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+
+$(TESTTARGET): $(TESTOBJS)
+	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@$(CC) -noixemul -o $@.debug $(TESTOBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 #
 
 .PHONY: clean
 clean:
 	-$(RM) $(MCCTARGET) $(MCCTARGET).debug $(MCCTARGET).map
-	-$(RM) $(MCCOBJS) $(M68KSTUBS)
+	-$(RM) $(MCCVTARGET) $(MCCVTARGET).debug $(MCCVTARGET).map
+	-$(RM) $(TESTTARGET) $(TESTTARGET).debug $(TESTTARGET).map
+	-$(RM) $(MCCOBJS) $(MCCVOBJS) $(TESTOBJS) $(M68KSTUBS)
 
 .PHONY: distclean
 distclean: clean
+	-$(RMDIR) $(OBJDIR)/mccv
+	-$(RMDIR) $(OBJDIR)/mcc
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)
+
+$(OBJDIR)/mcc/build.o: build.c class.h private.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/class.o: class.c class.h private.h rev.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/utils.o: utils.c class.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/brc1.o: brc1.c ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/library.o: library.c class.h private.h rev.h ../include/mccinit.c ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/scale.o: scale.c class.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/dragbar.o: dragbar.c class.h private.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcc/spacer.o: spacer.c class.h private.h ../include/mui/TheBar_mcc.h
+
+$(OBJDIR)/mcp/build.o: build.c class.h private.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/class.o: class.c class.h private.h rev.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/utils.o: utils.c class.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/brc1.o: brc1.c ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/library.o: library.c class.h private.h rev.h ../include/mccinit.c ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/scale.o: scale.c class.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/dragbar.o: dragbar.c class.h private.h ../include/mui/TheBar_mcc.h
+$(OBJDIR)/mcp/spacer.o: spacer.c class.h private.h ../include/mui/TheBar_mcc.h
+
+$(OBJDIR)/TheBar-Test.o: TheBar-Test.c class.h private.h ../include/mui/TheBar_mcc.h
+
+
