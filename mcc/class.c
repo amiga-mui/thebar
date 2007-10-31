@@ -2673,12 +2673,13 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     #ifdef __MORPHOS__
     if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
     {
-        stccpy(data->frameSpec,ptr,sizeof(data->frameSpec));
-        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)data->frameSpec,TAG_DONE);
+      strlcpy(data->frameSpec, ptr, sizeof(data->frameSpec));
+      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)data->frameSpec,TAG_DONE);
     }
+    else if (data->userFlags2 & UFLG2_UserFrame)
+      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
     else
-        if (data->userFlags2 & UFLG2_UserFrame) SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
-    	else SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
+      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
     #endif
 
     if (!(data->userFlags & UFLG_UserHorizSpacing))

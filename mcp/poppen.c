@@ -108,9 +108,11 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         switch(tag->ti_Tag)
         {
             case MUIA_Pendisplay_Spec:
-                stccpy(data->spec,(STRPTR)tidata,sizeof(data->spec));
-                redraw = TRUE;
-                break;
+            {
+              strlcpy(data->spec, (STRPTR)tidata, sizeof(data->spec));
+              redraw = TRUE;
+            }
+            break;
         }
     }
 

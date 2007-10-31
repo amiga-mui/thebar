@@ -268,7 +268,6 @@ ULONG xget(Object *obj, const ULONG attr);
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 ULONG stch_l(char *chr_ptr, ULONG *u_ptr);
 #endif
-size_t stccpy(char *p, const char *q, size_t n);
 
 /* utils.c */
 #define olabel(id)    Label(tr(id))
