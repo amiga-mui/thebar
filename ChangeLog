@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-11-02 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: added the register group to the cycle chain.
+
 2007-10-31 Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/button/Makefile: changed dependency management to use an

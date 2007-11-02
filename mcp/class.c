@@ -153,6 +153,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
             Child, RegisterGroup(regs), // Register
 
+                MUIA_CycleChain, TRUE,
+
                 Child, groups[0] = VGroup,
                     MUIA_Group_Columns, 2,
 
