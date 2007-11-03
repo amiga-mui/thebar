@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-11-03 Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp: removed a virtual frame where no virtual frame was necessary.
+
 2007-11-03  Pär Boberg <pbobbenb@spray.se>
 
   * mcp/locale/svenska.ct: Updated according to changes.
