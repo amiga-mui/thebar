@@ -282,7 +282,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 End, // <Colors
 
                 Child, VGroup, // >Appearance
-                    MUIA_Frame, MUIV_Frame_Virtual,
                     Child, ColGroup(2),
                         Child, olabel2(Msg_TextFont),
                         Child, PopaslObject,
