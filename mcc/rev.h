@@ -44,4 +44,4 @@
   #define CPU ""
 #endif
 
-#define LIB_COPYRIGHT  "Copyright (C) 2005-2007 TheBar.mcc Open Source Team"
+#define LIB_COPYRIGHT  "Copyright (c) 2005-2007 TheBar Open Source Team"
