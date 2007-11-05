@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-11-05  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/penadjust.c: fixed a typo.
+
 2007-11-03 Jens Langner <Jens.Langner@light-speed.de>
 
   * mcp: removed a virtual frame where no virtual frame was necessary.

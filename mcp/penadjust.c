@@ -381,7 +381,7 @@ mPenadjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *ms
                 g = (c>>8) & 0xff;
                 b = c & 0xff;
 
-                snprintf(spec, sizeof(spc), "r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
+                snprintf(spec, sizeof(spec), "r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
                 set(obj,MUIA_Pendisplay_Spec,spec);
             }
 
@@ -500,7 +500,8 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         /* RGB */
         case PAGE_RGB:
         {
-          struct MUI_RGBcolor *rgb = xget(data->rgb, MUIA_Coloradjust_RGB);
+          struct MUI_RGBcolor *rgb = (struct MUI_RGBcolor *)xget(data->rgb, MUIA_Coloradjust_RGB);
+
           snprintf(spec, sizeof(spec), "r%08lx,%08lx,%08lx", rgb->red, rgb->green, rgb->blue);
         }
         break;
