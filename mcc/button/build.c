@@ -496,7 +496,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
                                 aflag = 1;
                             }
 
-                            #ifdef __MORPHOS__
+    			    #if defined(__MORPHOS__) || defined(__amigaos4__)
     	                    if (useAlpha) hi = *src<0xFF;
                             #else
             	            if (useAlpha) hi = !(c & 0xFF000000);
@@ -581,7 +581,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
                             aflag = 1;
                         }
 
-                        #ifdef __MORPHOS__
+                        #if defined(__MORPHOS__) || defined(__amigaos4__)
                         if (useAlpha) hi = *src<0xFF;
                         #else
                         if (useAlpha) hi = !(c & 0xFF000000);
@@ -1129,7 +1129,7 @@ buildBitMapsCyber(struct InstData *data)
         WaitBlit();
     }
 
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     //NewRawDoFmt("%lx\n",1,1,data->image->flags & BRFLG_AlphaMask);
 
     if (data->image->flags & BRFLG_AlphaMask)
@@ -1512,7 +1512,7 @@ scaleStripBitMaps(struct InstData *data)
 void
 freeBitMaps(struct InstData *data)
 {
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     if (data->image->flags & BRFLG_AlphaMask)
     {
     	if (data->nchunky)
@@ -1693,7 +1693,7 @@ build(struct InstData *data)
     {
         if (data->flags & FLG_Strip)
         {
-            #ifdef __MORPHOS__
+	    #if defined(__MORPHOS__) || defined(__amigaos4__)
             if (data->flags & FLG_CyberDeep)
             {
                 buildBitMapsCyber(data);
