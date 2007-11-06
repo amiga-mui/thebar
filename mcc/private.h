@@ -144,9 +144,9 @@ struct InstData
     ULONG			                     objHeight;
     #endif
 
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     ULONG			                     userFrame;
-	UBYTE						   frameSpec[256];
+    UBYTE				             frameSpec[256];
     #endif
 
     ULONG                          flags;
