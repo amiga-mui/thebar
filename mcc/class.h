@@ -45,6 +45,11 @@
 
 #include "SDI_compiler.h"
 
+// these systems are able to handle alpha channel information
+#if defined(__MORPHOS__) || defined(__amigaos4__)
+	#define WITH_ALPHA			1
+#endif
+
 /***********************************************************************/
 
 #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL

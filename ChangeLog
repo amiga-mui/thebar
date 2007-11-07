@@ -5,13 +5,21 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-11-07  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c, mcc/button/class.c, mcc/button/build.c: replaced several
+    system specific #ifdef's concering alpha channel handling by a simple
+    #ifdef which is set according to whether a system can handle an alpha
+    channel or not. This makes the dynamic compilation more easier to
+    understand.
+
 2007-11-06  Alfonso Ranieri <alforan@tin.it>
 
   * I discovered that WritePixelArrayAlpha() is in
     OS4 too. So I managed various parts of the code
-    to make PNG pics to display their wonderfull 
+    to make PNG pics to display their wonderfull
     shadow on OS4 too. I make it to compile and work
-    on a friend (THanks Shinkuro) with OS4 on IRC. 
+    on a friend (THanks Shinkuro) with OS4 on IRC.
     Please test if it works there.
 
 2007-11-05  Thore Böckelmann <tboeckel@gmx.de>
