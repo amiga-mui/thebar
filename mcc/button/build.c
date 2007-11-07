@@ -496,7 +496,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
                                 aflag = 1;
                             }
 
-    			    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    			            #if defined(WITH_ALPHA)
     	                    if (useAlpha) hi = *src<0xFF;
                             #else
             	            if (useAlpha) hi = !(c & 0xFF000000);
@@ -581,7 +581,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
                             aflag = 1;
                         }
 
-                        #if defined(__MORPHOS__) || defined(__amigaos4__)
+                        #if defined(WITH_ALPHA)
                         if (useAlpha) hi = *src<0xFF;
                         #else
                         if (useAlpha) hi = !(c & 0xFF000000);
@@ -1129,27 +1129,24 @@ buildBitMapsCyber(struct InstData *data)
         WaitBlit();
     }
 
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(WITH_ALPHA)
     //NewRawDoFmt("%lx\n",1,1,data->image->flags & BRFLG_AlphaMask);
 
     if (data->image->flags & BRFLG_AlphaMask)
     {
 	    data->nchunky  = make->chunky;
     	data->gchunky  = make->gchunky;
-	
+
         data->snchunky = make->schunky;
 	    data->sgchunky = make->sgchunky;
-	
+
         data->dnchunky = make->dchunky;
     	data->dgchunky = make->dgchunky;
     }
-    else
     #else
-    {
-    	if (make->chunky)  freeArbitrateVecPooled(make->chunky);
-        if (make->schunky) freeArbitrateVecPooled(make->schunky);
-    	if (make->dchunky) freeArbitrateVecPooled(make->dchunky);
-    }
+	if (make->chunky)  freeArbitrateVecPooled(make->chunky);
+    if (make->schunky) freeArbitrateVecPooled(make->schunky);
+	if (make->dchunky) freeArbitrateVecPooled(make->dchunky);
     #endif
 
     freeArbitrateVecPooled(make);
@@ -1512,22 +1509,22 @@ scaleStripBitMaps(struct InstData *data)
 void
 freeBitMaps(struct InstData *data)
 {
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(WITH_ALPHA)
     if (data->image->flags & BRFLG_AlphaMask)
     {
     	if (data->nchunky)
         {
             freeArbitrateVecPooled(data->nchunky);
             data->nchunky = NULL;
-	}
-	
+	    }
+
         if (data->snchunky)
         {
             freeArbitrateVecPooled(data->snchunky);
             data->snchunky = NULL;
         }
 
-	if (data->dnchunky)
+	    if (data->dnchunky)
         {
             freeArbitrateVecPooled(data->dnchunky);
             data->dnchunky = NULL;
@@ -1693,7 +1690,7 @@ build(struct InstData *data)
     {
         if (data->flags & FLG_Strip)
         {
-	    #if defined(__MORPHOS__) || defined(__amigaos4__)
+	        #if defined(WITH_ALPHA)
             if (data->flags & FLG_CyberDeep)
             {
                 buildBitMapsCyber(data);
