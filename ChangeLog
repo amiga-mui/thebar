@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-12-04 Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/button/build.c: fixed a possible crash bug where a NUL pointer
+    was being accessed in case a textonly toolbar was opened and
+    data->image was accessed uninitalized.
+
 2007-12-03  Vit Sindlar <sindlarv at centrum dot cz>
 
   * mcp/locale/czech.ct: added Czech catalog translation
