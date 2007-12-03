@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-12-03  Vit Sindlar <sindlarv at centrum dot cz>
+
+  * mcp/locale/czech.ct: added Czech catalog translation
+
 2007-12-01  Pär Boberg <pbobbenb@spray.se>
 
   * mcp/locale/svenska.ct: Minor update.
