@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v21.5 RELEASE ############################################################
+
+2007-12-21 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final release preparation changes.
+
 2007-12-04 Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/button/build.c: fixed a possible crash bug where a NUL pointer
