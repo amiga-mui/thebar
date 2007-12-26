@@ -33,7 +33,10 @@
 #include <proto/muimaster.h>
 
 #include <clib/alib_protos.h>
+
+#ifndef __AROS__
 #include <clib/debug_protos.h>
+#endif
 
 #include <datatypes/pictureclass.h>
 #include <utility/pack.h>
@@ -46,14 +49,19 @@
 #include "SDI_compiler.h"
 
 // these systems are able to handle alpha channel information
-#if defined(__MORPHOS__) || defined(__amigaos4__)
+#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
 	#define WITH_ALPHA			1
 #endif
 
 /***********************************************************************/
 
+#ifdef __AROS__
+#define spacerObject  BOOPSIOBJMACRO_START(lib_spacerClass->mcc_Class)
+#define dragBarObject BOOPSIOBJMACRO_START(lib_dragBarClass->mcc_Class)
+#else
 #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
 #define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 
@@ -82,6 +90,9 @@ enum
 
 // xget()
 // Gets an attribute value from a MUI object
+#ifdef __AROS__
+#define xget XGET
+#else
 ULONG xget(Object *obj, const ULONG attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
@@ -90,18 +101,23 @@ ULONG xget(Object *obj, const ULONG attr);
   // the GetAttr() should catch the case when attr doesn't exist at all
   #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
+#endif
 
 /****************************************************************************/
 
 /* utils.c */
-#ifndef __MORPHOS__
+#ifdef __MORPHOS__
+
+#elif defined(__AROS__)
+Object *DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif
 APTR allocVecPooled(APTR pool, ULONG size);
 void freeVecPooled (APTR pool, APTR mem);
 
 /* brc1.c */
-USHORT BRCUnpack ( signed char *pSource , signed char *pDest , LONG srcBytes0 , LONG dstBytes0 );
+UWORD BRCUnpack ( signed char *pSource , signed char *pDest , LONG srcBytes0 , LONG dstBytes0 );
 
 /* spacer.c */
 BOOL initSpacerClass(void);

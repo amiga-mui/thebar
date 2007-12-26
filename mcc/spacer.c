@@ -54,13 +54,13 @@ enum
 
 /***********************************************************************/
 
-static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
+static IPTR mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 {
   ENTER();
 
   if((obj = (Object *)DoSuperNew(cl,obj,
     MUIA_CustomBackfill,TRUE,
-    TAG_MORE, (ULONG)msg->ops_AttrList)))
+    TAG_MORE, (IPTR)msg->ops_AttrList)))
   {
     struct data *data = INST_DATA(cl,obj);
     struct TagItem *tag;
@@ -78,13 +78,13 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
     }
   }
 
-  RETURN((ULONG)obj);
-  return (ULONG)obj;
+  RETURN((IPTR)obj);
+  return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
   struct data *data = INST_DATA(cl,obj);
@@ -103,19 +103,19 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     struct TagItem *tag;
     struct TagItem          *tstate;
-    ULONG result = 0;
+    IPTR result = 0;
 
     ENTER();
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -148,7 +148,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -186,11 +186,11 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
-    ULONG result = 0;
+    IPTR result = 0;
 
     ENTER();
 
@@ -208,7 +208,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -227,20 +227,20 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
             msg->MinMaxInfo->MinWidth  += delta;
             msg->MinMaxInfo->DefWidth  += delta;
             msg->MinMaxInfo->MaxWidth  += delta;
-            msg->MinMaxInfo->MaxHeight  = MBQ_MUI_MAXMAX;
+            msg->MinMaxInfo->MaxHeight  = MUI_MAXMAX;
         }
         else
         {
             msg->MinMaxInfo->MinHeight += delta;
             msg->MinMaxInfo->DefHeight += delta;
-            msg->MinMaxInfo->MaxWidth   = MBQ_MUI_MAXMAX;
+            msg->MinMaxInfo->MaxWidth   = MUI_MAXMAX;
             msg->MinMaxInfo->MaxHeight += delta;
         }
     }
     else
     {
-        msg->MinMaxInfo->MaxWidth  = MBQ_MUI_MAXMAX;
-        msg->MinMaxInfo->MaxHeight = MBQ_MUI_MAXMAX;
+        msg->MinMaxInfo->MaxWidth  = MUI_MAXMAX;
+        msg->MinMaxInfo->MaxHeight = MUI_MAXMAX;
     }
 
     RETURN(0);
@@ -249,7 +249,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -298,11 +298,11 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 {
   struct data *data = INST_DATA(cl,obj);
-  ULONG result = 0;
+  IPTR result = 0;
 
   ENTER();
 
@@ -333,7 +333,11 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,SpacerDispatcher,cl,obj,msg)
+#else
 DISPATCHER(SpacerDispatcher)
+#endif
 {
   switch(msg->MethodID)
   {
@@ -348,6 +352,9 @@ DISPATCHER(SpacerDispatcher)
     default:                  return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 

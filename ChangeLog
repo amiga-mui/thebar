@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-12-23 Matthias Rustler <mrustler@gmx.de>
+
+  * AROS port
+
 #### v21.5 RELEASE ############################################################
 
 2007-12-21 Jens Langner <Jens.Langner@light-speed.de>

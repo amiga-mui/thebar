@@ -33,9 +33,18 @@
 
 /***********************************************************************/
 
-#ifndef __MORPHOS__
 // DoSuperNew()
 // Calls parent NEW method within a subclass
+#ifdef __MORPHOS__
+
+#elif defined(__AROS__)
+Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
+{
+  AROS_SLOWSTACKTAGS_PRE(tag1)
+  retval = DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
+  AROS_SLOWSTACKTAGS_POST
+}
+#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
@@ -51,7 +60,7 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 
 /***********************************************************************/
 
-#ifndef __MORPHOS__
+#if !defined(__MORPHOS__) && !defined(__AROS__)
 
 #define HEX(c) ((c>'9')?c-'A'+10:c-'0')
 
@@ -152,7 +161,7 @@ opop(ULONG type, const void *key)
 Object *
 opoppen(const void *key, const void *title, const void *help)
 {
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return PoppenObject,
         MUIA_Window_Title, (ULONG)tr(title),
         MUIA_ControlChar,  (ULONG)GetKeyChar(tr(key)),
@@ -198,7 +207,7 @@ opopfri(const void *key, const void *title, const void *help)
         0x8042a547, 0,
         0x80426a55, 1,
         0x8042a92b, 0,
-    End;
+    TAG_DONE);
 }
 
 /***********************************************************************/
@@ -206,7 +215,7 @@ opopfri(const void *key, const void *title, const void *help)
 Object *
 opopback(UNUSED ULONG gradient, const void *key, const void *title, const void *help)
 {
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return MUI_NewObject(MUIC_Popimage,
         MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
         MUIA_Window_Title,     (ULONG)tr(title),
@@ -214,7 +223,7 @@ opopback(UNUSED ULONG gradient, const void *key, const void *title, const void *
         MUIA_Draggable,        TRUE,
         MUIA_CycleChain,       TRUE,
         MUIA_ShortHelp,        (ULONG)tr(help),
-    End;
+    TAG_DONE);
     #else
     if (lib_flags & BASEFLG_MUI20)
     {
@@ -225,7 +234,7 @@ opopback(UNUSED ULONG gradient, const void *key, const void *title, const void *
             MUIA_Draggable,        TRUE,
             MUIA_CycleChain,       TRUE,
             MUIA_ShortHelp,        (ULONG)tr(help),
-        End;
+        TAG_DONE);
     }
     else
     {
@@ -261,7 +270,7 @@ opopframe(const void *key, const void *title, const void *help)
 
 /***********************************************************************/
 
-#ifndef __MORPHOS__
+#if !defined(__MORPHOS__) || !defined(__AROS__)
 void
 drawGradient(Object *obj,struct MUIS_TheBar_Gradient *grad)
 {
