@@ -23,6 +23,10 @@
 #ifndef _CLASS_H
 #define _CLASS_H
 
+#ifdef __AROS__
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>
@@ -33,7 +37,11 @@
 #include <proto/muimaster.h>
 
 #include <clib/alib_protos.h>
+
+#ifndef __AROS__
 #include <clib/debug_protos.h>
+#endif
+
 #include <libraries/gadtools.h>
 
 #include <string.h>
@@ -189,11 +197,19 @@ struct MUIS_Popbackground_Status
 ** MUI macros
 */
 
+#ifdef __AROS__
+#define coloradjustObject       BOOPSIOBJMACRO_START(lib_coloradjust->mcc_Class)
+#define penadjustObject         BOOPSIOBJMACRO_START(lib_penadjust->mcc_Class)
+#define backgroundadjustObject  BOOPSIOBJMACRO_START(lib_backgroundadjust->mcc_Class)
+#define poppenObject            BOOPSIOBJMACRO_START(lib_poppen->mcc_Class)
+#define popbackObject           BOOPSIOBJMACRO_START(lib_popbackground->mcc_Class)
+#else
 #define coloradjustObject       NewObject(lib_coloradjust->mcc_Class,NULL
 #define penadjustObject         NewObject(lib_penadjust->mcc_Class,NULL
 #define backgroundadjustObject  NewObject(lib_backgroundadjust->mcc_Class,NULL
 #define poppenObject            NewObject(lib_poppen->mcc_Class,NULL
 #define popbackObject           NewObject(lib_popbackground->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 /*
@@ -241,9 +257,9 @@ struct MUIS_Popbackground_Status
 
 /***********************************************************************/
 
-#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))
-#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
-#define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(ULONG)(value),size,item)
+#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
+#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
+#define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(IPTR)(value),size,item)
 #define copymem(to,from,len)            memcpy((to), (from), (len))
 
 #define MUIVER20 20
@@ -252,6 +268,9 @@ struct MUIS_Popbackground_Status
 
 // xget()
 // Gets an attribute value from a MUI object
+#ifdef __AROS__
+#define xget XGET
+#else
 ULONG xget(Object *obj, const ULONG attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
@@ -260,11 +279,15 @@ ULONG xget(Object *obj, const ULONG attr);
   // the GetAttr() should catch the case when attr doesn't exist at all
   #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
+#endif
 
 /****************************************************************************/
 
 /* utils.c */
-#ifndef __MORPHOS__
+#ifdef __MORPHOS__
+#elif defined(__AROS__)
+Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 ULONG stch_l(char *chr_ptr, ULONG *u_ptr);
 #endif

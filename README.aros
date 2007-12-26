@@ -1,0 +1,17 @@
+README.aros
+===========
+
+MCC TheBar is hosted on Sourceforge:
+http://sourceforge.net/projects/thebar/
+
+Please ensure that all modifications for the AROS port flow back to its
+origin on Sourceforge.
+
+TODO
+----
+* MCC: some demos crash
+* create Catalogs
+
+LEGAL
+-----
+MCC_TheBar is released under the GNU Lesser General Public License.

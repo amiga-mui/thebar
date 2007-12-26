@@ -28,6 +28,7 @@
 #include <clib/alib_protos.h>
 
 #include <graphics/rpattr.h>
+#include <graphics/scale.h>
 #include <utility/pack.h>
 #include <datatypes/pictureclass.h>
 #include <cybergraphx/cybergraphics.h>
@@ -91,6 +92,9 @@ struct scale
 
 // xget()
 // Gets an attribute value from a MUI object
+#ifdef __AROS__
+#define xget XGET
+#else
 ULONG xget(Object *obj, const ULONG attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
@@ -99,11 +103,15 @@ ULONG xget(Object *obj, const ULONG attr);
   // the GetAttr() should catch the case when attr doesn't exist at all
   #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
+#endif /* __AROS__ */
 
 /***********************************************************************/
 
 /* utils.c */
-#ifndef __MORPHOS__
+#ifdef __MORPHOS__
+#elif defined(__AROS__)
+Object *DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif
 APTR allocVecPooled(APTR pool, ULONG size);
@@ -117,7 +125,7 @@ void freeArbitrateVecPooled(APTR mem);
 ULONG peekQualifier(void);
 
 /* brc1.c */
-USHORT BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);
+UWORD BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);
 
 /* scale.c */
 void scale(struct scale *sce , UBYTE *src , UBYTE *dst);
