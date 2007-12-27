@@ -30,6 +30,8 @@
 #include <proto/locale.h>
 #include <proto/utility.h>
 
+#include "SDI_compiler.h"
+
 #include "Debug.h"
 
 struct FC_Type { const long ID; const char * const Str; };

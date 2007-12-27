@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-12-27  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/C_c.sd: added missing "SDI_compiler.h" include
+
 2007-12-23 Matthias Rustler <mrustler@gmx.de>
 
   * AROS port
