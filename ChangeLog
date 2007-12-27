@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2007-12-27 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/SDI_compiler.h: adapted SDI macros to not produce warnings on a
+    MorphOS compile.
+
 2007-12-27  Thore Böckelmann <tboeckel@gmx.de>
 
   * demo/Makefile: modified Makefile to build with newlib.library instead of
