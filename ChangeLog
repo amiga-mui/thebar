@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2008-01-06  Matthias Rustler <mrustler@gmx.de>
+
+  * Catalog creation for AROS port.
+  * demo7: AROS version of DoSuperNew()
+
 2008-01-04  Vit Sindlar <sindlarv at centrum dot cz>
 
   * mcp/locale/czech.ct: updated Czech catalog translation
