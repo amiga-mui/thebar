@@ -404,8 +404,13 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
 /***********************************************************************/
 
+#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
 static UBYTE *
 RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
+#else
+static UBYTE *
+RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChannel)
+#endif
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size, maskDone = FALSE;
@@ -501,7 +506,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
     			            #if defined(WITH_ALPHA)
     	                    if (useAlpha) hi = *src<0xFF;
                             #else
-            	            if (useAlpha) hi = !(c & 0xFF000000);
+            	            if (useAlpha) hi = (allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
                             #endif
                             else hi = (c & 0x00FFFFFF)==trColor;
 
@@ -586,7 +591,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
                         #if defined(WITH_ALPHA)
                         if (useAlpha) hi = *src<0xFF;
                         #else
-                        if (useAlpha) hi = !(c & 0xFF000000);
+                        if (useAlpha) hi = (allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
                         #endif
                         else hi = (c & 0x00FFFFFF)==trColor;
 
@@ -974,8 +979,13 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         copy.dh    = make->dh;
         copy.flags = make->flags;
 
+		#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
         if (data->image->flags & BRFLG_ARGB) make->chunky = RGBToRGB(data->image,&copy);
+        #else
+        if (data->image->flags & BRFLG_ARGB) make->chunky = RGBToRGB(data->image,&copy,data->allowAlphaChannel);
+        #endif
         else make->chunky = LUT8ToRGB(data->image,&copy);
+
 
         freeSource(data->image,back);
         if (!make->chunky) return FALSE;
@@ -989,7 +999,11 @@ makeSourcesRGB(struct InstData *data,struct make *make)
 
             if((data->simage->data = getSource(data->simage)))
             {
+				#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                 if (data->simage->flags & BRFLG_ARGB) make->schunky = RGBToRGB(data->simage,&copy);
+                #else
+                if (data->simage->flags & BRFLG_ARGB) make->schunky = RGBToRGB(data->simage,&copy,data->allowAlphaChannel);
+               	#endif
                 else make->schunky = LUT8ToRGB(data->simage,&copy);
 
                 freeSource(data->simage,back);
@@ -1005,7 +1019,11 @@ makeSourcesRGB(struct InstData *data,struct make *make)
 
             if((data->dimage->data = getSource(data->dimage)))
             {
+				#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                 if (data->dimage->flags & BRFLG_ARGB) make->dchunky = RGBToRGB(data->dimage,&copy);
+                #else
+                if (data->dimage->flags & BRFLG_ARGB) make->dchunky = RGBToRGB(data->dimage,&copy,data->allowAlphaChannel);
+                #endif
                 else make->dchunky = LUT8ToRGB(data->dimage,&copy);
 
                 freeSource(data->dimage,back);
@@ -1146,9 +1164,23 @@ buildBitMapsCyber(struct InstData *data)
     	data->dgchunky = make->dgchunky;
     }
     #else
-	if (make->chunky)  freeArbitrateVecPooled(make->chunky);
-    if (make->schunky) freeArbitrateVecPooled(make->schunky);
-	if (make->dchunky) freeArbitrateVecPooled(make->dchunky);
+    if (data->allowAlphaChannel && data->image->flags & BRFLG_AlphaMask)
+    {
+	    data->nchunky  = make->chunky;
+    	data->gchunky  = make->gchunky;
+
+        data->snchunky = make->schunky;
+	    data->sgchunky = make->sgchunky;
+
+        data->dnchunky = make->dchunky;
+    	data->dgchunky = make->dgchunky;
+    }
+    else
+    {
+		if (make->chunky)  freeArbitrateVecPooled(make->chunky);
+	    if (make->schunky) freeArbitrateVecPooled(make->schunky);
+		if (make->dchunky) freeArbitrateVecPooled(make->dchunky);
+	}
     #endif
 
     freeArbitrateVecPooled(make);
@@ -1516,6 +1548,11 @@ freeBitMaps(struct InstData *data)
   #if defined(WITH_ALPHA)
   if(data->image != NULL &&
      data->image->flags & BRFLG_AlphaMask)
+  #else
+  if(data->allowAlphaChannel &&
+     data->image != NULL &&
+     data->image->flags & BRFLG_AlphaMask)
+  #endif
   {
     if(data->nchunky)
     {
@@ -1535,7 +1572,6 @@ freeBitMaps(struct InstData *data)
       data->dnchunky = NULL;
     }
   }
-  #endif
 
   if(!data->normalBM)
   {
@@ -1709,11 +1745,13 @@ build(struct InstData *data)
         {
 	        #if defined(WITH_ALPHA)
             if (data->flags & FLG_CyberDeep)
+            #else
+            if (data->allowAlphaChannel && data->flags & FLG_CyberDeep)
+            #endif
             {
                 buildBitMapsCyber(data);
                 return;
             }
-            #endif
 
             if (data->flags & FLG_Scaled)
             {

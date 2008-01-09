@@ -426,7 +426,7 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
                         #if defined(WITH_ALPHA)
     	                if (useAlpha) hi = *src<0xFF;
                         #else
-            	        if (useAlpha) hi = !(c & 0xFF000000);
+            	        if (useAlpha) hi = (data->allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
                         #endif
                         else hi = (c & 0x00FFFFFF)==trColor;
 
@@ -512,7 +512,7 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
 			            #if defined(WITH_ALPHA)
                         if (useAlpha) hi = *src<0xFF;
                         #else
-                        if (useAlpha) hi = !(c & 0xFF000000);
+                        if (useAlpha) hi = (data->allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
                         #endif
                         else hi = (c & 0x00FFFFFF)==trColor;
 
@@ -1086,9 +1086,23 @@ buildBitMapsCyber(struct InstData *data)
 	    data->strip.dgchunky = make->dgchunky;
     }
     #else
-    if (make->chunky)  freeVecPooled(data->pool,make->chunky);
-    if (make->schunky) freeVecPooled(data->pool,make->schunky);
-    if (make->dchunky) freeVecPooled(data->pool,make->dchunky);
+    if (data->allowAlphaChannel && data->image.flags & BRFLG_AlphaMask)
+    {
+    	data->strip.nchunky  = make->chunky;
+	    data->strip.gchunky  = make->gchunky;
+
+        data->strip.snchunky = make->schunky;
+    	data->strip.sgchunky = make->sgchunky;
+
+        data->strip.dnchunky = make->dchunky;
+	    data->strip.dgchunky = make->dgchunky;
+    }
+    else
+    {
+	    if (make->chunky)  freeVecPooled(data->pool,make->chunky);
+	    if (make->schunky) freeVecPooled(data->pool,make->schunky);
+	    if (make->dchunky) freeVecPooled(data->pool,make->dchunky);
+	}
     #endif
 
     freeVecPooled(data->pool,make);
@@ -1342,6 +1356,27 @@ freeBitMaps(struct InstData *data)
 
     #if defined(WITH_ALPHA)
     if (data->image.flags & BRFLG_AlphaMask)
+    {
+    	if (data->strip.nchunky)
+        {
+            freeVecPooled(data->pool,data->strip.nchunky);
+            data->strip.nchunky = NULL;
+    	}
+
+        if (data->strip.snchunky)
+        {
+            freeVecPooled(data->pool,data->strip.snchunky);
+            data->strip.snchunky = NULL;
+        }
+
+	    if (data->strip.dnchunky)
+        {
+            freeVecPooled(data->pool,data->strip.dnchunky);
+            data->strip.dnchunky = NULL;
+        }
+    }
+	#else
+    if (data->allowAlphaChannel && data->image.flags & BRFLG_AlphaMask)
     {
     	if (data->strip.nchunky)
         {

@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2008-01-09  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/misc: the OS3 build now has full true alpha channel support if at least
+    cybergraphics.library V45 and picture.datatype V46 are available. This is
+    true with AfA 3.96+ installed. This makes the wrong backgrounds vanish in
+    YAM's toolbars.
+
 2008-01-06  Matthias Rustler <mrustler@gmx.de>
 
   * Catalog creation for AROS port.

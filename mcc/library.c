@@ -68,6 +68,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base);
 
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
+struct Library *PictureDTBase = NULL;
 
 #if defined(__amigaos4__)
 struct DataTypesIFace *IDataTypes = NULL;
@@ -110,6 +111,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
          GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
       { }
 
+      PictureDTBase = OpenLibrary("picture.datatype", 0);
+
       // check the version of MUI)
       if(MUIMasterBase->lib_Version >= MUIVER20)
       {
@@ -147,6 +150,12 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
   {
     MUI_DeleteCustomClass(lib_dragBarClass);
     lib_dragBarClass = NULL;
+  }
+
+  if(PictureDTBase)
+  {
+    CloseLibrary(PictureDTBase);
+    PictureDTBase = NULL;
   }
 
   if(CyberGfxBase)
