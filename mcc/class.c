@@ -34,6 +34,11 @@
 
 #include "rev.h"
 
+#ifndef PDTA_AlphaChannel
+/* does the image contain alpha channel data? */
+#define PDTA_AlphaChannel     (DTA_Dummy + 256)
+#endif
+
 /***********************************************************************/
 
 static Object *
@@ -1039,13 +1044,19 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                 if (cdepth)
                 {
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
-
-                  #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
+                  #if defined(__MORPHOS__) || defined(__AROS__)
+                  // ignore the return code for MOS and AROS, OS3 and OS4 do it correctly
                   res = TRUE;
                   #endif
-        	}
+                }
                 else
+                {
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_LUT8,width,0,0,width,height);
+                  #if defined(__MORPHOS__) || defined(__AROS__)
+                  // ignore the return code for MOS and AROS, OS3 and OS4 do it correctly
+                  res = TRUE;
+                  #endif
+                }
 
                 if (!res)
                 {
@@ -1117,13 +1128,31 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                                 brush->trColor = ((colors[tc] & 0xFF000000)>>8) | ((colors[tc+1] & 0xFF000000)>>16) | ((colors[tc+2] & 0xFF000000)>>24);
                             }
                             #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-                            else brush->flags |= BRFLG_AlphaMask;
+                            else
+                            {
+                            	// MorphOS, OS4 and AROS always deliver a proper alpha channel
+                            	brush->flags |= BRFLG_AlphaMask;
+                            }
                             #else
                             {
-                                APTR p = NULL;
+                            	// on OS3 it depends on the used picture.datatype
+                            	if(bmh->bmh_Masking == mskHasAlpha)
+                            	{
+                            		// if the masking tells us about an alpha channel
+                            		// then we use this information directly
+                            		brush->flags |= BRFLG_AlphaMask;
+                            	}
+                            	else
+                            	{
+                            		// otherwise we ask the DT object about an alpha channel
+	                                APTR plane = NULL;
+	                                ULONG hasAlpha = 0;
 
-                                if (GetDTAttrs(dto,PDTA_MaskPlane,(IPTR)&p,TAG_DONE) && p)
-                                    brush->flags |= BRFLG_AlphaMask;
+	                                if (GetDTAttrs(dto, PDTA_MaskPlane, (IPTR)&plane, TAG_DONE) && plane != NULL)
+	                                    brush->flags |= BRFLG_AlphaMask;
+	                                else if (GetDTAttrs(dto, PDTA_AlphaChannel, (IPTR)&hasAlpha, TAG_DONE) && hasAlpha != 0)
+	                                    brush->flags |= BRFLG_AlphaMask;
+	                            }
                             }
                             #endif
 
@@ -1987,6 +2016,13 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             data->flags |= FLG_Table;
             if (data->flags & FLG_DragBar) set(data->db,MUIA_Group_Horiz,data->cols);
         }
+
+        #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+        // cgx/WritePixelArrayAlpha is available in AfA only
+        if(CyberGfxBase != NULL && CyberGfxBase->lib_Version >= 45 &&
+           PictureDTBase != NULL && PictureDTBase->lib_Version >= 46)
+          data->allowAlphaChannel = TRUE;
+        #endif
     }
     else
     {

@@ -37,6 +37,8 @@ extern struct MUI_CustomClass *lib_thisClass;
 extern struct MUI_CustomClass *lib_spacerClass;
 extern struct MUI_CustomClass *lib_dragBarClass;
 
+extern struct Library *PictureDTBase;
+
 enum
 {
   BASEFLG_Init  = 1<<0,
@@ -140,13 +142,15 @@ struct InstData
     ULONG                          spacersSize;
 
     #if defined(VIRTUAL)
-    ULONG			                     objWidth;
-    ULONG			                     objHeight;
+    ULONG			               objWidth;
+    ULONG			               objHeight;
     #endif
 
     #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-    ULONG			                     userFrame;
-    char          		             frameSpec[256];
+    ULONG			               userFrame;
+    char          		           frameSpec[256];
+    #else
+    ULONG                          allowAlphaChannel;
     #endif
 
     ULONG                          flags;

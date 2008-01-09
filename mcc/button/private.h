@@ -30,6 +30,8 @@ extern APTR                    lib_pool;
 extern ULONG                   lib_flags;
 extern ULONG		               lib_alpha;
 
+extern struct Library *PictureDTBase;
+
 enum
 {
     BASEFLG_Init    = 1<<0,
@@ -136,6 +138,10 @@ struct InstData
     struct MinList              notifyList;             // list of set notifies on the button
 
     ULONG                       qualifier;              // cureently active RAWKEY-Qualifiers
+
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+    ULONG                       allowAlphaChannel;
+	#endif
 };
 
 /* flags */

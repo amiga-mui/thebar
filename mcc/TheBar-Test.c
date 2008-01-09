@@ -48,6 +48,7 @@ struct Library *MUIMasterBase = NULL;
 struct Library *UtilityBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
+struct Library *PictureDTBase = NULL;
 #elif defined(__MORPHOS__)
 struct GfxBase *GfxBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
@@ -55,6 +56,7 @@ struct Library *MUIMasterBase = NULL;
 struct Library *UtilityBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
+struct Library *PictureDTBase = NULL;
 #else
 struct GfxBase *GfxBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
@@ -62,6 +64,7 @@ struct Library *MUIMasterBase = NULL;
 struct Library *UtilityBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
+struct Library *PictureDTBase = NULL;
 #endif
 
 #if defined(__amigaos4__)
