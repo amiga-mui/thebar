@@ -12,6 +12,7 @@ $URL$
 
 2008-01-09  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/button/class.c: fixed broken OS4 build.
   * mcc/misc: the OS3 build now has full true alpha channel support if at least
     cybergraphics.library V45 and picture.datatype V46 are available. This is
     true with AfA 3.96+ installed. This makes the wrong backgrounds vanish in
