@@ -33,6 +33,7 @@
 
 #undef GetOutlinePen
 #include <graphics/gfxmacros.h>
+#include <proto/cybergraphics.h>
 
 /***********************************************************************/
 
@@ -52,7 +53,11 @@
         ULONG , __p9, d7, \
         , CYBERGRAPHICS_BASE_NAME, 0, 0, 0, 0, 0, 0)
   #endif
-#elif !defined(__amigaos4__) && !defined(__AROS__)
+#elif defined(__amigaos4__)
+  #if !defined(WritePixelArrayAlpha) && defined(__USE_INLINE__)
+    #define WritePixelArrayAlpha(srcRect, SrcX, SrcY, SrcMod, rp, DestX, DestY, SizeX, SizeY, globalAlpha) ICyberGfx->WritePixelArrayAlpha(srcRect, SrcX, SrcY, SrcMod, rp, DestX, DestY, SizeX, SizeY, globalAlpha)
+  #endif
+#elif !defined(__AROS__)
   #ifndef WritePixelArrayAlpha
     #if defined(__SASC)
       ULONG WritePixelArrayAlpha(APTR, UWORD, UWORD, UWORD, struct RastPort *, UWORD, UWORD, UWORD, UWORD, ULONG);
@@ -1659,8 +1664,10 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     {
     	                if (chunky)
                         {
-	                        if (data->image->flags & BRFLG_EmpytAlpha) WritePixelArray(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
-        			        else WritePixelArrayAlpha(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,lib_alpha);
+	                        if (data->image->flags & BRFLG_EmpytAlpha)
+                              WritePixelArray(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
+        			        else
+                              WritePixelArrayAlpha(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,lib_alpha);
                         }
                         else
                         {
