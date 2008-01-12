@@ -125,7 +125,7 @@ void freeArbitrateVecPooled(APTR mem);
 ULONG peekQualifier(void);
 
 /* brc1.c */
-UWORD BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);
+BOOL BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);
 
 /* scale.c */
 void scale(struct scale *sce , UBYTE *src , UBYTE *dst);

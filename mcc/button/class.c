@@ -33,6 +33,7 @@
 
 #undef GetOutlinePen
 #include <graphics/gfxmacros.h>
+
 #include <proto/cybergraphics.h>
 
 /***********************************************************************/
@@ -77,6 +78,10 @@
           ULONG , __p9, d7, \
           , CYBERGRAPHICS_BASE_NAME)
     #endif
+  #endif
+#elif defined(__amigaos4__)
+  #ifndef WritePixelArrayAlpha
+  #define WritePixelArrayAlpha ICyberGfx->WritePixelArrayAlpha
   #endif
 #endif
 
