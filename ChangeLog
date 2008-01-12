@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2008-01-12  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/brc1.c, mcc/button/brc1.c: rework to not use any goto statement and
+    return a BOOL instead.
+  * mcc/button/class.c: fixed broken OS4 compile as the current SDK of OS4
+    miss the inline4 define for the WritePixelArrayAlpha() function.
+
 2008-01-09  Alfonso Ranieri <alforan@tin.it>
 
   * branches/mosmui4: Comitted the last changes to mosmui4 branch. Please use

@@ -34,55 +34,58 @@
 
 /***********************************************************************/
 
-UWORD
-BRCUnpack(signed char *pSource,signed char *pDest,LONG srcBytes0,LONG dstBytes0)
+BOOL BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0)
 {
-    signed char *source = pSource, *dest = pDest, c;
+  signed char *source = pSource;
+  signed char *dest = pDest;
+  LONG srcBytes = srcBytes0;
+  LONG dstBytes = dstBytes0;
+
+  ENTER();
+
+  while(dstBytes > 0)
+  {
     WORD n;
-    LONG  srcBytes = srcBytes0, dstBytes = dstBytes0;
-    UWORD          error = TRUE;
-    WORD           minus128 = -128;
 
-    ENTER();
+    if((srcBytes -= 1) < 0)
+      break;
 
-    while(dstBytes>0)
+    n = *source++;
+
+    if(n >= 0)
     {
-        if ((srcBytes-=1)<0) goto errorExit;
-        n = *source++;
+      n += 1;
 
-        if (n>=0)
-        {
-            n += 1;
+      if((srcBytes -= n) < 0 || (dstBytes -= n) < 0)
+        break;
 
-            if ((srcBytes -= n) <0) goto errorExit;
-            if ((dstBytes -= n) <0) goto errorExit;
-
-            do
-            {
-                *dest++ = *source++;
-            } while(--n>0);
-        }
-        else
-            if (n!=minus128)
-            {
-                n = -n+1;
-                if ((srcBytes -= 1)<0) goto errorExit;
-                if ((dstBytes -= n)<0) goto errorExit;
-                c = *source++;
-
-                do
-                {
-                    *dest++ = c;
-                } while(--n>0);
-            }
+      do
+      {
+        *dest++ = *source++;
+      }
+      while(--n > 0);
     }
+    else if(n != -128)
+    {
+      signed char c;
 
-    error = FALSE;
+      n = -n+1;
 
-    errorExit:
+      if((srcBytes -= 1) < 0 || (dstBytes -= n) < 0)
+        break;
 
-    RETURN(error);
-    return error;
+      c = *source++;
+
+      do
+      {
+        *dest++ = c;
+      }
+      while(--n > 0);
+    }
+  }
+
+  RETURN(dstBytes <= 0);
+  return dstBytes <= 0;
 }
 
 /***********************************************************************/

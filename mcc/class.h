@@ -117,7 +117,7 @@ APTR allocVecPooled(APTR pool, ULONG size);
 void freeVecPooled (APTR pool, APTR mem);
 
 /* brc1.c */
-UWORD BRCUnpack ( signed char *pSource , signed char *pDest , LONG srcBytes0 , LONG dstBytes0 );
+BOOL BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);
 
 /* spacer.c */
 BOOL initSpacerClass(void);
