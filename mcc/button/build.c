@@ -550,8 +550,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
                     if (alpha) alpha += RAWIDTH(w);
                 }
 
-                if (!reallyHasAlpha) image->flags |= BRFLG_EmpytAlpha;
-    	        else image->flags &= ~BRFLG_EmpytAlpha;
+                if (!reallyHasAlpha) image->flags |= BRFLG_EmptyAlpha;
+    	        else image->flags &= ~BRFLG_EmptyAlpha;
 
                 maskDone = TRUE;
             }
@@ -628,8 +628,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
                 if (alpha) alpha += RAWIDTH(w);
             }
 
-            if (!reallyHasAlpha) image->flags |= BRFLG_EmpytAlpha;
-            else image->flags &= ~BRFLG_EmpytAlpha;
+            if (!reallyHasAlpha) image->flags |= BRFLG_EmptyAlpha;
+            else image->flags &= ~BRFLG_EmptyAlpha;
         }
     }
 

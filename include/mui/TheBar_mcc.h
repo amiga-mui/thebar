@@ -303,8 +303,11 @@ enum
   BRFLG_AlphaMask = 1<<1,
   BRFLG_ColorRGB8 = 1<<2,
 
-  BRFLG_EmpytAlpha = 1<<16,
+  BRFLG_EmptyAlpha = 1<<16,
 };
+
+// typo in previous versions
+#define BRFLG_EmpytAlpha BRFLG_EmptyAlpha
 
 /*
 ** MUIA_TheButton_Strip is a pointer to this.

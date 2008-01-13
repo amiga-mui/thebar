@@ -471,9 +471,9 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
             }
 
             if(!reallyHasAlpha)
-              image->flags |= BRFLG_EmpytAlpha;
+              image->flags |= BRFLG_EmptyAlpha;
     	      else
-              image->flags &= ~BRFLG_EmpytAlpha;
+              image->flags &= ~BRFLG_EmptyAlpha;
 
             maskDone = TRUE;
         }
@@ -549,8 +549,8 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
                 if (alpha) alpha += RAWIDTH(w);
             }
 
-            if (!reallyHasAlpha) image->flags |= BRFLG_EmpytAlpha;
-            else image->flags &= ~BRFLG_EmpytAlpha;
+            if (!reallyHasAlpha) image->flags |= BRFLG_EmptyAlpha;
+            else image->flags &= ~BRFLG_EmptyAlpha;
         }
     }
 

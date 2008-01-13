@@ -1417,7 +1417,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     //NewRawDoFmt(">>> 1 %lx %lx %lx %ld\n",1,1,bm,chunky,mask,data->disMode);
                     if (chunky)
                     {
-	                  if(data->image->flags & BRFLG_EmpytAlpha)
+	                  if(data->image->flags & BRFLG_EmptyAlpha)
                         WritePixelArray(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
                       else
                         WritePixelArrayAlpha(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,lib_alpha);
@@ -1669,7 +1669,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     {
     	                if (chunky)
                         {
-	                        if (data->image->flags & BRFLG_EmpytAlpha)
+	                        if (data->image->flags & BRFLG_EmptyAlpha)
                               WritePixelArray(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
         			        else
                               WritePixelArrayAlpha(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,lib_alpha);
@@ -1678,7 +1678,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         {
                             if(bm)
                             {
-    	                        //if ((data->image->flags & BRFLG_EmpytAlpha) && mask)
+    	                        //if ((data->image->flags & BRFLG_EmptyAlpha) && mask)
     	                        if(mask)
                                 BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
                         	    else
