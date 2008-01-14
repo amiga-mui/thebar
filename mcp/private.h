@@ -127,6 +127,8 @@ struct InstData
 
   Object  *spacersSize;
 
+  Object  *hidden[3];
+
   STRPTR  base;
   ULONG   flags;
 };

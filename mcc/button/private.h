@@ -28,7 +28,6 @@
 extern struct SignalSemaphore  lib_poolSem;
 extern APTR                    lib_pool;
 extern ULONG                   lib_flags;
-extern ULONG		               lib_alpha;
 
 extern struct Library *PictureDTBase;
 
@@ -231,6 +230,7 @@ struct ButtonNotify
 #define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))
+#define nnsuperset(cl,obj,tag,val)      SetSuperAttrs(cl,obj,tag,(ULONG)(val),MUIA_NoNotify,TRUE,TAG_DONE)
 #define IDCMP_MOUSEOBJECT               0x40000000
 
 #endif /* _PRIVATE_H */

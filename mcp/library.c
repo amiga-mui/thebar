@@ -136,30 +136,16 @@ static BOOL ClassInit(UNUSED struct Library *base)
          GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
       { }
 
-      // check the version of MUI
+      // check for MUI 3.9+
       if(MUIMasterBase->lib_Version >= MUIVER20)
       {
         lib_flags |= BASEFLG_MUI20;
 
+        // check for MUI 4.0+
         if(MUIMasterBase->lib_Version > MUIVER20 || MUIMasterBase->lib_Revision >= 5341)
           lib_flags |= BASEFLG_MUI4;
       }
 
-/*      // initialize the locale translation
-      initStrings();
-
-      // localize some arrrays
-      localizeArray(regs, regIDs);
-      localizeArray(frames, frameIDs);
-      localizeArray(precisions, precisionIDs);
-      localizeArray(dismodes, dismodeIDs);
-      localizeArray(spacersSizes, spacersSizeIDs);
-      localizeArray(viewModes, viewModeIDs);
-      localizeArray(labelPoss, labelPosIDs);
-
-      if(!(lib_flags & BASEFLG_MUI4))
-        localizeMenus(menu,menuIDs);
-*/
       // on MUI 3.1 system's we do have to
       // initialize our subclasses as well
       #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)

@@ -200,38 +200,9 @@ void freeVecPooled(APTR pool, APTR mem)
   LEAVE();
 }
 
-/****************************************************************************/
-
-APTR allocArbitratePooled(ULONG size)
-{
-  APTR mem;
-
-  ENTER();
-
-  ObtainSemaphore(&lib_poolSem);
-  mem = AllocPooled(lib_pool,size);
-  ReleaseSemaphore(&lib_poolSem);
-
-  RETURN(mem);
-  return mem;
-}
-
 /***********************************************************************/
 
-void freeArbitratePooled(APTR mem, ULONG size)
-{
-  ENTER();
-
-  ObtainSemaphore(&lib_poolSem);
-  FreePooled(lib_pool,mem,size);
-  ReleaseSemaphore(&lib_poolSem);
-
-  LEAVE();
-}
-
-/***********************************************************************/
-
-APTR allocArbitrateVecPooled(ULONG size)
+APTR gmalloc(ULONG size)
 {
   APTR mem;
 
@@ -247,7 +218,7 @@ APTR allocArbitrateVecPooled(ULONG size)
 
 /***********************************************************************/
 
-void freeArbitrateVecPooled(APTR mem)
+void gfree(APTR mem)
 {
   ENTER();
 

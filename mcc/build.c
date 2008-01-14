@@ -1012,7 +1012,7 @@ buildBitMapsCyber(struct InstData *data)
     w = make->dw = data->image.width;
     h = make->dh = data->image.height;
 
-    if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheBar_DisMode_Sunny))
+    if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheBar_DisMode_Sunny) || (data->disMode==MUIV_TheBar_DisMode_BlendGrey))
         make->flags |= MFLG_Grey;
     make->flags |= MFLG_Cyber;
 
@@ -1248,7 +1248,7 @@ buildBitMaps(struct InstData *data)
     w = make->dw = image->width;
     h = make->dh = image->height;
 
-    if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheBar_DisMode_Sunny))
+    if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheBar_DisMode_Sunny) || (data->disMode==MUIV_TheBar_DisMode_BlendGrey))
         make->flags |= MFLG_Grey;
 
     if (flags & FLG_CyberMap) make->flags |= MFLG_Cyber;

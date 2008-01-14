@@ -308,7 +308,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 /***********************************************************************/
 
 static IPTR
-mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
+mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
   struct data *data = INST_DATA(cl,obj);
   IPTR result = 0;
@@ -317,13 +317,13 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 
   if(data->bar)
   {
-    result = DoMethod(data->bar, MUIM_CustomBackfill, msg->left,
-                                                      msg->top,
-                                                      msg->right,
-                                                      msg->bottom,
-                                                      msg->left+msg->xoffset,
-                                                      msg->top+msg->yoffset,
-                                                      0);
+    result = DoMethod(data->bar, MUIM_Backfill, msg->left,
+                                                msg->top,
+                                                msg->right,
+                                                msg->bottom,
+                                                msg->left+msg->xoffset,
+                                                msg->top+msg->yoffset,
+                                                0);
   }
   else
   {
@@ -355,7 +355,7 @@ DISPATCHER(DragBarDispatcher)
     case OM_SET:              return mSets(cl,obj,(APTR)msg);
     case MUIM_AskMinMax:      return mAskMinMax(cl,obj,(APTR)msg);
     case MUIM_Draw:           return mDraw(cl,obj,(APTR)msg);
-    case MUIM_CustomBackfill: return mCustomBackfill(cl,obj,(APTR)msg);
+    case MUIM_Backfill:       return mBackfill(cl,obj,(APTR)msg);
     case MUIM_Setup:          return mSetup(cl,obj,(APTR)msg);
     case MUIM_Cleanup:        return mCleanup(cl,obj,(APTR)msg);
     default:                  return DoSuperMethodA(cl,obj,msg);

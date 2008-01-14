@@ -30,8 +30,8 @@
 #define ALLOCRASTER(w,h)   AllocVec(RAWIDTH(w)*((UWORD)(h)),MEMF_CHIP|MEMF_CLEAR)
 #define FREERASTER(ra)     FreeVec(ra)
 
-#define ALLOCRASTERCG(w,h) allocArbitrateVecPooled(RAWIDTH(w)*((UWORD)(h)))
-#define FREERASTERCG(ra)   freeArbitrateVecPooled(ra)
+#define ALLOCRASTERCG(w,h) gmalloc(RAWIDTH(w)*((UWORD)(h)))
+#define FREERASTERCG(ra)   gfree(ra)
 
 /***********************************************************************/
 
@@ -114,11 +114,11 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (flags & MFLG_Grey)
     {
-        if (!(chunky = allocArbitrateVecPooled(size+size))) flags &= ~MFLG_Grey;
+        if (!(chunky = gmalloc(size+size))) flags &= ~MFLG_Grey;
     }
     else chunky = NULL;
 
-    if (!chunky) chunky = allocArbitrateVecPooled(size);
+    if (!chunky) chunky = gmalloc(size);
 
     if (chunky)
     {
@@ -130,7 +130,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
             {
                 ULONG len = RAWIDTH(w)*h;
 
-            	if((copy->mask = allocArbitrateVecPooled(len)))
+            	if((copy->mask = gmalloc(len)))
               {
                     alpha = copy->mask;
                     memset(alpha,0,len);
@@ -153,7 +153,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
             sce.dw = copy->dw;
             sce.dh = copy->dh;
 
-            //NewRawDoFmt("Scaling 1... \n",1,1,0);
+            D(DBF_STARTUP, "Scaling 1...");
             scale(&sce,image->data,chunky);
         }
         else
@@ -293,11 +293,11 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (flags & MFLG_Grey)
     {
-        if (!(chunky = allocArbitrateVecPooled(size+size))) flags &= ~MFLG_Grey;
+        if (!(chunky = gmalloc(size+size))) flags &= ~MFLG_Grey;
     }
     else chunky = NULL;
 
-    if (!chunky) chunky = allocArbitrateVecPooled(size);
+    if (!chunky) chunky = gmalloc(size);
 
     if (chunky)
     {
@@ -397,7 +397,7 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
         }
     }
 
-    if (flags & MFLG_Scaled) freeArbitrateVecPooled(from);
+    if (flags & MFLG_Scaled) gfree(from);
 
     return chunky;
 }
@@ -435,11 +435,11 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
 
     if (flags & MFLG_Grey)
     {
-        if (!(chunky = allocArbitrateVecPooled(size+size))) flags &= ~MFLG_Grey;
+        if (!(chunky = gmalloc(size+size))) flags &= ~MFLG_Grey;
     }
     else chunky = NULL;
 
-    if (!chunky) chunky = allocArbitrateVecPooled(size);
+    if (!chunky) chunky = gmalloc(size);
 
     if (chunky)
     {
@@ -466,7 +466,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
             sce.dw = copy->dw;
             sce.dh = copy->dh;
 
-            //NewRawDoFmt("Scaling 2... \n",1,1,0);
+            D(DBF_STARTUP, "Scaling 2...");
             scaleRGB(&sce,(ULONG *)image->data,(ULONG *)chunky);
         }
         else
@@ -536,9 +536,6 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
                             *gdest++ = v;
                             *gdest++ = v;
                         }
-
-                        //dest++;
-                        //src++;
 
                         *dest++ = *src++;
                         *dest++ = *src++;
@@ -714,7 +711,7 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (flags & MFLG_Scaled)
     {
-        if((from = allocArbitrateVecPooled(4*copy->dw*copy->dh)))
+        if((from = gmalloc(4*copy->dw*copy->dh)))
         {
             struct scale sce;
 
@@ -727,7 +724,7 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
             sce.dw = copy->dw;
             sce.dh = copy->dh;
 
-            //NewRawDoFmt("Scaling 3... \n",1,1,0);
+            D(DBF_STARTUP, "Scaling 3...");
             scaleRGB(&sce,(ULONG *)image->data,(ULONG *)from);
 
             w    = copy->dw;
@@ -753,11 +750,11 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (flags & MFLG_Grey)
     {
-        if (!(chunky = allocArbitrateVecPooled(size+size))) flags &= ~MFLG_Grey;
+        if (!(chunky = gmalloc(size+size))) flags &= ~MFLG_Grey;
     }
     else chunky = NULL;
 
-    if (!chunky) chunky = allocArbitrateVecPooled(size);
+    if (!chunky) chunky = gmalloc(size);
 
     if (chunky)
     {
@@ -832,7 +829,7 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
         }
     }
 
-    if (from!=image->data) freeArbitrateVecPooled(from);
+    if (from!=image->data) gfree(from);
 
     return chunky;
 }
@@ -850,11 +847,11 @@ getSource(struct MUIS_TheBar_Brush *image)
 
         if (image->flags & BRFLG_ARGB) size *= 4;
 
-        if (!(src = allocArbitrateVecPooled(size))) return NULL;
+        if (!(src = gmalloc(size))) return NULL;
 
         if(BRCUnpack(image->data,src,image->compressedSize,size))
         {
-            freeArbitrateVecPooled(src);
+            gfree(src);
             return NULL;
         }
     }
@@ -870,7 +867,7 @@ freeSource(struct MUIS_TheBar_Brush *image,UBYTE *back)
 {
     if (image->data && image->data!=back)
     {
-        freeArbitrateVecPooled(image->data);
+        gfree(image->data);
         image->data = back;
     }
 }
@@ -1072,7 +1069,7 @@ buildBitMapsCyber(struct InstData *data)
     ULONG  flags = data->flags;
     UWORD  w, h;
 
-    if (!(make = allocArbitrateVecPooled(sizeof(struct make)))) return;
+    if (!(make = gmalloc(sizeof(struct make)))) return;
     memset(make,0,sizeof(struct make));
 
     if (flags & FLG_Scaled)
@@ -1090,13 +1087,13 @@ buildBitMapsCyber(struct InstData *data)
     data->imgWidth  = make->dw = w;
     data->imgHeight = make->dh = h;
 
-    if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny))
+    if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny) || (data->disMode==MUIV_TheButton_DisMode_BlendGrey))
         make->flags |= MFLG_Grey;
     make->flags |= MFLG_Cyber;
 
     if (!makeSourcesRGB(data,make))
     {
-        freeArbitrateVecPooled(make);
+        gfree(make);
         return;
     }
 
@@ -1113,7 +1110,7 @@ buildBitMapsCyber(struct InstData *data)
         WritePixelArray(make->chunky,0,0,tw,&rport,0,0,w,h,RECTFMT_ARGB);
 
         data->mask = make->mask;
-        if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny))
+        if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny) || (data->disMode==MUIV_TheButton_DisMode_BlendGrey))
              data->greyBM = greyBitMapCyber(data,make->gchunky,w,h);
 
         if (make->schunky)
@@ -1126,7 +1123,7 @@ buildBitMapsCyber(struct InstData *data)
                 WritePixelArray(make->schunky,0,0,tw,&rport,0,0,w,h,RECTFMT_ARGB);
 
                 data->smask = make->smask;
-                if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny))
+                if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny) || (data->disMode==MUIV_TheButton_DisMode_BlendGrey))
                     data->sgreyBM = greyBitMapCyber(data,make->sgchunky,w,h);
             }
         }
@@ -1141,7 +1138,7 @@ buildBitMapsCyber(struct InstData *data)
                 WritePixelArray(make->dchunky,0,0,tw,&rport,0,0,w,h,RECTFMT_ARGB);
 
                 data->dmask = make->dmask;
-                if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny))
+                if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny) || (data->disMode==MUIV_TheButton_DisMode_BlendGrey))
                     data->dgreyBM = greyBitMapCyber(data,make->dgchunky,w,h);
             }
         }
@@ -1150,6 +1147,7 @@ buildBitMapsCyber(struct InstData *data)
     }
 
     #if defined(WITH_ALPHA)
+    D(DBF_STARTUP, "%lx", data->image->flags & BRFLG_AlphaMask);
     if (data->image->flags & BRFLG_AlphaMask)
     #else
     if (data->allowAlphaChannel && data->image->flags & BRFLG_AlphaMask)
@@ -1158,21 +1156,21 @@ buildBitMapsCyber(struct InstData *data)
 	    data->nchunky  = make->chunky;
     	data->gchunky  = make->gchunky;
 
-        data->snchunky = make->schunky;
+      data->snchunky = make->schunky;
 	    data->sgchunky = make->sgchunky;
 
-        data->dnchunky = make->dchunky;
+      data->dnchunky = make->dchunky;
     	data->dgchunky = make->dgchunky;
     }
     else
     {
     	// free unused chunky blocks
-		if (make->chunky)  freeArbitrateVecPooled(make->chunky);
-	    if (make->schunky) freeArbitrateVecPooled(make->schunky);
-		if (make->dchunky) freeArbitrateVecPooled(make->dchunky);
-	}
+  		if(make->chunky)  gfree(make->chunky);
+	    if(make->schunky) gfree(make->schunky);
+	  	if(make->dchunky) gfree(make->dchunky);
+  	}
 
-    freeArbitrateVecPooled(make);
+    gfree(make);
 }
 
 /***********************************************************************/
@@ -1306,7 +1304,7 @@ buildBitMaps(struct InstData *data)
     ULONG           flags = data->flags;
     UWORD           w, h;
 
-    if (!(make = allocArbitrateVecPooled(sizeof(struct make)))) return;
+    if (!(make = gmalloc(sizeof(struct make)))) return;
     memset(make,0,sizeof(struct make));
 
     if (flags & FLG_Scaled)
@@ -1324,13 +1322,13 @@ buildBitMaps(struct InstData *data)
     data->imgWidth  = make->dw = w;
     data->imgHeight = make->dh = h;
 
-    if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny))
+    if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny) || (data->disMode==MUIV_TheButton_DisMode_BlendGrey))
         make->flags |= MFLG_Grey;
     if (data->flags & FLG_CyberMap) make->flags |= MFLG_Cyber;
 
     if (!makeSources(data,make))
     {
-        freeArbitrateVecPooled(make);
+        gfree(make);
         return;
     }
 
@@ -1357,7 +1355,7 @@ buildBitMaps(struct InstData *data)
             data->dmask = make->dmask;
         }
 
-        if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny))
+        if ((flags & FLG_Sunny) || (data->disMode==MUIV_TheButton_DisMode_Sunny) || (data->disMode==MUIV_TheButton_DisMode_BlendGrey))
         {
             if (make->gchunky)
             {
@@ -1381,10 +1379,10 @@ buildBitMaps(struct InstData *data)
         WaitBlit();
     }
 
-    if (make->chunky)  freeArbitrateVecPooled(make->chunky);
-    if (make->schunky) freeArbitrateVecPooled(make->schunky);
-    if (make->dchunky) freeArbitrateVecPooled(make->dchunky);
-    freeArbitrateVecPooled(make);
+    if (make->chunky)  gfree(make->chunky);
+    if (make->schunky) gfree(make->schunky);
+    if (make->dchunky) gfree(make->dchunky);
+    gfree(make);
 }
 
 /***********************************************************************/
@@ -1464,13 +1462,13 @@ scaleBitMap(APTR src,struct scaleBitMap *scale,ULONG flags)
         bsa.bsa_SrcBitMap   = sbm;
         bsa.bsa_DestBitMap  = dbm;
 
-        /*NewRawDoFmt("Scaling 4 %ld %ld %ld %ld %ld %ld\n",1,1,
+        D(DBF_STARTUP, "Scaling 4 %ld %ld %ld %ld %ld %ld",
             bsa.bsa_SrcX,
             bsa.bsa_SrcY,
             bsa.bsa_SrcWidth,
             bsa.bsa_SrcHeight,
             bsa.bsa_XSrcFactor,
-            bsa.bsa_XDestFactor);*/
+            bsa.bsa_XDestFactor);
 
         BitMapScale(&bsa);
     }
@@ -1488,7 +1486,7 @@ scaleStripBitMaps(struct InstData *data)
         struct scaleBitMap scale;
         ULONG     flags;
 
-        //NewRawDoFmt("Scaling normal bitmap\n",1,1,0);
+        D(DBF_STARTUP, "Scaling normal bitmap");
 
         scale.sx  = data->image->left;
         scale.sy  = data->image->top;
@@ -1519,7 +1517,7 @@ scaleStripBitMaps(struct InstData *data)
                 if (data->strip->dmask) data->dmask = scaleBitMap(data->strip->dmask,&scale,flags | SCALEFLG_Mask);
             }
 
-            //NewRawDoFmt("Normal bitmap scaled %lx %lx \n",1,1,data->normalBM,data->mask);
+            D(DBF_STARTUP, "Normal bitmap scaled %lx %lx", data->normalBM,data->mask);
         }
 
         data->imgWidth  = scale.dw;
@@ -1545,19 +1543,19 @@ freeBitMaps(struct InstData *data)
   {
     if(data->nchunky)
     {
-      freeArbitrateVecPooled(data->nchunky);
+      gfree(data->nchunky);
       data->nchunky = NULL;
 	  }
 
     if(data->snchunky)
     {
-      freeArbitrateVecPooled(data->snchunky);
+      gfree(data->snchunky);
       data->snchunky = NULL;
     }
 
 	  if(data->dnchunky)
     {
-      freeArbitrateVecPooled(data->dnchunky);
+      gfree(data->dnchunky);
       data->dnchunky = NULL;
     }
   }
