@@ -254,6 +254,8 @@ enum
   MUIV_TheBar_DisMode_Grid,
   MUIV_TheBar_DisMode_FullGrid,
   MUIV_TheBar_DisMode_Sunny,
+  MUIV_TheBar_DisMode_Blend,
+  MUIV_TheBar_DisMode_BlendGrey,
 
   MUIV_TheBar_DisMode_Last,
 };
@@ -527,6 +529,8 @@ enum
   MUIV_TheButton_DisMode_Grid,
   MUIV_TheButton_DisMode_FullGrid,
   MUIV_TheButton_DisMode_Sunny,
+  MUIV_TheButton_DisMode_Blend,
+  MUIV_TheButton_DisMode_BlendGrey,
 
   MUIV_TheButton_DisMode_Last,
 };

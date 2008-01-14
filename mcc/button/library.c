@@ -103,8 +103,6 @@ static BOOL ClassInit(UNUSED struct Library *base)
       if((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
          GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
       {
-        STRPTR buf[16];
-
         // we open the cybgraphics.library but without failing if
         // it doesn't exist
         if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
@@ -121,11 +119,6 @@ static BOOL ClassInit(UNUSED struct Library *base)
           if(MUIMasterBase->lib_Version > MUIVER20 || MUIMasterBase->lib_Revision >= 5341)
             lib_flags |= BASEFLG_MUI4;
         }
-
-        if(GetVar("MUI/TheBarAlpha", (STRPTR)buf, sizeof(buf), GVF_GLOBAL_ONLY) > 0)
-    	    lib_alpha = strtoul((char*)buf, NULL, sizeof(buf));
-        else
-          lib_alpha = 0xffffffff;
 
         lib_flags |= BASEFLG_Init;
 

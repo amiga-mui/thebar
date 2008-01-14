@@ -5,6 +5,29 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2008-01-14  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: merged the major changes done in the mosmui4 branch onto our main
+    trunk and bumped our trunk version to v26. The major changes found on
+    the mosmui4 branch seem to be:
+    - new MUIV_TheButton_DisMode_Blend && MUIV_TheButton_DisMode_BlendGrey
+      value of the DisMode attribute.
+    - standard frame type for a button is now MUIV_Frame_Button
+    - use MUIA_FrameDynamic and disable MUIA_FrameVisible on MUI4 to care
+      for all the frame handling instead of doing frame stuff ourself.
+    - added own overloading backfill method (MUIM_Backfill)
+    - removed the ENV variable for setting the alpha channel value of EPAA
+      calls dynamically.
+    - default color precision is now "GUI" instead of "Image".
+    While the above changes seem to be only the major changes, there might
+    be some smaller ones I may have forgotten during the merge. So please
+    everyone please have a look what might not work anymore or not as
+    expected and report back. In addition, please every MUI4 user/developer
+    should have a look if the MUI4 changes applied to the main trunk work
+    now like with the old sources of the mosmui4 branch. And please stop
+    using thge mosmui4 branch. Every MUI4 specialities should be done using
+    a "if(lib_flags & BASEFLG_MUI4)" or respective #ifdef statement.
+
 2008-01-14  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/library.c: added missing PictureDTBase pointer.

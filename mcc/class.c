@@ -167,125 +167,132 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     attrs[19].ti_Tag  = MUIA_TheButton_ID;
     attrs[19].ti_Data = button->ID;
 
+    {
+        int i;
+
+        for (i = 20; i<31; attrs[i++].ti_Tag = TAG_IGNORE);
+
+    }
+
     if (button->help)
     {
-        attrs[20].ti_Tag  = MUIA_ShortHelp;
-        attrs[20].ti_Data = (IPTR)button->help;
+        attrs[30].ti_Tag  = MUIA_ShortHelp;
+        attrs[30].ti_Data = (IPTR)button->help;
     }
-    else attrs[20].ti_Tag = TAG_IGNORE;
+    else attrs[30].ti_Tag = TAG_IGNORE;
 
     if (flags & FLG_FreeStrip)
     {
-        attrs[21].ti_Tag  = MUIA_TheButton_Strip;
-        attrs[21].ti_Data = (IPTR)&data->strip;
+        attrs[31].ti_Tag  = MUIA_TheButton_Strip;
+        attrs[31].ti_Data = (IPTR)&data->strip;
     }
-    else attrs[21].ti_Tag = TAG_IGNORE;
+    else attrs[31].ti_Tag = TAG_IGNORE;
 
     if (userFlags || userFlags2)
     {
         if (userFlags & UFLG_UserHorizTextGfxSpacing)
         {
-            attrs[22].ti_Tag  = MUIA_TheButton_HorizTextGfxSpacing;
-            attrs[22].ti_Data = data->horizTextGfxSpacing;
-        }
-        else attrs[22].ti_Tag = TAG_IGNORE;
-
-        if (userFlags & UFLG_UserVertTextGfxSpacing)
-        {
-            attrs[23].ti_Tag  = MUIA_TheButton_VertTextGfxSpacing;
-            attrs[23].ti_Data = data->vertTextGfxSpacing;
-        }
-        else attrs[23].ti_Tag = TAG_IGNORE;
-
-        if (userFlags & UFLG_UserHorizInnerSpacing)
-        {
-            attrs[24].ti_Tag  = MUIA_TheButton_HorizInnerSpacing;
-            attrs[24].ti_Data = data->horizInnerSpacing;
-        }
-        else attrs[24].ti_Tag = TAG_IGNORE;
-
-        if (userFlags & UFLG_UserTopInnerSpacing)
-        {
-            attrs[25].ti_Tag  = MUIA_TheButton_TopInnerSpacing;
-            attrs[25].ti_Data = data->topInnerSpacing;
-        }
-        else attrs[25].ti_Tag = TAG_IGNORE;
-
-        if (userFlags & UFLG_UserBottomInnerSpacing)
-        {
-            attrs[26].ti_Tag  = MUIA_TheButton_BottomInnerSpacing;
-            attrs[26].ti_Data = data->bottomInnerSpacing;
-        }
-        else attrs[26].ti_Tag = TAG_IGNORE;
-
-        if (userFlags & UFLG_UserPrecision)
-        {
-            attrs[27].ti_Tag  = MUIA_TheButton_Precision;
-            attrs[27].ti_Data = data->precision;
-        }
-        else attrs[27].ti_Tag = TAG_IGNORE;
-
-        if (userFlags & UFLG_UserDisMode)
-        {
-            attrs[28].ti_Tag  = MUIA_TheButton_DisMode;
-            attrs[28].ti_Data = data->disMode;
-        }
-        else attrs[28].ti_Tag = TAG_IGNORE;
-
-        if (userFlags & UFLG_UserScale)
-        {
-            attrs[29].ti_Tag  = MUIA_TheButton_Scale;
-            attrs[29].ti_Data = data->scale;
-        }
-        else attrs[29].ti_Tag = TAG_IGNORE;
-
-        attrs[30].ti_Tag = TAG_IGNORE;
-
-        if (userFlags & UFLG_UserSpecialSelect)
-        {
-            attrs[31].ti_Tag  = MUIA_TheButton_SpecialSelect;
-            attrs[31].ti_Data = userFlags & UFLG_SpecialSelect;
-        }
-        else attrs[31].ti_Tag = TAG_IGNORE;
-
-        if (userFlags & UFLG_UserTextOverUseShine)
-        {
-            attrs[32].ti_Tag  = MUIA_TheButton_TextOverUseShine;
-            attrs[32].ti_Data = userFlags & UFLG_TextOverUseShine;
+            attrs[32].ti_Tag  = MUIA_TheButton_HorizTextGfxSpacing;
+            attrs[32].ti_Data = data->horizTextGfxSpacing;
         }
         else attrs[32].ti_Tag = TAG_IGNORE;
 
-        if (userFlags & UFLG_UserIgnoreSelImages)
+        if (userFlags & UFLG_UserVertTextGfxSpacing)
         {
-            attrs[33].ti_Tag  = MUIA_TheButton_IgnoreSelImages;
-            attrs[33].ti_Data = userFlags & UFLG_IgnoreSelImages;
+            attrs[33].ti_Tag  = MUIA_TheButton_VertTextGfxSpacing;
+            attrs[33].ti_Data = data->vertTextGfxSpacing;
         }
         else attrs[33].ti_Tag = TAG_IGNORE;
 
-        if (userFlags & UFLG_UserIgnoreDisImages)
+        if (userFlags & UFLG_UserHorizInnerSpacing)
         {
-            attrs[34].ti_Tag  = MUIA_TheButton_IgnoreDisImages;
-            attrs[34].ti_Data = userFlags & UFLG_IgnoreDisImages;
+            attrs[34].ti_Tag  = MUIA_TheButton_HorizInnerSpacing;
+            attrs[34].ti_Data = data->horizInnerSpacing;
         }
         else attrs[34].ti_Tag = TAG_IGNORE;
 
-        if (userFlags2 & UFLG2_UserDontMove)
+        if (userFlags & UFLG_UserTopInnerSpacing)
         {
-            attrs[35].ti_Tag  = MUIA_TheButton_DontMove;
-            attrs[35].ti_Data = userFlags2 & UFLG2_DontMove;
+            attrs[35].ti_Tag  = MUIA_TheButton_TopInnerSpacing;
+            attrs[35].ti_Data = data->topInnerSpacing;
         }
         else attrs[35].ti_Tag = TAG_IGNORE;
 
-        if (userFlags2 & UFLG2_NtRaiseActive)
+        if (userFlags & UFLG_UserBottomInnerSpacing)
         {
-            attrs[36].ti_Tag  = MUIA_TheButton_NtRaiseActive;
-            attrs[36].ti_Data = userFlags2 & UFLG2_NtRaiseActive;
+            attrs[36].ti_Tag  = MUIA_TheButton_BottomInnerSpacing;
+            attrs[36].ti_Data = data->bottomInnerSpacing;
         }
         else attrs[36].ti_Tag = TAG_IGNORE;
 
-        attrs[37].ti_Tag = TAG_DONE;
+        if (userFlags & UFLG_UserPrecision)
+        {
+            attrs[37].ti_Tag  = MUIA_TheButton_Precision;
+            attrs[37].ti_Data = data->precision;
+        }
+        else attrs[37].ti_Tag = TAG_IGNORE;
+
+        if (userFlags & UFLG_UserDisMode)
+        {
+            attrs[38].ti_Tag  = MUIA_TheButton_DisMode;
+            attrs[38].ti_Data = data->disMode;
+        }
+        else attrs[38].ti_Tag = TAG_IGNORE;
+
+        if (userFlags & UFLG_UserScale)
+        {
+            attrs[39].ti_Tag  = MUIA_TheButton_Scale;
+            attrs[39].ti_Data = data->scale;
+        }
+        else attrs[39].ti_Tag = TAG_IGNORE;
+
+        attrs[40].ti_Tag = TAG_IGNORE;
+
+        if (userFlags & UFLG_UserSpecialSelect)
+        {
+            attrs[41].ti_Tag  = MUIA_TheButton_SpecialSelect;
+            attrs[41].ti_Data = userFlags & UFLG_SpecialSelect;
+        }
+        else attrs[41].ti_Tag = TAG_IGNORE;
+
+        if (userFlags & UFLG_UserTextOverUseShine)
+        {
+            attrs[42].ti_Tag  = MUIA_TheButton_TextOverUseShine;
+            attrs[42].ti_Data = userFlags & UFLG_TextOverUseShine;
+        }
+        else attrs[42].ti_Tag = TAG_IGNORE;
+
+        if (userFlags & UFLG_UserIgnoreSelImages)
+        {
+            attrs[43].ti_Tag  = MUIA_TheButton_IgnoreSelImages;
+            attrs[43].ti_Data = userFlags & UFLG_IgnoreSelImages;
+        }
+        else attrs[43].ti_Tag = TAG_IGNORE;
+
+        if (userFlags & UFLG_UserIgnoreDisImages)
+        {
+            attrs[44].ti_Tag  = MUIA_TheButton_IgnoreDisImages;
+            attrs[44].ti_Data = userFlags & UFLG_IgnoreDisImages;
+        }
+        else attrs[44].ti_Tag = TAG_IGNORE;
+
+        if (userFlags2 & UFLG2_UserDontMove)
+        {
+            attrs[45].ti_Tag  = MUIA_TheButton_DontMove;
+            attrs[45].ti_Data = userFlags2 & UFLG2_DontMove;
+        }
+        else attrs[45].ti_Tag = TAG_IGNORE;
+
+        if (userFlags2 & UFLG2_NtRaiseActive)
+        {
+            attrs[46].ti_Tag  = MUIA_TheButton_NtRaiseActive;
+            attrs[46].ti_Data = userFlags2 & UFLG2_NtRaiseActive;
+        }
+        else attrs[46].ti_Tag = TAG_IGNORE;
+
+        attrs[47].ti_Tag = TAG_DONE;
     }
-    else attrs[22].ti_Tag = TAG_DONE;
+    else attrs[32].ti_Tag = TAG_DONE;
 
     if(button->class)
       return NewObjectA(button->class,NULL,attrs);
@@ -570,7 +577,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     lm->lm_MinMax.MinWidth  += data->leftBarFrameSpacing+data->rightBarFrameSpacing+2;
                     lm->lm_MinMax.MinHeight += data->topBarFrameSpacing+data->bottomBarFrameSpacing+2;
                 }
-      		#endif
+                #endif
 
                 lm->lm_MinMax.MaxWidth  = (data->flags & FLG_FreeHoriz) ? MUI_MAXMAX : lm->lm_MinMax.MinWidth;
                 lm->lm_MinMax.MaxHeight = (data->flags & FLG_FreeVert) ? MUI_MAXMAX : lm->lm_MinMax.MinHeight;
@@ -613,11 +620,11 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
               #else
               if(!(data->flags & FLG_Framed))
               {
-                  data->objWidth  = lm->lm_MinMax.MinWidth;
+                data->objWidth  = lm->lm_MinMax.MinWidth;
     	          data->objHeight = lm->lm_MinMax.MinHeight;
-    	      }
-	      #endif
-	     #endif
+    	        }
+	            #endif
+	          #endif
 
             data->lcols = cols;
             data->lrows = rows;
@@ -665,7 +672,6 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     case MUIV_TheBar_BarPos_Right:
                         #if defined(VIRTUAL)
                         x = ((ULONG)_mwidth(obj) > data->width) ? _mwidth(obj)-data->width : 0;
-                        //x = (_width(obj)>data->width) ? _width(obj)-data->width : 0;
                         #else
                         x = _mwidth(obj)-_minwidth(obj);
                         #endif
@@ -1848,7 +1854,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->cols      = pt.cols;
         data->rows      = pt.rows;
         #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-    	data->userFrame = pt.userFrame;
+        data->userFrame = pt.userFrame;
         #endif
         data->sortMsgID = MUIM_Group_Sort;
 
@@ -1948,16 +1954,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             {
                 if (pt.scale>=25 && pt.scale<=400) data->scale = pt.scale;
                 else userFlags &= ~UFLG_UserScale;
-            }
-
-            if (userFlags & UFLG_UserDisMode)
-            {
-                if (pt.disMode<MUIV_TheBar_DisMode_Last)
-                {
-                    data->disMode = pt.disMode;
-                    if (data->disMode==MUIV_TheBar_DisMode_Sunny) data->flags &= ~FLG_Sunny;
-                }
-                else userFlags &= ~UFLG_UserDisMode;
             }
 
             if (userFlags & UFLG_UserDisMode)
@@ -3171,7 +3167,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 /***********************************************************************/
 
 static IPTR
-mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
+mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
   IPTR result = 0;
@@ -4139,12 +4135,14 @@ DISPATCHER(_Dispatcher)
 
     case MUIM_Setup:                    return mSetup(cl,obj,(APTR)msg);
     case MUIM_Cleanup:                  return mCleanup(cl,obj,(APTR)msg);
+
     case MUIM_Show:                     return mShow(cl,obj,(APTR)msg);
     case MUIM_Hide:                     return mHide(cl,obj,(APTR)msg);
     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     case MUIM_Draw:                     return mDraw(cl,obj,(APTR)msg);
     #endif
-    case MUIM_CustomBackfill:           return mCustomBackfill(cl,obj,(APTR)msg);
+    case MUIM_Backfill:                 return mBackfill(cl,obj,(APTR)msg);
+
     case MUIM_CreateDragImage:          return mCreateDragImage(cl,obj,(APTR)msg);
     case MUIM_DeleteDragImage:          return mDeleteDragImage(cl,obj,(APTR)msg);
     case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);
