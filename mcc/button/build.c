@@ -1150,21 +1150,10 @@ buildBitMapsCyber(struct InstData *data)
     }
 
     #if defined(WITH_ALPHA)
-    //NewRawDoFmt("%lx\n",1,1,data->image->flags & BRFLG_AlphaMask);
-
     if (data->image->flags & BRFLG_AlphaMask)
-    {
-	    data->nchunky  = make->chunky;
-    	data->gchunky  = make->gchunky;
-
-        data->snchunky = make->schunky;
-	    data->sgchunky = make->sgchunky;
-
-        data->dnchunky = make->dchunky;
-    	data->dgchunky = make->dgchunky;
-    }
     #else
     if (data->allowAlphaChannel && data->image->flags & BRFLG_AlphaMask)
+    #endif
     {
 	    data->nchunky  = make->chunky;
     	data->gchunky  = make->gchunky;
@@ -1177,11 +1166,11 @@ buildBitMapsCyber(struct InstData *data)
     }
     else
     {
+    	// free unused chunky blocks
 		if (make->chunky)  freeArbitrateVecPooled(make->chunky);
 	    if (make->schunky) freeArbitrateVecPooled(make->schunky);
 		if (make->dchunky) freeArbitrateVecPooled(make->dchunky);
 	}
-    #endif
 
     freeArbitrateVecPooled(make);
 }

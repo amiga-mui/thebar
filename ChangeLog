@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2008-01-14  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c, mcc/button/build.c: fixed a memory leak.
+
 2008-01-12  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/brc1.c, mcc/button/brc1.c: rework to not use any goto statement and
