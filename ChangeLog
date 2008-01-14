@@ -7,6 +7,7 @@ $URL$
 
 2008-01-14  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/button/library.c: added missing PictureDTBase pointer.
   * mcc/build.c, mcc/button/build.c: fixed a memory leak.
 
 2008-01-12  Jens Langner <Jens.Langner@light-speed.de>
