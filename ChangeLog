@@ -7,6 +7,8 @@ $URL$
 
 2008-01-15  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/class.c: fixed two "type punned pointer violates strict alias rules"
+    warnings.
   * misc: added ENTER() and RETURN()/LEAVE() macros where they were still
     missing.
 
