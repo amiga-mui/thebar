@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2008-01-15  Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: added ENTER() and RETURN()/LEAVE() macros where they were still
+    missing.
+
 2008-01-14  Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: merged the major changes done in the mosmui4 branch onto our main

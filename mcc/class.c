@@ -49,22 +49,34 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     ULONG                    flags = data->flags, userFlags = data->userFlags, userFlags2 = data->userFlags2, bflags = button->flags, viewMode;
     struct TagItem           attrs[64];
 
+    ENTER();
+
     if (button->img==MUIV_TheBar_BarSpacer)
     {
-        return spacerObject,
+    	Object *spacer;
+
+        spacer = spacerObject,
             MUIA_Group_Horiz,                                                                    flags & FLG_Horiz,
             (userFlags & UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
             MUIA_TheButton_TheBar, obj,
         End;
+
+        RETURN(spacer);
+        return(spacer);
     }
     else if(button->img==MUIV_TheBar_ButtonSpacer)
     {
-      return spacerObject,
+      Object *spacer;
+
+      spacer = spacerObject,
                MUIA_Group_Horiz,                                                                    flags & FLG_Horiz,
                (flags & FLG_BarSpacer) ? TAG_IGNORE : MUIA_TheButton_Spacer,                        MUIV_TheButton_Spacer_Button,
                (userFlags & UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
                MUIA_TheButton_TheBar, obj,
       End;
+
+      RETURN(spacer);
+      return(spacer);
     }
     else if(button->img==MUIV_TheBar_ImageSpacer)
     {
@@ -86,15 +98,21 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
                (flags & FLG_FreeStrip) ? MUIA_TheButton_Strip : TAG_IGNORE, (IPTR)&data->strip,
           End))
       {
+        RETURN(o);
         return o;
       }
       else
       {
-        return spacerObject,
+        Object *spacer;
+
+        spacer = spacerObject,
                  MUIA_Group_Horiz,                                                                    flags & FLG_Horiz,
                  (userFlags & UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
                  MUIA_TheButton_TheBar, obj,
                End;
+
+        RETURN(spacer);
+        return spacer;
       }
     }
 
@@ -295,9 +313,12 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     else attrs[32].ti_Tag = TAG_DONE;
 
     if(button->class)
-      return NewObjectA(button->class,NULL,attrs);
+      o = NewObjectA(button->class,NULL,attrs);
     else
-      return MUI_NewObjectA((STRPTR)MUIC_TheButton,attrs);
+      o = MUI_NewObjectA((STRPTR)MUIC_TheButton,attrs);
+
+    RETURN(o);
+    return o;
 }
 
 

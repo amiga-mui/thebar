@@ -624,8 +624,14 @@ static LONG
 bestColor(struct palette *pal,ULONG rgb)
 {
     LONG p = addColor(pal,rgb);
+    LONG best;
 
-    return (p<0) ? calcPen(pal,rgb) : p;
+    ENTER();
+
+    best = (p<0) ? calcPen(pal,rgb) : p;
+
+    RETURN(best);
+    return best;
 }
 
 /***********************************************************************/

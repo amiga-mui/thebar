@@ -205,11 +205,19 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     struct TagItem *attrs = msg->ops_AttrList;
     ULONG          nflags, imode;
 
+    ENTER();
+
     if(GetTagData(MUIA_TheButton_MinVer, 0, attrs) > LIB_VERSION)
+    {
+      RETURN(0);
       return 0;
+    }
 
     if(!(pool = CreatePool(MEMF_ANY, 2048, 1024)))
+    {
+      RETURN(0);
       return 0;
+    }
 
     memset(&pack,0,sizeof(pack));
 
@@ -353,6 +361,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
       DeletePool(pool);
     }
 
+    RETURN(obj);
     return (IPTR)obj;
 }
 
@@ -511,6 +520,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     struct TagItem          *tstate;
     ULONG          redraw, setidcmp, back, sel, pressed, over;
     IPTR   res;
+
+    ENTER();
 
     redraw = setidcmp = back = sel = pressed = over = FALSE;
     vmt = rat = sct = sut = lpt = ekt = ract = NULL;
@@ -755,6 +766,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     if (ract) ract->ti_Tag = MUIA_TheButton_NtRaiseActive;
 
     if (over && data->tb) set(data->tb,MUIA_TheBar_MouseOver,data->id);
+
+    RETURN(res);
     return res;
 }
 
@@ -768,6 +781,8 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     APTR                    ptr;
     ULONG                   *val; // TODO: do we need IPTR here?
 
+    ENTER();
+
     // on non-MUI4 system we have to set the background spec
     // right before the initial setup and before the supermethod.
     if(!(lib_flags & BASEFLG_MUI4))
@@ -778,7 +793,11 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     }
 
     /* Super method */
-    if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
+    if (!DoSuperMethodA(cl,obj,msg))
+    {
+    	RETURN(FALSE);
+    	return FALSE;
+    }
 
     if (!(data->flags2 & FLG2_Limbo))
     {
@@ -1009,6 +1028,7 @@ B S R  FD  FV            FD = B * !S * R
     /* Done */
     data->flags |= FLG_Setup;
 
+    RETURN(FALSE);
     return TRUE;
 }
 
@@ -1019,8 +1039,11 @@ mBuild(struct IClass *cl,Object *obj,UNUSED Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
 
+  ENTER();
+
   build(data);
 
+  RETURN(0);
   return 0;
 }
 
@@ -1030,6 +1053,9 @@ static IPTR
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
+    IPTR result;
+
+    ENTER();
 
     if (!(data->flags2 & FLG2_Limbo))
     {
@@ -1048,7 +1074,10 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 
     data->flags &= ~(FLG_Setup|FLG_IsInVirtgroup);
 
-    return DoSuperMethodA(cl,obj,msg);
+    result = DoSuperMethodA(cl,obj,msg);
+
+    RETURN(result);
+    return result;
 }
 
 /***********************************************************************/
@@ -1107,6 +1136,8 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     UWORD       mw, mh;
+
+    ENTER();
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -1182,6 +1213,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
         msg->MinMaxInfo->MinWidth,msg->MinMaxInfo->DefWidth,msg->MinMaxInfo->MaxWidth,
         msg->MinMaxInfo->MinHeight,msg->MinMaxInfo->DefHeight,msg->MinMaxInfo->MaxHeight);
 
+    RETURN(0);
     return 0;
 }
 
@@ -1190,6 +1222,8 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 static void
 drawText(struct InstData *data,struct RastPort *rp)
 {
+    ENTER();
+
     if (data->labelLen)
     {
         Text(rp,(STRPTR)data->blabel,data->labelLen);
@@ -1209,6 +1243,8 @@ drawText(struct InstData *data,struct RastPort *rp)
             Move(rp,x,y);
         }
     }
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -1219,7 +1255,13 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     struct InstData    *data = INST_DATA(cl,obj);
     ULONG          flags = data->flags;
 
-    if (flags & FLG_RedrawBack) return 0;
+    ENTER();
+
+    if (flags & FLG_RedrawBack)
+    {
+    	RETURN(0);
+    	return 0;
+    }
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -1846,6 +1888,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         }
     }
 
+    RETURN(0);
     return 0;
 }
 
@@ -1857,7 +1900,6 @@ mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
   struct InstData *data = INST_DATA(cl,obj);
 
   ENTER();
-
 
   if(data->flags2 & FLG2_Special)
   {
@@ -2171,13 +2213,20 @@ static IPTR
 mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
+    IPTR result;
+
+    ENTER();
 
     if(data->flags & FLG_Selected)
     {
         Object *p = NULL;
 
         get(obj,MUIA_Parent,&p);
-        if (!p) return 0;
+        if (!p)
+        {
+        	RETURN(0);
+        	return 0;
+        }
 
         DoMethod(p,MUIM_DrawBackground,
             msg->left,
@@ -2188,10 +2237,14 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
             msg->top+msg->yoffset,
             0);
 
+        RETURN(0);
         return 0;
     }
 
-    return DoSuperMethodA(cl,obj,(Msg)msg);
+    result = DoSuperMethodA(cl,obj,(Msg)msg);
+
+    RETURN(result);
+    return result;
 }
 
 /***********************************************************************/

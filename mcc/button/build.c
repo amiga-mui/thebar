@@ -96,6 +96,8 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
     ULONG flags = copy->flags, size, maskDone = FALSE;
     UWORD w, h;
 
+    ENTER();
+
     copy->mask = NULL;
     copy->grey = NULL;
 
@@ -247,6 +249,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
         }
     }
 
+    RETURN(chunky);
     return chunky;
 }
 
@@ -258,6 +261,8 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
     UBYTE *from, *chunky;
     ULONG flags = copy->flags, size;
     UWORD w, h, left, top, tsw;
+
+    ENTER();
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -399,6 +404,7 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (flags & MFLG_Scaled) gfree(from);
 
+    RETURN(chunky);
     return chunky;
 }
 
@@ -415,6 +421,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
     UBYTE *chunky;
     ULONG flags = copy->flags, size, maskDone = FALSE;
     UWORD w, h;
+
+    ENTER();
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -630,6 +638,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
         }
     }
 
+    RETURN(chunky);
     return chunky;
 }
 
@@ -640,6 +649,8 @@ calcPen(struct palette *pal,ULONG rgb)
 {
     ULONG i, d, bestd = 196000;
     UWORD besti = 0, r, g, b, dr, dg, db;
+
+    ENTER();
 
     r = (rgb & 0xff0000) >> 16;
     g = (rgb & 0x00ff00) >> 8;
@@ -660,6 +671,7 @@ calcPen(struct palette *pal,ULONG rgb)
         }
     }
 
+    RETURN(besti);
     return besti;
 }
 
@@ -669,9 +681,15 @@ addColor(struct palette *pal,ULONG rgb)
     LONG p;
     ULONG i;
 
+    ENTER();
+
     for (i = 0; i<pal->numColors; i++)
     {
-        if (pal->colors[i]==rgb) return i;
+        if (pal->colors[i]==rgb)
+        {
+        	RETURN(i);
+        	return i;
+       	}
     }
 
     if (pal->numColors<pal->maxColors)
@@ -681,6 +699,7 @@ addColor(struct palette *pal,ULONG rgb)
     }
     else p = -1;
 
+    RETURN(p);
     return p;
 }
 
@@ -688,8 +707,14 @@ static LONG
 bestColor(struct palette *pal,ULONG rgb)
 {
     LONG p = addColor(pal,rgb);
+    LONG best;
 
-    return (p<0) ? calcPen(pal,rgb) : p;
+    ENTER();
+
+    best = (p<0) ? calcPen(pal,rgb) : p;
+
+    RETURN(best);
+    return best;
 }
 
 /***********************************************************************/
@@ -700,6 +725,8 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
     UBYTE *from, *chunky;
     ULONG flags = copy->flags, size;
     UWORD w, h, left, top, tsw;
+
+    ENTER();
 
     copy->mask = NULL;
     copy->grey = NULL;
@@ -831,6 +858,7 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (from!=image->data) gfree(from);
 
+    RETURN(chunky);
     return chunky;
 }
 
@@ -841,22 +869,30 @@ getSource(struct MUIS_TheBar_Brush *image)
 {
     BYTE *src;
 
+    ENTER();
+
     if (image->compressedSize)
     {
         ULONG size = image->dataTotalWidth*image->dataHeight;
 
         if (image->flags & BRFLG_ARGB) size *= 4;
 
-        if (!(src = gmalloc(size))) return NULL;
+        if (!(src = gmalloc(size)))
+        {
+        	RETURN(NULL);
+        	return NULL;
+        }
 
         if(BRCUnpack(image->data,src,image->compressedSize,size))
         {
             gfree(src);
+            RETURN(NULL);
             return NULL;
         }
     }
     else src = image->data;
 
+    RETURN(src);
     return src;
 }
 
@@ -865,11 +901,15 @@ getSource(struct MUIS_TheBar_Brush *image)
 static void
 freeSource(struct MUIS_TheBar_Brush *image,UBYTE *back)
 {
+    ENTER();
+
     if (image->data && image->data!=back)
     {
         gfree(image->data);
         image->data = back;
     }
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -877,6 +917,8 @@ freeSource(struct MUIS_TheBar_Brush *image,UBYTE *back)
 static ULONG
 makeSources(struct InstData *data,struct make *make)
 {
+    ENTER();
+
     if (data->image->data)
     {
         struct copy    copy;
@@ -901,7 +943,11 @@ makeSources(struct InstData *data,struct make *make)
         else make->chunky = LUT8ToLUT8(data->image,&copy);
 
         freeSource(data->image,back);
-        if (!make->chunky) return FALSE;
+        if (!make->chunky)
+        {
+        	RETURN(FALSE);
+        	return FALSE;
+        }
 
         make->mask    = copy.mask;
         make->gchunky = copy.grey;
@@ -950,9 +996,11 @@ makeSources(struct InstData *data,struct make *make)
             else data->image->data = back;
         }
 
+		RETURN(TRUE);
         return TRUE;
     }
 
+    RETURN(FALSE);
     return FALSE;
 }
 
@@ -961,6 +1009,8 @@ makeSources(struct InstData *data,struct make *make)
 static ULONG
 makeSourcesRGB(struct InstData *data,struct make *make)
 {
+    ENTER();
+
     if (data->image->data)
     {
         struct copy    copy;
@@ -985,7 +1035,11 @@ makeSourcesRGB(struct InstData *data,struct make *make)
 
 
         freeSource(data->image,back);
-        if (!make->chunky) return FALSE;
+        if (!make->chunky)
+        {
+        	RETURN(FALSE);
+        	return FALSE;
+        }
 
         make->mask    = copy.mask;
         make->gchunky = copy.grey;
@@ -1030,9 +1084,11 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             else data->dimage->data = back;
         }
 
+        RETURN(TRUE);
         return TRUE;
     }
 
+    RETURN(FALSE);
     return FALSE;
 }
 
@@ -1042,6 +1098,8 @@ static struct BitMap *
 greyBitMapCyber(struct InstData *data,UBYTE *chunky,UWORD w,UWORD h)
 {
     struct BitMap *dest;
+
+    ENTER();
 
     if (chunky)
     {
@@ -1057,6 +1115,7 @@ greyBitMapCyber(struct InstData *data,UBYTE *chunky,UWORD w,UWORD h)
     }
     else dest = NULL;
 
+    RETURN(dest);
     return dest;
 }
 
@@ -1069,7 +1128,13 @@ buildBitMapsCyber(struct InstData *data)
     ULONG  flags = data->flags;
     UWORD  w, h;
 
-    if (!(make = gmalloc(sizeof(struct make)))) return;
+    ENTER();
+
+    if (!(make = gmalloc(sizeof(struct make))))
+    {
+    	LEAVE();
+    	return;
+    }
     memset(make,0,sizeof(struct make));
 
     if (flags & FLG_Scaled)
@@ -1094,6 +1159,7 @@ buildBitMapsCyber(struct InstData *data)
     if (!makeSourcesRGB(data,make))
     {
         gfree(make);
+        LEAVE();
         return;
     }
 
@@ -1171,6 +1237,8 @@ buildBitMapsCyber(struct InstData *data)
   	}
 
     gfree(make);
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -1187,6 +1255,8 @@ LUT8ToBitMap(struct InstData *data,
 {
     struct BitMap *dest;
     UWORD	    d;
+
+    ENTER();
 
     if (data->screenDepth>8) d = 8;
     else d = data->screenDepth;
@@ -1238,6 +1308,7 @@ LUT8ToBitMap(struct InstData *data,
         else WriteChunkyPixels(&rport,0,0,width-1,height-1,src,width);
     }
 
+    RETURN(dest);
     return dest;
 }
 
@@ -1253,11 +1324,14 @@ greyBitMap(struct InstData *data,
            ULONG RGB8,
            struct pen *pens)
 {
+    ENTER();
+
     if (src)
     {
         ULONG greyColors[3*256];
         ULONG *gc;
         int   i;
+        struct BitMap *bm;
 
         gc = greyColors;
 
@@ -1288,9 +1362,13 @@ greyBitMap(struct InstData *data,
             *gc++ = gcol;
         }
 
-        return LUT8ToBitMap(data,src,width,height,greyColors,numColors,0,pens);
+        bm = LUT8ToBitMap(data,src,width,height,greyColors,numColors,0,pens);
+
+        RETURN(bm);
+        return bm;
     }
 
+	RETURN(NULL);
     return NULL;
 }
 
@@ -1304,7 +1382,14 @@ buildBitMaps(struct InstData *data)
     ULONG           flags = data->flags;
     UWORD           w, h;
 
-    if (!(make = gmalloc(sizeof(struct make)))) return;
+    ENTER();
+
+    if (!(make = gmalloc(sizeof(struct make))))
+    {
+    	LEAVE();
+    	return;
+    }
+
     memset(make,0,sizeof(struct make));
 
     if (flags & FLG_Scaled)
@@ -1329,6 +1414,7 @@ buildBitMaps(struct InstData *data)
     if (!makeSources(data,make))
     {
         gfree(make);
+        LEAVE();
         return;
     }
 
@@ -1383,6 +1469,8 @@ buildBitMaps(struct InstData *data)
     if (make->schunky) gfree(make->schunky);
     if (make->dchunky) gfree(make->dchunky);
     gfree(make);
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -1414,6 +1502,8 @@ scaleBitMap(APTR src,struct scaleBitMap *scale,ULONG flags)
     struct BitMap *sbm=NULL;
     struct BitMap *dbm=NULL;
     APTR          dest;
+
+    ENTER();
 
     if (flags & SCALEFLG_Mask)
     {
@@ -1473,6 +1563,7 @@ scaleBitMap(APTR src,struct scaleBitMap *scale,ULONG flags)
         BitMapScale(&bsa);
     }
 
+	RETURN(dest);
     return dest;
 }
 
@@ -1481,6 +1572,8 @@ scaleBitMap(APTR src,struct scaleBitMap *scale,ULONG flags)
 void
 scaleStripBitMaps(struct InstData *data)
 {
+    ENTER();
+
     if (data->strip->normalBM)
     {
         struct scaleBitMap scale;
@@ -1523,6 +1616,8 @@ scaleStripBitMaps(struct InstData *data)
         data->imgWidth  = scale.dw;
         data->imgHeight = scale.dh;
     }
+
+    LEAVE();
 }
 
 /***********************************************************************/
@@ -1726,6 +1821,8 @@ freeBitMaps(struct InstData *data)
 void
 build(struct InstData *data)
 {
+    ENTER();
+
     if (data->image)
     {
         if (data->flags & FLG_Strip)
@@ -1737,6 +1834,7 @@ build(struct InstData *data)
             #endif
             {
                 buildBitMapsCyber(data);
+                LEAVE();
                 return;
             }
 
@@ -1762,6 +1860,8 @@ build(struct InstData *data)
             else buildBitMaps(data);
         }
     }
+
+    LEAVE();
 }
 
 /***********************************************************************/
