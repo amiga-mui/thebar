@@ -202,7 +202,7 @@ APTR allocVecPooled(APTR pool, ULONG size)
 void freeVecPooled(APTR pool, APTR mem)
 {
 #if defined(__amigaos4__) || defined(__MORPHOS__)
-  return FreeVecPooled(pool, mem);
+  FreeVecPooled(pool, mem);
 #else
   ENTER();
 

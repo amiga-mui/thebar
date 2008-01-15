@@ -74,7 +74,7 @@ void
 freeVecPooled(APTR pool,APTR mem)
 {
 #if defined(__amigaos4__) || defined(__MORPHOS__)
-  return FreeVecPooled(pool, mem);
+  FreeVecPooled(pool, mem);
 #else
   FreePooled(pool,(LONG *)mem-1,*((LONG *)mem-1));
 #endif
