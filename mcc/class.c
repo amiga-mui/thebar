@@ -3396,7 +3396,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         node = node->mln_Succ;
 
         // now we set the notify as we have identifed the button
-        DoMethodA(button->obj, (Msg)&notify->msg);
+        DoMethodA(button->obj, (Msg)(void *)&notify->msg);
 
         // remove the clone notify from the list
         Remove((struct Node *)notify);
@@ -3810,7 +3810,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
             node = node->mln_Succ;
 
             // now we set the notify as we have identifed the button
-            DoMethodA(bt->obj, (Msg)&notify->msg);
+            DoMethodA(bt->obj, (Msg)(void *)&notify->msg);
 
             // remove the clone notify from the list
             Remove((struct Node *)notify);
