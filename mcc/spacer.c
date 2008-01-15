@@ -90,6 +90,8 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
   struct data *data = INST_DATA(cl,obj);
   BOOL result = FALSE;
 
+  ENTER();
+
   switch (msg->opg_AttrID)
   {
     case MUIA_TheButton_Spacer: *msg->opg_Storage = (data->flags & FLG_SP_Bar) ? MUIV_TheButton_Spacer_Bar : MUIV_TheButton_Spacer_Button; result=TRUE; break;
@@ -361,6 +363,7 @@ BOOPSI_DISPATCHER_END
 BOOL initSpacerClass(void)
 {
   BOOL result = FALSE;
+
   ENTER();
 
   if((lib_spacerClass = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Area, NULL, sizeof(struct data), ENTRY(SpacerDispatcher))))

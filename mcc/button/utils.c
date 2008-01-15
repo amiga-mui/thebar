@@ -96,6 +96,8 @@ void stripUnderscore(STRPTR dest, STRPTR from, ULONG mode)
 
 static int stcd_l(const char *in, long *value)
 {
+  ENTER();
+
   if(in)
   {
     char *ptr;
@@ -115,6 +117,7 @@ static int stcd_l(const char *in, long *value)
       case '8':
       case '9':
         *value = strtol(in, &ptr, 10);
+        RETURN(ptr - in);
         return ptr - in;
       break;
     }
@@ -122,6 +125,7 @@ static int stcd_l(const char *in, long *value)
 
   *value = 0;
 
+  RETURN(0);
   return 0;
 }
 
@@ -176,6 +180,9 @@ struct TextFont *openFont(STRPTR name)
 
 APTR allocVecPooled(APTR pool, ULONG size)
 {
+#if defined(__amigaos4__) || defined(__MORPHOS__)
+  return AllocVecPooled(pool, size);
+#else
   ULONG *mem;
 
   ENTER();
@@ -187,17 +194,22 @@ APTR allocVecPooled(APTR pool, ULONG size)
 
   RETURN(mem);
   return mem;
+#endif
 }
 
 /****************************************************************************/
 
 void freeVecPooled(APTR pool, APTR mem)
 {
+#if defined(__amigaos4__) || defined(__MORPHOS__)
+  return FreeVecPooled(pool, mem);
+#else
   ENTER();
 
   FreePooled(pool, (LONG *)mem-1, *((LONG *)mem-1));
 
   LEAVE();
+#endif
 }
 
 /***********************************************************************/
