@@ -116,9 +116,15 @@ static int stcd_l(const char *in, long *value)
       case '7':
       case '8':
       case '9':
+      {
+        int ret;
+
         *value = strtol(in, &ptr, 10);
-        RETURN(ptr - in);
-        return ptr - in;
+        ret = ptr-in;
+
+        RETURN(ret);
+        return ret;
+      }
       break;
     }
   }
