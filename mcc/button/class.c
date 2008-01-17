@@ -482,16 +482,18 @@ addRemEventHandler(struct IClass *cl, Object *obj, struct InstData *data)
 #define _between(a,x,b)      ((x)>=(a) && (x)<=(b))
 #define _isinobject(obj,x,y) (_between(_left(obj),(x),_right(obj)) && _between(_top(obj),(y),_bottom(obj)))
 
-static ULONG
+static BOOL
 checkIn(Object *obj,struct InstData *data,WORD x,WORD y)
 {
-  ULONG in;
+  BOOL in = FALSE;
 
   ENTER();
 
   if((in = _isinobject(obj,x,y)) && (data->flags & FLG_IsInVirtgroup))
   {
     Object *p = obj;
+
+    in = TRUE;
 
     for (;;)
     {
