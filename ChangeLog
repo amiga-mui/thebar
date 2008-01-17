@@ -7,6 +7,7 @@ $URL$
 
 2008-01-17  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/button/class.c: changed variable type for checkIn() result usage.
   * mcc/button/class.c: fixed possibly random return value of checkIn().
 
 2008-01-15  Thore Böckelmann <tboeckel@gmx.de>
