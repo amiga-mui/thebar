@@ -1926,7 +1926,7 @@ mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 
         default:
         {
-          ULONG in = xget(_win(obj), MUIA_Window_Activate);
+          BOOL in = xget(_win(obj), MUIA_Window_Activate);
 
           if(in)
             in = checkIn(obj,data,msg->imsg->MouseX,msg->imsg->MouseY);
