@@ -2,13 +2,12 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id$
-$URL$
+2008-01-16  Alfonso Ranieri <alforan@tin.it>
 
-2008-01-17  Thore Böckelmann <tboeckel@gmx.de>
-
-  * mcc/button/class.c: changed variable type for checkIn() result usage.
-  * mcc/button/class.c: fixed possibly random return value of checkIn().
+  * mcc/class.c: pics are now load in a different order
+    that should be the natural order of loading since
+    the beginning but I was too lazy to do that :P
+    I will update documentation asap
 
 2008-01-15  Thore Böckelmann <tboeckel@gmx.de>
 
