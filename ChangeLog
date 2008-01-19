@@ -5,6 +5,9 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2008-01-19  Alfonso Ranieri <alforan@tin.it>
+  * Various docs update
+
 2008-01-17  Alfonso Ranieri <alforan@tin.it>
 
   * mcc/class.c: pics are now load in a different order
