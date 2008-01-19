@@ -1,28 +1,24 @@
-#ifndef _THEBAR_MCC_H_
-#define _THEBAR_MCC_H_
+#ifndef THEBAR_MCC_H
+#define THEBAR_MCC_H
 
-/***************************************************************************
-
- TheBar.mcc - Next Generation Toolbar MUI Custom Class
- Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- TheBar class Support Site:  http://www.sf.net/projects/thebar
-
- $Id$
- $URL$
-
-***************************************************************************/
+/*
+** TheBar.mcc - Next Generation Toolbar MUI Custom Class
+** Copyright (C) 2003-2008 Alfonso Ranieri
+**
+** TheBar is developed by TheBar.mcc Open Source Team
+**
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Lesser General Public
+** License as published by the Free Software Foundation; either
+** version 2.1 of the License, or (at your option) any later version.
+**
+** This library is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+** Lesser General Public License for more details.
+**
+** TheBar class Support Site: http://www.sf.net/projects/thebar
+**/
 
 #ifndef LIBRARIES_MUI_H
 #include <libraries/mui.h>
@@ -106,12 +102,24 @@ struct MUIP_TheBar_Notify          { STACKED ULONG MethodID; STACKED ULONG ID; S
 struct MUIP_TheBar_KillNotify      { STACKED ULONG MethodID; STACKED ULONG ID; STACKED Tag attr; STACKED Object *dest; };
 
 /* MUIM_TheBar_SetAttr, MUIM_TheBar_GetAttr attributes */
-#define MUIA_TheBar_Attr_Hide      (TBTAGBASE+0) /* v11 */
-#define MUIA_TheBar_Attr_Sleep     (TBTAGBASE+1) /* v11 */
-#define MUIA_TheBar_Attr_Disabled  (TBTAGBASE+2) /* v11 */
-#define MUIA_TheBar_Attr_Selected  (TBTAGBASE+3) /* v11 */
+#define MUIV_TheBar_Attr_Hide      (TBTAGBASE+0) /* v11 */
+#define MUIV_TheBar_Attr_Sleep     (TBTAGBASE+1) /* v11 */
+#define MUIV_TheBar_Attr_Disabled  (TBTAGBASE+2) /* v11 */
+#define MUIV_TheBar_Attr_Selected  (TBTAGBASE+3) /* v11 */
+
+/*
+** Compatibility: the above are not "real" attributes,
+** but just arguments of a method, so they must be MUIV_
+*/
+#define MUIA_TheBar_Attr_Hide      MUIV_TheBar_Attr_Hide
+#define MUIA_TheBar_Attr_Sleep     MUIV_TheBar_Attr_Sleep
+#define MUIA_TheBar_Attr_Disabled  MUIV_TheBar_Attr_Disabled
+#define MUIA_TheBar_Attr_Selected  MUIV_TheBar_Attr_Selected
 
 /* MUIM_Notify special Qualifier value */
+/*
+** This was a bad idea. Don't use it!
+*/
 #define MUIV_TheBar_Qualifier      (0x49893135)  /* v21 */
 
 /***********************************************************************/
@@ -554,4 +562,4 @@ enum
   #endif
 #endif
 
-#endif /* _THEBAR_MCC_H_ */
+#endif /* THEBAR_MCC_H */
