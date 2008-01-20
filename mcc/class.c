@@ -1532,20 +1532,22 @@ makePicsFun(struct pack *pt,
     ULONG pics = FALSE;
     UWORD nbr = 0;
 
+    ENTER();
+
     sb->data = ssb->data = dsb->data = NULL;
 
 	if (dostrip || pt->strip || pt->pics)
     {
         struct Process *me;
         struct Window  *win;
-        BPTR           idrawer, odir = NULL;
+        BPTR           idrawer, odir = (BPTR)NULL;
 
         me  = (struct Process *)FindTask(NULL);
         win = me->pr_WindowPtr;
         me->pr_WindowPtr = (struct Window *)-1;
 
         if (pt->idrawer && (idrawer = Lock(pt->idrawer,SHARED_LOCK))) odir = CurrentDir(idrawer);
-        else idrawer = NULL;
+        else idrawer = (BPTR)NULL;
 
         if (dostrip || pt->strip)
         {
@@ -1806,7 +1808,8 @@ makePicsFun(struct pack *pt,
 
 	if (pics) *nbrPtr = nbr;
 
-	return pics;
+	RETURN(pics);
+    return pics;
 }
 
 static ULONG
@@ -1818,6 +1821,8 @@ makePics(struct pack *pt,
 		 UWORD *nbrPtr)
 {
     ULONG pics;
+
+    ENTER();
 
     pics = makePicsFun(pt,pool,FALSE,sb,ssb,dsb,nbrPtr);
     if (!pics && pt->stripBrush) pics = makePicsFun(pt,pool,TRUE,sb,ssb,dsb,nbrPtr);
@@ -1834,6 +1839,7 @@ makePics(struct pack *pt,
         pics = TRUE;
     }
 
+    RETURN(pics);
     return pics;
 }
 
