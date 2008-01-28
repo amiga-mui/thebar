@@ -2,8 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id$
-$URL$
+2008-01-28  Alfonso Ranieri <alforan@tin.it>
+
+  * Fixed MUIM_TheButton_Build called on TheBar object in Hide and Sleep
+    of TheBar mcc
 
 2008-01-20  Thore Böckelmann <tboeckel@gmx.de>
 
