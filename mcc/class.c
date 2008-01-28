@@ -3696,7 +3696,7 @@ hideButton(struct IClass *cl,Object *obj,struct InstData *data,struct Button *bt
 
         if (data->flags & FLG_Setup)
         {
-            if (data->flags & FLG_FreeStrip) DoMethod(obj,MUIM_TheButton_Build);
+            if (data->flags & FLG_FreeStrip) DoMethod(bt->obj,MUIM_TheButton_Build);
             DoMethod(obj,MUIM_Group_ExitChange);
         }
     }
@@ -3817,8 +3817,8 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
 
           if(data->flags & FLG_Setup)
           {
-            if(data->flags & FLG_FreeStrip)
-              DoMethod(obj,MUIM_TheButton_Build);
+            if((data->flags & FLG_FreeStrip) && bt->obj)
+              DoMethod(bt->obj,MUIM_TheButton_Build);
 
             DoMethod(obj,MUIM_Group_ExitChange);
           }
