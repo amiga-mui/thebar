@@ -346,6 +346,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             data->labelLen = strlen((char *)data->blabel);
         }
 
+        if((data->flags & FLG_Borderless) && (data->userFlags & UFLG_NtRaiseActive))
+          SetSuperAttrs(cl, obj, MUIA_ShowSelState, FALSE, MUIA_NoNotify, TRUE, TAG_DONE);
+
         // cleanup the notifyList
         NewList((struct List *)&data->notifyList);
 
@@ -535,7 +538,10 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         switch(tag->ti_Tag)
         {
             case MUIA_TheButton_MouseOver:
-                if (BOOLSAME(tidata,data->flags & FLG_MouseOver)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata,data->flags & FLG_MouseOver))
+                {
+                  tag->ti_Tag = TAG_IGNORE;
+                }
                 else
                 {
                     if (tidata)
@@ -544,6 +550,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                         over = TRUE;
                     }
                     else data->flags &= ~FLG_MouseOver;
+
                     back = TRUE;
                 }
                 break;
@@ -592,7 +599,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                         SetSuperAttrs(cl,obj,MUIA_Selected,     tidata,
                                              MUIA_FrameDynamic, tidata  ? FALSE : ((data->flags & FLG_Raised) ? TRUE : FALSE),
                                              MUIA_FrameVisible, !tidata ? FALSE : ((data->userFlags & UFLG_NtRaiseActive) ? FALSE : TRUE),
-                                             MUIA_ShowSelState, tidata,
+                                             MUIA_ShowSelState, (data->userFlags & UFLG_NtRaiseActive) ? FALSE : tidata,
                                              TAG_DONE);
                     }
                 }
@@ -720,7 +727,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 if ((data->flags & (FLG_Borderless|FLG_Sunny)) && !tidata)
                 {
                     pressed = back = TRUE;
-                    data->flags &= ~FLG_MouseOver;
+                    //data->flags &= ~FLG_MouseOver;
                 }
                 break;
         }
@@ -730,13 +737,29 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     {
         addRemEventHandler(cl,obj,data);
 
-        if (data->flags & FLG_Disabled) data->flags &= ~FLG_MouseOver;
+        if (data->flags & FLG_Disabled)
+        {
+          data->flags &= ~FLG_MouseOver;
+
+          //if ((data->flags & (FLG_Raised|FLG_Sunny)) && (data->flags & FLG_Borderless))
+          //  SetSuperAttrs(cl,obj,MUIA_FrameVisible,FALSE,TAG_DONE);
+        }
         else
             if (data->flags & FLG_Visible)
             {
-                if (checkIn(obj,data,_window(obj)->MouseX,_window(obj)->MouseY)) data->flags |= FLG_MouseOver;
-                else data->flags &= ~FLG_MouseOver;
+                /*if (checkIn(obj,data,_window(obj)->MouseX,_window(obj)->MouseY)) data->flags |= FLG_MouseOver;
+                else data->flags &= ~FLG_MouseOver;*/
                 back = TRUE;
+
+                data->flags &= ~FLG_MouseOver;
+
+                /*if ((data->flags & FLG_Raised) && (data->flags & (FLG_MouseOver))
+                {
+                  SetSuperAttrs(cl,obj, MUIA_FrameDynamic, TRUE,
+                                        MUIA_FrameVisible, TRUE,
+                                      //((data->userFlags & UFLG_NtRaiseActive) && (data->flags & FLG_MouseOver)) ? TRUE : FALSE,
+                                        TAG_DONE);
+                }*/
             }
     }
 
@@ -744,13 +767,19 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     {
         if (back)
         {
-            if (!(data->flags & FLG_Disabled))
-                if ((data->flags & FLG_Raised) && (data->flags & FLG_MouseOver))
-                    if (pressed ||(data->flags & FLG_Selected)) nnsuperset(cl,obj,MUIA_Background,"");
-                    else nnsuperset(cl,obj,MUIA_Background,data->activeBack);
-                else nnsuperset(cl,obj,MUIA_Background,"");
+            //if (data->flags & FLG_Sunny)
+            //    data->flags |= FLG_RedrawBack;
+
+            if (!(data->flags & FLG_Disabled) && (data->flags & FLG_Raised) && (data->flags & FLG_MouseOver) && !(pressed || (data->flags & FLG_Selected)))
+                nnsuperset(cl,obj,MUIA_Background,data->activeBack);
             else nnsuperset(cl,obj,MUIA_Background,"");
         }
+    }
+
+    if (setidcmp)
+    {
+        if (checkIn(obj,data,_window(obj)->MouseX,_window(obj)->MouseY)) data->flags |= FLG_MouseOver;
+        else data->flags &= ~FLG_MouseOver;
     }
 
     if (data->flags & FLG_Sunny) redraw = back;
@@ -986,7 +1015,7 @@ B S R  FD  FV            FD = B * !S * R
         memset(&data->eh,0,sizeof(data->eh));
         data->eh.ehn_Class  = cl;
         data->eh.ehn_Object = obj;
-        data->eh.ehn_Events = IDCMP_MOUSEMOVE; //IDCMP_MOUSEOBJECT;
+        data->eh.ehn_Events = IDCMP_MOUSEOBJECT; //IDCMP_MOUSEMOVE;
         data->eh.ehn_Flags  = MUI_EHF_GUIMODE;
 
         /* Compute frame size */
@@ -1150,7 +1179,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     {
         struct RastPort rp;
 
-        memcpy(&rp,&_screen(obj)->RastPort,sizeof(rp));
+        copymem(&rp,&_screen(obj)->RastPort,sizeof(rp));
 
         if (data->vMode==MUIV_TheButton_ViewMode_Text) SetFont(&rp,data->tf);
         else SetFont(&rp,data->tgf);
@@ -1259,11 +1288,13 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
     ENTER();
 
+    /*
     if (flags & FLG_RedrawBack)
     {
     	RETURN(0);
     	return 0;
     }
+    */
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -1760,7 +1791,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                                 BltBitMap(bm,x,y,tbm,0,0,iw,ih,0xc0,0xff,NULL);
 
-                                memcpy(&trp,rp,sizeof(trp));
+                                copymem(&trp,rp,sizeof(trp));
                                 trp.Layer  = NULL;
                                 trp.BitMap = tbm;
 
@@ -1971,7 +2002,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
     if((notify = allocVecPooled(data->pool, size)))
     {
       // now we fill the notify structure
-      memcpy(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
+      copymem(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
 
       // add the new notify to the notifies list of the button
       AddTail((struct List *)&data->notifyList, (struct Node *)notify);
@@ -2112,7 +2143,7 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
           ULONG *para = (ULONG *)(((LONG)&notify->msg.FollowParams)+sizeof(ULONG));
 
           // now we fill the notify structure
-          memcpy(destMessage, para, sizeof(ULONG)*(notify->msg.FollowParams));
+          copymem(destMessage, para, sizeof(ULONG)*(notify->msg.FollowParams));
 
           // parse through the destMessage and replace certain
           // variable with their correct values.
@@ -2219,7 +2250,10 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 
     ENTER();
 
-    if(data->flags & FLG_Selected)
+    // we only use the Backfill method non-MUI4 systems
+    // as MUI4 deals with backfill things on its own
+    if(!(lib_flags & BASEFLG_MUI4) &&
+       data->flags & FLG_Selected)
     {
         Object *p = NULL;
 

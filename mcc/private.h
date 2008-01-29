@@ -292,6 +292,12 @@ void freeBitMaps(struct InstData *data);
 #define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
 #define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(IPTR)ptr)
 
+#if defined(__MORPHOS__)
+#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
+#else
+#define copymem(to,from,len)            memcpy((to),(from),(len));
+#endif
+
 #if !defined(IsMinListEmpty)
 #define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
 #endif

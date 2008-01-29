@@ -115,6 +115,7 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif
 APTR allocVecPooled(APTR pool, ULONG size);
 void freeVecPooled (APTR pool, APTR mem);
+APTR reallocVecPooledNC(APTR pool,APTR mem,ULONG size);
 
 /* brc1.c */
 BOOL BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);

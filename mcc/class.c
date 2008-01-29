@@ -1133,7 +1133,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                     {
                         brush->dataTotalWidth = tw;
 
-                        if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                        if (colors && numColors) copymem(brush->colors = (ULONG *)(chunky+size),colors,csize);
                         brush->numColors = numColors;
 
                         if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
@@ -1186,7 +1186,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                         }
                         else
                         {
-                            if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                            if (colors && numColors) copymem(brush->colors = (ULONG *)(chunky+size),colors,csize);
                             brush->numColors = numColors;
 
                             if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
@@ -1520,6 +1520,15 @@ ULONG ptable[] =
     PACK_ENDTABLE
 };
 
+/*
+** This is needed to perform a new loading sequence:
+** 1. single images on disk
+** 2. one strip on disk
+** 3. single strip as static brush
+** 4. static images as brushes
+** This makes sense in normal operations.
+*/
+
 static ULONG
 makePicsFun(struct pack *pt,
 	   	    APTR pool,
@@ -1556,9 +1565,9 @@ makePicsFun(struct pack *pt,
 
             if (dostrip)
             {
-                memcpy(sb,pt->stripBrush,sizeof(*sb));
-                if (pt->sstripBrush) memcpy(ssb,pt->sstripBrush,sizeof(*ssb));
-                if (pt->dstripBrush) memcpy(dsb,pt->dstripBrush,sizeof(*dsb));
+                copymem(sb,pt->stripBrush,sizeof(*sb));
+                if (pt->sstripBrush) copymem(ssb,pt->sstripBrush,sizeof(*ssb));
+                if (pt->dstripBrush) copymem(dsb,pt->dstripBrush,sizeof(*dsb));
             }
             else
             {
@@ -1644,7 +1653,7 @@ makePicsFun(struct pack *pt,
 
                             for (j = hofs = 0; j<(int)cols; j++, hofs += w+horizSpace)
                             {
-                                memcpy(pt->brushes[x] = brush,sb,sizeof(struct MUIS_TheBar_Brush));
+                                copymem(pt->brushes[x] = brush,sb,sizeof(struct MUIS_TheBar_Brush));
                                 brush->left   = hofs;
                                 brush->top    = vofs;
                                 brush->width  = w;
@@ -1653,7 +1662,7 @@ makePicsFun(struct pack *pt,
 
                                 if (sbrush)
                                 {
-                                    memcpy(pt->sbrushes[x] = sbrush,ssb,sizeof(struct MUIS_TheBar_Brush));
+                                    copymem(pt->sbrushes[x] = sbrush,ssb,sizeof(struct MUIS_TheBar_Brush));
                                     sbrush->left   = hofs;
                                     sbrush->top    = vofs;
                                     sbrush->width  = w;
@@ -1663,7 +1672,7 @@ makePicsFun(struct pack *pt,
 
                                 if (dbrush)
                                 {
-                                    memcpy(pt->dbrushes[x] = dbrush,dsb,sizeof(struct MUIS_TheBar_Brush));
+                                    copymem(pt->dbrushes[x] = dbrush,dsb,sizeof(struct MUIS_TheBar_Brush));
                                     dbrush->left   = hofs;
                                     dbrush->top    = vofs;
                                     dbrush->width  = w;
@@ -1912,9 +1921,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         if (data->flags & FLG_FreeStrip)
         {
-            if (sb.data)  memcpy(&data->image,&sb,sizeof(data->image));
-            if (ssb.data) memcpy(&data->simage,&ssb,sizeof(data->simage));
-            if (dsb.data) memcpy(&data->dimage,&dsb,sizeof(data->dimage));
+            if (sb.data)  copymem(&data->image,&sb,sizeof(data->image));
+            if (ssb.data) copymem(&data->simage,&ssb,sizeof(data->simage));
+            if (dsb.data) copymem(&data->dimage,&dsb,sizeof(data->dimage));
         }
 
         data->userFlags  = pt.userFlags;
@@ -2741,7 +2750,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             {
                 if (!(lib_flags & BASEFLG_MUI20) && getconfigitem(cl,obj,MUICFG_TheBar_Gradient,&ptr))
                 {
-                    memcpy(&data->grad,ptr,sizeof(data->grad));
+                    copymem(&data->grad,ptr,sizeof(data->grad));
                     SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,NULL,TAG_DONE);
                     data->flags2 |= FLG2_Gradient;
                     done = TRUE;
@@ -2894,7 +2903,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     data->eh.ehn_Class  = cl;
     data->eh.ehn_Object = obj;
     data->eh.ehn_Events = IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW;
-    DoMethod(_win(obj),MUIM_Window_AddEventHandler,(IPTR)&data->eh);
+    //DoMethod(_win(obj),MUIM_Window_AddEventHandler,(IPTR)&data->eh);
 
     #if defined(VIRTUAL)
     data->flags |= FLG_IsInVirtgroup;
@@ -2944,6 +2953,20 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
     RETURN(result);
     return result;
 }
+
+/***********************************************************************/
+
+/*static ULONG
+mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+{
+    //register struct data *data = INST_DATA(cl,obj);
+    ULONG res = DoSuperMethodA(cl, obj, msg);
+
+    msg->MinMaxInfo->MinWidth  = _subwidth(obj);
+    msg->MinMaxInfo->MinHeight = _subheight(obj);
+
+    return res;
+}*/
 
 /***********************************************************************/
 
@@ -3199,7 +3222,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     {
         struct RastPort rp;
 
-        memcpy(&rp,_rp(obj),sizeof(rp));
+        copymem(&rp,_rp(obj),sizeof(rp));
 
         SetAPen(&rp,MUIPEN(data->barFrameShinePen));
         Move(&rp,_left(obj),_bottom(obj));
@@ -3370,7 +3393,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         if((clone = allocVecPooled(data->pool, size)))
         {
           // copy the data of the notify
-          memcpy(clone, notify, size);
+          copymem(clone, notify, size);
 
           // add it to our clone list
           AddTail((struct List *)&button->notifyListClone, (struct Node *)clone);
@@ -3455,6 +3478,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
   struct MinNode *node;
+  struct MUIP_Notify *notify = NULL;
   BOOL result = FALSE;
 
   ENTER();
@@ -3468,11 +3492,9 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
     // button to which we add the notify.
     if(button->ID == msg->ID)
     {
-      struct MUIP_Notify *notify;
-
       // lets allocate a temporary buffer for sending
       // the notify method to the button correctly.
-      if((notify = allocVecPooled(data->pool, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
+      if((notify = reallocVecPooledNC(data->pool, notify, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
       {
         // now we fill the notify structure
         notify->MethodID      = MUIM_Notify;
@@ -3480,19 +3502,19 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
         notify->TrigVal       = msg->value;
         notify->DestObj       = msg->dest;
 
-        // fill the rest with memcpy
-        memcpy(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
+        // fill the rest with copymem
+        copymem(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
 
         // now we set the notify as we have identifed the button
         result = DoMethodA(button->obj, (Msg)notify);
-
-        // free the temporary buffer again
-        freeVecPooled(data->pool, notify);
       }
 
       break;
     }
   }
+
+  if(notify != NULL)
+    freeVecPooled(data->pool, notify);
 
   RETURN(result);
   return result;
@@ -3767,7 +3789,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
           if((clone = allocVecPooled(data->pool, size)))
           {
             // copy the data of the notify
-            memcpy(clone, notify, size);
+            copymem(clone, notify, size);
 
             // add it to our clone list
             AddTail((struct List *)&bt->notifyListClone, (struct Node *)clone);
@@ -4152,7 +4174,7 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 
 /***********************************************************************/
 
-static IPTR
+/*static IPTR
 mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -4168,7 +4190,7 @@ mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg
 
     RETURN(0);
     return 0;
-}
+}*/
 
 /***********************************************************************/
 
@@ -4195,9 +4217,10 @@ DISPATCHER(_Dispatcher)
     #endif
     case MUIM_Backfill:                 return mBackfill(cl,obj,(APTR)msg);
 
+    //case MUIM_AskMinMax:                return mAskMinMax(cl,obj,(APTR)msg);
     case MUIM_CreateDragImage:          return mCreateDragImage(cl,obj,(APTR)msg);
     case MUIM_DeleteDragImage:          return mDeleteDragImage(cl,obj,(APTR)msg);
-    case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);
+    //case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);
 
     case MUIM_Group_InitChange:         return mInitChange(cl,obj,(APTR)msg);
     case MUIM_Group_ExitChange:         return mExitChange(cl,obj,(APTR)msg);
