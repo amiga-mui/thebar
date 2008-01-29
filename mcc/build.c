@@ -172,7 +172,7 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
         }
         else
         {
-            memcpy(chunky,image->data,size);
+            copymem(chunky,image->data,size);
 
             if (alpha)
             {
@@ -211,7 +211,7 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
             }
         }
 
-        if (flags & MFLG_Grey) memcpy(copy->grey = chunky+size,chunky,size);
+        if (flags & MFLG_Grey) copymem(copy->grey = chunky+size,chunky,size);
     }
 
     RETURN(chunky);
@@ -477,7 +477,7 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
 
             maskDone = TRUE;
         }
-        else memcpy(chunky,image->data,size);
+        else copymem(chunky,image->data,size);
 
 
         if (!maskDone && (alpha || gdest))
@@ -1088,10 +1088,10 @@ buildBitMapsCyber(struct InstData *data)
     	data->strip.nchunky  = make->chunky;
 	    data->strip.gchunky  = make->gchunky;
 
-        data->strip.snchunky = make->schunky;
+      data->strip.snchunky = make->schunky;
     	data->strip.sgchunky = make->sgchunky;
 
-        data->strip.dnchunky = make->dchunky;
+      data->strip.dnchunky = make->dchunky;
 	    data->strip.dgchunky = make->dgchunky;
     }
     else
@@ -1100,7 +1100,7 @@ buildBitMapsCyber(struct InstData *data)
 	    if (make->chunky)  freeVecPooled(data->pool,make->chunky);
 	    if (make->schunky) freeVecPooled(data->pool,make->schunky);
 	    if (make->dchunky) freeVecPooled(data->pool,make->dchunky);
-	}
+    }
 
     freeVecPooled(data->pool,make);
 

@@ -56,16 +56,12 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 APTR
 allocVecPooled(APTR pool,ULONG size)
 {
-#if defined(__amigaos4__) || defined(__MORPHOS__)
-  return AllocVecPooled(pool, size);
-#else
   ULONG *mem;
 
   if((mem = AllocPooled(pool,size = size+sizeof(ULONG))))
     *mem++ = size;
 
   return mem;
-#endif
 }
 
 /****************************************************************************/
@@ -73,12 +69,24 @@ allocVecPooled(APTR pool,ULONG size)
 void
 freeVecPooled(APTR pool,APTR mem)
 {
-#if defined(__amigaos4__) || defined(__MORPHOS__)
-  FreeVecPooled(pool, mem);
-#else
   FreePooled(pool,(LONG *)mem-1,*((LONG *)mem-1));
-#endif
 }
 
 /****************************************************************************/
 
+APTR
+reallocVecPooledNC(APTR pool,APTR mem,ULONG size)
+{
+  if(!pool || !size)
+    return NULL;
+
+  if(mem)
+  {
+    if(*((ULONG *)mem-1)-sizeof(ULONG)>=size) return mem;
+      freeVecPooled(pool,mem);
+  }
+
+  return allocVecPooled(pool,size);
+}
+
+/****************************************************************************/

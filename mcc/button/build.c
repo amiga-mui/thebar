@@ -208,10 +208,10 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                 maskDone = TRUE;
             }
-            else memcpy(chunky,image->data,size);
+            else copymem(chunky,image->data,size);
         }
 
-        if (flags & MFLG_Grey) memcpy(copy->grey = chunky+size,chunky,size);
+        if (flags & MFLG_Grey) copymem(copy->grey = chunky+size,chunky,size);
 
         if (!maskDone && alpha)
         {
@@ -272,7 +272,7 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
         struct copy    temp;
         UBYTE *cchunky;
 
-        memcpy(&temp,copy,sizeof(temp));
+        copymem(&temp,copy,sizeof(temp));
         temp.flags = MFLG_Scaled|MFLG_NtMask;
         if (!(cchunky = LUT8ToLUT8(image,&temp))) return NULL;
 
@@ -560,7 +560,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
 
                 maskDone = TRUE;
             }
-            else memcpy(chunky,image->data,size);
+            else copymem(chunky,image->data,size);
         }
 
         if (!maskDone && (alpha || gdest))
@@ -1850,7 +1850,7 @@ build(struct InstData *data)
                 if (data->strip->mask)
                 {
                     if((data->mask = ((data->flags & FLG_CyberMap) ? ALLOCRASTERCG(data->imgWidth,data->imgHeight) : ALLOCRASTER(data->imgWidth,data->imgHeight))))
-                      memcpy(data->mask,data->strip->mask,RAWIDTH(data->imgWidth)*data->imgHeight);
+                      copymem(data->mask,data->strip->mask,RAWIDTH(data->imgWidth)*data->imgHeight);
                 }
             }
         }

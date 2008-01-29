@@ -233,4 +233,10 @@ struct ButtonNotify
 #define nnsuperset(cl,obj,tag,val)      SetSuperAttrs(cl,obj,tag,(ULONG)(val),MUIA_NoNotify,TRUE,TAG_DONE)
 #define IDCMP_MOUSEOBJECT               0x40000000
 
+#if defined(__MORPHOS__)
+#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
+#else
+#define copymem(to,from,len)            memcpy((to),(from),(len));
+#endif
+
 #endif /* _PRIVATE_H */

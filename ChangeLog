@@ -2,14 +2,30 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+$URL$
+$Id$
+
+2008-01-29  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: backported the lastest changes done in the mui4 branch to our
+    trunk. The changes include:
+    - changed all memcpy() back to copymem() while copymem() is a macro
+      again which defaults to CopyMem() for MorphOS now.
+    - introduced new reallocVecPooledNC() function and used it in the
+      MUIM_Notify method of TheBar.mcc
+    - the allocVecPooled/freeVecPooled function use AllocPooled() and
+      FreePooled() for all platforms again.
+    - disabled MUIM_HandleEvent and Window event handler for TheBar.mcc
+    - use IDCMP_MOUSEOBJECT instead of IDCMP_MOUSEMOVE for the button
+      event handler.
+    - changes to the FLG_MouseOver handling in TheButton.mcc
+    - we skip the MUIM_Backfill method for MUI4 systems.
+
 2008-01-28  Alfonso Ranieri <alforan@tin.it>
 
   * Bumped MOS/MUI branch to the last one 
-
-2008-01-28  Alfonso Ranieri <alforan@tin.it>
-
-  * Fixed MUIM_TheButton_Build called on TheBar object in Hide and Sleep
-    of TheBar mcc
+  * mcc/class.c: Fixed MUIM_TheButton_Build called on TheBar object in Hide
+    and Sleep of TheBar mcc
 
 2008-01-20  Thore Böckelmann <tboeckel@gmx.de>
 
