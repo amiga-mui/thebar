@@ -3477,39 +3477,30 @@ static IPTR
 mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  struct MinNode *node;
   struct MUIP_Notify *notify = NULL;
   BOOL result = FALSE;
+  struct Button *button;
 
   ENTER();
 
   // now we first find the button object with its ID
-  for(node = data->buttons.mlh_Head; node->mln_Succ; node = node->mln_Succ)
+  if((button = findButton(data, msg->ID)) != NULL)
   {
-    struct Button *button = (struct Button *)node;
-
-    // if the ID matches we found the correct toolbar
-    // button to which we add the notify.
-    if(button->ID == msg->ID)
+    // lets allocate a temporary buffer for sending
+    // the notify method to the button correctly.
+    if((notify = reallocVecPooledNC(data->pool, notify, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
     {
-      // lets allocate a temporary buffer for sending
-      // the notify method to the button correctly.
-      if((notify = reallocVecPooledNC(data->pool, notify, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
-      {
-        // now we fill the notify structure
-        notify->MethodID      = MUIM_Notify;
-        notify->TrigAttr      = msg->attr;
-        notify->TrigVal       = msg->value;
-        notify->DestObj       = msg->dest;
+      // now we fill the notify structure
+      notify->MethodID      = MUIM_Notify;
+      notify->TrigAttr      = msg->attr;
+      notify->TrigVal       = msg->value;
+      notify->DestObj       = msg->dest;
 
-        // fill the rest with copymem
-        copymem(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
+      // fill the rest with copymem
+      copymem(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
 
-        // now we set the notify as we have identifed the button
-        result = DoMethodA(button->obj, (Msg)notify);
-      }
-
-      break;
+      // now we set the notify as we have identifed the button
+      result = DoMethodA(button->obj, (Msg)notify);
     }
   }
 
