@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $URL$
 $Id$
 
+2008-01-30  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/button/class.c: fixed an illegal access to _window() which happened
+    due to recent changes where a the visible status of a button was not
+    properly checked.
+
 2008-01-30  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/class.c: added the button ID to the AskMinMax debug output, as
