@@ -2,8 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$URL$
-$Id$
+2008-01-30  Alfonso Ranieri <alforan@tin.it>
+
+  * If you set up a notification on <attr,MUIV_Everytime>, there was no 
+    way to obtain a real value of attr in the invoked method. MUIV_TriggerValue
+    was always returned. Fixed, extenting MUIP_SendNotify.
 
 2008-01-30  Jens Langner <Jens.Langner@light-speed.de>
 
