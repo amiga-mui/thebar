@@ -7,6 +7,8 @@ $Id$
 
 2008-01-30  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/utils.c: added the usual ENTER()/RETURN() macro calls to the memory
+    allocation functions.
   * mcc/class.c: replaced a custom button search by a call to findButton().
 
 2008-01-29  Jens Langner <Jens.Langner@light-speed.de>
