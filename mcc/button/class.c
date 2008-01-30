@@ -776,7 +776,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         }
     }
 
-    if (setidcmp)
+    if(setidcmp && (data->flags & FLG_Visible))
     {
         if (checkIn(obj,data,_window(obj)->MouseX,_window(obj)->MouseY)) data->flags |= FLG_MouseOver;
         else data->flags &= ~FLG_MouseOver;
@@ -1241,8 +1241,8 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     msg->MinMaxInfo->MaxHeight = MUI_MAXMAX;
 
     D(DBF_STARTUP, "AskMinMax: %08lx id %ld - %ld %ld %ld %ld %ld %ld", obj, data->id,
-        msg->MinMaxInfo->MinWidth,msg->MinMaxInfo->DefWidth,msg->MinMaxInfo->MaxWidth,
-        msg->MinMaxInfo->MinHeight,msg->MinMaxInfo->DefHeight,msg->MinMaxInfo->MaxHeight);
+    msg->MinMaxInfo->MinWidth,msg->MinMaxInfo->DefWidth,msg->MinMaxInfo->MaxWidth,
+    msg->MinMaxInfo->MinHeight,msg->MinMaxInfo->DefHeight,msg->MinMaxInfo->MaxHeight);
 
     RETURN(0);
     return 0;
