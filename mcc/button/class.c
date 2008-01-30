@@ -2009,7 +2009,12 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
 
       // now that we have added the new notify to our list
       // we go and create a "faked" notify message we send
-      result = DoSuperMethod(cl, obj, MUIM_Notify, msg->TrigAttr, msg->TrigVal, obj, 2, MUIM_TheButton_SendNotify, notify);
+      // alfie: OK, but if a Notify is made on a couple <attr,MUIV_EveryTime>, we never get
+      // the actual value of the attribute at notify time, but just MUIV_TriggerValue.
+      // f.e. a notification on MUIA_Selected,MUIV_EveryTime is not possible
+      // so, we simply add a third parm to the message, which will store the real value
+      // and in mSendNotify, we use that value
+      result = DoSuperMethod(cl, obj, MUIM_Notify, msg->TrigAttr, msg->TrigVal, obj, 3, MUIM_TheButton_SendNotify, notify,MUIV_TriggerValue);
 
       // in case the DoSuperMethod returns an error we go and cleanup the notify again
       if(result == 0)
@@ -2174,11 +2179,11 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
             switch(destMessage[i])
             {
               case MUIV_TriggerValue:
-                destMessage[i] = notify->msg.TrigVal;
+                destMessage[i] = msg->trigVal;
               break;
 
               case MUIV_NotTriggerValue:
-                destMessage[i] = !notify->msg.TrigVal;
+                destMessage[i] = !msg->trigVal;
               break;
 
               case MUIV_TheBar_Qualifier:
