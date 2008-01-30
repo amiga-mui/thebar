@@ -2941,7 +2941,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
     if (data->flags & FLG_Framed) freeFramePens(obj,data);
     #endif
 
-    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
+    //DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
 
     if (data->flags & FLG_FreeStrip) freeBitMaps(data);
 
