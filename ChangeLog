@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $URL$
 $Id$
 
+2008-01-30  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: replaced a custom button search by a call to findButton().
+
 2008-01-29  Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: backported the lastest changes done in the mui4 branch to our
@@ -23,7 +27,7 @@ $Id$
 
 2008-01-28  Alfonso Ranieri <alforan@tin.it>
 
-  * Bumped MOS/MUI branch to the last one 
+  * Bumped MOS/MUI branch to the last one
   * mcc/class.c: Fixed MUIM_TheButton_Build called on TheBar object in Hide
     and Sleep of TheBar mcc
 
