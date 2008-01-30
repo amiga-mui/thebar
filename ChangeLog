@@ -10,6 +10,9 @@ MUI TheBar MCC class - ChangeLog
 
 2008-01-30  Jens Langner <Jens.Langner@light-speed.de>
 
+  * include/mui/TheBar_mcc.h: added the required "STACKED" attribute to the
+    extended MUIP_TheButton_SendNotify structure. This is required for AROS
+    compatibility.
   * mcc/button/class.c: fixed an illegal access to _window() which happened
     due to recent changes where a the visible status of a button was not
     properly checked.

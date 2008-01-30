@@ -416,7 +416,7 @@ enum
 #define MUIM_TheButton_Build               (TBUTTAGBASE+0)   /* v13         */
 #define MUIM_TheButton_SendNotify          (TBUTTAGBASE+1)   /* v21 PRIVATE */
 
-struct MUIP_TheButton_SendNotify           { STACKED ULONG MethodID; STACKED APTR notify; ULONG trigVal;};
+struct MUIP_TheButton_SendNotify           { STACKED ULONG MethodID; STACKED APTR notify; STACKED ULONG trigVal;};
 
 /***********************************************************************/
 /*
