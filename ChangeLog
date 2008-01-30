@@ -7,6 +7,8 @@ $Id$
 
 2008-01-30  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/button/class.c: added the button ID to the AskMinMax debug output, as
+    this makes the output easier to read.
   * mcc/utils.c: added the usual ENTER()/RETURN() macro calls to the memory
     allocation functions.
   * mcc/class.c: replaced a custom button search by a call to findButton().

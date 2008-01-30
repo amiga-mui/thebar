@@ -1240,7 +1240,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     msg->MinMaxInfo->MaxWidth  = MUI_MAXMAX;
     msg->MinMaxInfo->MaxHeight = MUI_MAXMAX;
 
-    D(DBF_STARTUP, "AskMinMax: %lx - %ld %ld %ld %ld %ld %ld\n",obj,
+    D(DBF_STARTUP, "AskMinMax: %08lx id %ld - %ld %ld %ld %ld %ld %ld", obj, data->id,
         msg->MinMaxInfo->MinWidth,msg->MinMaxInfo->DefWidth,msg->MinMaxInfo->MaxWidth,
         msg->MinMaxInfo->MinHeight,msg->MinMaxInfo->DefHeight,msg->MinMaxInfo->MaxHeight);
 
