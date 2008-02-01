@@ -6,6 +6,7 @@
 #include <mui/TheBar_mcc.h>
 #include <string.h>
 #include <stdio.h>
+#include "SDI_compiler.h"
 
 /***********************************************************************/
 
@@ -23,29 +24,31 @@ struct Library *MUIMasterBase;
 
 struct MUIS_TheBar_Button buttons[] =
 {
-    {0, 0, "Ball1", "Ball1 help", MUIV_TheBar_ButtonFlag_Immediate|MUIV_TheBar_ButtonFlag_Selected, 6},
-    {1, 1, "Ball2", "Ball2 help", MUIV_TheBar_ButtonFlag_Immediate, 								5},
-    {2, 2, "Ball3", "Ball3 help", MUIV_TheBar_ButtonFlag_Immediate, 								3},
-    {MUIV_TheBar_End, -1},
+    {0, 0, "Ball1", "Ball1 help", MUIV_TheBar_ButtonFlag_Immediate|MUIV_TheBar_ButtonFlag_Selected, 6, NULL, NULL},
+    {1, 1, "Ball2", "Ball2 help", MUIV_TheBar_ButtonFlag_Immediate, 								5, NULL, NULL},
+    {2, 2, "Ball3", "Ball3 help", MUIV_TheBar_ButtonFlag_Immediate, 								3, NULL, NULL},
+    {MUIV_TheBar_End,0,NULL,NULL,0,0,NULL,NULL}
 };
 
 /***********************************************************************/
 
-char *appareances[] = {"Images and text","Images","Text",NULL};
-char *labelPoss[] = {"Bottom","Top","Right","Left",NULL};
+const char *appareances[] = {"Images and text","Images","Text",NULL};
+const char *labelPoss[] = {"Bottom","Top","Right","Left",NULL};
 
 int
-main(int argc,char **argv)
+main(UNUSED int argc,char **argv)
 {
     int res;
 
-    if (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",39))
+    IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",39);
+    if (IntuitionBase)
     {
-        if (MUIMasterBase = OpenLibrary("muimaster.library",19))
+        MUIMasterBase = OpenLibrary("muimaster.library",19);
+        if (MUIMasterBase)
         {
             Object *app, *win, *tb, *pg;
 
-            if (app = ApplicationObject,
+            if ((app = ApplicationObject,
                     MUIA_Application_Title,         "TheBar Demo1",
                     MUIA_Application_Version,       "$VER: TheBarDemo1 1.0 (24.6.2003)",
                     MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
@@ -118,7 +121,7 @@ main(int argc,char **argv)
 							End,
                     	End,
                     End,
-                End)
+                End))
             {
                 ULONG sigs = 0, id;
 
@@ -128,7 +131,7 @@ main(int argc,char **argv)
                         
                 set(win,MUIA_Window_Open,TRUE);
 
-                while ((id = DoMethod(app,MUIM_Application_NewInput,&sigs))!=MUIV_Application_ReturnID_Quit)
+                while ((LONG)(id = DoMethod(app,MUIM_Application_NewInput,&sigs))!=MUIV_Application_ReturnID_Quit)
                 {
                     if (sigs)
                     {

@@ -251,7 +251,7 @@ DEMO8OBJS  = $(OBJDIR)/demo8.o
 
 DEMO9OBJS  = $(OBJDIR)/demo9.o
 
-DEMO10OBJS = $(OBJDIR)/demo9.o
+DEMO10OBJS = $(OBJDIR)/demo10.o
 
 #
 
