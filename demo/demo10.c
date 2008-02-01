@@ -11,13 +11,32 @@
 /***********************************************************************/
 
 long __stack = 8192;
+#if defined(__amigaos4__)
+struct Library *IntuitionBase;
+struct Library *MUIMasterBase;
+struct IntuitionIFace *IIntuition;
+struct MUIMasterIFace *IMUIMaster;
+#else
 struct IntuitionBase *IntuitionBase;
 struct Library *MUIMasterBase;
+#endif
 
 /***********************************************************************/
 
 #ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
+#endif
+
+/***********************************************************************/
+
+#if defined(__amigaos4__)
+#define CLOSELIB(lib, iface)              { if((iface) && (lib)) { DropInterface((APTR)(iface)); iface = NULL; CloseLibrary((struct Library *)lib); lib = NULL; } }
+#define GETINTERFACE(iname, iface, base)  ((iface) = (APTR)GetInterface((struct Library *)(base), (iname), 1L, NULL))
+#define DROPINTERFACE(iface)              { DropInterface((APTR)(iface)); iface = NULL; }
+#else
+#define CLOSELIB(lib, iface)              { if((lib)) { CloseLibrary((struct Library *)lib); lib = NULL; } }
+#define GETINTERFACE(iname, iface, base)  TRUE
+#define DROPINTERFACE(iface)              ((void)0)
 #endif
 
 /***********************************************************************/
@@ -40,11 +59,11 @@ main(UNUSED int argc,char **argv)
 {
     int res;
 
-    IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",39);
-    if (IntuitionBase)
+    if((IntuitionBase = (APTR)OpenLibrary("intuition.library",39)) != NULL &&
+       GETINTERFACE("main", IIntuition, IntuitionBase))
     {
-        MUIMasterBase = OpenLibrary("muimaster.library",19);
-        if (MUIMasterBase)
+        if((MUIMasterBase = OpenLibrary("muimaster.library",19)) != NULL &&
+           GETINTERFACE("main", IMUIMaster, MUIMasterBase))
         {
             Object *app, *win, *tb, *pg;
 
@@ -150,13 +169,15 @@ main(UNUSED int argc,char **argv)
                 res = RETURN_FAIL;
             }
 
-            CloseLibrary(MUIMasterBase);
+            CLOSELIB(MUIMasterBase, IMUIMaster);
         }
         else
         {
             printf("%s: Can't open muimaster.library ver 19 or higher\n",argv[0]);
             res = RETURN_ERROR;
         }
+
+        CLOSELIB(IntuitionBase, IIntuition);
     }
     else
     {
