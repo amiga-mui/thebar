@@ -47,7 +47,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     Object                   *o;
     struct MUIS_TheBar_Brush *brush, *sbrush, *dbrush;
     ULONG                    flags = data->flags, userFlags = data->userFlags, userFlags2 = data->userFlags2, bflags = button->flags, viewMode;
-    struct TagItem           attrs[64];
+    struct TagItem           attrs[64], *tag;
 
     ENTER();
 
@@ -138,184 +138,173 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
         else brush = sbrush = dbrush = NULL;
     }
 
+    tag = attrs;
 
     #if defined(VIRTUAL)
-    attrs[0].ti_Tag   = MUIA_TheButton_InVirtgroup;
-    attrs[0].ti_Data  = TRUE;
-    #else
-    attrs[0].ti_Tag   = TAG_IGNORE;
+    tag->ti_Tag   = MUIA_TheButton_InVirtgroup;
+    tag++->ti_Data  = TRUE;
     #endif
 
-    attrs[1].ti_Tag   = MUIA_Disabled;
-    attrs[1].ti_Data  = bflags & BFLG_Disabled;
-    attrs[2].ti_Tag   = MUIA_Selected;
-    attrs[2].ti_Data  = bflags & BFLG_Selected;
-    attrs[3].ti_Tag   = MUIA_Group_Horiz;
-    attrs[3].ti_Data  = flags & FLG_Horiz;
-    attrs[4].ti_Tag   = MUIA_TheButton_MinVer;
-    attrs[4].ti_Data  = 16;
-    attrs[5].ti_Tag   = MUIA_TheButton_TheBar;
-    attrs[5].ti_Data  = (IPTR)obj;
-    attrs[6].ti_Tag   = MUIA_TheButton_Image;
-    attrs[6].ti_Data  = (IPTR)brush;
-    attrs[7].ti_Tag   = MUIA_TheButton_SelImage;
-    attrs[7].ti_Data  = (IPTR)sbrush;
-    attrs[8].ti_Tag   = MUIA_TheButton_DisImage;
-    attrs[8].ti_Data  = (IPTR)dbrush;
-    attrs[9].ti_Tag   = MUIA_TheButton_Label;
-    attrs[9].ti_Data  = (IPTR)button->text;
-    attrs[10].ti_Tag  = MUIA_TheButton_Immediate;
-    attrs[10].ti_Data = bflags & BFLG_Immediate;
-    attrs[11].ti_Tag  = MUIA_TheButton_Toggle;
-    attrs[11].ti_Data = bflags & BFLG_Toggle;
-    attrs[12].ti_Tag  = MUIA_TheButton_Borderless;
-    attrs[12].ti_Data = flags & FLG_Borderless;
-    attrs[13].ti_Tag  = MUIA_TheButton_Raised;
-    attrs[13].ti_Data = flags & FLG_Raised;
-    attrs[14].ti_Tag  = MUIA_TheButton_Sunny;
-    attrs[14].ti_Data = flags & FLG_Sunny;
-    attrs[15].ti_Tag  = MUIA_TheButton_Scaled;
-    attrs[15].ti_Data = flags & FLG_Scaled;
-    attrs[16].ti_Tag  = MUIA_TheButton_EnableKey;
-    attrs[16].ti_Data = flags & FLG_EnableKeys;
-    attrs[17].ti_Tag  = MUIA_TheButton_ViewMode;
-    attrs[17].ti_Data = viewMode;
-    attrs[18].ti_Tag  = MUIA_TheButton_LabelPos;
-    attrs[18].ti_Data = data->labelPos;
-    attrs[19].ti_Tag  = MUIA_TheButton_ID;
-    attrs[19].ti_Data = button->ID;
+    tag->ti_Tag    = MUIA_Disabled;
+    tag++->ti_Data = bflags & BFLG_Disabled;
 
-    {
-        int i;
+    tag->ti_Tag    = MUIA_Selected;
+    tag++->ti_Data = bflags & BFLG_Selected;
 
-        for (i = 20; i<31; attrs[i++].ti_Tag = TAG_IGNORE);
+    tag->ti_Tag    = MUIA_Group_Horiz;
+    tag++->ti_Data = flags & FLG_Horiz;
 
-    }
+    tag->ti_Tag    = MUIA_TheButton_MinVer;
+    tag++->ti_Data = 16;
+
+    tag->ti_Tag    = MUIA_TheButton_TheBar;
+    tag++->ti_Data = (IPTR)obj;
+
+    tag->ti_Tag    = MUIA_TheButton_Image;
+    tag++->ti_Data = (IPTR)brush;
+
+    tag->ti_Tag    = MUIA_TheButton_SelImage;
+    tag++->ti_Data = (IPTR)sbrush;
+
+    tag->ti_Tag    = MUIA_TheButton_DisImage;
+    tag++->ti_Data = (IPTR)dbrush;
+
+    tag->ti_Tag    = MUIA_TheButton_Label;
+    tag++->ti_Data = (IPTR)button->text;
+
+    tag->ti_Tag    = MUIA_TheButton_Immediate;
+    tag++->ti_Data = bflags & BFLG_Immediate;
+
+    tag->ti_Tag    = MUIA_TheButton_Toggle;
+    tag++->ti_Data = bflags & BFLG_Toggle;
+
+    tag->ti_Tag    = MUIA_TheButton_Borderless;
+    tag++->ti_Data = flags & FLG_Borderless;
+
+    tag->ti_Tag    = MUIA_TheButton_Raised;
+    tag++->ti_Data = flags & FLG_Raised;
+
+    tag->ti_Tag    = MUIA_TheButton_Sunny;
+    tag++->ti_Data = flags & FLG_Sunny;
+
+    tag->ti_Tag    = MUIA_TheButton_Scaled;
+    tag++->ti_Data = flags & FLG_Scaled;
+
+    tag->ti_Tag    = MUIA_TheButton_EnableKey;
+    tag++->ti_Data = flags & FLG_EnableKeys;
+
+    tag->ti_Tag    = MUIA_TheButton_ViewMode;
+    tag++->ti_Data = viewMode;
+
+    tag->ti_Tag    = MUIA_TheButton_LabelPos;
+    tag++->ti_Data = data->labelPos;
+
+    tag->ti_Tag    = MUIA_TheButton_ID;
+    tag++->ti_Data = button->ID;
 
     if (button->help)
     {
-        attrs[30].ti_Tag  = MUIA_ShortHelp;
-        attrs[30].ti_Data = (IPTR)button->help;
+        tag->ti_Tag    = MUIA_ShortHelp;
+        tag++->ti_Data = (IPTR)button->help;
     }
-    else attrs[30].ti_Tag = TAG_IGNORE;
 
     if (flags & FLG_FreeStrip)
     {
-        attrs[31].ti_Tag  = MUIA_TheButton_Strip;
-        attrs[31].ti_Data = (IPTR)&data->strip;
+        tag->ti_Tag    = MUIA_TheButton_Strip;
+        tag++->ti_Data = (IPTR)&data->strip;
     }
-    else attrs[31].ti_Tag = TAG_IGNORE;
 
     if (userFlags || userFlags2)
     {
         if (userFlags & UFLG_UserHorizTextGfxSpacing)
         {
-            attrs[32].ti_Tag  = MUIA_TheButton_HorizTextGfxSpacing;
-            attrs[32].ti_Data = data->horizTextGfxSpacing;
+            tag->ti_Tag    = MUIA_TheButton_HorizTextGfxSpacing;
+            tag++->ti_Data = data->horizTextGfxSpacing;
         }
-        else attrs[32].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserVertTextGfxSpacing)
         {
-            attrs[33].ti_Tag  = MUIA_TheButton_VertTextGfxSpacing;
-            attrs[33].ti_Data = data->vertTextGfxSpacing;
+            tag->ti_Tag    = MUIA_TheButton_VertTextGfxSpacing;
+            tag++->ti_Data = data->vertTextGfxSpacing;
         }
-        else attrs[33].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserHorizInnerSpacing)
         {
-            attrs[34].ti_Tag  = MUIA_TheButton_HorizInnerSpacing;
-            attrs[34].ti_Data = data->horizInnerSpacing;
+            tag->ti_Tag    = MUIA_TheButton_HorizInnerSpacing;
+            tag++->ti_Data = data->horizInnerSpacing;
         }
-        else attrs[34].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserTopInnerSpacing)
         {
-            attrs[35].ti_Tag  = MUIA_TheButton_TopInnerSpacing;
-            attrs[35].ti_Data = data->topInnerSpacing;
+            tag->ti_Tag    = MUIA_TheButton_TopInnerSpacing;
+            tag++->ti_Data = data->topInnerSpacing;
         }
-        else attrs[35].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserBottomInnerSpacing)
         {
-            attrs[36].ti_Tag  = MUIA_TheButton_BottomInnerSpacing;
-            attrs[36].ti_Data = data->bottomInnerSpacing;
+            tag->ti_Tag    = MUIA_TheButton_BottomInnerSpacing;
+            tag++->ti_Data = data->bottomInnerSpacing;
         }
-        else attrs[36].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserPrecision)
         {
-            attrs[37].ti_Tag  = MUIA_TheButton_Precision;
-            attrs[37].ti_Data = data->precision;
+            tag->ti_Tag    = MUIA_TheButton_Precision;
+            tag++->ti_Data = data->precision;
         }
-        else attrs[37].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserDisMode)
         {
-            attrs[38].ti_Tag  = MUIA_TheButton_DisMode;
-            attrs[38].ti_Data = data->disMode;
+            tag->ti_Tag    = MUIA_TheButton_DisMode;
+            tag++->ti_Data = data->disMode;
         }
-        else attrs[38].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserScale)
         {
-            attrs[39].ti_Tag  = MUIA_TheButton_Scale;
-            attrs[39].ti_Data = data->scale;
+            tag->ti_Tag    = MUIA_TheButton_Scale;
+            tag++->ti_Data = data->scale;
         }
-        else attrs[39].ti_Tag = TAG_IGNORE;
-
-        attrs[40].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserSpecialSelect)
         {
-            attrs[41].ti_Tag  = MUIA_TheButton_SpecialSelect;
-            attrs[41].ti_Data = userFlags & UFLG_SpecialSelect;
+            tag->ti_Tag    = MUIA_TheButton_SpecialSelect;
+            tag++->ti_Data = userFlags & UFLG_SpecialSelect;
         }
-        else attrs[41].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserTextOverUseShine)
         {
-            attrs[42].ti_Tag  = MUIA_TheButton_TextOverUseShine;
-            attrs[42].ti_Data = userFlags & UFLG_TextOverUseShine;
+            tag->ti_Tag    = MUIA_TheButton_TextOverUseShine;
+            tag++->ti_Data = userFlags & UFLG_TextOverUseShine;
         }
-        else attrs[42].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserIgnoreSelImages)
         {
-            attrs[43].ti_Tag  = MUIA_TheButton_IgnoreSelImages;
-            attrs[43].ti_Data = userFlags & UFLG_IgnoreSelImages;
+            tag->ti_Tag    = MUIA_TheButton_IgnoreSelImages;
+            tag++->ti_Data = userFlags & UFLG_IgnoreSelImages;
         }
-        else attrs[43].ti_Tag = TAG_IGNORE;
 
         if (userFlags & UFLG_UserIgnoreDisImages)
         {
-            attrs[44].ti_Tag  = MUIA_TheButton_IgnoreDisImages;
-            attrs[44].ti_Data = userFlags & UFLG_IgnoreDisImages;
+            tag->ti_Tag    = MUIA_TheButton_IgnoreDisImages;
+            tag++->ti_Data = userFlags & UFLG_IgnoreDisImages;
         }
-        else attrs[44].ti_Tag = TAG_IGNORE;
 
         if (userFlags2 & UFLG2_UserDontMove)
         {
-            attrs[45].ti_Tag  = MUIA_TheButton_DontMove;
-            attrs[45].ti_Data = userFlags2 & UFLG2_DontMove;
+            tag->ti_Tag    = MUIA_TheButton_DontMove;
+            tag++->ti_Data = userFlags2 & UFLG2_DontMove;
         }
-        else attrs[45].ti_Tag = TAG_IGNORE;
 
         if (userFlags2 & UFLG2_NtRaiseActive)
         {
-            attrs[46].ti_Tag  = MUIA_TheButton_NtRaiseActive;
-            attrs[46].ti_Data = userFlags2 & UFLG2_NtRaiseActive;
+            tag->ti_Tag    = MUIA_TheButton_NtRaiseActive;
+            tag++->ti_Data = userFlags2 & UFLG2_NtRaiseActive;
         }
-        else attrs[46].ti_Tag = TAG_IGNORE;
-
-        attrs[47].ti_Tag = TAG_DONE;
     }
-    else attrs[32].ti_Tag = TAG_DONE;
 
-    if(button->class)
-      o = NewObjectA(button->class,NULL,attrs);
-    else
-      o = MUI_NewObjectA((STRPTR)MUIC_TheButton,attrs);
+    tag->ti_Tag = TAG_DONE;
+
+    o = button->class ? NewObjectA(button->class,NULL,attrs) :
+                        MUI_NewObjectA((STRPTR)MUIC_TheButton,attrs);
 
     RETURN(o);
     return o;
@@ -389,8 +378,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
     {
         case MUILM_MINMAX:
         {
-            Object *child;
-            Object          *cstate;
+            Object *child, *cstate;
             ULONG  horiz = data->flags & (FLG_Horiz|FLG_Table), test;
             LONG   cols = 0, rows = 0, numBut, c;
             UWORD  butMaxMinWidth, butMaxMinHeight, maxMinWidth, maxMinHeight, width, height, addSpace;
@@ -429,12 +417,10 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     rows = data->rows;
                     if (rows<=0 || rows>numBut) rows = numBut;
                     cols = numBut/rows;
-                    if (cols==0) cols = 1;
+                    if (!cols) cols = 1;
                     else if (numBut-cols*rows>0) cols++;
                 }
             }
-
-            //kprintf("butMaxMinWidth:%ld butMaxMinHeight:%ld - but:%ld cols:%ld rows:%ld\n",butMaxMinWidth,butMaxMinHeight,numBut,cols,rows);
 
             maxMinWidth = maxMinHeight = width = height = addSpace = 0;
             c = 0;
@@ -568,10 +554,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                     if(data->db)
                     {
-                        if(data->cols)
-                          lm->lm_MinMax.MinWidth += _minwidth(data->db)+data->horizSpacing;
-                        else
-                          lm->lm_MinMax.MinHeight += _minheight(data->db)+data->vertSpacing;
+                        if(data->cols) lm->lm_MinMax.MinWidth += _minwidth(data->db)+data->horizSpacing;
+                        else lm->lm_MinMax.MinHeight += _minheight(data->db)+data->vertSpacing;
 
                         #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                         lm->lm_MinMax.MinHeight += (data->flags & FLG_Framed) ? 4 : 0;
@@ -608,6 +592,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 if (data->db)
                 {
                     height += _minheight(data->db)+data->vertSpacing;
+
                     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                     height += (data->flags & FLG_Framed) ? 4 : 0;
                     #endif
@@ -641,24 +626,14 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
               #else
               if(!(data->flags & FLG_Framed))
               {
-                data->objWidth  = lm->lm_MinMax.MinWidth;
-    	          data->objHeight = lm->lm_MinMax.MinHeight;
-    	        }
-	            #endif
+                 data->objWidth  = lm->lm_MinMax.MinWidth;
+    	         data->objHeight = lm->lm_MinMax.MinHeight;
+    	      }
 	          #endif
+	        #endif
 
             data->lcols = cols;
             data->lrows = rows;
-
-            //kprintf("Table:%lx - Cols:%ld LCols:%ld Rows:%ld LRows:%ld\n",data->flags & FLG_Table,data->cols,cols,data->rows,rows);
-
-            /*kprintf("MinMax mw:%ld dw:%ld MW:%ld - mh:%ld dh:%ld MH:%ld\n",
-                lm->lm_MinMax.MinWidth,
-                lm->lm_MinMax.DefWidth,
-                lm->lm_MinMax.MaxWidth,
-                lm->lm_MinMax.MinHeight,
-                lm->lm_MinMax.DefHeight,
-                lm->lm_MinMax.MaxHeight);*/
 
             RETURN(0);
             return 0;
@@ -675,24 +650,23 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
             if (horiz)
             {
-                Object *child;
-                Object          *cstate;
-                       int x, sx, sy = 0, cols = data->lcols, c = 0, r = 0;
+                Object *child, *cstate;
+                int    x, sx, sy = 0, cols = data->lcols, c = 0, r = 0;
                 ULONG  spc = data->horizSpacing;
 
                 switch (data->barPos)
                 {
                     case MUIV_TheBar_BarPos_Center:
-                        #if defined(VIRTUAL)
-                        x = ((ULONG)_width(obj) > data->width) ? (_width(obj)-data->width)>>1 : 0;
+                        #ifdef VIRTUAL
+                        x = (_mwidth(obj)>(int)data->width) ? (_mwidth(obj)-data->width)>>1 : 0;
                         #else
                         x = (_width(obj)-_minwidth(obj))>>1;
                         #endif
                         break;
 
                     case MUIV_TheBar_BarPos_Right:
-                        #if defined(VIRTUAL)
-                        x = ((ULONG)_mwidth(obj) > data->width) ? _mwidth(obj)-data->width : 0;
+                        #ifdef VIRTUAL
+                        x = (_mwidth(obj)>(int)data->width) ? _mwidth(obj)-data->width : 0;
                         #else
                         x = _mwidth(obj)-_minwidth(obj);
                         #endif
@@ -870,7 +844,6 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         y += r*(data->buttonHeight+data->vertSpacing);
                     }
 
-                    //kprintf("Layout: %lx - %ld/%ld %ld/%ld - %ld %ld %ld %ld\n",child,c,cols,r,data->rows,x,y,width,height);
                     if(!MUI_Layout(child,x,y,width,height,0))
                     {
                       RETURN(FALSE);
@@ -882,24 +855,23 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             }
             else
             {
-                Object *child;
-                Object          *cstate;
+                Object *child, *cstate;
                 int    y;
                 ULONG  spc = data->vertSpacing;
 
                 switch (data->barPos)
                 {
                     case MUIV_TheBar_BarPos_Center:
-                        #if defined(VIRTUAL)
-                        y = ((ULONG)_height(obj) > data->height) ? (_height(obj)-data->height)>>1 : 0;
+                        #ifdef VIRTUAL
+                        y = (_mheight(obj)>(int)data->height) ? (_mheight(obj)-data->height)>>1 : 0;
                         #else
                         y = (_height(obj)-_minheight(obj))>>1;
                         #endif
                         break;
 
                     case MUIV_TheBar_BarPos_Right:
-                        #if defined(VIRTUAL)
-                        y = ((ULONG)_height(obj) > data->height) ? _height(obj)-data->height : 0;
+                        #ifdef VIRTUAL
+                        y = (_mheight(obj)>(int)data->height) ? _mheight(obj)-data->height : 0;
                         #else
                         y = _height(obj)-_minheight(obj);
                         #endif
@@ -995,7 +967,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                     if (data->flags & FLG_Framed) x += data->leftBarFrameSpacing+1;
-	            #endif
+	                #endif
 
                     if(!MUI_Layout(child,x,y,width,height,0))
                     {
@@ -1855,11 +1827,11 @@ makePics(struct pack *pt,
 static IPTR
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    struct pack                        pt;
+    struct pack               pt;
     struct MUIS_TheBar_Button *buttons;
     APTR                      pool;
     struct TagItem            *attrs = msg->ops_AttrList;
-    struct MUIS_TheBar_Brush           sb, ssb, dsb;
+    struct MUIS_TheBar_Brush  sb, ssb, dsb;
     ULONG                     pics;
     UWORD                     nbr = 0;
 

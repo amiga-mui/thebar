@@ -20,9 +20,7 @@
 
 ***************************************************************************/
 
-#include <exec/types.h>
-
-#include "Debug.h"
+#include "class.h"
 
 /***********************************************************************/
 
@@ -32,60 +30,55 @@
 #define MAXRUN 128
 #define MAXDAT 128
 
+#define BRCUnpackOK    0
+#define BRCUnpackError 1
+
 /***********************************************************************/
 
-BOOL BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0)
+int
+BRCUnpack(signed char *pSource,signed char *pDest,LONG srcBytes0,LONG dstBytes0)
 {
-  signed char *source = pSource;
-  signed char *dest = pDest;
-  LONG srcBytes = srcBytes0;
-  LONG dstBytes = dstBytes0;
+    signed char *source = pSource, *dest = pDest;
+    SHORT       n;
+    LONG        srcBytes = srcBytes0, dstBytes = dstBytes0;
 
-  ENTER();
-
-  while(dstBytes > 0)
-  {
-    WORD n;
-
-    if((srcBytes -= 1) < 0)
-      break;
-
-    n = *source++;
-
-    if(n >= 0)
+    while(dstBytes>0)
     {
-      n += 1;
+        if ((srcBytes -= 1)<0) return BRCUnpackError;
+        n = *source++;
 
-      if((srcBytes -= n) < 0 || (dstBytes -= n) < 0)
-        break;
+        if (n>=0)
+        {
+            n += 1;
 
-      do
-      {
-        *dest++ = *source++;
-      }
-      while(--n > 0);
+            if (((srcBytes -= n)<0) || ((dstBytes -= n)<0))
+            	return BRCUnpackError;
+
+            do
+            {
+                *dest++ = *source++;
+            } while(--n>0);
+        }
+        else
+            if (n!=-128)
+            {
+                signed char c;
+
+                n = -n+1;
+
+                if (((srcBytes -= 1)<0) || ((dstBytes -= n)<0))
+                	return BRCUnpackError;
+
+                c = *source++;
+
+                do
+                {
+                    *dest++ = c;
+                } while(--n>0);
+            }
     }
-    else if(n != -128)
-    {
-      signed char c;
 
-      n = -n+1;
-
-      if((srcBytes -= 1) < 0 || (dstBytes -= n) < 0)
-        break;
-
-      c = *source++;
-
-      do
-      {
-        *dest++ = c;
-      }
-      while(--n > 0);
-    }
-  }
-
-  RETURN(dstBytes <= 0);
-  return dstBytes <= 0;
+    return BRCUnpackOK;
 }
 
 /***********************************************************************/

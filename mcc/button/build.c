@@ -1033,7 +1033,6 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         #endif
         else make->chunky = LUT8ToRGB(data->image,&copy);
 
-
         freeSource(data->image,back);
         if (!make->chunky)
         {
@@ -1219,13 +1218,13 @@ buildBitMapsCyber(struct InstData *data)
     if (data->allowAlphaChannel && data->image->flags & BRFLG_AlphaMask)
     #endif
     {
-	    data->nchunky  = make->chunky;
+        data->nchunky  = make->chunky;
     	data->gchunky  = make->gchunky;
 
-      data->snchunky = make->schunky;
+        data->snchunky = make->schunky;
 	    data->sgchunky = make->sgchunky;
 
-      data->dnchunky = make->dchunky;
+        data->dnchunky = make->dchunky;
     	data->dgchunky = make->dgchunky;
     }
     else
@@ -1237,7 +1236,7 @@ buildBitMapsCyber(struct InstData *data)
   	}
 
     gfree(make);
-
+	
     LEAVE();
 }
 
