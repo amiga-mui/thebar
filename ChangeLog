@@ -2,6 +2,12 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-02  Jens Langner <Jens.Langner@light-speed.de>
+
+  * TheBar-Test.c: fixed another minor compiler warning.
+  * mccinit.c: updated to latest available version which fixes some minor
+    compiler warnings when used with the MorphOS SDK.
+
 2008-02-02  Thore Böckelmann <tboeckel@gmx.de>
 
   * demo10.c: fixed several things to make it compilable for OS4.
@@ -11,35 +17,19 @@ MUI TheBar MCC class - ChangeLog
   * Fixed demo10.c and demos Makefile. There is still something  that
     prevents demo10.c NTRaiseActive to make it works fine in main trunk
     code; too tired to find it now.
-
-2008-02-01  Alfonso Ranieri <alforan@tin.it>
-
   * brc1.c were (in mcc/ and in button/) broken. Fixed with my version.
     Last release was OK, while those in the actual svn didn't make
     any compressed image to work (see demo4 f.e.). Note that is
     a function returning (an int) 0 for success, 1 otherwise; so 
     defining it as returning a BOOL might be quite confusing.
-
   * Changed makebutton() in mcc/class.c to something more reasonable
     (attrs[i] changed to tag-> to make the code faster and more readable)
-
   * Fixed layout hook in class.c; when the bar was vertical and the 
     position was at right (bottom), the last button could be drawn in a non
     correct way; it MUST be tested on 68K.
-
   * Added demo10.c in the demo drawer, because it is cute :)
     So modified Makefile and added pics/Balls.png
-
   * Note that the TheBarDemo doesn't compile for OS4 on linux cross
-
-  * Please, someone, who wrote mccinit.c, should fix the mos warnings in a
-    convenient way; they are the following:
-    
-    ../include/mccinit.c: In function `mccLibInit':
-    ../include/mccinit.c:626: warning: assignment from incompatible pointer type (DOSBase must be a DosLibrary *)
-    ../include/mccinit.c:628: warning: assignment from incompatible pointer type (GfxBase must be a GfxBase *)
-    ../include/mccinit.c:630: warning: assignment from incompatible pointer type (IntuitionBase must be a IntuitionBase *)
-    ../include/mccinit.c:656: warning: initialization discards qualifiers from pointer target type (SUPERCLASSP must be casted to STRPTR)
 
 2008-01-30  Alfonso Ranieri <alforan@tin.it>
 
