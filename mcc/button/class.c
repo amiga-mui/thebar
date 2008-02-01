@@ -1302,19 +1302,19 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     {
         struct RastPort *rp = &data->rp;
         ULONG           bl = flags & FLG_Borderless,
-                                 se = flags & FLG_Selected,
-                                 ov = flags & FLG_MouseOver,
-                                 ra = flags & FLG_Raised,
-                                 di = flags & FLG_Disabled,
-                                 done = FALSE,
-                                 strip = (flags & FLG_Strip) && !(flags & FLG_Scaled);
+                        se = flags & FLG_Selected,
+                        ov = flags & FLG_MouseOver,
+                        ra = flags & FLG_Raised,
+                        di = flags & FLG_Disabled,
+                        done = FALSE,
+                        strip = (flags & FLG_Strip) && !(flags & FLG_Scaled);
         UWORD           txp = 0, typ = 0, ixp = 0, iyp = 0,
-                                 iw = data->imgWidth, ih = data->imgHeight,
-                                 tw = data->lInfo.te_Width, th  = data->lInfo.te_Height,
-                                 tmy = data->lInfo.te_Extent.MinY, vm = data->vMode,
-                                 hisp = data->horizInnerSpacing, tisp = data->topInnerSpacing;
+                        iw = data->imgWidth, ih = data->imgHeight,
+                        tw = data->lInfo.te_Width, th  = data->lInfo.te_Height,
+                        tmy = data->lInfo.te_Extent.MinY, vm = data->vMode,
+                        hisp = data->horizInnerSpacing, tisp = data->topInnerSpacing;
         WORD            mt = _mtop(obj),  ml = _mleft(obj),
-                                 mw = _mwidth(obj), mh = _mheight(obj);
+                        mw = _mwidth(obj), mh = _mheight(obj);
 
         switch(data->lPos)
         {
@@ -1654,12 +1654,14 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 struct BitMap *bm;
                 APTR          mask;
                 UWORD         x = 0, y = 0;
-                UBYTE	        *chunky = NULL;
+                UBYTE	      *chunky = NULL;
                 #if defined(WITH_ALPHA)
-                ULONG	        useChunky = data->image->flags & BRFLG_AlphaMask;
+                ULONG	      useChunky = data->image->flags & BRFLG_AlphaMask;
                 #else
-                ULONG	        useChunky = (data->allowAlphaChannel && data->image->flags & BRFLG_AlphaMask);
+                ULONG	      useChunky = (data->allowAlphaChannel && data->image->flags & BRFLG_AlphaMask);
                 #endif
+
+                useChunky = data->image->flags & BRFLG_AlphaMask;
 
                 if (strip)
                 {
