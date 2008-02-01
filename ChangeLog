@@ -4,6 +4,12 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-01  Alfonso Ranieri <alforan@tin.it>
 
+  * Fixed demo10.c and demos Makefile. There is still something  that
+    prevents demo10.c NTRaiseActive to make it works fine in main trunk
+    code; too tired to find it now.
+
+2008-02-01  Alfonso Ranieri <alforan@tin.it>
+
   * brc1.c were (in mcc/ and in button/) broken. Fixed with my version.
     Last release was OK, while those in the actual svn didn't make
     any compressed image to work (see demo4 f.e.). Note that is
