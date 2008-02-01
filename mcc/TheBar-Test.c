@@ -155,7 +155,7 @@ int main(void)
       initSpacerClass();
       initDragBarClass();
 
-      lib_thisClass = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
+      lib_thisClass = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
 
       if(lib_thisClass && (app = ApplicationObject,
                          MUIA_Application_Title,         "TheBar Demo1",
