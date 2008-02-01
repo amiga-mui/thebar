@@ -2,6 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-02  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo10.c: fixed several things to make it compilable for OS4.
+
 2008-02-01  Alfonso Ranieri <alforan@tin.it>
 
   * Fixed demo10.c and demos Makefile. There is still something  that
