@@ -116,13 +116,13 @@ static BOOL ClassInit(UNUSED struct Library *base)
       // check the version of MUI)
       if(MUIMasterBase->lib_Version >= MUIVER20)
       {
-        lib_flags |= BASEFLG_MUI20;
+        setFlag(lib_flags, BASEFLG_MUI20);
 
         if(MUIMasterBase->lib_Version > MUIVER20 || MUIMasterBase->lib_Revision >= 5341)
-          lib_flags |= BASEFLG_MUI4;
+          setFlag(lib_flags, BASEFLG_MUI4);
       }
 
-      lib_flags |= BASEFLG_Init;
+      setFlag(lib_flags, BASEFLG_Init);
       lib_thisClass = ThisClass;
 
       RETURN(TRUE);
@@ -172,7 +172,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
     DataTypesBase = NULL;
   }
 
-  lib_flags &= ~(BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
+  clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
 
   LEAVE();
 
