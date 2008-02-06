@@ -56,8 +56,8 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     	Object *spacer;
 
         spacer = spacerObject,
-            MUIA_Group_Horiz,                                                                    flags & FLG_Horiz,
-            (userFlags & UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
+            MUIA_Group_Horiz,                                                                    isFlagSet(flags, FLG_Horiz),
+            isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
             MUIA_TheButton_TheBar, obj,
         End;
 
@@ -69,9 +69,9 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
       Object *spacer;
 
       spacer = spacerObject,
-               MUIA_Group_Horiz,                                                                    flags & FLG_Horiz,
-               (flags & FLG_BarSpacer) ? TAG_IGNORE : MUIA_TheButton_Spacer,                        MUIV_TheButton_Spacer_Button,
-               (userFlags & UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
+               MUIA_Group_Horiz,                                                                    isFlagSet(flags, FLG_Horiz),
+               isFlagSet(flags, FLG_BarSpacer) ? TAG_IGNORE : MUIA_TheButton_Spacer,                        MUIV_TheButton_Spacer_Button,
+               isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
                MUIA_TheButton_TheBar, obj,
       End;
 
@@ -80,10 +80,10 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     }
     else if(button->img==MUIV_TheBar_ImageSpacer)
     {
-      if(!(data->flags & FLG_TextOnly) && data->brushes &&((LONG)data->spacer>=0) && (data->viewMode!=MUIV_TheBar_ViewMode_Text) &&
+      if(isFlagClear(data->flags, FLG_TextOnly) && data->brushes &&((LONG)data->spacer>=0) && (data->viewMode!=MUIV_TheBar_ViewMode_Text) &&
          (o = TheButtonObject,
                MUIA_TheButton_MinVer,                                       16,
-               MUIA_Group_Horiz,                                            flags & FLG_Horiz,
+               MUIA_Group_Horiz,                                            isFlagSet(flags, FLG_Horiz),
                MUIA_TheButton_TheBar,                                       (IPTR)obj,
                MUIA_TheButton_NoClick,                                      TRUE,
                MUIA_TheButton_Image,                                        (IPTR)data->brushes[data->spacer],
@@ -92,10 +92,10 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
                MUIA_TheButton_ViewMode,                                     MUIV_TheButton_ViewMode_Gfx,
                MUIA_TheButton_Borderless,                                   TRUE,
                MUIA_TheButton_Raised,                                       FALSE,
-               MUIA_TheButton_Sunny,                                        flags & FLG_Sunny,
-               MUIA_TheButton_Scaled,                                       flags & FLG_Scaled,
+               MUIA_TheButton_Sunny,                                        isFlagSet(flags, FLG_Sunny),
+               MUIA_TheButton_Scaled,                                       isFlagSet(flags, FLG_Scaled),
                MUIA_TheButton_Spacer,                                       MUIV_TheButton_Spacer_Image,
-               (flags & FLG_FreeStrip) ? MUIA_TheButton_Strip : TAG_IGNORE, (IPTR)&data->strip,
+               isFlagSet(flags, FLG_FreeStrip) ? MUIA_TheButton_Strip : TAG_IGNORE, (IPTR)&data->strip,
           End))
       {
         RETURN(o);
@@ -106,8 +106,8 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
         Object *spacer;
 
         spacer = spacerObject,
-                 MUIA_Group_Horiz,                                                                    flags & FLG_Horiz,
-                 (userFlags & UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
+                 MUIA_Group_Horiz,                                                                    isFlagSet(flags, FLG_Horiz),
+                 isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
                  MUIA_TheButton_TheBar, obj,
                End;
 
@@ -116,7 +116,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
       }
     }
 
-    if (flags & FLG_TextOnly)
+    if (isFlagSet(flags, FLG_TextOnly))
     {
         viewMode = MUIV_TheBar_ViewMode_Text;
         brush = sbrush = dbrush = NULL;
@@ -129,13 +129,18 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
         {
             brush = data->brushes[button->img];
 
-            if (data->sbrushes) sbrush = data->sbrushes[button->img];
-            else sbrush = NULL;
+            if (data->sbrushes)
+                sbrush = data->sbrushes[button->img];
+            else
+                sbrush = NULL;
 
-            if (data->dbrushes) dbrush = data->dbrushes[button->img];
-            else dbrush = NULL;
+            if (data->dbrushes)
+                dbrush = data->dbrushes[button->img];
+            else
+                dbrush = NULL;
         }
-        else brush = sbrush = dbrush = NULL;
+        else
+            brush = sbrush = dbrush = NULL;
     }
 
     tag = attrs;
@@ -146,13 +151,13 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     #endif
 
     tag->ti_Tag    = MUIA_Disabled;
-    tag++->ti_Data = bflags & BFLG_Disabled;
+    tag++->ti_Data = isFlagSet(bflags, BFLG_Disabled);
 
     tag->ti_Tag    = MUIA_Selected;
-    tag++->ti_Data = bflags & BFLG_Selected;
+    tag++->ti_Data = isFlagSet(bflags, BFLG_Selected);
 
     tag->ti_Tag    = MUIA_Group_Horiz;
-    tag++->ti_Data = flags & FLG_Horiz;
+    tag++->ti_Data = isFlagSet(flags, FLG_Horiz);
 
     tag->ti_Tag    = MUIA_TheButton_MinVer;
     tag++->ti_Data = 16;
@@ -173,25 +178,25 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     tag++->ti_Data = (IPTR)button->text;
 
     tag->ti_Tag    = MUIA_TheButton_Immediate;
-    tag++->ti_Data = bflags & BFLG_Immediate;
+    tag++->ti_Data = isFlagSet(bflags, BFLG_Immediate);
 
     tag->ti_Tag    = MUIA_TheButton_Toggle;
-    tag++->ti_Data = bflags & BFLG_Toggle;
+    tag++->ti_Data = isFlagSet(bflags, BFLG_Toggle);
 
     tag->ti_Tag    = MUIA_TheButton_Borderless;
-    tag++->ti_Data = flags & FLG_Borderless;
+    tag++->ti_Data = isFlagSet(flags, FLG_Borderless);
 
     tag->ti_Tag    = MUIA_TheButton_Raised;
-    tag++->ti_Data = flags & FLG_Raised;
+    tag++->ti_Data = isFlagSet(flags, FLG_Raised);
 
     tag->ti_Tag    = MUIA_TheButton_Sunny;
-    tag++->ti_Data = flags & FLG_Sunny;
+    tag++->ti_Data = isFlagSet(flags, FLG_Sunny);
 
     tag->ti_Tag    = MUIA_TheButton_Scaled;
-    tag++->ti_Data = flags & FLG_Scaled;
+    tag++->ti_Data = isFlagSet(flags, FLG_Scaled);
 
     tag->ti_Tag    = MUIA_TheButton_EnableKey;
-    tag++->ti_Data = flags & FLG_EnableKeys;
+    tag++->ti_Data = isFlagSet(flags, FLG_EnableKeys);
 
     tag->ti_Tag    = MUIA_TheButton_ViewMode;
     tag++->ti_Data = viewMode;
@@ -208,7 +213,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
         tag++->ti_Data = (IPTR)button->help;
     }
 
-    if (flags & FLG_FreeStrip)
+    if (isFlagSet(flags, FLG_FreeStrip))
     {
         tag->ti_Tag    = MUIA_TheButton_Strip;
         tag++->ti_Data = (IPTR)&data->strip;
@@ -216,85 +221,85 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
 
     if (userFlags || userFlags2)
     {
-        if (userFlags & UFLG_UserHorizTextGfxSpacing)
+        if (isFlagSet(userFlags, UFLG_UserHorizTextGfxSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_HorizTextGfxSpacing;
             tag++->ti_Data = data->horizTextGfxSpacing;
         }
 
-        if (userFlags & UFLG_UserVertTextGfxSpacing)
+        if (isFlagSet(userFlags, UFLG_UserVertTextGfxSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_VertTextGfxSpacing;
             tag++->ti_Data = data->vertTextGfxSpacing;
         }
 
-        if (userFlags & UFLG_UserHorizInnerSpacing)
+        if (isFlagSet(userFlags, UFLG_UserHorizInnerSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_HorizInnerSpacing;
             tag++->ti_Data = data->horizInnerSpacing;
         }
 
-        if (userFlags & UFLG_UserTopInnerSpacing)
+        if (isFlagSet(userFlags, UFLG_UserTopInnerSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_TopInnerSpacing;
             tag++->ti_Data = data->topInnerSpacing;
         }
 
-        if (userFlags & UFLG_UserBottomInnerSpacing)
+        if (isFlagSet(userFlags, UFLG_UserBottomInnerSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_BottomInnerSpacing;
             tag++->ti_Data = data->bottomInnerSpacing;
         }
 
-        if (userFlags & UFLG_UserPrecision)
+        if (isFlagSet(userFlags, UFLG_UserPrecision))
         {
             tag->ti_Tag    = MUIA_TheButton_Precision;
             tag++->ti_Data = data->precision;
         }
 
-        if (userFlags & UFLG_UserDisMode)
+        if (isFlagSet(userFlags, UFLG_UserDisMode))
         {
             tag->ti_Tag    = MUIA_TheButton_DisMode;
             tag++->ti_Data = data->disMode;
         }
 
-        if (userFlags & UFLG_UserScale)
+        if (isFlagSet(userFlags, UFLG_UserScale))
         {
             tag->ti_Tag    = MUIA_TheButton_Scale;
             tag++->ti_Data = data->scale;
         }
 
-        if (userFlags & UFLG_UserSpecialSelect)
+        if (isFlagSet(userFlags, UFLG_UserSpecialSelect))
         {
             tag->ti_Tag    = MUIA_TheButton_SpecialSelect;
             tag++->ti_Data = userFlags & UFLG_SpecialSelect;
         }
 
-        if (userFlags & UFLG_UserTextOverUseShine)
+        if (isFlagSet(userFlags, UFLG_UserTextOverUseShine))
         {
             tag->ti_Tag    = MUIA_TheButton_TextOverUseShine;
             tag++->ti_Data = userFlags & UFLG_TextOverUseShine;
         }
 
-        if (userFlags & UFLG_UserIgnoreSelImages)
+        if (isFlagSet(userFlags, UFLG_UserIgnoreSelImages))
         {
             tag->ti_Tag    = MUIA_TheButton_IgnoreSelImages;
             tag++->ti_Data = userFlags & UFLG_IgnoreSelImages;
         }
 
-        if (userFlags & UFLG_UserIgnoreDisImages)
+        if (isFlagSet(userFlags, UFLG_UserIgnoreDisImages))
         {
             tag->ti_Tag    = MUIA_TheButton_IgnoreDisImages;
             tag++->ti_Data = userFlags & UFLG_IgnoreDisImages;
         }
 
-        if (userFlags2 & UFLG2_UserDontMove)
+        if (isFlagSet(userFlags2, UFLG2_UserDontMove))
         {
             tag->ti_Tag    = MUIA_TheButton_DontMove;
             tag++->ti_Data = userFlags2 & UFLG2_DontMove;
         }
 
-        if (userFlags2 & UFLG2_NtRaiseActive)
+        if (isFlagSet(userFlags2, UFLG2_NtRaiseActive))
         {
             tag->ti_Tag    = MUIA_TheButton_NtRaiseActive;
             tag++->ti_Data = userFlags2 & UFLG2_NtRaiseActive;
@@ -1852,14 +1857,16 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     PackStructureTags(&pt,ptable,attrs);
 
-    if (pt.viewMode>=MUIV_TheBar_ViewMode_Last) pt.viewMode = MUIV_TheBar_ViewMode_Text;
-    if (pt.labelPos>=MUIV_TheBar_LabelPos_Last) pt.labelPos = MUIV_TheBar_LabelPos_Bottom;
+    if (pt.viewMode>=MUIV_TheBar_ViewMode_Last)
+        pt.viewMode = MUIV_TheBar_ViewMode_Text;
+    if (pt.labelPos>=MUIV_TheBar_LabelPos_Last)
+        pt.labelPos = MUIV_TheBar_LabelPos_Bottom;
 
-    if ((pt.pflags & PFLG_FreeHorizExists) ? (pt.flags & PFLG_FreeHoriz) : (pt.flags & FLG_Horiz))
-        pt.flags |= FLG_FreeHoriz;
+    if (isFlagSet(pt.pflags, PFLG_FreeHorizExists) ? isFlagSet(pt.flags, PFLG_FreeHoriz) : isFlagSet(pt.flags, FLG_Horiz))
+        setFlag(pt.flags, FLG_FreeHoriz);
 
-    if ((pt.pflags & PFLG_FreeVertExists) ? (pt.flags & PFLG_FreeVert) : (pt.flags & FLG_Horiz) == 0)
-        pt.flags |= FLG_FreeVert;
+    if (isFlagSet(pt.pflags, PFLG_FreeVertExists) ? isFlagSet(pt.flags, PFLG_FreeVert) : isFlagSet(pt.flags, FLG_Horiz) == 0)
+        setFlag(pt.flags, FLG_FreeVert);
 
 	pics = makePics(&pt,pool,&sb,&ssb,&dsb,&nbr);
 
@@ -1867,7 +1874,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             MUIA_Group_LayoutHook,   (IPTR)&LayoutHook,
             MUIA_Group_HorizSpacing, 0,
             MUIA_Group_VertSpacing,  0,
-            (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, TRUE,
+            isFlagSet(lib_flags, BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, TRUE,
             TAG_MORE,(IPTR)attrs)))
     {
         struct InstData *data = INST_DATA(cl,obj);
@@ -1891,11 +1898,14 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         #endif
         data->sortMsgID = MUIM_Group_Sort;
 
-        if (data->flags & FLG_FreeStrip)
+        if (isFlagSet(data->flags, FLG_FreeStrip))
         {
-            if (sb.data)  copymem(&data->image,&sb,sizeof(data->image));
-            if (ssb.data) copymem(&data->simage,&ssb,sizeof(data->simage));
-            if (dsb.data) copymem(&data->dimage,&dsb,sizeof(data->dimage));
+            if (sb.data)
+                copymem(&data->image,&sb,sizeof(data->image));
+            if (ssb.data)
+                copymem(&data->simage,&ssb,sizeof(data->simage));
+            if (dsb.data)
+                copymem(&data->dimage,&dsb,sizeof(data->dimage));
         }
 
         data->userFlags  = pt.userFlags;
@@ -1905,119 +1915,153 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         {
             ULONG userFlags = data->userFlags, userFlags2 = data->userFlags2;
 
-            if (userFlags & UFLG_UserHorizSpacing)
+            if (isFlagSet(userFlags, UFLG_UserHorizSpacing))
             {
-                if (pt.horizSpacing<=256) data->horizSpacing = pt.horizSpacing;
-                else userFlags &= ~UFLG_UserHorizSpacing;
+                if (pt.horizSpacing<=256)
+                    data->horizSpacing = pt.horizSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserHorizSpacing);
             }
 
-            if (userFlags & UFLG_UserVertSpacing)
+            if (isFlagSet(userFlags, UFLG_UserVertSpacing))
             {
-                if (pt.vertSpacing<=256) data->vertSpacing = pt.vertSpacing;
-                else userFlags &= ~UFLG_UserVertSpacing;
+                if (pt.vertSpacing<=256)
+                    data->vertSpacing = pt.vertSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserVertSpacing);
             }
 
-            if (userFlags & UFLG_UserLeftBarFrameSpacing)
+            if (isFlagSet(userFlags, UFLG_UserLeftBarFrameSpacing))
             {
-                if (pt.leftBarFrameSpacing>0 && pt.leftBarFrameSpacing<=256) data->leftBarFrameSpacing = pt.leftBarFrameSpacing;
-                else userFlags &= ~UFLG_UserLeftBarFrameSpacing;
+                if (pt.leftBarFrameSpacing>0 && pt.leftBarFrameSpacing<=256)
+                    data->leftBarFrameSpacing = pt.leftBarFrameSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserLeftBarFrameSpacing);
             }
 
-            if (userFlags & UFLG_UserRightBarFrameSpacing)
+            if (isFlagSet(userFlags, UFLG_UserRightBarFrameSpacing))
             {
-                if (pt.rightBarFrameSpacing>0 && pt.rightBarFrameSpacing<=256) data->rightBarFrameSpacing = pt.rightBarFrameSpacing;
-                else userFlags &= ~UFLG_UserRightBarFrameSpacing;
+                if (pt.rightBarFrameSpacing>0 && pt.rightBarFrameSpacing<=256)
+                    data->rightBarFrameSpacing = pt.rightBarFrameSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserRightBarFrameSpacing);
             }
 
-            if (userFlags & UFLG_UserTopBarFrameSpacing)
+            if (isFlagSet(userFlags, UFLG_UserTopBarFrameSpacing))
             {
-                if (pt.topBarFrameSpacing>0 && pt.topBarFrameSpacing<=256) data->topBarFrameSpacing = pt.topBarFrameSpacing;
-                else userFlags &= ~UFLG_UserTopBarFrameSpacing;
+                if (pt.topBarFrameSpacing>0 && pt.topBarFrameSpacing<=256)
+                    data->topBarFrameSpacing = pt.topBarFrameSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserTopBarFrameSpacing);
             }
 
-            if (userFlags & UFLG_UserBottomBarFrameSpacing)
+            if (isFlagSet(userFlags, UFLG_UserBottomBarFrameSpacing))
             {
-                if (pt.bottomBarFrameSpacing>0 && pt.bottomBarFrameSpacing<=256) data->bottomBarFrameSpacing = pt.bottomBarFrameSpacing;
-                else userFlags &= ~UFLG_UserBottomBarFrameSpacing;
+                if (pt.bottomBarFrameSpacing>0 && pt.bottomBarFrameSpacing<=256)
+                    data->bottomBarFrameSpacing = pt.bottomBarFrameSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserBottomBarFrameSpacing);
             }
 
-            if (userFlags & UFLG_UserBarSpacerSpacing)
+            if (isFlagSet(userFlags, UFLG_UserBarSpacerSpacing))
             {
-                if (pt.barSpacerSpacing<=256) data->barSpacerSpacing = pt.barSpacerSpacing;
-                else userFlags &= ~UFLG_UserBarSpacerSpacing;
+                if (pt.barSpacerSpacing<=256)
+                    data->barSpacerSpacing = pt.barSpacerSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserBarSpacerSpacing);
             }
 
-            if (userFlags & UFLG_UserHorizInnerSpacing)
+            if (isFlagSet(userFlags, UFLG_UserHorizInnerSpacing))
             {
-                if (pt.horizInnerSpacing>0 && pt.horizInnerSpacing<=256) data->horizInnerSpacing = pt.horizInnerSpacing;
-                else userFlags &= ~UFLG_UserHorizInnerSpacing;
+                if (pt.horizInnerSpacing>0 && pt.horizInnerSpacing<=256)
+                    data->horizInnerSpacing = pt.horizInnerSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserHorizInnerSpacing);
             }
 
-            if (userFlags & UFLG_UserTopInnerSpacing)
+            if (isFlagSet(userFlags, UFLG_UserTopInnerSpacing))
             {
-                if (pt.topInnerSpacing>0 && pt.topInnerSpacing<=256) data->topInnerSpacing = pt.topInnerSpacing;
-                else userFlags &= ~UFLG_UserTopInnerSpacing;
+                if (pt.topInnerSpacing>0 && pt.topInnerSpacing<=256)
+                    data->topInnerSpacing = pt.topInnerSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserTopInnerSpacing);
             }
 
-            if (userFlags & UFLG_UserBottomInnerSpacing)
+            if (isFlagSet(userFlags, UFLG_UserBottomInnerSpacing))
             {
-                if (pt.bottomInnerSpacing>0 && pt.bottomInnerSpacing<=256) data->bottomInnerSpacing = pt.bottomInnerSpacing;
-                else userFlags &= ~UFLG_UserBottomInnerSpacing;
+                if (pt.bottomInnerSpacing>0 && pt.bottomInnerSpacing<=256)
+                    data->bottomInnerSpacing = pt.bottomInnerSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserBottomInnerSpacing);
             }
 
-            if (userFlags & UFLG_UserHorizTextGfxSpacing)
+            if (isFlagSet(userFlags, UFLG_UserHorizTextGfxSpacing))
             {
-                if (pt.horizTextGfxSpacing>0 && pt.horizTextGfxSpacing<=256) data->horizTextGfxSpacing = pt.horizTextGfxSpacing;
-                else userFlags &= ~UFLG_UserHorizTextGfxSpacing;
+                if (pt.horizTextGfxSpacing>0 && pt.horizTextGfxSpacing<=256)
+                    data->horizTextGfxSpacing = pt.horizTextGfxSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserHorizTextGfxSpacing);
             }
 
-            if (userFlags & UFLG_UserVertTextGfxSpacing)
+            if (isFlagSet(userFlags, UFLG_UserVertTextGfxSpacing))
             {
-                if (pt.vertTextGfxSpacing>0 && pt.vertTextGfxSpacing<=256) data->vertTextGfxSpacing = pt.vertTextGfxSpacing;
-                else userFlags &= ~UFLG_UserVertTextGfxSpacing;
+                if (pt.vertTextGfxSpacing>0 && pt.vertTextGfxSpacing<=256)
+                    data->vertTextGfxSpacing = pt.vertTextGfxSpacing;
+                else
+                    clearFlag(userFlags, UFLG_UserVertTextGfxSpacing);
             }
 
-            if (userFlags & UFLG_UserPrecision)
+            if (isFlagSet(userFlags, UFLG_UserPrecision))
             {
-                if (pt.precision<MUIV_TheBar_Precision_Last) data->precision = pt.precision;
-                else userFlags &= ~UFLG_UserPrecision;
+                if (pt.precision<MUIV_TheBar_Precision_Last)
+                    data->precision = pt.precision;
+                else
+                    clearFlag(userFlags, UFLG_UserPrecision);
             }
 
-            if (userFlags & UFLG_UserScale)
+            if (isFlagSet(userFlags, UFLG_UserScale))
             {
-                if (pt.scale>=25 && pt.scale<=400) data->scale = pt.scale;
-                else userFlags &= ~UFLG_UserScale;
+                if (pt.scale>=25 && pt.scale<=400)
+                    data->scale = pt.scale;
+                else
+                    clearFlag(userFlags, UFLG_UserScale);
             }
 
-            if (userFlags & UFLG_UserDisMode)
+            if (isFlagSet(userFlags, UFLG_UserDisMode))
             {
                 if (pt.disMode<MUIV_TheBar_DisMode_Last)
                 {
                     data->disMode = pt.disMode;
-                    if (data->disMode==MUIV_TheBar_DisMode_Sunny) data->flags &= ~FLG_Sunny;
+                    if (data->disMode==MUIV_TheBar_DisMode_Sunny)
+                        clearFlag(data->flags, FLG_Sunny);
                 }
-                else userFlags &= ~UFLG_UserDisMode;
+                else
+                    clearFlag(userFlags, UFLG_UserDisMode);
             }
 
-            if (userFlags2 & UFLG2_UserSpacersSize)
+            if (isFlagSet(userFlags2, UFLG2_UserSpacersSize))
             {
-                if (pt.spacersSize<MUIV_TheBar_SpacersSize_Last) data->spacersSize = pt.spacersSize;
-                else userFlags2 &= ~UFLG2_UserSpacersSize;
+                if (pt.spacersSize<MUIV_TheBar_SpacersSize_Last)
+                    data->spacersSize = pt.spacersSize;
+                else
+                    clearFlag(userFlags2, UFLG2_UserSpacersSize);
             }
 
             data->userFlags  = userFlags;
             data->userFlags2 = userFlags2;
         }
 
-        if (pt.spacer<data->nbr-1) data->spacer = pt.spacer;
-        else data->spacer = -1;
+        if (pt.spacer<data->nbr-1)
+            data->spacer = pt.spacer;
+        else
+            data->spacer = -1;
 
         NewList((struct List *)&data->buttons);
 
-        if (data->flags & FLG_DragBar)
+        if (isFlagSet(data->flags, FLG_DragBar))
         {
             if((data->db = dragBarObject,
-                    MUIA_Group_Horiz,      data->flags & FLG_Horiz,
+                    MUIA_Group_Horiz,      isFlagSet(data->flags, FLG_Horiz),
                     MUIA_TheButton_TheBar, (IPTR)obj,
                 End))
             {
@@ -2031,19 +2075,21 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             {
                 DoMethod(obj,MUIM_TheBar_AddButton,(IPTR)buttons);
 
-                if (buttons->exclude && (buttons->flags & BFLG_Selected))
+                if (buttons->exclude && isFlagSet(buttons->flags, BFLG_Selected))
                     data->active = buttons->ID;
 
                 buttons++;
             }
         }
 
-        if (data->remove) updateRemove(cl,obj,data);
+        if (data->remove)
+            updateRemove(cl,obj,data);
 
         if (data->cols || data->rows)
         {
-            data->flags |= FLG_Table;
-            if (data->flags & FLG_DragBar) set(data->db,MUIA_Group_Horiz,data->cols);
+            setFlag(data->flags, FLG_Table);
+            if (isFlagSet(data->flags, FLG_DragBar))
+                set(data->db,MUIA_Group_Horiz,data->cols);
         }
 
         #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
@@ -2113,34 +2159,34 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_TheBar_DisImages:        *msg->opg_Storage = (IPTR)data->dbrushes; result=TRUE; break;
     case MUIA_TheBar_SelImages:        *msg->opg_Storage = (IPTR)data->sbrushes; result=TRUE; break;
     case MUIA_TheBar_ViewMode:         *msg->opg_Storage = data->viewMode; result=TRUE; break;
-    case MUIA_TheBar_Borderless:       *msg->opg_Storage = (data->flags & FLG_Borderless) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_Raised:           *msg->opg_Storage = (data->flags & FLG_Raised) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_Sunny:            *msg->opg_Storage = (data->flags & FLG_Sunny) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_Scaled:           *msg->opg_Storage = (data->flags & FLG_Scaled) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_Borderless:       *msg->opg_Storage = isFlagSet(data->flags, FLG_Borderless) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_Raised:           *msg->opg_Storage = isFlagSet(data->flags, FLG_Raised) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_Sunny:            *msg->opg_Storage = isFlagSet(data->flags, FLG_Sunny) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_Scaled:           *msg->opg_Storage = isFlagSet(data->flags, FLG_Scaled) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_SpacerIndex:      *msg->opg_Storage = data->spacer; result=TRUE; break;
-    case MUIA_TheBar_EnableKeys:       *msg->opg_Storage = (data->flags & FLG_EnableKeys) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_TextOnly:         *msg->opg_Storage = (data->flags & FLG_TextOnly) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_EnableKeys:       *msg->opg_Storage = isFlagSet(data->flags, FLG_EnableKeys) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_TextOnly:         *msg->opg_Storage = isFlagSet(data->flags, FLG_TextOnly) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_LabelPos:         *msg->opg_Storage = data->labelPos; result=TRUE; break;
     case MUIA_TheBar_BarPos:           *msg->opg_Storage = data->barPos; result=TRUE; break;
     case MUIA_TheBar_Active:           *msg->opg_Storage = data->active; result=TRUE; break;
     case MUIA_TheBar_Columns:          *msg->opg_Storage = data->cols; result=TRUE; break;
     case MUIA_TheBar_Rows:             *msg->opg_Storage = data->rows; result=TRUE; break;
-    case MUIA_TheBar_Free:             *msg->opg_Storage = ((data->flags & FLG_FreeHoriz) && (data->flags & FLG_FreeVert)) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_FreeHoriz:        *msg->opg_Storage = (data->flags & FLG_FreeHoriz) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_FreeVert:         *msg->opg_Storage = (data->flags & FLG_FreeVert) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_BarSpacer:        *msg->opg_Storage = (data->flags & FLG_BarSpacer) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_Free:             *msg->opg_Storage = (isFlagSet(data->flags, FLG_FreeHoriz) && isFlagSet(data->flags, FLG_FreeVert)) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_FreeHoriz:        *msg->opg_Storage = isFlagSet(data->flags, FLG_FreeHoriz) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_FreeVert:         *msg->opg_Storage = isFlagSet(data->flags, FLG_FreeVert) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_BarSpacer:        *msg->opg_Storage = isFlagSet(data->flags, FLG_BarSpacer) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_RemoveSpacers:    *msg->opg_Storage = data->remove; result=TRUE; break;
     #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     case MUIA_TheBar_Frame:            *msg->opg_Storage = FALSE; result=TRUE; break;
     #else
-    case MUIA_TheBar_Frame:            *msg->opg_Storage = (data->flags & FLG_Framed) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_Frame:            *msg->opg_Storage = isFlagSet(data->flags, FLG_Framed) ? TRUE : FALSE; result=TRUE; break;
     #endif
-    case MUIA_TheBar_DragBar:          *msg->opg_Storage = (data->flags & FLG_DragBar) ? TRUE : FALSE; result=TRUE; break;
-    case MUIA_TheBar_IgnoreAppearance: *msg->opg_Storage = (data->flags2 & FLG2_IgnoreAppearance) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_DragBar:          *msg->opg_Storage = isFlagSet(data->flags, FLG_DragBar) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_IgnoreAppearance: *msg->opg_Storage = isFlagSet(data->flags2, FLG2_IgnoreAppearance) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_DisMode:          *msg->opg_Storage = data->disMode; result=TRUE; break;
-    case MUIA_TheBar_NtRaiseActive:    *msg->opg_Storage = (data->userFlags2 & UFLG2_NtRaiseActive) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_NtRaiseActive:    *msg->opg_Storage = isFlagSet(data->userFlags2, UFLG2_NtRaiseActive) ? TRUE : FALSE; result=TRUE; break;
 
-    case MUIA_Group_Horiz:             *msg->opg_Storage = (data->flags & FLG_Horiz) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_Group_Horiz:             *msg->opg_Storage = isFlagSet(data->flags, FLG_Horiz) ? TRUE : FALSE; result=TRUE; break;
 
     case MUIA_Version:                 *msg->opg_Storage = LIB_VERSION; result=TRUE; break;
     case MUIA_Revision:                *msg->opg_Storage = LIB_REVISION; result=TRUE; break;
@@ -2247,58 +2293,67 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
                         if (b->exclude & (1<<button->ID))
                         {
-                            if (button->flags & BFLG_Sleep) b->flags &= ~MUIV_TheBar_ButtonFlag_Selected;
-                            else set(button->obj,MUIA_Selected,FALSE);
+                            if isFlagSet(button->flags, BFLG_Sleep)
+                                clearFlag(b->flags, MUIV_TheBar_ButtonFlag_Selected);
+                            else
+                                set(button->obj,MUIA_Selected,FALSE);
                         }
                     }
 
-                    if (b->flags & BFLG_Sleep) b->flags |= MUIV_TheBar_ButtonFlag_Selected;
-                    else set(b->obj,MUIA_Selected,TRUE);
+                    if isFlagSet(b->flags, BFLG_Sleep)
+                        setFlag(b->flags, MUIV_TheBar_ButtonFlag_Selected);
+                    else
+                        set(b->obj,MUIA_Selected,TRUE);
                 }
                 break;
 
             case MUIA_TheBar_MouseOver:
-                if (data->id==tidata) tag->ti_Tag = TAG_IGNORE;
-                else data->id =tidata;
+                if (data->id==tidata)
+                    tag->ti_Tag = TAG_IGNORE;
+                else
+                    data->id =tidata;
                 break;
 
 
             case MUIA_Group_Horiz:
-                if (!BOOLSAME(tidata,data->flags & FLG_Horiz))
+                if (!BOOLSAME(tidata, isFlagSet(data->flags, FLG_Horiz)))
                 {
                     if (tidata)
                     {
-                        data->flags |= FLG_Horiz|FLG_FreeHoriz;
-                        data->flags &= ~FLG_FreeVert;
+                        setFlag(data->flags, FLG_Horiz|FLG_FreeHoriz);
+                        clearFlag(data->flags, FLG_FreeVert);
                     }
                     else
                     {
-                        data->flags |= FLG_FreeVert;
-                        data->flags &= ~(FLG_Horiz|FLG_FreeHoriz);
+                        setFlag(data->flags, FLG_FreeVert);
+                        clearFlag(data->flags, FLG_Horiz|FLG_FreeHoriz);
                     }
-                    flags |= SFLG_Horiz;
+
+                    setFlag(flags, SFLG_Horiz);
                 }
                 break;
 
             #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
             case MUIA_TheBar_Frame:
-                if (!BOOLSAME(tidata,data->flags & FLG_Framed))
+                if (!BOOLSAME(tidata, isFlagSet(data->flags, FLG_Framed)))
                 {
                     if (tidata)
                     {
-                        if (data->flags & FLG_Setup) allocateFramePens(obj,data);
+                        if (isFlagSet(data->flags, FLG_Setup))
+                            allocateFramePens(obj,data);
 
-                        data->flags |= FLG_Framed;
+                        setFlag(data->flags, FLG_Framed);
                     }
                     else
                     {
 
-                        if (data->flags & FLG_Setup) freeFramePens(obj,data);
+                        if (isFlagSet(data->flags, FLG_Setup))
+                            freeFramePens(obj,data);
 
-                        data->flags &= ~FLG_Framed;
+                        clearFlag(data->flags, FLG_Framed);
                     }
 
-                    flags |= SFLG_Frame;
+                    setFlag(flags, SFLG_Frame);
                 }
                 break;
     	    #endif
@@ -2308,7 +2363,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 {
                     if (tidata)
                     {
-                        data->flags |= FLG_DragBar;
+                        setFlag(data->flags, FLG_DragBar);
 
                         if((data->db = dragBarObject,
                             	MUIA_Group_Horiz,      data->flags & FLG_Horiz,
@@ -2316,44 +2371,51 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                             End))
                         {
                             DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)data->db);
-                            flags |= SFLG_Rebuild;
+                            setFlag(flags, SFLG_Rebuild);
                         }
                     }
                     else
                     {
-                        data->flags &= ~FLG_DragBar;
+                        clearFlag(data->flags, FLG_DragBar);
 
                         DoSuperMethod(cl,obj,OM_REMMEMBER,(IPTR)data->db);
                         MUI_DisposeObject(data->db);
                         data->db = NULL;
                     }
 
-                    flags |= SFLG_DragBar;
+                    setFlag(flags, SFLG_DragBar);
                 }
                 break;
 
             case MUIA_TheBar_Borderless:
-                if (BOOLSAME(tidata,data->flags & FLG_Borderless)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_Borderless)))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_Borderless;
-                    else data->flags &= ~FLG_Borderless;
+                    if (tidata)
+                        setFlag(data->flags, FLG_Borderless);
+                    else
+                        clearFlag(data->flags, FLG_Borderless);
 
-                    flags |= SFLG_Rebuild;
+                    setFlag(flags, SFLG_Rebuild);
                 }
                 break;
 
             case MUIA_TheBar_ViewMode:
-                if (tidata>=MUIV_TheBar_ViewMode_Last) tag->ti_Tag = TAG_IGNORE;
+                if (tidata>=MUIV_TheBar_ViewMode_Last)
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
                     ULONG old = data->viewMode;
 
-                    if ((old==tidata) || (data->flags & FLG_TextOnly)) tag->ti_Tag = TAG_IGNORE;
+                    if ((old==tidata) || isFlagSet(data->flags, FLG_TextOnly))
+                        tag->ti_Tag = TAG_IGNORE;
                     else
                     {
-                        if ((data->flags & FLG_Setup) && ((old==MUIV_TheBar_ViewMode_Text) || (tidata==MUIV_TheBar_ViewMode_Text))) flags |= SFLG_Rebuild;
-                        else flags |= SFLG_ViewMode;
+                        if (isFlagSet(data->flags, FLG_Setup) && ((old==MUIV_TheBar_ViewMode_Text) || (tidata==MUIV_TheBar_ViewMode_Text)))
+                            setFlag(flags, SFLG_Rebuild);
+                        else
+                            setFlag(flags, SFLG_ViewMode);
 
                         data->viewMode = tidata;
                     }
@@ -2361,242 +2423,297 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 break;
 
             case MUIA_TheBar_Scaled:
-                if (BOOLSAME(tidata,data->flags & FLG_Scaled)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_Scaled)))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_Scaled;
-                    else data->flags &= ~FLG_Scaled;
+                    if (tidata)
+                        setFlag(data->flags, FLG_Scaled);
+                    else
+                        clearFlag(data->flags, FLG_Scaled);
 
-                    if (data->flags & FLG_Setup) flags |= SFLG_Rebuild;
-                    else flags |= SFLG_Scaled;
+                    if (isFlagSet(data->flags, FLG_Setup))
+                        setFlag(flags, SFLG_Rebuild);
+                    else
+                        setFlag(flags, SFLG_Scaled);
                 }
                 break;
 
             case MUIA_TheBar_Sunny:
-                if (BOOLSAME(tidata,data->flags & FLG_Sunny) || (data->disMode==MUIV_TheBar_DisMode_Sunny)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_Sunny)) || (data->disMode==MUIV_TheBar_DisMode_Sunny))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_Sunny;
-                    else data->flags &= ~FLG_Sunny;
+                    if (tidata)
+                        setFlag(data->flags, FLG_Sunny);
+                    else
+                        clearFlag(data->flags, FLG_Sunny);
 
-                    if (data->flags & FLG_Setup)
+                    if (isFlagSet(data->flags, FLG_Setup))
                     {
-                        flags |= SFLG_Rebuild;
-                        if (data->flags & FLG_FreeStrip) data->flags |= FLG_RebuildbitMaps;
+                        setFlag(flags, SFLG_Rebuild);
+                        if (isFlagSet(data->flags, FLG_FreeStrip))
+                            setFlag(data->flags, FLG_RebuildbitMaps);
                     }
-                    else flags |= SFLG_Sunny;
+                    else
+                        setFlag(flags, SFLG_Sunny);
                 }
                 break;
 
             case MUIA_TheBar_Raised:
-                if (BOOLSAME(tidata,data->flags & FLG_Raised)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_Raised)))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_Raised;
-                    else data->flags &= ~FLG_Raised;
+                    if (tidata)
+                        setFlag(data->flags, FLG_Raised);
+                    else
+                        clearFlag(data->flags, FLG_Raised);
 
-                    if (data->flags & FLG_Setup) flags |= SFLG_Rebuild;
-                    else flags |= SFLG_Raised;
+                    if (isFlagSet(data->flags, FLG_Setup))
+                        setFlag(flags, SFLG_Rebuild);
+                    else
+                        setFlag(flags, SFLG_Raised);
                 }
                 break;
 
             case MUIA_TheBar_NtRaiseActive:
-                if (BOOLSAME(tidata,data->userFlags2 & UFLG2_NtRaiseActive)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->userFlags2, UFLG2_NtRaiseActive)))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->userFlags2 |= UFLG2_NtRaiseActive;
-                    else data->userFlags2 &= ~UFLG2_NtRaiseActive;
-                    flags |= SFLG_NtRaiseActive;
+                    if (tidata)
+                        setFlag(data->userFlags2, UFLG2_NtRaiseActive);
+                    else
+                        clearFlag(data->userFlags2, UFLG2_NtRaiseActive);
+
+                    setFlag(flags, SFLG_NtRaiseActive);
                 }
                 break;
 
             case MUIA_TheBar_LabelPos:
-                if ((tidata>=MUIV_TheBar_LabelPos_Last) || (tidata==data->labelPos)) tag->ti_Tag = TAG_IGNORE;
+                if ((tidata>=MUIV_TheBar_LabelPos_Last) || (tidata==data->labelPos))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
                     data->labelPos = tidata;
-                    flags |= SFLG_LabelPos;
+                    setFlag(flags, SFLG_LabelPos);
                 }
                 break;
 
             case MUIA_TheBar_EnableKeys:
-                if (BOOLSAME(tidata,data->flags & FLG_EnableKeys)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_EnableKeys)))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_EnableKeys;
-                    else data->flags &= ~FLG_EnableKeys;
-                    flags |= SFLG_EnableKeys;
+                    if (tidata)
+                        setFlag(data->flags, FLG_EnableKeys);
+                    else
+                        clearFlag(data->flags, FLG_EnableKeys);
+
+                    setFlag(flags, SFLG_EnableKeys);
                 }
                 break;
 
             case MUIA_TheBar_BarPos:
-                if ((tidata>=MUIV_TheBar_BarPos_Last) || (data->barPos==tidata)) tag->ti_Tag = TAG_IGNORE;
+                if ((tidata>=MUIV_TheBar_BarPos_Last) || (data->barPos==tidata))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
                     data->barPos = tidata;
-                    flags |= SFLG_Change;
+                    setFlag(flags, SFLG_Change);
                 }
                 break;
 
             case MUIA_Background:
-                data->flags |= FLG_Background;
+                setFlag(data->flags, FLG_Background);
                 break;
 
             case MUIA_TheBar_Columns:
-                if (data->cols==(int)tidata) tag->ti_Tag = TAG_IGNORE;
+                if (data->cols==(int)tidata)
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
                     data->cols = (int)tidata;
-                    flags |= SFLG_Table;
+                    setFlag(flags, SFLG_Table);
                 }
                 break;
 
             case MUIA_TheBar_Rows:
-                if (data->rows==(int)tidata) tag->ti_Tag = TAG_IGNORE;
+                if (data->rows==(int)tidata)
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
                     data->rows = (int)tidata;
-                    flags |= SFLG_Table;
+                    setFlag(flags, SFLG_Table);
                 }
                 break;
 
             case MUIA_TheBar_Free:
-                if (BOOLSAME(tidata,(data->flags & FLG_FreeHoriz) && (data->flags & FLG_FreeVert))) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_FreeHoriz)) && isFlagSet(data->flags, FLG_FreeVert))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_FreeHoriz|FLG_FreeVert;
-                    else data->flags &= ~(FLG_FreeHoriz|FLG_FreeVert);
+                    if (tidata)
+                        setFlag(data->flags, FLG_FreeHoriz|FLG_FreeVert);
+                    else
+                        clearFlag(data->flags, FLG_FreeHoriz|FLG_FreeVert);
 
-                    flags |= SFLG_Change;
+                    setFlag(flags, SFLG_Change);
                 }
                 break;
 
             case MUIA_TheBar_FreeHoriz:
-                if (BOOLSAME(tidata,data->flags & FLG_FreeHoriz)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_FreeHoriz)))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_FreeHoriz;
-                    else data->flags &= ~FLG_FreeHoriz;
+                    if (tidata)
+                        setFlag(data->flags, FLG_FreeHoriz);
+                    else
+                        clearFlag(data->flags, FLG_FreeHoriz);
 
-                    flags |= SFLG_Change;
+                    setFlag(flags, SFLG_Change);
                 }
                 break;
 
             case MUIA_TheBar_FreeVert:
-                if (BOOLSAME(tidata,data->flags & FLG_FreeVert)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_FreeVert)))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_FreeVert;
-                    else data->flags &= ~FLG_FreeVert;
+                    if (tidata)
+                        setFlag(data->flags, FLG_FreeVert);
+                    else
+                        clearFlag(data->flags, FLG_FreeVert);
 
-                    flags |= SFLG_Change;
+                    setFlag(flags, SFLG_Change);
                 }
                 break;
 
             case MUIA_TheBar_BarSpacer:
-                if (BOOLSAME(tidata,data->flags & FLG_BarSpacer)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_BarSpacer)))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_BarSpacer;
-                    else data->flags &= ~FLG_BarSpacer;
+                    if (tidata)
+                        setFlag(data->flags, FLG_BarSpacer);
+                    else
+                        clearFlag(data->flags, FLG_BarSpacer);
 
-                    flags |= SFLG_Rebuild;
+                    setFlag(flags, SFLG_Rebuild);
                 }
                 break;
 
             case MUIA_TheBar_SpacerIndex:
-                if (data->spacer==tidata) tag->ti_Tag = TAG_IGNORE;
+                if (data->spacer==tidata)
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
                     data->spacer = tidata;
 
-                    flags |= SFLG_Rebuild;
+                    setFlag(flags, SFLG_Rebuild);
                 }
                 break;
 
             case MUIA_TheBar_IgnoreAppearance:
-                if (BOOLSAME(tidata,data->flags2 & FLG2_IgnoreAppearance)) tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata, isFlagSet(data->flags2, FLG2_IgnoreAppearance)))
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags2 |= FLG2_IgnoreAppearance;
-                    else data->flags2 &= ~FLG2_IgnoreAppearance;
+                    if (tidata)
+                        setFlag(data->flags2, FLG2_IgnoreAppearance);
+                    else
+                        clearFlag(data->flags2, FLG2_IgnoreAppearance);
                 }
                 break;
 
             case MUIA_TheBar_RemoveSpacers:
-                if (data->remove==tidata) tag->ti_Tag = TAG_IGNORE;
+                if (data->remove==tidata)
+                    tag->ti_Tag = TAG_IGNORE;
                 else
                 {
                     data->remove = tidata;
-                    flags |= SFLG_Remove;
+                    setFlag(flags, SFLG_Remove);
                 }
                 break;
         }
     }
 
-    if ((data->flags & FLG_Setup) && flags) DoMethod(obj,MUIM_Group_InitChange);
+    if (isFlagSet(data->flags, FLG_Setup) && flags)
+        DoMethod(obj,MUIM_Group_InitChange);
 
-    if (flags & SFLG_Remove) updateRemove(cl,obj,data);
+    if (isFlagSet(flags, SFLG_Remove))
+        updateRemove(cl,obj,data);
 
-    if (flags & SFLG_Table)
+    if (isFlagSet(flags, SFLG_Table))
     {
         if (data->cols || data->rows)
         {
-            if (data->flags & FLG_DragBar) set(data->db,MUIA_Group_Horiz,data->cols);
+            if (isFlagSet(data->flags, FLG_DragBar))
+                set(data->db,MUIA_Group_Horiz,data->cols);
 
-            if (!(data->flags & FLG_Table))
+            if (isFlagClear(data->flags, FLG_Table))
             {
                 struct Button *button, *succ;
 
-                data->flags |= FLG_Table;
+                setFlag(data->flags, FLG_Table);
 
                 for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
                 {
-                    if (button->flags & BFLG_Sleep) continue;
+                    if (isFlagSet(button->flags, BFLG_Sleep))
+                        continue;
                     set(button->obj,MUIA_Group_Horiz,TRUE);
                 }
             }
         }
         else
         {
-            if (data->flags & FLG_Table)
+            if (isFlagSet(data->flags, FLG_Table))
             {
                 struct Button *button, *succ;
 
-                data->flags &= ~FLG_Table;
+                clearFlag(data->flags, FLG_Table);
 
                 for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
                 {
-                    if (button->flags & BFLG_Sleep) continue;
+                    if (isFlagSet(button->flags, BFLG_Sleep))
+                        continue;
+
                     set(button->obj,MUIA_Group_Horiz,data->flags & FLG_Horiz);
                 }
 
-                if (data->flags & FLG_DragBar) set(data->db,MUIA_Group_Horiz,data->flags & FLG_Horiz);
+                if (isFlagSet(data->flags, FLG_DragBar))
+                    set(data->db,MUIA_Group_Horiz,data->flags & FLG_Horiz);
             }
         }
     }
 
-    if (flags & SFLG_Horiz)
+    if (isFlagSet(flags, SFLG_Horiz))
     {
-        ULONG horiz = data->flags & FLG_Horiz;
+        ULONG horiz = isFlagSet(data->flags, FLG_Horiz);
 
-        if (!(flags & SFLG_Rebuild))
+        if (isFlagClear(flags, SFLG_Rebuild))
         {
             struct Button *button, *succ;
 
             for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
             {
-                if (button->flags & BFLG_Sleep) continue;
+                if (isFlagSet(button->flags, BFLG_Sleep))
+                    continue;
+
                 set(button->obj,MUIA_Group_Horiz,horiz);
             }
         }
 
-        if (!(data->flags & FLG_Table) && data->db) set(data->db,MUIA_Group_Horiz,horiz);
+        if (isFlagClear(data->flags, FLG_Table) && data->db)
+            set(data->db,MUIA_Group_Horiz,horiz);
     }
 
-    if (flags & SFLG_Rebuild) DoMethod(obj,MUIM_TheBar_Rebuild);
+    if (isFlagSet(flags, SFLG_Rebuild))
+        DoMethod(obj,MUIM_TheBar_Rebuild);
     else
-        if (flags & SFLG_ButtonAttrs)
+        if (isFlagSet(flags, SFLG_ButtonAttrs))
         {
             struct Button *button;
             struct Button *succ;
@@ -2609,57 +2726,59 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                                         { TAG_IGNORE, 0 },
                                         { TAG_DONE,   0 } };
 
-            if (flags & SFLG_ViewMode)
+            if (isFlagSet(flags, SFLG_ViewMode))
             {
                 attrs[0].ti_Tag  = MUIA_TheButton_ViewMode;
                 attrs[0].ti_Data = data->viewMode;
             }
 
-            if (flags & SFLG_Raised)
+            if (isFlagSet(flags, SFLG_Raised))
             {
                 attrs[1].ti_Tag  = MUIA_TheButton_Raised;
-                attrs[1].ti_Data = (data->flags & FLG_Raised) ? TRUE : FALSE;
+                attrs[1].ti_Data = isFlagSet(data->flags, FLG_Raised) ? TRUE : FALSE;
             }
 
-            if (flags & SFLG_Scaled)
+            if (isFlagSet(flags, SFLG_Scaled))
             {
                 attrs[2].ti_Tag  = MUIA_TheButton_Scaled;
-                attrs[2].ti_Data = (data->flags & FLG_Scaled) ? TRUE : FALSE;
+                attrs[2].ti_Data = isFlagSet(data->flags, FLG_Scaled) ? TRUE : FALSE;
             }
 
-            if (flags & SFLG_Sunny)
+            if (isFlagSet(flags, SFLG_Sunny))
             {
                 attrs[3].ti_Tag  = MUIA_TheButton_Sunny;
-                attrs[3].ti_Data = (data->flags & FLG_Sunny) ? TRUE : FALSE;
+                attrs[3].ti_Data = isFlagSet(data->flags, FLG_Sunny) ? TRUE : FALSE;
             }
 
-            if (flags & SFLG_LabelPos)
+            if (isFlagSet(flags, SFLG_LabelPos))
             {
                 attrs[4].ti_Tag  = MUIA_TheButton_LabelPos;
                 attrs[4].ti_Data = data->labelPos;
             }
 
-            if (flags & SFLG_EnableKeys)
+            if (isFlagSet(flags, SFLG_EnableKeys))
             {
                 attrs[5].ti_Tag  = MUIA_TheButton_EnableKey;
-                attrs[5].ti_Data = (data->flags & FLG_EnableKeys) ? TRUE : FALSE;
+                attrs[5].ti_Data = isFlagSet(data->flags, FLG_EnableKeys) ? TRUE : FALSE;
             }
 
-            if (flags & SFLG_NtRaiseActive)
+            if (isFlagSet(flags, SFLG_NtRaiseActive))
             {
                 attrs[6].ti_Tag  = MUIA_TheButton_NtRaiseActive;
-                attrs[6].ti_Data = (data->userFlags2 & UFLG2_NtRaiseActive) ? TRUE : FALSE;
+                attrs[6].ti_Data = isFlagSet(data->userFlags2, UFLG2_NtRaiseActive) ? TRUE : FALSE;
             }
 
             DoSuperMethod(cl,obj,OM_SET,(IPTR)attrs,NULL);
 
             for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
-                if (!(button->flags & BFLG_Sleep)) DoMethod(button->obj,OM_SET,(IPTR)attrs,NULL);
+                if (isFlagClear(button->flags, BFLG_Sleep))
+                    DoMethod(button->obj,OM_SET,(IPTR)attrs,NULL);
         }
 
     res = DoSuperMethodA(cl,obj,(Msg)msg);
 
-    if ((data->flags & FLG_Setup) && flags) DoMethod(obj,MUIM_Group_ExitChange);
+    if (isFlagSet(data->flags, FLG_Setup) && flags)
+        DoMethod(obj,MUIM_Group_ExitChange);
 
     RETURN(res);
     return res;
@@ -2686,7 +2805,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     ENTER();
 
     /* Appearance */
-    if (!(data->flags2 & FLG2_IgnoreAppearance))
+    if (isFlagClear(data->flags2, FLG2_IgnoreAppearance))
     {
         struct MUIS_TheBar_Appearance *ap;
 
@@ -2704,11 +2823,11 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
                      TAG_DONE);
     }
 
-    if (!(data->flags & FLG_Background))
+    if (isFlagClear(data->flags, FLG_Background))
     {
         ULONG done = FALSE;
 
-        if (lib_flags & BASEFLG_MUI4)
+        if (isFlagSet(lib_flags, BASEFLG_MUI4))
         {
             if (getconfigitem(cl,obj,MUICFG_TheBar_GroupBack,&ptr))
             {
@@ -2720,11 +2839,11 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         {
             if (getconfigitem(cl,obj,MUICFG_TheBar_UseGroupBack,&val) ? *val : MUIDEF_TheBar_UseGroupBack)
             {
-                if (!(lib_flags & BASEFLG_MUI20) && getconfigitem(cl,obj,MUICFG_TheBar_Gradient,&ptr))
+                if (isFlagClear(lib_flags, BASEFLG_MUI20) && getconfigitem(cl,obj,MUICFG_TheBar_Gradient,&ptr))
                 {
                     copymem(&data->grad,ptr,sizeof(data->grad));
                     SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,NULL,TAG_DONE);
-                    data->flags2 |= FLG2_Gradient;
+                    setFlag(data->flags2, FLG2_Gradient);
                     done = TRUE;
                 }
                 else
@@ -2757,96 +2876,102 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
       strlcpy(data->frameSpec, ptr, sizeof(data->frameSpec));
       SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(IPTR)data->frameSpec,TAG_DONE);
     }
-    else if (data->userFlags2 & UFLG2_UserFrame)
+    else if (isFlagSet(data->userFlags2, UFLG2_UserFrame))
       SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
     else
       SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
     #endif
 
-    if (!(data->userFlags & UFLG_UserHorizSpacing))
+    if (isFlagClear(data->userFlags, UFLG_UserHorizSpacing))
     {
         data->horizSpacing = getconfigitem(cl,obj,MUICFG_TheBar_HorizSpacing,&val) ?
             *val : MUIDEF_TheBar_HorizSpacing;
     }
 
-    if (!(data->userFlags & UFLG_UserVertSpacing))
+    if (isFlagClear(data->userFlags, UFLG_UserVertSpacing))
     {
         data->vertSpacing = getconfigitem(cl,obj,MUICFG_TheBar_VertSpacing,&val) ?
             *val : MUIDEF_TheBar_VertSpacing;
     }
 
-    if (!(data->userFlags & UFLG_UserLeftBarFrameSpacing))
+    if (isFlagClear(data->userFlags, UFLG_UserLeftBarFrameSpacing))
     {
         data->leftBarFrameSpacing = getconfigitem(cl,obj,MUICFG_TheBar_LeftBarFrameSpacing,&val) ?
             *val : MUIDEF_TheBar_LeftBarFrameSpacing;
     }
 
-    if (!(data->userFlags & UFLG_UserRightBarFrameSpacing))
+    if (isFlagClear(data->userFlags, UFLG_UserRightBarFrameSpacing))
     {
         data->rightBarFrameSpacing = getconfigitem(cl,obj,MUICFG_TheBar_RightBarFrameSpacing,&val) ?
             *val : MUIDEF_TheBar_RightBarFrameSpacing;
     }
 
-    if (!(data->userFlags & UFLG_UserTopBarFrameSpacing))
+    if (isFlagClear(data->userFlags, UFLG_UserTopBarFrameSpacing))
     {
         data->topBarFrameSpacing = getconfigitem(cl,obj,MUICFG_TheBar_TopBarFrameSpacing,&val) ?
             *val : MUIDEF_TheBar_TopBarFrameSpacing;
     }
 
-    if (!(data->userFlags & UFLG_UserBottomBarFrameSpacing))
+    if (isFlagClear(data->userFlags, UFLG_UserBottomBarFrameSpacing))
     {
         data->bottomBarFrameSpacing = getconfigitem(cl,obj,MUICFG_TheBar_BottomBarFrameSpacing,&val) ?
             *val : MUIDEF_TheBar_BottomBarFrameSpacing;
     }
 
     /* IgnoreSelImages */
-    if (!(data->userFlags & UFLG_UserIgnoreSelImages))
+    if (isFlagClear(data->userFlags, UFLG_UserIgnoreSelImages))
     {
         if (getconfigitem(cl,obj,MUICFG_TheBar_IgnoreSelImages,&val) ? *val : MUIDEF_TheBar_IgnoreSelImages)
-            data->userFlags |= UFLG_IgnoreSelImages;
-        else data->userFlags &= ~UFLG_IgnoreSelImages;
+            setFlag(data->userFlags, UFLG_IgnoreSelImages);
+        else
+            clearFlag(data->userFlags, UFLG_IgnoreSelImages);
    }
 
     /* IgnoreDisImages */
-    if (!(data->userFlags & UFLG_UserIgnoreDisImages))
+    if (isFlagClear(data->userFlags, UFLG_UserIgnoreDisImages))
     {
         if (getconfigitem(cl,obj,MUICFG_TheBar_IgnoreDisImages,&val) ? *val : MUIDEF_TheBar_IgnoreDisImages)
-            data->userFlags |= UFLG_IgnoreDisImages;
-        else data->userFlags &= ~UFLG_IgnoreDisImages;
+            setFlag(data->userFlags, UFLG_IgnoreDisImages);
+        else
+            clearFlag(data->userFlags, UFLG_IgnoreDisImages);
     }
 
     /* DontMove */
-    if (!(data->userFlags2 & UFLG2_UserDontMove))
+    if (isFlagClear(data->userFlags2, UFLG2_UserDontMove))
     {
         if (getconfigitem(cl,obj,MUICFG_TheBar_DontMove,&val) ? *val : MUIDEF_TheBar_DontMove)
-            data->userFlags2 |= UFLG2_DontMove;
-        else data->userFlags2 &= ~UFLG2_DontMove;
+            setFlag(data->userFlags2, UFLG2_DontMove);
+        else
+            clearFlag(data->userFlags2, UFLG2_DontMove);
     }
 
     /* NtRaiseActive */
-    if (!(data->userFlags2 & UFLG2_UserNtRaiseActive))
+    if (isFlagClear(data->userFlags2, UFLG2_UserNtRaiseActive))
     {
         if (getconfigitem(cl,obj,MUICFG_TheBar_NtRaiseActive,&val) ? *val : MUIDEF_TheBar_NtRaiseActive)
-            data->userFlags2 |= UFLG2_NtRaiseActive;
-        else data->userFlags2 &= ~UFLG2_NtRaiseActive;
+            setFlag(data->userFlags2, UFLG2_NtRaiseActive);
+        else
+            clearFlag(data->userFlags2, UFLG2_NtRaiseActive);
     }
 
     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     /* Frame pens */
-    if (data->flags & FLG_Framed) allocateFramePens(obj,data);
+    if (isFlagSet(data->flags, FLG_Framed))
+        allocateFramePens(obj,data);
     #endif
 
     /* DisMode */
-    if (!(data->userFlags & UFLG_UserDisMode))
+    if (isFlagClear(data->userFlags, UFLG_UserDisMode))
     {
         data->disMode = getconfigitem(cl,obj,MUICFG_TheBar_DisMode,&val) ?
             *val : MUIDEF_TheBar_DisMode;
 
-        if (data->disMode==MUIV_TheBar_DisMode_Sunny) data->flags &= ~FLG_Sunny;
+        if (data->disMode==MUIV_TheBar_DisMode_Sunny)
+            clearFlag(data->flags, FLG_Sunny);
     }
 
     /* SpacersSize */
-    if (!(data->userFlags2 & UFLG2_UserSpacersSize))
+    if (isFlagClear(data->userFlags2, UFLG2_UserSpacersSize))
     {
         data->spacersSize = getconfigitem(cl,obj,MUICFG_TheBar_SpacersSize,&val) ?
             *val : MUIDEF_TheBar_SpacersSize;
@@ -2857,18 +2982,20 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     data->screenDepth = GetBitMapAttr(data->screen->RastPort.BitMap,BMA_DEPTH);
     if (CyberGfxBase && IsCyberModeID(GetVPModeID(&data->screen->ViewPort)))
     {
-        data->flags |= FLG_CyberMap;
-        if (data->screenDepth>8) data->flags |= FLG_CyberDeep;
+        setFlag(data->flags, FLG_CyberMap);
+        if (data->screenDepth>8)
+            setFlag(data->flags, FLG_CyberDeep);
     }
 
-    if (data->flags & FLG_FreeStrip)
+    if (isFlagSet(data->flags, FLG_FreeStrip))
     {
         struct Button *button, *succ;
 
         build(data);
 
         for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
-            if (!(button->flags & BFLG_Sleep)) DoMethod(button->obj,MUIM_TheButton_Build);
+            if (isFlagClear(button->flags, BFLG_Sleep))
+                DoMethod(button->obj,MUIM_TheButton_Build);
     }
 
     memset(&data->eh,0,sizeof(data->eh));
@@ -2878,7 +3005,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     //DoMethod(_win(obj),MUIM_Window_AddEventHandler,(IPTR)&data->eh);
 
     #if defined(VIRTUAL)
-    data->flags |= FLG_IsInVirtgroup;
+    setFlag(data->flags, FLG_IsInVirtgroup);
     #else
     for (parent = obj; ;)
     {
@@ -2887,13 +3014,13 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
         if((ptr = (STRPTR)xget(parent, MUIA_Virtgroup_Top)))
         {
-            data->flags |= FLG_IsInVirtgroup;
+            setFlag(data->flags, FLG_IsInVirtgroup);
             break;
         }
     }
     #endif
 
-    data->flags |= FLG_Setup;
+    setFlag(data->flags, FLG_Setup);
 
     RETURN(TRUE);
     return TRUE;
@@ -2910,15 +3037,17 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
     ENTER();
 
     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-    if (data->flags & FLG_Framed) freeFramePens(obj,data);
+    if (isFlagSet(data->flags, FLG_Framed))
+        freeFramePens(obj,data);
     #endif
 
     //DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
 
-    if (data->flags & FLG_FreeStrip) freeBitMaps(data);
+    if (isFlagSet(data->flags, FLG_FreeStrip))
+        freeBitMaps(data);
 
-    data->flags  &= ~(FLG_Setup|FLG_CyberMap|FLG_CyberDeep|FLG_IsInVirtgroup);
-    data->flags2 &= ~(FLG2_Gradient);
+    clearFlag(data->flags, FLG_Setup|FLG_CyberMap|FLG_CyberDeep|FLG_IsInVirtgroup);
+    clearFlag(data->flags2, FLG2_Gradient);
 
     result = DoSuperMethodA(cl,obj,msg);
 
@@ -2955,7 +3084,7 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
       return FALSE;
     }
 
-    if ((data->flags & FLG_CyberDeep) && (data->flags2 & FLG2_Gradient))
+    if (isFlagSet(data->flags, FLG_CyberDeep) && isFlagSet(data->flags2, FLG2_Gradient))
     {
         UWORD w = _width(obj), h = _height(obj);
 
@@ -2971,7 +3100,8 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
             from  = data->grad.from;
             to    = data->grad.to;
             horiz = data->grad.flags & MUIV_TheBar_Gradient_Horiz;
-            if (!(data->flags & FLG_Horiz)) horiz = !horiz;
+            if (isFlagClear(data->flags, FLG_Horiz))
+                horiz = !horiz;
 
             /* Compute diffs */
             r1 = (from & 0x00FF0000)>>16;
@@ -3017,36 +3147,43 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 
             /* Find out max diff */
             step = (rdif>=gdif) ? rdif : gdif;
-            if (bdif>step) step = bdif;
+            if (bdif>step)
+                step = bdif;
 
             /* Find out best step to minimize rest */
             if (horiz)
             {
-                if (step>w) step = w;
+                if (step>w)
+                    step = w;
 
-                if (step==0) step = 1;
+                if (step==0)
+                    step = 1;
                 else
                 {
                     x = w/step;
                     if (w!=x*step)
                     {
                         step = w/(x+1);
-                        if (step>w) step = w;
+                        if (step>w)
+                            step = w;
                     }
                 }
             }
             else
             {
-                if (step>h) step = h;
+                if (step>h)
+                    step = h;
 
-                if (step==0) step = 1;
+                if (step==0)
+                    step = 1;
                 else
                 {
                     x = h/step;
                     if (h!=x*step)
                     {
                         step = h/(x+1);
-                        if (step>h) step = h;
+                        if (step>h)
+                            step = h;
                     }
                 }
             }
@@ -3055,13 +3192,16 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
             {
                 /* Compute color components deltas */
                 rd = rdif/step;
-                if (!rd) rd = 1;
+                if (!rd)
+                    rd = 1;
 
                 gd = gdif/step;
-                if (!gd) gd = 1;
+                if (!gd)
+                    gd = 1;
 
                 bd = bdif/step;
-                if (!bd) bd = 1;
+                if (!bd)
+                    bd = 1;
 
                 /* Compute rests */
                 ridx = (rdif>step) ? step/((rdif-step)/rd) : 0;
@@ -3089,14 +3229,16 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
                         FillPixelArray(&trp,x,0,w-x,h,col);
                         break;
                     }
-                    else FillPixelArray(&trp,x,0,d,h,col);
+                    else
+                        FillPixelArray(&trp,x,0,d,h,col);
                 else
                     if (i==step-1)
                     {
                         FillPixelArray(&trp,0,x,w,h-x,col);
                         break;
                     }
-                    else FillPixelArray(&trp,0,x,w,d,col);
+                    else
+                        FillPixelArray(&trp,0,x,w,d,col);
 
                 x += d;
 
@@ -3106,45 +3248,57 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
                     r += rd;
 
                     /* Time to add more one more delta? */
-                    if (i && ridx && !(i%ridx)) r += rd;
-                    if (r>r2) r = r2;
+                    if (i && ridx && !(i%ridx))
+                        r += rd;
+                    if (r>r2)
+                        r = r2;
                 }
                 else
                 {
                     r -= rd;
 
-                    if (i && ridx && !(i%ridx)) r -= rd;
-                    if (r<r2) r = r2;
+                    if (i && ridx && !(i%ridx))
+                        r -= rd;
+                    if (r<r2)
+                        r = r2;
                 }
 
                 if (gs)
                 {
                     g += gd;
 
-                    if (i && gidx && !(i%gidx)) g += gd;
-                    if (g>g2) g = g2;
+                    if (i && gidx && !(i%gidx))
+                        g += gd;
+                    if (g>g2)
+                        g = g2;
                 }
                 else
                 {
                     g -= gd;
 
-                    if (i && gidx && !(i%gidx)) g -= gd;
-                    if (g<g2) g = g2;
+                    if (i && gidx && !(i%gidx))
+                        g -= gd;
+                    if (g<g2)
+                        g = g2;
                 }
 
                 if (bs)
                 {
                     b += bd;
 
-                    if (i && bidx && !(i%bidx)) b += bd;
-                    if (b>b2) b = b2;
+                    if (i && bidx && !(i%bidx))
+                        b += bd;
+                    if (b>b2)
+                        b = b2;
                 }
                 else
                 {
                     b -= bd;
 
-                    if (i && bidx && !(i%bidx)) b -= bd;
-                    if (b<b2) b = b2;
+                    if (i && bidx && !(i%bidx))
+                        b -= bd;
+                    if (b<b2)
+                        b = b2;
                 }
             }
         }
@@ -3187,9 +3341,9 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     DoSuperMethodA(cl,obj,(Msg)msg);
 
     #if defined(VIRTUAL)
-    if (data->flags & FLG_Framed)
+    if (isFlagSet(data->flags, FLG_Framed))
     #else
-    if ((data->flags & FLG_Framed) && (msg->flags & (MADF_DRAWUPDATE|MADF_DRAWOBJECT)))
+    if (isFlagSet(data->flags, FLG_Framed) && (isFlagSet(msg->flags, MADF_DRAWUPDATE) || isFlagSet(msg->flags, MADF_DRAWOBJECT)))
     #endif
     {
         struct RastPort rp;
@@ -3221,11 +3375,13 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 
   ENTER();
 
-  /*if(lib_flags & BASEFLG_MUI20)
+  /*
+  if(isFlagSet(lib_flags, BASEFLG_MUI20))
   {
     result = DoSuperMethodA(cl,obj,(Msg)msg);
   }
-  else*/
+  else
+  */
   {
     if(data->gradbm)
       BltBitMapRastPort(data->gradbm,msg->left-_left(obj),msg->top-_top(obj),_rp(obj),msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,0xc0);
@@ -3325,21 +3481,21 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
     // if the button is flagged as sleeping
     // we can continue
-    if(button->flags & BFLG_Sleep)
+    if(isFlagSet(button->flags, BFLG_Sleep))
       continue;
 
     // clear some flags
-    button->flags &= ~(BFLG_Disabled|BFLG_Selected);
+    clearFlag(button->flags, BFLG_Disabled|BFLG_Selected);
 
     // save some variables
     if(xget(button->obj, MUIA_Disabled))
-      button->flags |= BFLG_Disabled;
+      setFlag(button->flags, BFLG_Disabled);
 
     if(xget(button->obj, MUIA_Selected))
-      button->flags |= BFLG_Selected;
+      setFlag(button->flags, BFLG_Selected);
 
     // remove object from group if necessary
-    if(!(button->flags & BFLG_Hide))
+    if(isFlagClear(button->flags, BFLG_Hide))
       DoSuperMethod(cl, obj, OM_REMMEMBER, (IPTR)button->obj);
 
     // before we finally dispose the button object we have to create a clone
@@ -3381,16 +3537,16 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
   }
 
   // for a MUI redraw
-  if((data->flags & FLG_Setup) && !(data->flags & FLG_CyberDeep))
+  if(isFlagSet(data->flags, FLG_Setup) && isFlagClear(data->flags, FLG_CyberDeep))
     MUI_Redraw(obj, MADF_DRAWOBJECT);
 
   // rebuild all bitmaps in case required
-  if(data->flags & FLG_RebuildbitMaps)
+  if(isFlagSet(data->flags, FLG_RebuildbitMaps))
   {
     freeBitMaps(data);
     build(data);
 
-    data->flags &= ~FLG_RebuildbitMaps;
+    clearFlag(data->flags, FLG_RebuildbitMaps);
   }
 
   // now we go and rebuild all buttons again
@@ -3400,7 +3556,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
     // if the button is flagged as sleeping
     // we can continue
-    if(button->flags & BFLG_Sleep)
+    if(isFlagSet(button->flags, BFLG_Sleep))
       continue;
 
     // generate a new button object
@@ -3409,8 +3565,8 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
       struct MinNode *node;
 
       // add the button object to our group
-      // if it isn't flagged as being hided
-      if(!(button->flags & BFLG_Hide))
+      // if it isn't flagged as being hidden
+      if(isFlagClear(button->flags, BFLG_Hide))
         DoSuperMethod(cl, obj, OM_ADDMEMBER, (IPTR)button->obj);
 
       // now we put the notifies from our clone list
@@ -3431,12 +3587,12 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         freeVecPooled(data->pool, notify);
       }
 
-      if((data->flags & FLG_Setup) && (data->flags & FLG_FreeStrip))
+      if(isFlagSet(data->flags, FLG_Setup) && isFlagSet(data->flags, FLG_FreeStrip))
         DoMethod(button->obj, MUIM_TheButton_Build);
     }
   }
 
-  if(data->flags & FLG_Setup)
+  if(isFlagSet(data->flags, FLG_Setup))
     DoMethod(obj, MUIM_Group_ExitChange);
 
   RETURN(0);
@@ -3489,28 +3645,18 @@ static IPTR
 mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  struct MinNode *node;
+  struct Button *button;
   BOOL result = FALSE;
 
   ENTER();
 
-  // now we first find the button object with its ID
-  for(node = data->buttons.mlh_Head; node->mln_Succ; node = node->mln_Succ)
+  if((button = findButton(data, msg->ID)) != NULL)
   {
-    struct Button *button = (struct Button *)node;
-
-    // if the ID matches we found the correct toolbar
-    // button to which we add the notify.
-    if(button->ID == msg->ID)
-    {
-      // now we kill the notify as we have identifed the button
-      if(msg->dest != NULL)
-        DoMethod(button->obj, MUIM_KillNotifyObj, msg->attr, msg->dest);
-      else
-        DoMethod(button->obj, MUIM_KillNotify, msg->attr);
-
-      break;
-    }
+    // now we kill the notify as we have identifed the button
+    if(msg->dest != NULL)
+      DoMethod(button->obj, MUIM_KillNotifyObj, msg->attr, msg->dest);
+    else
+      DoMethod(button->obj, MUIM_KillNotify, msg->attr);
   }
 
   RETURN(result);
@@ -3540,40 +3686,50 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 
         NewList((struct List *)&button->notifyListClone);
 
-        if (msg->button->flags & MUIV_TheBar_ButtonFlag_NoClick)   button->flags |= BFLG_NoClick;
-        if (msg->button->flags & MUIV_TheBar_ButtonFlag_Immediate) button->flags |= BFLG_Immediate;
-        if (msg->button->flags & MUIV_TheBar_ButtonFlag_Toggle)    button->flags |= BFLG_Toggle ;
-        if (msg->button->flags & MUIV_TheBar_ButtonFlag_Disabled)  button->flags |= BFLG_Disabled;
-        if (msg->button->flags & MUIV_TheBar_ButtonFlag_Selected)  button->flags |= BFLG_Selected;
-        if (msg->button->flags & MUIV_TheBar_ButtonFlag_Sleep)     button->flags |= BFLG_Sleep;
-        if (msg->button->flags & MUIV_TheBar_ButtonFlag_Hide)      button->flags |= BFLG_Hide;
+        if (isFlagSet(msg->button->flags, MUIV_TheBar_ButtonFlag_NoClick))
+            setFlag(button->flags, BFLG_NoClick);
+        if (isFlagSet(msg->button->flags, MUIV_TheBar_ButtonFlag_Immediate))
+            setFlag(button->flags, BFLG_Immediate);
+        if (isFlagSet(msg->button->flags, MUIV_TheBar_ButtonFlag_Toggle))
+            setFlag(button->flags, BFLG_Toggle);
+        if (isFlagSet(msg->button->flags, MUIV_TheBar_ButtonFlag_Disabled))
+            setFlag(button->flags, BFLG_Disabled);
+        if (isFlagSet(msg->button->flags, MUIV_TheBar_ButtonFlag_Selected))
+            setFlag(button->flags, BFLG_Selected);
+        if (isFlagSet(msg->button->flags, MUIV_TheBar_ButtonFlag_Sleep))
+            setFlag(button->flags, BFLG_Sleep);
+        if (isFlagSet(msg->button->flags, MUIV_TheBar_ButtonFlag_Hide))
+            setFlag(button->flags, BFLG_Hide);
 
         if (button->exclude)
         {
-            button->flags &= ~(MUIV_TheBar_ButtonFlag_NoClick|MUIV_TheBar_ButtonFlag_Toggle);
-            button->flags |= MUIV_TheBar_ButtonFlag_Immediate;
+            clearFlag(button->flags, MUIV_TheBar_ButtonFlag_NoClick|MUIV_TheBar_ButtonFlag_Toggle);
+            setFlag(button->flags, MUIV_TheBar_ButtonFlag_Immediate);
         }
 
-        if ((button->flags & BFLG_Sleep) || (button->obj = makeButton(button,obj,data)))
+        if (isFlagSet(button->flags, BFLG_Sleep) || (button->obj = makeButton(button,obj,data)))
         {
             AddTail((struct List *)&data->buttons, (struct Node *)button);
 
-            if (!(button->flags & BFLG_Sleep))
+            if (isFlagClear(button->flags, BFLG_Sleep))
             {
                 set(button->obj,MUIA_TheButton_TheBar,obj);
 
-                if (!(button->flags & BFLG_Hide))
+                if (isFlagClear(button->flags, BFLG_Hide))
                 {
-                    if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
+                    if (isFlagSet(data->flags, FLG_Setup))
+                        DoMethod(obj,MUIM_Group_InitChange);
                     DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)button->obj);
-                    if (data->flags & FLG_Setup)
+                    if (isFlagSet(data->flags, FLG_Setup))
                     {
-                        if (data->flags & FLG_FreeStrip) DoMethod(button->obj,MUIM_TheButton_Build);
+                        if (isFlagSet(data->flags, FLG_FreeStrip))
+                            DoMethod(button->obj,MUIM_TheButton_Build);
                         DoMethod(obj,MUIM_Group_ExitChange);
                     }
                 }
 
-                if (button->exclude) DoMethod(button->obj,MUIM_Notify,MUIA_Selected,TRUE,(IPTR)obj,3,MUIM_Set,MUIA_TheBar_Active,button->ID);
+                if (button->exclude)
+                    DoMethod(button->obj,MUIM_Notify,MUIA_Selected,TRUE,(IPTR)obj,3,MUIM_Set,MUIA_TheBar_Active,button->ID);
 
                 msg->button->obj = button->obj;
             }
@@ -3600,20 +3756,20 @@ mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
 
   ENTER();
 
-  if((bt = findButton(data,msg->ID)))
+  if((bt = findButton(data,msg->ID)) !=NULL)
   {
     switch (msg->attr)
     {
       case MUIA_TheBar_Attr_Hide:
       {
-        *msg->storage = bt->flags & BFLG_Hide;
+        *msg->storage = isFlagSet(bt->flags, BFLG_Hide);
         result = TRUE;
       }
       break;
 
       case MUIA_TheBar_Attr_Sleep:
       {
-        *msg->storage = bt->flags & BFLG_Sleep;
+        *msg->storage = isFlagSet(bt->flags, BFLG_Sleep);
         result = TRUE;
       }
       break;
@@ -3623,7 +3779,7 @@ mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
         if(bt->obj)
           *msg->storage = xget(bt->obj, MUIA_Disabled);
         else
-          *msg->storage = bt->flags & BFLG_Disabled;
+          *msg->storage = isFlagSet(bt->flags, BFLG_Disabled);
 
         result = TRUE;
       }
@@ -3634,7 +3790,7 @@ mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
         if(bt->obj)
           *msg->storage = xget(bt->obj, MUIA_Selected);
         else
-          *msg->storage = bt->flags & BFLG_Selected;
+          *msg->storage = isFlagSet(bt->flags, BFLG_Selected);
 
         result = TRUE;
       }
@@ -3655,37 +3811,41 @@ hideButton(struct IClass *cl,Object *obj,struct InstData *data,struct Button *bt
 
     ENTER();
 
-    if (!BOOLSAME(value,bt->flags & BFLG_Hide))
+    if (!BOOLSAME(value, isFlagSet(bt->flags, BFLG_Hide)))
     {
-        if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
+        if (isFlagSet(data->flags, FLG_Setup))
+            DoMethod(obj,MUIM_Group_InitChange);
 
         if (value)
         {
             DoSuperMethod(cl,obj,OM_REMMEMBER,(IPTR)bt->obj);
-            bt->flags |= BFLG_Hide;
+            setFlag(bt->flags, BFLG_Hide);
             res = TRUE;
         }
         else
         {
-            bt->flags &= ~BFLG_Hide;
+            clearFlag(bt->flags, BFLG_Hide);
             DoSuperMethod(cl,obj,OM_ADDMEMBER,(ULONG)bt->obj);
 
-            if (orderButtons(cl,obj,data)) res = TRUE;
+            if (orderButtons(cl,obj,data))
+                res = TRUE;
             else
             {
                 DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)bt->obj);
-                bt->flags |= BFLG_Hide;
+                setFlag(bt->flags, BFLG_Hide);
             }
 
         }
 
-        if (data->flags & FLG_Setup)
+        if (isFlagSet(data->flags, FLG_Setup))
         {
-            if (data->flags & FLG_FreeStrip) DoMethod(bt->obj,MUIM_TheButton_Build);
+            if (isFlagSet(data->flags, FLG_FreeStrip))
+                DoMethod(bt->obj,MUIM_TheButton_Build);
             DoMethod(obj,MUIM_Group_ExitChange);
         }
     }
-    else res = TRUE;
+    else
+        res = TRUE;
 
     RETURN(res);
     return res;
@@ -3702,7 +3862,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
 
   D(DBF_STARTUP, "sleepButton: %d", value);
 
-  if(!BOOLSAME(value,bt->flags & BFLG_Sleep))
+  if(!BOOLSAME(value, isFlagSet(bt->flags, BFLG_Sleep)))
   {
     // should the button put to sleep or awakend
     if(value)
@@ -3710,24 +3870,24 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
       struct MinList *notifyList;
 
       // remove the button object from the group
-      if(!(bt->flags & BFLG_Hide))
+      if(isFlagClear(bt->flags, BFLG_Hide))
       {
-        if(data->flags & FLG_Setup)
+        if(isFlagSet(data->flags, FLG_Setup))
           DoMethod(obj, MUIM_Group_InitChange);
 
         DoSuperMethod(cl, obj, OM_REMMEMBER, (ULONG)bt->obj);
 
-        if(data->flags & FLG_Setup)
+        if(isFlagSet(data->flags, FLG_Setup))
           DoMethod(obj, MUIM_Group_ExitChange);
       }
 
-      bt->flags &= ~(BFLG_Disabled|BFLG_Selected);
+      clearFlag(bt->flags, BFLG_Disabled|BFLG_Selected);
 
       if(xget(bt->obj, MUIA_Disabled))
-        bt->flags |= BFLG_Disabled;
+        setFlag(bt->flags, BFLG_Disabled);
 
       if(xget(bt->obj, MUIA_Selected))
-        bt->flags |= BFLG_Selected;
+        setFlag(bt->flags, BFLG_Selected);
 
       // before we finally put the button to sleep we have to create a clone
       // of the notifyList it currently maintains.
@@ -3765,7 +3925,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
       MUI_DisposeObject(bt->obj);
       bt->obj = NULL;
 
-      bt->flags |= BFLG_Sleep;
+      setFlag(bt->flags, BFLG_Sleep);
 
       res = TRUE;
     }
@@ -3780,11 +3940,11 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
         if(bt->exclude)
           DoMethod(bt->obj, MUIM_Notify, MUIA_Selected, TRUE, (ULONG)obj, 3, MUIM_Set, MUIA_TheBar_Active, bt->ID);
 
-        if(bt->flags & BFLG_Hide)
+        if(isFlagSet(bt->flags, BFLG_Hide))
           res = TRUE;
         else
         {
-          if(data->flags & FLG_Setup)
+          if(isFlagSet(data->flags, FLG_Setup))
             DoMethod(obj, MUIM_Group_InitChange);
 
           DoSuperMethod(cl, obj, OM_ADDMEMBER, (ULONG)bt->obj);
@@ -3800,16 +3960,16 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
             bt->obj = NULL;
           }
 
-          if(data->flags & FLG_Setup)
+          if(isFlagSet(data->flags, FLG_Setup))
           {
-            if((data->flags & FLG_FreeStrip) && bt->obj)
+            if(isFlagSet(data->flags, FLG_FreeStrip) && bt->obj)
               DoMethod(bt->obj,MUIM_TheButton_Build);
 
             DoMethod(obj,MUIM_Group_ExitChange);
           }
 
           // make the button the active one
-          if(res && bt->exclude && (bt->flags & BFLG_Selected))
+          if(res && bt->exclude && isFlagSet(bt->flags, BFLG_Selected))
             set(obj, MUIA_TheBar_Active, bt->ID);
         }
 
@@ -3836,7 +3996,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
           }
 
           // remove the sleep flag
-          bt->flags &= ~BFLG_Sleep;
+          clearFlag(bt->flags, BFLG_Sleep);
         }
       }
     }
@@ -3874,17 +4034,26 @@ mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
                 break;
 
             case MUIA_TheBar_Attr_Disabled:
-                if (bt->obj) set(bt->obj,MUIA_Disabled,value);
-                if (value) bt->flags |= BFLG_Disabled;
-                else bt->flags &= ~BFLG_Disabled;
+                if (bt->obj)
+                    set(bt->obj,MUIA_Disabled,value);
+
+                if (value)
+                    setFlag(bt->flags, BFLG_Disabled);
+                else
+                    clearFlag(bt->flags, BFLG_Disabled);
                 res = TRUE;
                 break;
 
             case MUIA_TheBar_Attr_Selected:
-                if (bt->exclude) set(obj,MUIA_TheBar_Active,bt->ID);
-                else if (bt->obj) set(bt->obj,MUIA_Selected,value);
-                if (value) bt->flags |= BFLG_Selected;
-                else bt->flags &= ~BFLG_Selected;
+                if (bt->exclude)
+                    set(obj,MUIA_TheBar_Active,bt->ID);
+                else if (bt->obj)
+                    set(bt->obj,MUIA_Selected,value);
+
+                if (value)
+                    setFlag(bt->flags, BFLG_Selected);
+                else
+                    clearFlag(bt->flags, BFLG_Selected);
                 res = TRUE;
                 break;
         }
@@ -3909,12 +4078,12 @@ mRemove(struct IClass *cl, Object *obj, struct MUIP_TheBar_Remove *msg)
   {
     if(button->obj)
     {
-      if(data->flags & FLG_Setup)
+      if(isFlagSet(data->flags, FLG_Setup))
         DoMethod(obj, MUIM_Group_InitChange);
 
       removeButton(cl, obj, button);
 
-      if(data->flags & FLG_Setup)
+      if(isFlagSet(data->flags, FLG_Setup))
         DoMethod(obj, MUIM_Group_ExitChange);
     }
     else
@@ -3955,7 +4124,7 @@ mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 
   ENTER();
 
-  result = ((button = findButton(data,msg->ID)) && !(button->flags & BFLG_Sleep)) ? DoMethodA(button->obj,(Msg)&msg->method) : 0;
+  result = ((button = findButton(data,msg->ID)) && isFlagClear(button->flags, BFLG_Sleep)) ? DoMethodA(button->obj,(Msg)&msg->method) : 0;
 
   RETURN(result);
   return result;
@@ -3971,7 +4140,7 @@ mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
   ENTER();
 
-  if(data->flags & FLG_Setup)
+  if(isFlagSet(data->flags, FLG_Setup))
     DoMethod(obj,MUIM_Group_InitChange);
 
   for(node = data->buttons.mlh_Head; node->mln_Succ; )
@@ -3984,7 +4153,7 @@ mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
     removeButton(cl, obj, button);
   }
 
-  if(data->flags & FLG_Setup)
+  if(isFlagSet(data->flags, FLG_Setup))
     DoMethod(obj,MUIM_Group_ExitChange);
 
 
@@ -4004,7 +4173,9 @@ mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
     for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
     {
-        if (button->flags & BFLG_Sleep) continue;
+        if (isFlagSet(button->flags, BFLG_Sleep))
+            continue;
+
         set(button->obj,MUIA_TheButton_MouseOver,FALSE);
     }
 
@@ -4029,13 +4200,17 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 
     /* Counts buttons */
     for(n = 0, button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
-        if (!(button->flags & (BFLG_Sleep|BFLG_Hide))) n++;
+        if (isFlagClear(button->flags, BFLG_Sleep) && isFlagClear(button->flags, BFLG_Hide))
+            n++;
 
-    if (data->db) n++;
+    if (data->db)
+        n++;
 
     /* Alloc sort msg */
-    if (n>STATICSORTSIZE) smsg = allocVecPooled(data->pool,sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
-    else smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
+    if (n>STATICSORTSIZE)
+        smsg = allocVecPooled(data->pool,sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
+    else
+        smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
     if (!smsg)
     {
       RETURN(FALSE);
@@ -4048,7 +4223,8 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
         smsg->obj[0] = data->db;
         o = smsg->obj+1;
     }
-    else o = smsg->obj;
+    else
+        o = smsg->obj;
 
     NewList((struct List *)&temp);
 
@@ -4067,7 +4243,8 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
         Remove((struct Node *)button);
         AddHead((struct List *)&temp, (struct Node *)button);
 
-        if (!(button->flags & (BFLG_Sleep|BFLG_Hide))) *o = button->obj;
+        if (isFlagClear(button->flags, BFLG_Sleep) && isFlagClear(button->flags, BFLG_Hide))
+            *o = button->obj;
     }
 
     /* Insert missing */
@@ -4075,7 +4252,8 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
     {
         Remove((struct Node *)button);
         AddHead((struct List *)&temp, (struct Node *)button);
-        if (!(button->flags & (BFLG_Sleep|BFLG_Hide))) *o = button->obj;
+        if (isFlagClear(button->flags, BFLG_Sleep) && isFlagClear(button->flags, BFLG_Hide))
+            *o = button->obj;
     }
 
     *o = NULL;
@@ -4087,11 +4265,14 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
         AddHead((struct List *)&data->buttons, (struct Node *)button);
     }
 
-    if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
+    if (isFlagSet(data->flags, FLG_Setup))
+        DoMethod(obj,MUIM_Group_InitChange);
     DoSuperMethodA(cl,obj,(Msg)smsg);
-    if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_ExitChange);
+    if (isFlagSet(data->flags, FLG_Setup))
+        DoMethod(obj,MUIM_Group_ExitChange);
 
-    if (n>STATICSORTSIZE) freeVecPooled(data->pool,smsg);
+    if (n>STATICSORTSIZE)
+        freeVecPooled(data->pool,smsg);
 
     RETURN(TRUE);
     return TRUE;
@@ -4109,7 +4290,7 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 
     if (data->dm)
     {
-        if (BOOLSAME(data->flags & FLG_Horiz,msg->horiz))
+        if (BOOLSAME(isFlagSet(data->flags, FLG_Horiz), msg->horiz))
         {
             data->di.width  = data->dm->width;
             data->di.height = data->dm->height;
@@ -4120,8 +4301,8 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
             data->di.width  = data->buttonWidth;
             data->di.height = data->buttonHeight;
             #else
-            data->di.width  = data->buttonWidth+((data->flags & FLG_Framed) ? data->leftBarFrameSpacing+data->rightBarFrameSpacing+2 : 0);
-            data->di.height = data->buttonHeight+((data->flags & FLG_Framed) ? data->topBarFrameSpacing+data->bottomBarFrameSpacing+2 : 0);
+            data->di.width  = data->buttonWidth+(isFlagSet(data->flags, FLG_Framed) ? data->leftBarFrameSpacing+data->rightBarFrameSpacing+2 : 0);
+            data->di.height = data->buttonHeight+(isFlagSet(data->flags, FLG_Framed) ? data->topBarFrameSpacing+data->bottomBarFrameSpacing+2 : 0);
             #endif
         }
 
@@ -4147,7 +4328,9 @@ mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg
 
     for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
     {
-        if (button->flags & BFLG_Sleep) continue;
+        if (isFlagSet(button->flags, BFLG_Sleep))
+            continue;
+
         set(button->obj,MUIA_TheButton_MouseOver,FALSE);
     }
 

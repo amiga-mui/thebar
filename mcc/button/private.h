@@ -239,4 +239,9 @@ struct ButtonNotify
 #define copymem(to,from,len)            memcpy((to),(from),(len));
 #endif
 
+#define setFlag(mask, flag)             (mask) |= (flag)
+#define clearFlag(mask, flag)           (mask) &= ~(flag)
+#define isFlagSet(mask, flag)           (((mask) & (flag)) == (flag))
+#define isFlagClear(mask, flag)         (((mask) & (flag)) == 0)
+
 #endif /* _PRIVATE_H */

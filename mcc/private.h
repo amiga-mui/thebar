@@ -302,5 +302,10 @@ void freeBitMaps(struct InstData *data);
 #define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
 #endif
 
+#define setFlag(mask, flag)             (mask) |= (flag)
+#define clearFlag(mask, flag)           (mask) &= ~(flag)
+#define isFlagSet(mask, flag)           (((mask) & (flag)) == (flag))
+#define isFlagClear(mask, flag)         (((mask) & (flag)) == 0)
+
 #endif /* _PRIVATE_H */
 
