@@ -2,6 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-07  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: replaced some left over "value & flag" style bit checks.
+
 2008-02-06  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?.c: replaced all "value & flag" style bit checks and manipulations by
