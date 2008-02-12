@@ -56,7 +56,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     	Object *spacer;
 
         spacer = spacerObject,
-            MUIA_Group_Horiz,                                                                    isFlagSet(flags, FLG_Horiz),
+            MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
             isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
             MUIA_TheButton_TheBar, obj,
         End;
@@ -69,8 +69,8 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
       Object *spacer;
 
       spacer = spacerObject,
-               MUIA_Group_Horiz,                                                                    isFlagSet(flags, FLG_Horiz),
-               isFlagSet(flags, FLG_BarSpacer) ? TAG_IGNORE : MUIA_TheButton_Spacer,                        MUIV_TheButton_Spacer_Button,
+               MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
+               isFlagSet(flags, FLG_BarSpacer) ? TAG_IGNORE : MUIA_TheButton_Spacer, MUIV_TheButton_Spacer_Button,
                isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
                MUIA_TheButton_TheBar, obj,
       End;
@@ -106,7 +106,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
         Object *spacer;
 
         spacer = spacerObject,
-                 MUIA_Group_Horiz,                                                                    isFlagSet(flags, FLG_Horiz),
+                 MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
                  isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
                  MUIA_TheButton_TheBar, obj,
                End;
@@ -345,6 +345,9 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
       return FALSE;
     }
 
+    // set the method ID for sorting
+    smsg->MethodID = MUIM_Group_Sort;
+
     if (data->db)
     {
         smsg->obj[0] = data->db;
@@ -395,11 +398,12 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             LONG   cols = 0, rows = 0, numBut, c;
             UWORD  butMaxMinWidth, butMaxMinHeight, maxMinWidth, maxMinHeight, width, height, addSpace;
 
+            D(DBF_ALWAYS, "layout start");
             butMaxMinWidth  = butMaxMinHeight = numBut = 0;
 
             for(cstate = (Object *)lm->lm_Children->mlh_Head; (child = NextObject(&cstate)); )
             {
-                if (!xget(child,MUIA_ShowMe) || (xget(child,MUIA_TheButton_Spacer)!=MUIV_TheButton_Spacer_None))
+                if (xget(child, MUIA_ShowMe) == FALSE || xget(child,MUIA_TheButton_Spacer) != MUIV_TheButton_Spacer_None)
                     continue;
 
                 if ((butMaxMinWidth<MUI_MAXMAX) && (_minwidth(child)>butMaxMinWidth))
@@ -407,6 +411,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                 if ((butMaxMinHeight<MUI_MAXMAX) && (_minheight(child)>butMaxMinHeight))
                     butMaxMinHeight = _minheight(child);
+
+                D(DBF_ALWAYS, "but %3ld minh %3ld", numBut, _minheight(child));
 
                 numBut++;
             }
@@ -419,18 +425,26 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 if (data->cols)
                 {
                     cols = data->cols;
-                    if (cols<=0 || cols>numBut) cols = numBut;
+                    if (cols<=0 || cols>numBut)
+                        cols = numBut;
+
                     rows = numBut/cols;
-                    if (rows==0) rows = 1;
-                    else if (numBut-cols*rows>0) rows++;
+                    if (rows == 0)
+                        rows = 1;
+                    else if (numBut-cols*rows>0)
+                        rows++;
                 }
                 else
                 {
                     rows = data->rows;
-                    if (rows<=0 || rows>numBut) rows = numBut;
+                    if (rows<=0 || rows>numBut)
+                        rows = numBut;
+
                     cols = numBut/rows;
-                    if (!cols) cols = 1;
-                    else if (numBut-cols*rows>0) cols++;
+                    if (cols == 0)
+                        cols = 1;
+                    else if (numBut-cols*rows>0)
+                        cols++;
                 }
             }
 
@@ -442,7 +456,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             {
                 UWORD w = 0;
 
-                if (!xget(child,MUIA_ShowMe)) continue;
+                if (xget(child,MUIA_ShowMe) == FALSE)
+                    continue;
 
                 if (horiz)
                 {
@@ -506,7 +521,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         if (isFlagSet(data->flags, FLG_Table) && (++c>=cols))
                             test = TRUE;
                     }
-                    else width += w;
+                    else
+                        width += w;
                 }
                 else
                 {
@@ -554,7 +570,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                             break;
                     }
 
-                    if (addSpace>1) height += data->vertSpacing;
+                    if (addSpace>1)
+                        height += data->vertSpacing;
                 }
             }
 
@@ -573,7 +590,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         if(data->cols)
                             lm->lm_MinMax.MinWidth += _minwidth(data->db)+data->horizSpacing;
                         else
-                           lm->lm_MinMax.MinHeight += _minheight(data->db)+data->vertSpacing;
+                            lm->lm_MinMax.MinHeight += _minheight(data->db)+data->vertSpacing;
 
                         #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                         lm->lm_MinMax.MinHeight += isFlagSet(data->flags, FLG_Framed) ? 4 : 0;
@@ -603,7 +620,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 #endif
 
                 lm->lm_MinMax.MaxWidth  = isFlagSet(data->flags, FLG_FreeHoriz) ? MUI_MAXMAX : lm->lm_MinMax.MinWidth;
-                lm->lm_MinMax.MaxHeight = isFlagSet(data->flags, FLG_FreeVert) ? MUI_MAXMAX : lm->lm_MinMax.MinHeight;
+                lm->lm_MinMax.MaxHeight = isFlagSet(data->flags, FLG_FreeVert)  ? MUI_MAXMAX : lm->lm_MinMax.MinHeight;
             }
             else
             {
@@ -628,7 +645,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 #endif
 
                 lm->lm_MinMax.MaxWidth  = isFlagSet(data->flags, FLG_FreeHoriz) ? MUI_MAXMAX : lm->lm_MinMax.MinWidth;
-                lm->lm_MinMax.MaxHeight = isFlagSet(data->flags, FLG_FreeVert) ? MUI_MAXMAX : lm->lm_MinMax.MinHeight;
+                lm->lm_MinMax.MaxHeight = isFlagSet(data->flags, FLG_FreeVert)  ? MUI_MAXMAX : lm->lm_MinMax.MinHeight;
             }
 
             lm->lm_MinMax.DefWidth  = lm->lm_MinMax.MinWidth;
@@ -644,15 +661,16 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
               #else
               if(isFlagClear(data->flags, FLG_Framed))
               {
-                 data->objWidth  = lm->lm_MinMax.MinWidth;
-    	         data->objHeight = lm->lm_MinMax.MinHeight;
-    	      }
-	          #endif
-	        #endif
+                data->objWidth  = lm->lm_MinMax.MinWidth;
+    	          data->objHeight = lm->lm_MinMax.MinHeight;
+              }
+   	          #endif
+	          #endif // VIRTUAL
 
             data->lcols = cols;
             data->lrows = rows;
 
+            D(DBF_ALWAYS, "layout end");
             RETURN(0);
             return 0;
         }
@@ -720,7 +738,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         case MUIV_TheButton_Spacer_Bar:
                             width  = _minwidth(child);
                             height = data->buttonHeight-2;
-                            if (x) x -= spc;
+                            if (x)
+                                x -= spc;
                             test = FALSE;
                             break;
 
@@ -740,14 +759,16 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                     break;
                             }
                             height = data->buttonHeight;
-                            if (x) x -= spc;
+                            if (x)
+                                x -= spc;
                             test = FALSE;
                             break;
 
                         case MUIV_TheButton_Spacer_Image:
                             width  = _minwidth(child);
                             height = _minheight(child);
-                            if (x) x -= spc;
+                            if (x)
+                                x -= spc;
                             test = FALSE;
                             break;
 
@@ -768,7 +789,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                     xx = 2;
                                     y  = 2;
                                 }
-                                else xx = y = 0;
+                                else
+                                    xx = y = 0;
                                 //height -= isFlagSet(data->flags, FLG_Framed) ? data->topBarFrameSpacing+data->bottomBarFrameSpacing+2 : 0;
                                 #endif
 
@@ -783,11 +805,12 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                 continue;
                             }
                             else
+                            {
                                 if (data->rows)
                                 {
                                     ULONG xx;
 
-				                    width  = _mwidth(obj);
+                                    width  = _mwidth(obj);
                                     height = _minheight(child);
 
                                     #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
@@ -799,7 +822,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                         xx = 2;
                                         y  = 2;
                                     }
-                                    else xx = y = 0;
+                                    else
+                                        xx = y = 0;
                                     //width  -= isFlagSet(data->flags, FLG_Framed) ? data->leftBarFrameSpacing+data->rightBarFrameSpacing+2 : 0;
                                     #endif
 
@@ -828,7 +852,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                         xx = 2;
                                         y  = 2;
                                     }
-                                    else xx = y = 0;
+                                    else
+                                        xx = y = 0;
                                     //height -= isFlagSet(data->flags, FLG_Framed) ? data->topBarFrameSpacing+data->bottomBarFrameSpacing+2 : 0;
                                     #endif
 
@@ -842,6 +867,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                     x += width+spc;
                                     continue;
                                 }
+                            }
+                            break;
                     }
 
                     y = sy;
@@ -926,7 +953,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         case MUIV_TheButton_Spacer_Bar:
                             width  = data->buttonWidth;
                             height = _minheight(child);
-                            if (y) y -= spc;
+                            if (y)
+                                y -= spc;
                             break;
 
                         case MUIV_TheButton_Spacer_Button:
@@ -945,13 +973,15 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                     break;
                             }
                             width  = data->buttonWidth;
-                            if (y) y -= spc;
+                            if (y)
+                                y -= spc;
                             break;
 
                         case MUIV_TheButton_Spacer_Image:
                             width  = _minwidth(child);
                             height = _minheight(child);
-                            if (y) y -= spc;
+                            if (y)
+                                y -= spc;
                             break;
 
                         case MUIV_TheButton_Spacer_DragBar:
@@ -970,7 +1000,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                               x  = 2;
                               yy = 2;
                             }
-                            else x = yy = 0;
+                            else
+                              x = yy = 0;
                             //width -= isFlagSet(data->flags, FLG_Framed) ? data->leftBarFrameSpacing+data->rightBarFrameSpacing+2 : 0;
                             #endif
 
@@ -985,13 +1016,15 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         }
                     }
 
-                    if (width<data->buttonWidth) x = (data->buttonWidth - _minwidth(child)) >> 1;
-                    else x = 0;
+                    if (width<data->buttonWidth)
+                        x = (data->buttonWidth - _minwidth(child)) >> 1;
+                    else
+                        x = 0;
 
                     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                     if (isFlagSet(data->flags, FLG_Framed))
                         x += data->leftBarFrameSpacing+1;
-	                #endif
+  	                #endif
 
                     if(!MUI_Layout(child,x,y,width,height,0))
                     {
@@ -1891,7 +1924,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if (isFlagSet(pt.pflags, PFLG_FreeVertExists) ? isFlagSet(pt.flags, PFLG_FreeVert) : isFlagSet(pt.flags, FLG_Horiz) == 0)
         setFlag(pt.flags, FLG_FreeVert);
 
-	pics = makePics(&pt,pool,&sb,&ssb,&dsb,&nbr);
+  	pics = makePics(&pt,pool,&sb,&ssb,&dsb,&nbr);
 
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_Group_LayoutHook,   (IPTR)&LayoutHook,
@@ -1919,7 +1952,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
         data->userFrame = pt.userFrame;
         #endif
-        data->sortMsgID = MUIM_Group_Sort;
 
         if (isFlagSet(data->flags, FLG_FreeStrip))
         {
@@ -2901,9 +2933,13 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
       SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(IPTR)data->frameSpec,TAG_DONE);
     }
     else if (isFlagSet(data->userFlags2, UFLG2_UserFrame))
+    {
       SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
+    }
     else
+    {
       SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
+    }
     #endif
 
     if (isFlagClear(data->userFlags, UFLG_UserHorizSpacing))
@@ -3081,7 +3117,8 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-/*static ULONG
+/*
+static ULONG
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
     //register struct data *data = INST_DATA(cl,obj);
@@ -3091,7 +3128,8 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     msg->MinMaxInfo->MinHeight = _subheight(obj);
 
     return res;
-}*/
+}
+*/
 
 /***********************************************************************/
 
@@ -3743,11 +3781,14 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
                 {
                     if (isFlagSet(data->flags, FLG_Setup))
                         DoMethod(obj,MUIM_Group_InitChange);
+
                     DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)button->obj);
+
                     if (isFlagSet(data->flags, FLG_Setup))
                     {
                         if (isFlagSet(data->flags, FLG_FreeStrip))
                             DoMethod(button->obj,MUIM_TheButton_Build);
+
                         DoMethod(obj,MUIM_Group_ExitChange);
                     }
                 }
@@ -4241,6 +4282,9 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
       return FALSE;
     }
 
+    // set the method ID for sorting
+    smsg->MethodID = MUIM_Group_Sort;
+
     /* Insert DragBar */
     if (data->db)
     {
@@ -4291,7 +4335,9 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 
     if (isFlagSet(data->flags, FLG_Setup))
         DoMethod(obj,MUIM_Group_InitChange);
+
     DoSuperMethodA(cl,obj,(Msg)smsg);
+
     if (isFlagSet(data->flags, FLG_Setup))
         DoMethod(obj,MUIM_Group_ExitChange);
 
