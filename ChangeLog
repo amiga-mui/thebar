@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-12  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: sorting of more than 31 buttons was broken as the MethodID of
+    the message was never set in this case.
+
 2008-02-07  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: replaced some left over "value & flag" style bit checks.
