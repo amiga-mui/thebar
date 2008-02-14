@@ -304,6 +304,7 @@ void freeBitMaps(struct InstData *data);
 
 #define setFlag(mask, flag)             (mask) |= (flag)
 #define clearFlag(mask, flag)           (mask) &= ~(flag)
+#define isAnyFlagSet(mask, flag)        (((mask) & (flag)) != 0)
 #define isFlagSet(mask, flag)           (((mask) & (flag)) == (flag))
 #define isFlagClear(mask, flag)         (((mask) & (flag)) == 0)
 
