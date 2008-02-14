@@ -901,10 +901,13 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
     if (isFlagClear(data->flags2, FLG2_Limbo))
     {
-        if (!getconfigitem(cl,obj,MUICFG_TheBar_ButtonFrame,&ptr))
-             ptr = MUIDEF_TheBar_ButtonFrame;
+        if(isFlagSet(lib_flags, BASEFLG_MUI4))
+        {
+            if(!getconfigitem(cl, obj, MUICFG_TheBar_ButtonFrame, &ptr))
+                 ptr = MUIDEF_TheBar_ButtonFrame;
 
-        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)ptr,TAG_DONE);
+            SetSuperAttrs(cl, obj, MUIA_Group_Forward, FALSE, MUIA_Frame, (ULONG)ptr, TAG_DONE);
+        }
 
         if(isFlagSet(lib_flags, BASEFLG_MUI20))
         {
@@ -938,9 +941,9 @@ B S R  FD  FV            FD = B * !S * R
 
 */
 
-            SetSuperAttrs(cl,obj,MUIA_FrameDynamic, fd,
-                                 MUIA_FrameVisible, fv,
-                                 TAG_DONE);
+            SetSuperAttrs(cl, obj, MUIA_FrameDynamic, fd,
+                                   MUIA_FrameVisible, fv,
+                                   TAG_DONE);
         }
 
 
