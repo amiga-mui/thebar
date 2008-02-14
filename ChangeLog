@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-14  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: made the centered layout consistent between virtual and normal
+    bars.
+
 2008-02-12  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: sorting of more than 31 buttons was broken as the MethodID of

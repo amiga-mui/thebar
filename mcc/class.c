@@ -696,7 +696,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         #ifdef VIRTUAL
                         x = (_mwidth(obj)>(int)data->width) ? (_mwidth(obj)-data->width)>>1 : 0;
                         #else
-                        x = (_width(obj)-_minwidth(obj))>>1;
+                        x = (_mwidth(obj)-_minwidth(obj))>>1;
                         #endif
                         break;
 
