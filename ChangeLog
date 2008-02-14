@@ -4,6 +4,8 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-14  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/button/class.c: MUIA_FrameDynamic/Visible is now only modified with
+    at least MUI3.9 as MUI3.8 doesn't know these attributes.
   * mcc/class.c: made the centered layout consistent between virtual and normal
     bars.
 

@@ -624,8 +624,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                         tag->ti_Tag = TAG_IGNORE;
 
                         SetSuperAttrs(cl,obj,MUIA_Selected,     tidata,
-                                             MUIA_FrameDynamic, tidata  ? FALSE : (isFlagSet(data->flags, FLG_Raised) ? TRUE : FALSE),
-                                             MUIA_FrameVisible, !tidata ? FALSE : (isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : TRUE),
+                                             isFlagSet(lib_flags, BASEFLG_MUI20) ? MUIA_FrameDynamic : TAG_IGNORE, tidata  ? FALSE : (isFlagSet(data->flags, FLG_Raised) ? TRUE : FALSE),
+                                             isFlagSet(lib_flags, BASEFLG_MUI20) ? MUIA_FrameVisible : TAG_IGNORE, !tidata ? FALSE : (isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : TRUE),
                                              MUIA_ShowSelState, isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : tidata,
                                              TAG_DONE);
                     }
@@ -901,22 +901,26 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
     if (isFlagClear(data->flags2, FLG2_Limbo))
     {
-        ULONG fd = FALSE, fv = FALSE;
-
         if (!getconfigitem(cl,obj,MUICFG_TheBar_ButtonFrame,&ptr))
-            ptr = MUIDEF_TheBar_ButtonFrame;
+             ptr = MUIDEF_TheBar_ButtonFrame;
 
         SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)ptr,TAG_DONE);
 
-        if (isFlagSet(data->flags, FLG_Borderless))
+        if(isFlagSet(lib_flags, BASEFLG_MUI20))
         {
-            if (isFlagSet(data->flags, FLG_Selected))
+        	// modify MUIA_FrameDynamic/Visible only for MUI3.9+ as MUI3.8 doesn't know
+        	// these attributes at all
+            BOOL fd = FALSE, fv = FALSE;
+
+            if(isFlagSet(data->flags, FLG_Borderless))
+            {
+                if(isFlagSet(data->flags, FLG_Selected))
+                    fv = TRUE;
+                else if(isFlagSet(data->flags, FLG_Raised))
+                    fd = TRUE;
+            }
+            else
                 fv = TRUE;
-            else if isFlagSet(data->flags, FLG_Raised)
-                fd = TRUE;
-        }
-        else
-            fv = TRUE;
 /*
 B S R  FD  FV            FD = B * !S * R
 0 0 0   0  1             FV = !FD - B * !S * !R = !B + S
@@ -928,15 +932,16 @@ B S R  FD  FV            FD = B * !S * R
 1 1 0   0  1
 1 1 1   0  1
 
-        SetSuperAttrs(cl,obj,MUIA_FrameDynamic, fd, isFlagSet(data->flags, FLG_Borderless) && isFlagClear(data->flags, FLG_Selected) && isFlagSet(data->flags, FLG_Raised),
-                             MUIA_FrameVisible, fv, isFlagClear(data->flags, FLG_Borderless) || isFlagSet(data->flags, FLG_Selected),
-                             TAG_DONE);
+            SetSuperAttrs(cl,obj,MUIA_FrameDynamic, fd, isFlagSet(data->flags, FLG_Borderless) && isFlagClear(data->flags, FLG_Selected) && isFlagSet(data->flags, FLG_Raised),
+                                 MUIA_FrameVisible, fv, isFlagClear(data->flags, FLG_Borderless) || isFlagSet(data->flags, FLG_Selected),
+                                 TAG_DONE);
 
 */
 
-        SetSuperAttrs(cl,obj,MUIA_FrameDynamic, fd,
-                             MUIA_FrameVisible, fv,
-                             TAG_DONE);
+            SetSuperAttrs(cl,obj,MUIA_FrameDynamic, fd,
+                                 MUIA_FrameVisible, fv,
+                                 TAG_DONE);
+        }
 
 
         /* Active background */
@@ -1106,10 +1111,10 @@ B S R  FD  FV            FD = B * !S * R
         data->eh.ehn_Flags  = MUI_EHF_GUIMODE;
 
         /* Compute frame size */
-        if(isFlagClear(lib_flags, BASEFLG_MUI4))
-          data->fSize = isFlagSet(data->flags, FLG_Borderless) ? (isFlagSet(_riflags(obj), MUIMRI_THINFRAMES) ? 1 : 2) : 0;
+        if(isFlagClear(lib_flags, BASEFLG_MUI4) || isFlagClear(data->flags, FLG_Borderless))
+            data->fSize = isFlagSet(_riflags(obj), MUIMRI_THINFRAMES) ? 1 : 2;
         else
-          data->fSize = 0;
+            data->fSize = 0;
 
         /* Derive GFX env info */
         data->screen = _screen(obj);
@@ -2000,6 +2005,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
             WORD  t = _top(obj), l = _left(obj), r = _right(obj), b = _bottom(obj);
 
             if (data->fStyle==MUIV_TheButton_FrameStyle_Recessed)
+            {
                 if (se)
                 {
                     shine  = MUIPEN(data->shine);
@@ -2010,7 +2016,9 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     shine  = MUIPEN(data->shadow);
                     shadow = MUIPEN(data->shine);
                 }
+            }
             else
+            {
                 if (se)
                 {
                     shine  = MUIPEN(data->shadow);
@@ -2021,6 +2029,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     shine  = MUIPEN(data->shine);
                     shadow = MUIPEN(data->shadow);
                 }
+            }
 
             SetAPen(rp,shadow);
             Move(rp,r,t);
