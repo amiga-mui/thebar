@@ -2769,7 +2769,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     if (isFlagSet(flags, SFLG_Rebuild))
         DoMethod(obj,MUIM_TheBar_Rebuild);
     else
-        if (isFlagSet(flags, SFLG_ButtonAttrs))
+        if (isAnyFlagSet(flags, SFLG_ButtonAttrs))
         {
             struct Button *button;
             struct Button *succ;

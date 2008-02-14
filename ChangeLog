@@ -4,6 +4,8 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-14  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/private.h, mcc/class.c: added isAnyFlagSet() macro to check if at least
+    one of the given flags is set.
   * mcc/button/class.c: setting the bar's frame attribute is now only done for
     MUI4 as this caused unwantend additional frames with MUI3.x after a button
     was hidden and shown again at least once.
