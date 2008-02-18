@@ -58,10 +58,12 @@ struct InstData
 
   Object  *groupBack;
   Object  *useGroupBack;
+  Object  *frame;
+  Object  *barFrameShinePen;
+  Object  *barFrameShadowPen;
 
   Object  *buttonBack;
   Object  *useButtonBack;
-
   Object  *frameShinePen;
   Object  *frameShadowPen;
   Object  *frameStyle;
@@ -71,10 +73,6 @@ struct InstData
 
   Object  *barSpacerShinePen;
   Object  *barSpacerShadowPen;
-
-  Object  *frame;
-  Object  *barFrameShinePen;
-  Object  *barFrameShadowPen;
 
   Object  *dragBarShinePen;
   Object  *dragBarShadowPen;
@@ -121,8 +119,6 @@ struct InstData
   Object  *disMode;
 
   Object  *spacersSize;
-
-  Object  *hidden[3];
 
   STRPTR  base;
   ULONG   flags;

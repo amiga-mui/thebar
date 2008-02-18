@@ -63,7 +63,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         char buf[128];
         Object *prefs;
         Object *trans;
-        Object *groups[16];
 
         static const char *regs[5];
         static const char *frames[3];
@@ -142,36 +141,39 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 MUIA_CycleChain, TRUE,
 
-                Child, groups[0] = VGroup,
+                Child, VGroup,
                     MUIA_Group_Columns, 2,
 
                     Child, VGroup, // >Backrounds
                         GroupFrameT(tr(Msg_Title_Backgrounds)),
                         Child, owspace(1),
-                        Child, groups[1] = ColGroup(3),
+                        Child, ColGroup((lib_flags & BASEFLG_MUI4) ? 2 : 3),
+
                             Child, (IPTR)oflabel(Msg_GroupBackground),
                             Child, data->groupBack = (lib_flags & BASEFLG_MUI4) ? opopfri(Msg_GroupBackground,Msg_GroupBackground_Title,Msg_GroupBackground_Help) :
                                                                                   opopback(TRUE,Msg_GroupBackground,Msg_GroupBackground_Title,Msg_GroupBackground_Help),
 
-                            Child, data->hidden[0] = VGroup,
+			                (lib_flags & BASEFLG_MUI4) ? TAG_IGNORE : Child,
+			                (lib_flags & BASEFLG_MUI4) ? 0 : (VGroup,
                                 Child, (IPTR)VSpace(0),
                                 Child, HGroup,
                                     //Child, olabel1(Msg_UseGroupBackground),
                                     Child, (IPTR)(data->useGroupBack = ocheck(Msg_UseGroupBackground, Msg_UseGroupBackground_Help)),
                                 End,
                                 Child, (IPTR)VSpace(0),
-                            End,
+                            End),
                             Child, (IPTR)oflabel(Msg_ButtonBackground),
                             Child, (IPTR)(data->buttonBack = (lib_flags & BASEFLG_MUI4) ? opopfri(Msg_ButtonBackground,Msg_ButtonBackground_Title,Msg_ButtonBackground_Help) :
                                                                                           opopback(FALSE,Msg_ButtonBackground,Msg_ButtonBackground_Title,Msg_ButtonBackground_Help)),
-                            Child, data->hidden[1] = VGroup,
+			                (lib_flags & BASEFLG_MUI4) ? TAG_IGNORE : Child,
+			                (lib_flags & BASEFLG_MUI4) ? 0 : (VGroup,
                                 Child, (IPTR)VSpace(0),
                                 Child, HGroup,
                                     //Child, olabel1(Msg_UseButtonBackground),
                                     Child, (IPTR)(data->useButtonBack = ocheck(Msg_UseButtonBackground ,Msg_UseButtonBackground_Help)),
                                 End,
                                 Child, (IPTR)VSpace(0),
-                            End,
+                            End),
                         End,
                         Child, owspace(1),
                     End, // <Backgrounds
@@ -226,7 +228,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         Child, owspace(1),
                     End, // <Bar spacer
 
-                    Child, data->hidden[2] = VGroup, // >Buttons frame
+                    // >Buttons frame
+			        (lib_flags & BASEFLG_MUI4) ? TAG_IGNORE : Child,
+			        (lib_flags & BASEFLG_MUI4) ? 0 : (VGroup,
                         GroupFrameT(tr(Msg_Title_Frame)),
                         Child, owspace(1),
                         Child, ColGroup(2),
@@ -241,26 +245,28 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                             Child, (IPTR)(data->frameStyle = ocycle(frames,Msg_FrameStyle,Msg_FrameStyle_Help)),
                         End,
                         Child, owspace(1),
-                    End, // <Buttons frame
+                    End), // <Buttons frame
 
-                    Child, data->hidden[3] = VGroup, // >BarFrame
+                    // >BarFrame
+			        (lib_flags & BASEFLG_MUI4) ? TAG_IGNORE : Child,
+			        (lib_flags & BASEFLG_MUI4) ? 0 : (VGroup,
                         GroupFrameT(tr(Msg_Title_BarFrame)),
                         MUIA_Weight, 60,
                         Child, owspace(1),
-                        Child, HGroup,
-                            #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-                            Child, oflabel(Msg_Frame),
-	                          Child, data->frame = opopframe(Msg_Frame,Msg_Frame_Title,Msg_Frame_Help),
-                            #else
-                            Child, (IPTR)oflabel(Msg_BarFrameShine),
-                            Child, (IPTR)(data->barFrameShinePen = opoppen(Msg_BarFrameShine,Msg_BarFrameShine_Title,Msg_BarFrameShine_Help)),
-                            Child, owspace(20),
-                            Child, (IPTR)oflabel(Msg_BarFrameShadow),
-                            Child, (IPTR)(data->barFrameShadowPen = opoppen(Msg_BarFrameShadow,Msg_BarFrameShadow_Title,Msg_BarFrameShadow_Help)),
-                            #endif
-                        End,
+                        Child, (lib_flags & BASEFLG_MUI20) ?
+							(HGroup,
+                            	Child, oflabel(Msg_Frame),
+		                        Child, data->frame = opopframe(Msg_Frame,Msg_Frame_Title,Msg_Frame_Help),
+	                         End) :
+							(HGroup,
+                            	Child, (IPTR)oflabel(Msg_BarFrameShine),
+                            	Child, (IPTR)(data->barFrameShinePen = opoppen(Msg_BarFrameShine,Msg_BarFrameShine_Title,Msg_BarFrameShine_Help)),
+                            	Child, owspace(20),
+                            	Child, (IPTR)oflabel(Msg_BarFrameShadow),
+                            	Child, (IPTR)(data->barFrameShadowPen = opoppen(Msg_BarFrameShadow,Msg_BarFrameShadow_Title,Msg_BarFrameShadow_Help)),
+                        	 End),
                         Child, owspace(1),
-                    End, // <BarFrame
+                    End), // <BarFrame
 
                 End, // <Colors
 
@@ -361,8 +367,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         Child, owspace(1),
                     End, // <Inner spacing
 
-                    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-                    Child, VGroup, // >BarFrame spacing
+                    // >BarFrame spacing
+                    (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : Child,
+                    (lib_flags & BASEFLG_MUI20) ? 0 : (VGroup, 
                         GroupFrameT(tr(Msg_Title_BarFrameSpacing)),
                         Child, owspace(1),
                         Child, ColGroup(4),
@@ -376,8 +383,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                             Child, (IPTR)(data->bottomBarFrameSpacing = oslider(Msg_BottomBarFrameSpacing,Msg_BottomBarFrameSpacing_Help,1,16)),
                         End,
                         Child, owspace(1),
-                    End, // <BarFrame spacing
-                    #endif
+                    End), // <BarFrame spacing
 
                     Child, VGroup, // >Text/Gfx spacing
                         GroupFrameT(tr(Msg_Title_TextGfxSpacing)),
@@ -391,10 +397,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         Child, owspace(1),
                     End, // <Text/Gfx spacing
 
-                    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-                    Child, HVSpace,
-                    #endif
-
+                    (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : Child,
+                    (lib_flags & BASEFLG_MUI20) ? 0 : (HVSpace),
                 End,  // <Spacing
 
                 Child, VGroup, // >Settings
@@ -481,23 +485,15 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             {
                 const char *at;
 
-                // make sure to remove & dispose GUI stuff we don't need
-                // on MUI4 systems
-                if(lib_flags & BASEFLG_MUI4)
-                {
-                  DoMethod(groups[1],OM_REMMEMBER,(IPTR)data->hidden[0]);
-                  DoMethod(groups[1],OM_REMMEMBER,(IPTR)data->hidden[1]);
-                  set(groups[1],MUIA_Group_Columns,2);
-                  DoMethod(groups[0],OM_REMMEMBER,(IPTR)data->hidden[2]);
-                  DoMethod(groups[0],OM_REMMEMBER,(IPTR)data->hidden[3]);
-                }
-
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->groupBack,MUICFG_TheBar_GroupBack,2,(IPTR)tr(Msg_GroupBackground),MUIA_Imagedisplay_Spec);
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->groupBack,MUICFG_TheBar_GroupBack,2,(IPTR)tr(Msg_GroupBackground),MUIA_Framedisplay_Spec);
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->buttonBack,MUICFG_TheBar_ButtonBack,1,(IPTR)tr(Msg_ButtonBackground));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->frameShinePen,MUICFG_TheBar_FrameShinePen,1,(IPTR)tr(Msg_FrameShinePen));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->frameShadowPen,MUICFG_TheBar_FrameShadowPen,1,(IPTR)tr(Msg_FrameShadowPen));
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->frameStyle,MUICFG_TheBar_FrameStyle,1,(IPTR)tr(Msg_FrameStyle));
+                if (!((lib_flags & BASEFLG_MUI4)))
+                {
+                	DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->frameShinePen,MUICFG_TheBar_FrameShinePen,1,(IPTR)tr(Msg_FrameShinePen));
+                	DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->frameShadowPen,MUICFG_TheBar_FrameShadowPen,1,(IPTR)tr(Msg_FrameShadowPen));
+                	DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->frameStyle,MUICFG_TheBar_FrameStyle,1,(IPTR)tr(Msg_FrameStyle));
+				}
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->disBodyPen,MUICFG_TheBar_DisBodyPen,1,(IPTR)tr(Msg_DisabledBody));
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->disShadowPen,MUICFG_TheBar_DisShadowPen,1,(IPTR)tr(Msg_DisabledShadow));
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->barSpacerShinePen,MUICFG_TheBar_BarSpacerShinePen,1,(IPTR)tr(Msg_BarSpacerShinePen));
@@ -585,15 +581,6 @@ mDispose(struct IClass *cl,Object *obj,Msg msg)
   if(data->menu)
     MUI_DisposeObject(data->menu);
 
-  // also dispose the hidden objects as we removed them
-  // from our object list previously.
-  if(lib_flags & BASEFLG_MUI4)
-  {
-    MUI_DisposeObject(data->hidden[0]);
-    MUI_DisposeObject(data->hidden[1]);
-    MUI_DisposeObject(data->hidden[2]);
-  }
-
   return DoSuperMethodA(cl,obj,msg);
 }
 
@@ -647,14 +634,15 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
 
     if (lib_flags & BASEFLG_MUI20)
     {
-        /* On MUI3.9, user might set a MUI frame, so also its inner spacing is automatic */
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Frame)))
             ptr = MUIDEF_TheBar_Frame;
-        set(data->groupBack,MUIA_Framedisplay_Spec,ptr);
+
+	    if (lib_flags & BASEFLG_MUI4)
+	        set(data->groupBack,MUIA_Framedisplay_Spec,ptr);
+		else set(data->frame,MUIA_Framedisplay_Spec,ptr);
 	}
 	else
     {
-        /* On MUI3.8, user might set color, recessed mode and inner spacing, but they are not MUI's */
 	    if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BarFrameShinePen)))
     	    ptr = MUIDEF_TheBar_BarFrameShinePen;
 	    set(data->barFrameShinePen,MUIA_Pendisplay_Spec,ptr);
@@ -870,20 +858,48 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     STRPTR                         ptr;
     ULONG                          val;
 
-    if(!(lib_flags & BASEFLG_MUI20) && (ptr = (STRPTR)xget(data->groupBack, MUIA_Popbackground_Grad)))
+    if (lib_flags & BASEFLG_MUI20)
     {
-        DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_GroupBack);
-        addconfigitem(cfg,ptr,sizeof(struct MUIS_TheBar_Gradient),MUICFG_TheBar_Gradient);
-    }
-    else
-    {
-        DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_Gradient);
-        ptr = (STRPTR)xget(data->groupBack, MUIA_Imagedisplay_Spec);
-	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_GroupBack);
-    }
+	    if (lib_flags & BASEFLG_MUI4)
+    	{
+	    	get(data->buttonBack,MUIA_Framedisplay_Spec,&ptr);
+	    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_ButtonFrame);
+		}
+		else
+    	{
+	    	ptr = (STRPTR)xget(data->buttonBack, MUIA_Imagedisplay_Spec);
+	    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_ButtonBack);
 
-    val = xget(data->useGroupBack, MUIA_Selected);
-    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseGroupBack);
+		    val = xget(data->useButtonBack, MUIA_Selected);
+    		addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseButtonBack);
+		}
+    }
+	else
+    {
+	    if ((ptr = (STRPTR)xget(data->groupBack, MUIA_Popbackground_Grad)))
+	    {
+    	    DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_GroupBack);
+        	addconfigitem(cfg,ptr,sizeof(struct MUIS_TheBar_Gradient),MUICFG_TheBar_Gradient);
+	    }
+    	else
+	    {
+    	    DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_Gradient);
+        	ptr = (STRPTR)xget(data->groupBack, MUIA_Imagedisplay_Spec);
+		    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_GroupBack);
+    	}
+
+    	val = xget(data->useGroupBack, MUIA_Selected);
+	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseGroupBack);
+
+    	ptr = (STRPTR)xget(data->frameShinePen, MUIA_Pendisplay_Spec);
+	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_FrameShinePen);
+
+    	ptr = (STRPTR)xget(data->frameShadowPen, MUIA_Pendisplay_Spec);
+	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_FrameShadowPen);
+
+    	val = xget(data->frameStyle, MUIA_Cycle_Active);
+	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_FrameStyle);
+	}
 
     if (lib_flags & BASEFLG_MUI4)
     {
@@ -899,15 +915,6 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     	addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseButtonBack);
 	}
 
-    ptr = (STRPTR)xget(data->frameShinePen, MUIA_Pendisplay_Spec);
-    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_FrameShinePen);
-
-    ptr = (STRPTR)xget(data->frameShadowPen, MUIA_Pendisplay_Spec);
-    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_FrameShadowPen);
-
-    val = xget(data->frameStyle, MUIA_Cycle_Active);
-    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_FrameStyle);
-
     ptr = (STRPTR)xget(data->disBodyPen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_DisBodyPen);
 
@@ -920,20 +927,32 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     ptr = (STRPTR)xget(data->barSpacerShadowPen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarSpacerShadowPen);
 
-    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-    if(lib_flags & BASEFLG_MUI4)
-      ptr = (STRPTR)xget(data->groupBack, MUIA_Framedisplay_Spec);
-    else
-      ptr = (STRPTR)xget(data->frame, MUIA_Framedisplay_Spec);
-    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_Frame);
-    #else
+    if (lib_flags & BASEFLG_MUI20)
+    {
+	    if (lib_flags & BASEFLG_MUI4) ptr = (STRPTR)xget(data->groupBack, MUIA_Framedisplay_Spec);
+	    else ptr = (STRPTR)xget(data->frame, MUIA_Framedisplay_Spec);
+    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_Frame);
+	}
+	else
+    {
+	    ptr = (STRPTR)xget(data->barFrameShinePen, MUIA_Pendisplay_Spec);
+    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarFrameShinePen);
 
-    ptr = (STRPTR)xget(data->barFrameShinePen, MUIA_Pendisplay_Spec);
-    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarFrameShinePen);
+	    ptr = (STRPTR)xget(data->barFrameShadowPen, MUIA_Pendisplay_Spec);
+    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarFrameShadowPen);
 
-    ptr = (STRPTR)xget(data->barFrameShadowPen, MUIA_Pendisplay_Spec);
-    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarFrameShadowPen);
-    #endif
+    	val = xget(data->leftBarFrameSpacing, MUIA_Numeric_Value);
+	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_LeftBarFrameSpacing);
+
+	    val = xget(data->rightBarFrameSpacing, MUIA_Numeric_Value);
+	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_RightBarFrameSpacing);
+
+	    val = xget(data->topBarFrameSpacing, MUIA_Numeric_Value);
+	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_TopBarFrameSpacing);
+
+	    val = xget(data->bottomBarFrameSpacing, MUIA_Numeric_Value);
+	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_BottomBarFrameSpacing);
+	}
 
     ptr = (STRPTR)xget(data->dragBarShinePen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_DragBarShinePen);
@@ -948,16 +967,12 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseDragBarFillPen);
 
     ptr = (STRPTR)xget(data->textFont, MUIA_String_Contents);
-    if(*((STRPTR)ptr))
-      addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_TextFont);
-    else
-      DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_TextFont);
+    if(*((STRPTR)ptr)) addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_TextFont);
+    else DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_TextFont);
 
     ptr = (STRPTR)xget(data->textGfxFont, MUIA_String_Contents);
-    if(*((STRPTR)ptr))
-      addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_TextGfxFont);
-    else
-      DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_TextGfxFont);
+    if(*((STRPTR)ptr)) addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_TextGfxFont);
+    else DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_TextGfxFont);
 
     ap.viewMode = xget(data->viewMode, MUIA_Cycle_Active);
     ap.labelPos = xget(data->labelPos, MUIA_Cycle_Active);
@@ -993,20 +1008,6 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
 
     val = xget(data->vertTexGfxSpacing, MUIA_Numeric_Value);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_VertTextGfxSpacing);
-
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-    val = xget(data->leftBarFrameSpacing, MUIA_Numeric_Value);
-    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_LeftBarFrameSpacing);
-
-    val = xget(data->rightBarFrameSpacing, MUIA_Numeric_Value);
-    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_RightBarFrameSpacing);
-
-    val = xget(data->topBarFrameSpacing, MUIA_Numeric_Value);
-    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_TopBarFrameSpacing);
-
-    val = xget(data->bottomBarFrameSpacing, MUIA_Numeric_Value);
-    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_BottomBarFrameSpacing);
-    #endif
 
     val = xget(data->precision, MUIA_Cycle_Active);
     addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_Precision);
