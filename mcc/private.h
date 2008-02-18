@@ -146,10 +146,10 @@ struct InstData
     ULONG			               objHeight;
     #endif
 
-    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-    ULONG			               userFrame;
     char          		           frameSpec[256];
-    #else
+    ULONG			               userFrame;
+
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     ULONG                          allowAlphaChannel;
     #endif
 
