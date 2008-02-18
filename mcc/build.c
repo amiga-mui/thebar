@@ -1433,182 +1433,153 @@ freeBitMaps(struct InstData *data)
 	#endif
     {
     	if (data->strip.nchunky)
-        {
             freeVecPooled(data->pool,data->strip.nchunky);
-            data->strip.nchunky = NULL;
-    	}
 
         if (data->strip.snchunky)
-        {
             freeVecPooled(data->pool,data->strip.snchunky);
-            data->strip.snchunky = NULL;
-        }
 
 	    if (data->strip.dnchunky)
-        {
             freeVecPooled(data->pool,data->strip.dnchunky);
-            data->strip.dnchunky = NULL;
-        }
     }
 
     if(!strip->normalBM)
     {
-      LEAVE();
-      return;
-    }
-
-    if (isFlagClear(data->flags, FLG_CyberDeep))
-    {
-        struct ColorMap *cm = data->screen->ViewPort.ColorMap;
-        struct pen      *pens, *gpens, *spens, *sgpens, *dpens, *dgpens;
-        int             i;
-
-        pens  = data->pens;
-        gpens = (strip->greyBM) ? data->gpens  : NULL;
-
-        if((spens = (strip->snormalBM) ? data->spens : NULL))
-          sgpens = (strip->sgreyBM) ? data->sgpens : NULL;
-        else
-          sgpens = NULL;
-
-        if((dpens = (strip->dnormalBM) ? data->dpens : NULL))
-          dgpens = (strip->dgreyBM) ? data->dgpens : NULL;
-        else
-          dgpens = NULL;
-
-        for (i = 256; i--; )
+        if (isFlagClear(data->flags, FLG_CyberDeep))
         {
-            if (pens)
+            struct ColorMap *cm = data->screen->ViewPort.ColorMap;
+            struct pen      *pens, *gpens, *spens, *sgpens, *dpens, *dgpens;
+            int             i;
+
+            pens  = data->pens;
+            gpens = (strip->greyBM) ? data->gpens  : NULL;
+
+            if((spens = (strip->snormalBM) ? data->spens : NULL))
+              sgpens = (strip->sgreyBM) ? data->sgpens : NULL;
+            else
+              sgpens = NULL;
+
+            if((dpens = (strip->dnormalBM) ? data->dpens : NULL))
+              dgpens = (strip->dgreyBM) ? data->dgpens : NULL;
+            else
+              dgpens = NULL;
+
+            for (i = 256; i--; )
             {
-                if (pens->done)
+                if (pens)
                 {
-                    ReleasePen(cm,pens->pen);
-                    pens->done = 0;
-                }
-
-                pens++;
-            }
-
-            if (gpens)
-            {
-                if (gpens->done)
-                {
-                    ReleasePen(cm,gpens->pen);
-                    gpens->done = 0;
-                }
-
-                gpens++;
-            }
-
-            if (spens)
-            {
-                if (sgpens)
-                {
-                    if (sgpens->done)
+                    if (pens->done)
                     {
-                        ReleasePen(cm,sgpens->pen);
-                        sgpens->done = 0;
+                        ReleasePen(cm,pens->pen);
+                        pens->done = 0;
                     }
 
-                    sgpens++;
+                    pens++;
                 }
 
-                if (spens->done)
+                if (gpens)
                 {
-                    ReleasePen(cm,spens->pen);
-                    spens->done = 0;
-                }
-
-                spens++;
-            }
-
-            if (dpens)
-            {
-                if (dgpens)
-                {
-                    if (dgpens->done)
+                    if (gpens->done)
                     {
-                        ReleasePen(cm,dgpens->pen);
-                        dgpens->done = 0;
+                        ReleasePen(cm,gpens->pen);
+                        gpens->done = 0;
                     }
 
-                    dgpens++;
+                    gpens++;
                 }
 
-                if (dpens->done)
+                if (spens)
                 {
-                    ReleasePen(cm,dpens->pen);
-                    dpens->done = 0;
+                    if (sgpens)
+                    {
+                        if (sgpens->done)
+                        {
+                            ReleasePen(cm,sgpens->pen);
+                            sgpens->done = 0;
+                        }
+
+                        sgpens++;
+                    }
+
+                    if (spens->done)
+                    {
+                        ReleasePen(cm,spens->pen);
+                        spens->done = 0;
+                    }
+
+                    spens++;
                 }
 
-                dpens++;
+                if (dpens)
+                {
+                    if (dgpens)
+                    {
+                        if (dgpens->done)
+                        {
+                            ReleasePen(cm,dgpens->pen);
+                            dgpens->done = 0;
+                        }
+
+                        dgpens++;
+                    }
+
+                    if (dpens->done)
+                    {
+                        ReleasePen(cm,dpens->pen);
+                        dpens->done = 0;
+                    }
+
+                    dpens++;
+                }
             }
         }
-    }
 
-    if (strip->greyBM)
-    {
-        FreeBitMap(strip->greyBM);
-        strip->greyBM = NULL;
-    }
+        if (strip->greyBM)
+            FreeBitMap(strip->greyBM);
 
-    if (strip->mask)
-    {
-        if (isFlagSet(data->flags, FLG_CyberMap))
-            FREERASTERCG(data->pool,strip->mask);
-        else
-            FREERASTER(strip->mask);
-
-        strip->mask = NULL;
-    }
-
-    FreeBitMap(strip->normalBM);
-    strip->normalBM = NULL;
-
-    if (strip->snormalBM)
-    {
-        if (strip->sgreyBM)
-        {
-            FreeBitMap(strip->sgreyBM);
-            strip->sgreyBM = NULL;
-        }
-
-        if (strip->smask)
+        if (strip->mask)
         {
             if (isFlagSet(data->flags, FLG_CyberMap))
-                FREERASTERCG(data->pool,strip->smask);
+                FREERASTERCG(data->pool,strip->mask);
             else
-                FREERASTER(strip->smask);
-
-            strip->smask = NULL;
+                FREERASTER(strip->mask);
         }
 
-        FreeBitMap(strip->snormalBM);
-        strip->snormalBM = NULL;
-    }
+        FreeBitMap(strip->normalBM);
 
-    if (strip->dnormalBM)
-    {
-        if (strip->dgreyBM)
+        if (strip->snormalBM)
         {
-            FreeBitMap(strip->dgreyBM);
-            strip->dgreyBM = NULL;
+            if (strip->sgreyBM)
+                FreeBitMap(strip->sgreyBM);
+
+            if (strip->smask)
+            {
+                if (isFlagSet(data->flags, FLG_CyberMap))
+                    FREERASTERCG(data->pool,strip->smask);
+                else
+                    FREERASTER(strip->smask);
+            }
+
+            FreeBitMap(strip->snormalBM);
         }
 
-        if (strip->dmask)
+        if (strip->dnormalBM)
         {
-            if (isFlagSet(data->flags, FLG_CyberMap))
-                FREERASTERCG(data->pool,strip->dmask);
-            else
-                FREERASTER(strip->dmask);
+            if (strip->dgreyBM)
+                FreeBitMap(strip->dgreyBM);
 
-            strip->dmask = NULL;
+            if (strip->dmask)
+            {
+                if (isFlagSet(data->flags, FLG_CyberMap))
+                    FREERASTERCG(data->pool,strip->dmask);
+                else
+                    FREERASTER(strip->dmask);
+            }
+
+            FreeBitMap(strip->dnormalBM);
         }
+	}
 
-        FreeBitMap(strip->dnormalBM);
-        strip->dnormalBM = NULL;
-    }
-
+    memset(strip,0,sizeof(struct MUIS_TheBar_Strip));
     LEAVE();
 }
 

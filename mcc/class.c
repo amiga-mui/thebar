@@ -2920,27 +2920,31 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         }
     }
 
+	if (isAnyFlagSet(lib_flags,BASEFLG_MUI20|BASEFLG_MUI4))
+    {
+	  if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
+      {
+	    strlcpy(data->frameSpec, ptr, sizeof(data->frameSpec));
+    	SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(IPTR)data->frameSpec,TAG_DONE);
+	  }
+    }
+    else
+    {
+      if (isFlagSet(data->userFlags2, UFLG2_UserFrame))
+      {
+        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
+      }
+      else
+      {
+        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
+      }
+    }
+
     if(!DoSuperMethodA(cl,obj,msg))
     {
       RETURN(FALSE);
       return FALSE;
     }
-
-    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-    if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
-    {
-      strlcpy(data->frameSpec, ptr, sizeof(data->frameSpec));
-      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(IPTR)data->frameSpec,TAG_DONE);
-    }
-    else if (isFlagSet(data->userFlags2, UFLG2_UserFrame))
-    {
-      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
-    }
-    else
-    {
-      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
-    }
-    #endif
 
     if (isFlagClear(data->userFlags, UFLG_UserHorizSpacing))
     {
@@ -3437,19 +3441,13 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 
   ENTER();
 
-  /*
-  if(isFlagSet(lib_flags, BASEFLG_MUI20))
-  {
-    result = DoSuperMethodA(cl,obj,(Msg)msg);
-  }
+  if(isAnyFlagSet(lib_flags,BASEFLG_MUI20|BASEFLG_MUI4))
+	return DoSuperMethodA(cl,obj,(Msg)msg);
+
+  if(data->gradbm)
+    BltBitMapRastPort(data->gradbm,msg->left-_left(obj),msg->top-_top(obj),_rp(obj),msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,0xc0);
   else
-  */
-  {
-    if(data->gradbm)
-      BltBitMapRastPort(data->gradbm,msg->left-_left(obj),msg->top-_top(obj),_rp(obj),msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,0xc0);
-    else
-      DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,msg->xoffset,msg->yoffset,0);
-  }
+    DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,msg->xoffset,msg->yoffset,0);
 
   RETURN(result);
   return result;

@@ -2,6 +2,21 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-18  Alfonso Ranieri <alforan@tin.it>
+
+  * trunk/mcp/class.c - Trying to make it work with any MUI. Not sure if it is totally 
+    fixed at the moment. Should be tested on MUI3.9/OS4 and classic
+  * trunk/mcp/locale/TheBar_mcp.cd - added some missing definition
+  * trunk/mcp/private.h - Removed some conditional preprocessor definition  
+  * trunk/mcc/build.c - free bit maps now clear some fields, otherwise switching screen
+    might cause the class to use non existing stuff
+  * trunk/mcc/class.c - it was broken on MUI3.9/MOS (f.e. YAM freezes creating the write 
+    window); seem fixed now
+  * trunk/mcc/button/build.c - as for build.c in mcc
+  * trunk/mcc/button/utils.c - some little changes
+  * trunk/mcc/button/class.c - Button background is used as default ad OM_NEW
+
+
 2008-02-14  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/private.h, mcc/class.c: added isAnyFlagSet() macro to check if at least

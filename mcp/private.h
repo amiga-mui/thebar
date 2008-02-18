@@ -72,12 +72,9 @@ struct InstData
   Object  *barSpacerShinePen;
   Object  *barSpacerShadowPen;
 
-  #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
   Object  *frame;
-  #else
   Object  *barFrameShinePen;
   Object  *barFrameShadowPen;
-  #endif
 
   Object  *dragBarShinePen;
   Object  *dragBarShadowPen;
@@ -104,12 +101,10 @@ struct InstData
   Object  *topInnerSpacing;
   Object  *bottomInnerSpacing;
 
-  #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
   Object  *leftBarFrameSpacing;
   Object  *rightBarFrameSpacing;
   Object  *topBarFrameSpacing;
   Object  *bottomBarFrameSpacing;
-  #endif
 
   Object  *horizTexGfxSpacing;
   Object  *vertTexGfxSpacing;
