@@ -487,7 +487,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->groupBack,MUICFG_TheBar_GroupBack,2,(IPTR)tr(Msg_GroupBackground),MUIA_Imagedisplay_Spec);
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->groupBack,MUICFG_TheBar_GroupBack,2,(IPTR)tr(Msg_GroupBackground),MUIA_Framedisplay_Spec);
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->buttonBack,MUICFG_TheBar_ButtonBack,1,(IPTR)tr(Msg_ButtonBackground));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->buttonBack,MUICFG_TheBar_ButtonBack,2,(IPTR)tr(Msg_ButtonBackground),MUIA_Imagedisplay_Spec);
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->buttonBack,MUICFG_TheBar_ButtonBack,2,(IPTR)tr(Msg_ButtonBackground),MUIA_Framedisplay_Spec);
                 if (!((lib_flags & BASEFLG_MUI4)))
                 {
                 	DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(IPTR)data->frameShinePen,MUICFG_TheBar_FrameShinePen,1,(IPTR)tr(Msg_FrameShinePen));
@@ -632,15 +633,42 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     ULONG                         v;
     ULONG                         *val;
 
+	/* These are MUI version dependent */
+
+    /* Group back */
+    if (lib_flags & BASEFLG_MUI4)
+    {
+	    if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_GroupBack)))
+	        ptr = MUIDEF_TheBar_GroupBack;
+	    set(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
+	}
+	else
+    {
+	    if (!(lib_flags & BASEFLG_MUI20) && (ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Gradient)))
+        {
+    	    set(data->groupBack,MUIA_Popbackground_Grad,ptr);
+        }
+	    else
+    	{
+        	if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_GroupBack)))
+            	ptr = MUIDEF_TheBar_GroupBack;
+	        set(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
+    	}
+
+	    v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseGroupBack)) ?
+    	    *val : MUIDEF_TheBar_UseGroupBack;
+	    set(data->useGroupBack,MUIA_Selected,v);
+	}
+
+    /* Group frame */
     if (lib_flags & BASEFLG_MUI20)
     {
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Frame)))
             ptr = MUIDEF_TheBar_Frame;
 
-	    if (lib_flags & BASEFLG_MUI4)
-	        set(data->groupBack,MUIA_Framedisplay_Spec,ptr);
+	    if (lib_flags & BASEFLG_MUI4) set(data->groupBack,MUIA_Framedisplay_Spec,ptr);
 		else set(data->frame,MUIA_Framedisplay_Spec,ptr);
-	}
+    }
 	else
     {
 	    if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BarFrameShinePen)))
@@ -666,47 +694,28 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     	v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BottomBarFrameSpacing)) ?
         	*val : MUIDEF_TheBar_BottomBarFrameSpacing;
 	    set(data->bottomBarFrameSpacing,MUIA_Numeric_Value,v);
-    }
+	}
 
+    /* Button back */
+	if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_ButtonBack)))
+		ptr = MUIDEF_TheBar_ButtonBack;
+	set(data->buttonBack,MUIA_Imagedisplay_Spec,ptr);
+    if (!(lib_flags & BASEFLG_MUI4))
+    {
+    	v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseButtonBack)) ?
+        	*val : MUIDEF_TheBar_UseButtonBack;
+	    set(data->useButtonBack,MUIA_Selected,v);
+	}
+
+    /* Button frame */
     if (lib_flags & BASEFLG_MUI4)
     {
-	    if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_GroupBack)))
-	        ptr = MUIDEF_TheBar_GroupBack;
-	    set(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
-
-	    if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_ButtonBack)))
-	        ptr = MUIDEF_TheBar_ButtonBack;
-	    set(data->buttonBack,MUIA_Imagedisplay_Spec,ptr);
-
 	    if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_ButtonFrame)))
 	        ptr = MUIDEF_TheBar_ButtonFrame;
 	    set(data->buttonBack,MUIA_Framedisplay_Spec,ptr);
 	}
 	else
     {
-	    if (!(lib_flags & BASEFLG_MUI20) && (ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Gradient)))
-        {
-    	    set(data->groupBack,MUIA_Popbackground_Grad,ptr);
-        }
-	    else
-    	{
-        	if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_GroupBack)))
-            	ptr = MUIDEF_TheBar_GroupBack;
-	        set(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
-    	}
-
-	    v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseGroupBack)) ?
-    	    *val : MUIDEF_TheBar_UseGroupBack;
-	    set(data->useGroupBack,MUIA_Selected,v);
-
-    	if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_ButtonBack)))
-        	ptr = MUIDEF_TheBar_ButtonBack;
-	    set(data->buttonBack,MUIA_Imagedisplay_Spec,ptr);
-
-    	v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseButtonBack)) ?
-        	*val : MUIDEF_TheBar_UseButtonBack;
-	    set(data->useButtonBack,MUIA_Selected,v);
-
 	    if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_FrameShinePen)))
     	    ptr = MUIDEF_TheBar_FrameShinePen;
 	    set(data->frameShinePen,MUIA_Pendisplay_Spec,ptr);
@@ -718,7 +727,9 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     	v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_FrameStyle)) ?
         	*val : MUIDEF_TheBar_FrameStyle;
 	    set(data->frameStyle,MUIA_Cycle_Active,v);
-    }
+	}
+
+	/* Rest is MUI version indipendent */
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_DisBodyPen)))
         ptr = MUIDEF_TheBar_DisBodyPen;
@@ -858,21 +869,38 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     STRPTR                         ptr;
     ULONG                          val;
 
-    if (lib_flags & BASEFLG_MUI20)
-    {
-	    if (lib_flags & BASEFLG_MUI4)
-    	{
-	    	get(data->buttonBack,MUIA_Framedisplay_Spec,&ptr);
-	    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_ButtonFrame);
-		}
-		else
-    	{
-	    	ptr = (STRPTR)xget(data->buttonBack, MUIA_Imagedisplay_Spec);
-	    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_ButtonBack);
+	/* These are MUI version dependent */
 
-		    val = xget(data->useButtonBack, MUIA_Selected);
-    		addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseButtonBack);
-		}
+    /* Group back */
+    if (lib_flags & BASEFLG_MUI20)
+	{
+	    get(data->groupBack,MUIA_Imagedisplay_Spec,&ptr);
+		addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_GroupBack);
+	}
+	else
+    {
+	    if ((ptr = (STRPTR)xget(data->groupBack,MUIA_Popbackground_Grad)))
+	    {
+    	    DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_GroupBack);
+        	addconfigitem(cfg,ptr,sizeof(struct MUIS_TheBar_Gradient),MUICFG_TheBar_Gradient);
+	    }
+    	else
+	    {
+    	    DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_Gradient);
+        	ptr = (STRPTR)xget(data->groupBack,MUIA_Imagedisplay_Spec);
+		    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_GroupBack);
+    	}
+
+    	val = xget(data->useGroupBack, MUIA_Selected);
+	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseGroupBack);
+	}
+
+    /* Group frame */
+    if (lib_flags & BASEFLG_MUI20)
+	{
+	    if (lib_flags & BASEFLG_MUI4) ptr = (STRPTR)xget(data->groupBack,MUIA_Framedisplay_Spec);
+	    else ptr = (STRPTR)xget(data->frame,MUIA_Framedisplay_Spec);
+    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_Frame);
     }
 	else
     {
@@ -884,62 +912,6 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
 
     	val = xget(data->frameStyle, MUIA_Cycle_Active);
 	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_FrameStyle);
-	}
-
-    if (lib_flags & BASEFLG_MUI4)
-    {
-	    get(data->buttonBack,MUIA_Framedisplay_Spec,&ptr);
-    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_ButtonFrame);
-	}
-	else
-    {
-	    if ((ptr = (STRPTR)xget(data->groupBack, MUIA_Popbackground_Grad)))
-	    {
-    	    DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_GroupBack);
-        	addconfigitem(cfg,ptr,sizeof(struct MUIS_TheBar_Gradient),MUICFG_TheBar_Gradient);
-	    }
-    	else
-	    {
-    	    DoMethod(cfg,MUIM_Dataspace_Remove,MUICFG_TheBar_Gradient);
-        	ptr = (STRPTR)xget(data->groupBack, MUIA_Imagedisplay_Spec);
-		    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_GroupBack);
-    	}
-
-	    ptr = (STRPTR)xget(data->buttonBack, MUIA_Imagedisplay_Spec);
-    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_ButtonBack);
-
-	    val = xget(data->useButtonBack, MUIA_Selected);
-    	addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseButtonBack);
-
-    	val = xget(data->useGroupBack, MUIA_Selected);
-	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseGroupBack);
-	}
-
-    ptr = (STRPTR)xget(data->disBodyPen, MUIA_Pendisplay_Spec);
-    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_DisBodyPen);
-
-    ptr = (STRPTR)xget(data->disShadowPen, MUIA_Pendisplay_Spec);
-    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_DisShadowPen);
-
-    ptr = (STRPTR)xget(data->barSpacerShinePen, MUIA_Pendisplay_Spec);
-    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarSpacerShinePen);
-
-    ptr = (STRPTR)xget(data->barSpacerShadowPen, MUIA_Pendisplay_Spec);
-    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarSpacerShadowPen);
-
-    if (lib_flags & BASEFLG_MUI20)
-    {
-	    if (lib_flags & BASEFLG_MUI4) ptr = (STRPTR)xget(data->groupBack, MUIA_Framedisplay_Spec);
-	    else ptr = (STRPTR)xget(data->frame, MUIA_Framedisplay_Spec);
-    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_Frame);
-	}
-	else
-    {
-	    ptr = (STRPTR)xget(data->barFrameShinePen, MUIA_Pendisplay_Spec);
-    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarFrameShinePen);
-
-	    ptr = (STRPTR)xget(data->barFrameShadowPen, MUIA_Pendisplay_Spec);
-    	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarFrameShadowPen);
 
     	val = xget(data->leftBarFrameSpacing, MUIA_Numeric_Value);
 	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_LeftBarFrameSpacing);
@@ -953,6 +925,47 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
 	    val = xget(data->bottomBarFrameSpacing, MUIA_Numeric_Value);
 	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_BottomBarFrameSpacing);
 	}
+
+    /* Button back */
+	get(data->buttonBack,MUIA_Imagedisplay_Spec,&ptr);
+	addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_ButtonBack);
+	if (!(lib_flags & BASEFLG_MUI4))
+    {
+		val = xget(data->useButtonBack,MUIA_Selected);
+    	addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseButtonBack);
+	}
+
+    /* Button frame */
+    if (lib_flags & BASEFLG_MUI4)
+    {
+		get(data->buttonBack,MUIA_Framedisplay_Spec,&ptr);
+	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_ButtonFrame);
+	}
+    else
+    {
+    	ptr = (STRPTR)xget(data->frameShinePen, MUIA_Pendisplay_Spec);
+	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_FrameShinePen);
+
+    	ptr = (STRPTR)xget(data->frameShadowPen, MUIA_Pendisplay_Spec);
+	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_FrameShadowPen);
+
+    	val = xget(data->frameStyle, MUIA_Cycle_Active);
+	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_FrameStyle);
+	}
+
+	/* Rest is MUI version indipendent */
+
+    ptr = (STRPTR)xget(data->disBodyPen, MUIA_Pendisplay_Spec);
+    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_DisBodyPen);
+
+    ptr = (STRPTR)xget(data->disShadowPen, MUIA_Pendisplay_Spec);
+    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_DisShadowPen);
+
+    ptr = (STRPTR)xget(data->barSpacerShinePen, MUIA_Pendisplay_Spec);
+    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarSpacerShinePen);
+
+    ptr = (STRPTR)xget(data->barSpacerShadowPen, MUIA_Pendisplay_Spec);
+    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarSpacerShadowPen);
 
     ptr = (STRPTR)xget(data->dragBarShinePen, MUIA_Pendisplay_Spec);
     addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_DragBarShinePen);
