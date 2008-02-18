@@ -890,10 +890,12 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
         	ptr = (STRPTR)xget(data->groupBack,MUIA_Imagedisplay_Spec);
 		    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_GroupBack);
     	}
-
+	}
+	if (!(lib_flags & BASEFLG_MUI4))
+    {
     	val = xget(data->useGroupBack, MUIA_Selected);
 	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseGroupBack);
-	}
+    }
 
     /* Group frame */
     if (lib_flags & BASEFLG_MUI20)
