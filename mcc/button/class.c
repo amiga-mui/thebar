@@ -784,9 +784,12 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 redraw = TRUE;
             }
 
-            if (isFlagClear(data->flags,FLG_Disabled) && isFlagSet(data->flags,FLG_Raised) && isFlagSet(data->flags,FLG_MouseOver) && !(pressed || isFlagSet(data->flags,FLG_Selected)))
+            if (isFlagClear(data->flags,FLG_Disabled) &&
+                isFlagSet(data->flags,FLG_Raised) &&
+                isFlagSet(data->flags,FLG_MouseOver) &&
+                !(pressed || isFlagSet(data->flags,FLG_Selected)))
                 nnsuperset(cl,obj,MUIA_Background,data->activeBack);
-            else nnsuperset(cl,obj,MUIA_Background,data->parentBack);
+            else nnsuperset(cl,obj,MUIA_Background,isFlagSet(lib_flags,BASEFLG_MUI4) ? "" : data->parentBack);
         }
     }
 
@@ -832,7 +835,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
     // on non-MUI4 system we have to set the background spec
     // right before the initial setup and before the supermethod.
-    if(isFlagClear(lib_flags, BASEFLG_MUI4))
+    if(isFlagClear(lib_flags,BASEFLG_MUI4))
     {
       superget(cl,obj,MUIA_Parent,&parent);
       data->parentBack = parent ? _backspec(parent) : (APTR)MUII_WindowBack;
