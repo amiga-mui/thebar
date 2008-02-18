@@ -13,6 +13,7 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-18  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/class.c: some minor code cleanup.
   * mcc/button/class.c: the OS4 build now uses the new BltBitMapTags() function
     for all blit operations.
   * mcc/button/class.c: used the isFlagSet/Clear() were they were not used yet

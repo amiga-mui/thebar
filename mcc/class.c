@@ -398,7 +398,6 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             LONG   cols = 0, rows = 0, numBut, c;
             UWORD  butMaxMinWidth, butMaxMinHeight, maxMinWidth, maxMinHeight, width, height, addSpace;
 
-            D(DBF_ALWAYS, "layout start");
             butMaxMinWidth  = butMaxMinHeight = numBut = 0;
 
             for(cstate = (Object *)lm->lm_Children->mlh_Head; (child = NextObject(&cstate)); )
@@ -411,8 +410,6 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                 if ((butMaxMinHeight<MUI_MAXMAX) && (_minheight(child)>butMaxMinHeight))
                     butMaxMinHeight = _minheight(child);
-
-                D(DBF_ALWAYS, "but %3ld minh %3ld", numBut, _minheight(child));
 
                 numBut++;
             }
@@ -670,7 +667,6 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             data->lcols = cols;
             data->lrows = rows;
 
-            D(DBF_ALWAYS, "layout end");
             RETURN(0);
             return 0;
         }
@@ -1559,23 +1555,23 @@ ULONG ptable[] =
 ** This makes sense in normal operations.
 */
 
-static ULONG
+static BOOL
 makePicsFun(struct pack *pt,
-	   	    APTR pool,
-			ULONG dostrip,
+	   	      APTR pool,
+            ULONG dostrip,
             struct MUIS_TheBar_Brush *sb,
-			struct MUIS_TheBar_Brush *ssb,
+            struct MUIS_TheBar_Brush *ssb,
             struct MUIS_TheBar_Brush *dsb,
             UWORD *nbrPtr)
 {
-    ULONG pics = FALSE;
+    BOOL pics = FALSE;
     UWORD nbr = 0;
 
     ENTER();
 
     sb->data = ssb->data = dsb->data = NULL;
 
-	if (dostrip || pt->strip || pt->pics)
+  	if (dostrip || pt->strip || pt->pics)
     {
         struct Process *me;
         struct Window  *win;
@@ -1596,15 +1592,19 @@ makePicsFun(struct pack *pt,
             if (dostrip)
             {
                 copymem(sb,pt->stripBrush,sizeof(*sb));
-                if (pt->sstripBrush) copymem(ssb,pt->sstripBrush,sizeof(*ssb));
-                if (pt->dstripBrush) copymem(dsb,pt->dstripBrush,sizeof(*dsb));
+                if (pt->sstripBrush)
+                    copymem(ssb,pt->sstripBrush,sizeof(*ssb));
+                if (pt->dstripBrush)
+                    copymem(dsb,pt->dstripBrush,sizeof(*dsb));
             }
             else
             {
                 if (loadDTBrush(pool,sb,pt->strip))
                 {
-                    if (pt->sstrip) loadDTBrush(pool,ssb,pt->sstrip);
-                    if (pt->dstrip) loadDTBrush(pool,dsb,pt->dstrip);
+                    if (pt->sstrip)
+                        loadDTBrush(pool,ssb,pt->sstrip);
+                    if (pt->dstrip)
+                        loadDTBrush(pool,dsb,pt->dstrip);
                 }
             }
 
@@ -1639,8 +1639,10 @@ makePicsFun(struct pack *pt,
                 brsize  = sizeof(struct MUIS_TheBar_Brush)*nbr;
 
                 totsize = brpsize+brsize;
-                if (ssb->data) totsize += brpsize+brsize;
-                if (dsb->data) totsize += brpsize+brsize;
+                if (ssb->data)
+                    totsize += brpsize+brsize;
+                if (dsb->data)
+                    totsize += brpsize+brsize;
 
                 if ((pt->brushes = allocVecPooled(pool,totsize)))
                 {
@@ -1667,15 +1669,19 @@ makePicsFun(struct pack *pt,
                             pt->sbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
                             sbrush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt->sbrushes+brpsize);
                         }
-                        else sbrush = NULL;
+                        else
+                            sbrush = NULL;
 
                         if (dsb->data)
                         {
-                            if (ssb->data) pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
-                            else pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
+                            if (ssb->data)
+                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
+                            else
+                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
                             dbrush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt->dbrushes+brpsize);
                         }
-                        else dbrush = NULL;
+                        else
+                            dbrush = NULL;
 
                         for (x = i = vofs = 0; i<(int)rows; i++, vofs += h+vertSpace)
                         {
@@ -1715,8 +1721,8 @@ makePicsFun(struct pack *pt,
                         }
 
                         pt->brushes[x] = NULL;
-                        if (sbrush) pt->sbrushes[x] = NULL;
-                        if (dbrush) pt->dbrushes[x] = NULL;
+                        pt->sbrushes[x] = NULL;
+                        pt->dbrushes[x] = NULL;
 
                         pics = TRUE;
                     }
@@ -1731,10 +1737,8 @@ makePicsFun(struct pack *pt,
                         freeVecPooled(pool,pt->brushes);
 
                         pt->brushes = NULL;
-                        if (pt->sbrushes)
-                            pt->sbrushes = NULL;
-                        if (pt->dbrushes)
-                            pt->dbrushes = NULL;
+                        pt->sbrushes = NULL;
+                        pt->dbrushes = NULL;
                     }
                 }
             }
@@ -1789,30 +1793,36 @@ makePicsFun(struct pack *pt,
 
                         if (pt->dpics)
                         {
-                            if (pt->spics) pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
-                            else pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
+                            if (pt->spics)
+                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
+                            else
+                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
 
                             dbrush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt->dbrushes+brpsize);
                         }
 
                         p = pt->pics;
-                        if (pt->sbrushes) sp = pt->spics;
-                        if (pt->dbrushes) dp = pt->dpics;
+                        if (pt->sbrushes)
+                            sp = pt->spics;
+                        if (pt->dbrushes)
+                            dp = pt->dpics;
 
                         for (i = 0; *p; i++, p++)
                         {
-                            if (!loadDTBrush(pool,pt->brushes[i] = brush+i,*p)) break;
+                            if (!loadDTBrush(pool,pt->brushes[i] = brush+i,*p))
+                                break;
 
                             if (pt->sbrushes)
                             {
-                                if (*sp!=MUIV_TheBar_SkipPic) loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp);
+                                if (*sp!=MUIV_TheBar_SkipPic)
+                                    loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp);
                                 sp++;
                             }
 
                             if (pt->dbrushes)
                             {
-                                if (*dp!=MUIV_TheBar_SkipPic) loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp);
-
+                                if (*dp!=MUIV_TheBar_SkipPic)
+                                    loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp);
                                 dp++;
                             }
                         }
@@ -1822,14 +1832,14 @@ makePicsFun(struct pack *pt,
                             freeVecPooled(pool,pt->brushes);
 
                             pt->brushes = NULL;
-                            if (pt->sbrushes) pt->sbrushes = NULL;
-                            if (pt->dbrushes) pt->dbrushes = NULL;
+                            pt->sbrushes = NULL;
+                            pt->dbrushes = NULL;
                         }
                         else
                         {
                             pt->brushes[i] = NULL;
-                            if (pt->sbrushes) pt->sbrushes[i] = NULL;
-                            if (pt->dbrushes) pt->dbrushes[i] = NULL;
+                            pt->sbrushes[i] = NULL;
+                            pt->dbrushes[i] = NULL;
 
                             setFlag(pt->flags, FLG_FreeBrushes);
                             pics = TRUE;
@@ -1848,28 +1858,30 @@ makePicsFun(struct pack *pt,
         me->pr_WindowPtr = win;
     }
 
-	if (pics) *nbrPtr = nbr;
+  	if (pics == TRUE)
+        *nbrPtr = nbr;
 
-	RETURN(pics);
+    RETURN(pics);
     return pics;
 }
 
-static ULONG
+static BOOL
 makePics(struct pack *pt,
-		 APTR pool,
-		 struct MUIS_TheBar_Brush *sb,
-		 struct MUIS_TheBar_Brush *ssb,
+         APTR pool,
+         struct MUIS_TheBar_Brush *sb,
+         struct MUIS_TheBar_Brush *ssb,
          struct MUIS_TheBar_Brush *dsb,
-		 UWORD *nbrPtr)
+         UWORD *nbrPtr)
 {
-    ULONG pics;
+    BOOL pics;
 
     ENTER();
 
     pics = makePicsFun(pt,pool,FALSE,sb,ssb,dsb,nbrPtr);
-    if (!pics && pt->stripBrush) pics = makePicsFun(pt,pool,TRUE,sb,ssb,dsb,nbrPtr);
+    if (pics == FALSE && pt->stripBrush)
+        pics = makePicsFun(pt,pool,TRUE,sb,ssb,dsb,nbrPtr);
 
-    if (!pics && pt->brushes)
+    if (pics == FALSE && pt->brushes)
     {
         struct MUIS_TheBar_Brush **brush;
         UWORD                    nbr;
@@ -1893,13 +1905,13 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     APTR                      pool;
     struct TagItem            *attrs = msg->ops_AttrList;
     struct MUIS_TheBar_Brush  sb, ssb, dsb;
-    ULONG                     pics;
+    BOOL                      pics;
     UWORD                     nbr = 0;
 
     ENTER();
 
     if ((GetTagData(MUIA_TheBar_MinVer,0,attrs) > LIB_VERSION) ||
-        !(pool = CreatePool(MEMF_ANY,2048,1024)))
+        (pool = CreatePool(MEMF_ANY,2048,1024)) == NULL)
         return 0;
 
     memset(&pt,0,sizeof(pt));
@@ -4376,7 +4388,6 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 
         data->di.di = data->dm;
 
-
         result = (IPTR)&data->di;
     }
 
@@ -4386,7 +4397,8 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 
 /***********************************************************************/
 
-/*static IPTR
+/*
+static IPTR
 mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -4404,7 +4416,8 @@ mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg
 
     RETURN(0);
     return 0;
-}*/
+}
+*/
 
 /***********************************************************************/
 
