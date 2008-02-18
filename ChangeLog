@@ -2,6 +2,13 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-18  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/button/utils.c: the own strlcpy() and strlcat() functions are only
+    required for OS3 compiles where the old libnix version is used. For our
+    normal clib2 compiles and also for MorphOS compiles they are not required
+    as the newer libnix already has them.
+
 2008-02-18  Alfonso Ranieri <alforan@tin.it>
 
   *  ARGGGGGGGGGGG!
