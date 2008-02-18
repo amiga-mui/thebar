@@ -4,6 +4,12 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-18  Alfonso Ranieri <alforan@tin.it>
 
+  *  OK, now the hard part: making button/class.c to work again 
+     everywhere. This would take time...
+
+
+2008-02-18  Alfonso Ranieri <alforan@tin.it>
+
   *  trunk/mcp/class.c - Fixes again
 
 

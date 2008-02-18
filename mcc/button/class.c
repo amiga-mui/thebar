@@ -256,9 +256,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             MUIA_Font, (pack.vMode==MUIV_TheButton_ViewMode_Text) ? MUIV_Font_Button : MUIV_Font_Tiny,
             isFlagSet(pack.flags, FLG_Borderless) ? TAG_IGNORE : MUIA_Frame, MUIV_Frame_Button,
             isFlagSet(pack.flags, FLG_Borderless) ? TAG_IGNORE : MUIA_Background, MUII_ButtonBack,
-            isFlagSet(lib_flags, BASEFLG_MUI20) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameDynamic : TAG_IGNORE, TRUE,
-            isFlagSet(lib_flags, BASEFLG_MUI20) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameVisible : TAG_IGNORE, FALSE,
-            isFlagSet(lib_flags, BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, isFlagSet(pack.flags, FLG_Borderless),
+            isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameDynamic : TAG_IGNORE, TRUE,
+            isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameVisible : TAG_IGNORE, FALSE,
+            isFlagSet(lib_flags, BASEFLG_MUI4) ? TAG_IGNORE : MUIA_CustomBackfill, isFlagSet(pack.flags, FLG_Borderless),
             TAG_MORE,(IPTR)attrs)))
     {
         struct InstData *data = INST_DATA(cl,obj);
@@ -543,11 +543,11 @@ checkIn(Object *obj,struct InstData *data,WORD x,WORD y)
 static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    struct InstData    *data = INST_DATA(cl,obj);
-    struct TagItem *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
-    struct TagItem          *tstate;
-    ULONG          redraw, setidcmp, back, sel, pressed, over;
-    IPTR   res;
+    struct InstData *data = INST_DATA(cl,obj);
+    struct TagItem  *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
+    struct TagItem  *tstate;
+    ULONG           redraw, setidcmp, back, sel, pressed, over;
+    IPTR            res;
 
     ENTER();
 
@@ -561,7 +561,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         switch(tag->ti_Tag)
         {
             case MUIA_TheButton_MouseOver:
-                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_MouseOver)))
+                if (BOOLSAME(tidata,isFlagSet(data->flags,FLG_MouseOver)))
                 {
                   tag->ti_Tag = TAG_IGNORE;
                 }
@@ -569,94 +569,82 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 {
                     if (tidata)
                     {
-                        setFlag(data->flags, FLG_MouseOver);
+                        setFlag(data->flags,FLG_MouseOver);
                         over = TRUE;
                     }
-                    else
-                        clearFlag(data->flags, FLG_MouseOver);
+                    else clearFlag(data->flags,FLG_MouseOver);
 
                     back = TRUE;
                 }
                 break;
 
             case MUIA_Group_Horiz:
-                if (tidata)
-                    setFlag(data->flags, FLG_Horiz);
-                else
-                    clearFlag(data->flags, FLG_Horiz);
+                if (tidata) setFlag(data->flags, FLG_Horiz);
+                else clearFlag(data->flags, FLG_Horiz);
                 break;
 
             case MUIA_TheButton_Sunny:
-                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_Sunny)) || (data->disMode==MUIV_TheButton_DisMode_Sunny))
+                if (BOOLSAME(tidata,isFlagSet(data->flags,FLG_Sunny)) || (data->disMode==MUIV_TheButton_DisMode_Sunny))
                 {
                     sut = tag;
                     tag->ti_Tag = TAG_IGNORE;
                 }
                 else
                 {
-                    if (tidata)
-                        setFlag(data->flags, FLG_Sunny);
-                    else
-                        clearFlag(data->flags, FLG_Sunny);
+                    if (tidata) setFlag(data->flags,FLG_Sunny);
+                    else clearFlag(data->flags,FLG_Sunny);
                 }
                 break;
 
             case MUIA_Selected:
-                if (isFlagSet(data->flags, FLG_IsSpacer) || BOOLSAME(tidata, isFlagSet(data->flags, FLG_Selected)))
+                if (isFlagSet(data->flags,FLG_IsSpacer) || BOOLSAME(tidata,isFlagSet(data->flags,FLG_Selected)))
                 {
                     tag->ti_Tag = TAG_IGNORE;
                 }
                 else
                 {
-                    if (tidata)
-                    {
-                        setFlag(data->flags, FLG_Selected);
-                    }
-                    else
-                    {
-                        clearFlag(data->flags, FLG_Selected);
-                    }
+                    if (tidata) setFlag(data->flags,FLG_Selected);
+                    else clearFlag(data->flags,FLG_Selected);
 
                     sel = TRUE;
                     setidcmp = TRUE;
 
-                    if (isFlagSet(data->flags, FLG_Borderless))
+    				if (isFlagSet(lib_flags,BASEFLG_MUI4) && isFlagSet(data->flags,FLG_Borderless))
                     {
                         tag->ti_Tag = TAG_IGNORE;
 
                         SetSuperAttrs(cl,obj,MUIA_Selected,     tidata,
-                                             isFlagSet(lib_flags, BASEFLG_MUI20) ? MUIA_FrameDynamic : TAG_IGNORE, tidata  ? FALSE : (isFlagSet(data->flags, FLG_Raised) ? TRUE : FALSE),
-                                             isFlagSet(lib_flags, BASEFLG_MUI20) ? MUIA_FrameVisible : TAG_IGNORE, !tidata ? FALSE : (isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : TRUE),
-                                             MUIA_ShowSelState, isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : tidata,
+                                             MUIA_FrameDynamic, tidata  ? FALSE : ((data->flags & FLG_Raised) ? TRUE : FALSE),
+                                             MUIA_FrameVisible, !tidata ? FALSE : ((data->userFlags & UFLG_NtRaiseActive) ? FALSE : TRUE),
+                                             MUIA_ShowSelState, (data->userFlags & UFLG_NtRaiseActive) ? FALSE : tidata,
                                              TAG_DONE);
                     }
                 }
                 break;
 
             case MUIA_Disabled:
-                if (isFlagSet(data->flags, FLG_IsSpacer) || BOOLSAME(tidata, isFlagSet(data->flags, FLG_Disabled)))
+                if (isFlagSet(data->flags,FLG_IsSpacer) || BOOLSAME(tidata,isFlagSet(data->flags,FLG_Disabled)))
                 {
                     tag->ti_Tag = TAG_IGNORE;
                 }
                 else
                 {
-                    if (tidata)
-                        setFlag(data->flags, FLG_Disabled);
-                    else
-                        clearFlag(data->flags, FLG_Disabled);
+                    if (tidata) setFlag(data->flags,FLG_Disabled);
+                    else clearFlag(data->flags,FLG_Disabled);
+
                     setidcmp = back = TRUE;
                 }
                 break;
 
             case MUIA_ShowMe:
-                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_ShowMe)))
-                    tag->ti_Tag = TAG_IGNORE;
+                if (BOOLSAME(tidata,isFlagSet(data->flags,FLG_ShowMe)))
+                {
+				    tag->ti_Tag = TAG_IGNORE;
+                }
                 else
                 {
-                    if (tidata)
-                        setFlag(data->flags, FLG_ShowMe);
-                    else
-                        clearFlag(data->flags, FLG_ShowMe);
+                    if (tidata) setFlag(data->flags,FLG_ShowMe);
+                    else clearFlag(data->flags,FLG_ShowMe);
                 }
                 break;
 
@@ -665,63 +653,57 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 break;
 
             case MUIA_TheButton_Quiet:
-                if (tidata)
-                    setFlag(data->flags, FLG_NoNotify);
-                else
-                    clearFlag(data->flags, FLG_NoNotify);
+                if (tidata) setFlag(data->flags,FLG_NoNotify);
+                else clearFlag(data->flags,FLG_NoNotify);
                 break;
 
             case MUIA_TheButton_Raised:
-                if (isFlagSet(data->flags, FLG_NoClick) || isFlagSet(data->flags, FLG_IsSpacer) || isFlagClear(data->flags, FLG_Borderless) || BOOLSAME(tidata, isFlagSet(data->flags, FLG_Raised)))
+                if (isFlagSet(data->flags,FLG_NoClick) || isFlagSet(data->flags,FLG_IsSpacer) || isFlagClear(data->flags,FLG_Borderless) || BOOLSAME(tidata,isFlagSet(data->flags,FLG_Raised)))
                 {
                     rat = tag;
                     tag->ti_Tag = TAG_IGNORE;
                 }
                 else
                 {
-                    if (tidata)
-                        setFlag(data->flags, FLG_Raised);
-                    else
-                        clearFlag(data->flags, FLG_Raised);
+                    if (tidata) setFlag(data->flags,FLG_Raised);
+                    else clearFlag(data->flags,FLG_Raised);
                     setidcmp = TRUE;
                 }
                 break;
 
             case MUIA_TheButton_ViewMode:
-                if (isFlagSet(data->flags, FLG_IsSpacer) || !data->image || !data->image->data || (tidata>=MUIV_TheButton_ViewMode_Last) || (tidata==data->vMode))
+                if (isFlagSet(data->flags,FLG_IsSpacer) || !data->image || !data->image->data || (tidata>=MUIV_TheButton_ViewMode_Last) || (tidata==data->vMode))
                 {
                     vmt = tag;
                     tag->ti_Tag = TAG_IGNORE;
                 }
-                else
-                    data->vMode = tidata;
+                else data->vMode = tidata;
                 break;
 
             case MUIA_TheButton_Scaled:
-                if (BOOLSAME(tidata, isFlagSet(data->flags, FLG_Scaled)))
+                if (BOOLSAME(tidata,isFlagSet(data->flags,FLG_Scaled)))
                 {
                     sct = tag;
                     tag->ti_Tag = TAG_IGNORE;
                 }
                 else
-                    if (tidata)
-                        setFlag(data->flags, FLG_Scaled);
-                    else
-                        clearFlag(data->flags, FLG_Scaled);
+                {
+                    if (tidata) setFlag(data->flags,FLG_Scaled);
+                    else clearFlag(data->flags,FLG_Scaled);
+                }
                 break;
 
             case MUIA_TheButton_LabelPos:
-                if (isFlagSet(data->flags, FLG_IsSpacer) || (tidata>=MUIV_TheButton_LabelPos_Last) || (tidata==data->lPos))
+                if (isFlagSet(data->flags,FLG_IsSpacer) || (tidata>=MUIV_TheButton_LabelPos_Last) || (tidata==data->lPos))
                 {
                     lpt = tag;
                     tag->ti_Tag = TAG_IGNORE;
                 }
-                else
-                    data->lPos = tidata;
+                else data->lPos = tidata;
                 break;
 
             case MUIA_TheButton_EnableKey:
-                if (isFlagSet(data->flags, FLG_IsSpacer) || BOOLSAME(tidata, isFlagSet(data->flags, FLG_EnableKey)))
+                if (isFlagSet(data->flags,FLG_IsSpacer) || BOOLSAME(tidata,isFlagSet(data->flags,FLG_EnableKey)))
                 {
                     ekt = tag;
                     tag->ti_Tag = TAG_IGNORE;
@@ -731,8 +713,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     if (tidata)
                     {
                         setFlag(data->flags, FLG_EnableKey);
-                        if (data->cchar)
-                            superset(cl,obj,MUIA_ControlChar,ToLower(data->cchar));
+                        if (data->cchar) superset(cl,obj,MUIA_ControlChar,ToLower(data->cchar));
                     }
                     else
                     {
@@ -745,34 +726,30 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
             case MUIA_TheBar_Limbo:
                 if (tidata)
                 {
-                    setFlag(data->flags2, FLG2_Limbo|FLG2_Special);
-                    addRemEventHandler(cl, obj, data);
+                    setFlag(data->flags2,FLG2_Limbo|FLG2_Special);
+                    addRemEventHandler(cl,obj,data);
                 }
-                else
-                    clearFlag(data->flags2, FLG2_Limbo);
+                else clearFlag(data->flags2,FLG2_Limbo);
                 break;
 
             case MUIA_TheButton_NtRaiseActive:
-                if (BOOLSAME(tidata, isFlagSet(data->userFlags, UFLG_NtRaiseActive)))
+                if (BOOLSAME(tidata,isFlagSet(data->userFlags,UFLG_NtRaiseActive)))
                 {
                     ract = tag;
                     tag->ti_Tag = TAG_IGNORE;
                 }
                 else
                 {
-                    if (tidata)
-                        setFlag(data->userFlags, UFLG_NtRaiseActive);
-                    else
-                        clearFlag(data->userFlags, UFLG_NtRaiseActive);
+                    if (tidata) setFlag(data->userFlags,UFLG_NtRaiseActive);
+                    else clearFlag(data->userFlags,UFLG_NtRaiseActive);
                     setidcmp = TRUE;
                 }
                 break;
 
             case MUIA_Pressed:
-                if ((isFlagSet(data->flags, FLG_Borderless) || isFlagSet(data->flags, FLG_Sunny)) && !tidata)
+                if ((isFlagSet(data->flags,FLG_Borderless) || isFlagSet(data->flags,FLG_Sunny)) && !tidata)
                 {
                     pressed = back = TRUE;
-                    //clearFlag(data->flags, FLG_MouseOver);
                 }
                 break;
         }
@@ -782,91 +759,60 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     {
         addRemEventHandler(cl,obj,data);
 
-        if (isFlagSet(data->flags, FLG_Disabled))
+		if (isFlagSet(data->flags,FLG_Disabled))
         {
-          clearFlag(data->flags, FLG_MouseOver);
+        	clearFlag(data->flags,FLG_MouseOver);
 
-          //if ((isFlagSet(data->flags, FLG_Raised) || isFlagSet(data->flags, FLG_Sunny)) && isFlagSet(data->flags, FLG_Borderless))
-          //  SetSuperAttrs(cl,obj,MUIA_FrameVisible,FALSE,TAG_DONE);
         }
         else
-            if (isFlagSet(data->flags, FLG_Visible))
+        {
+            if (isFlagSet(data->flags,FLG_Visible))
             {
-                /*
-                if (checkIn(obj,data,_window(obj)->MouseX,_window(obj)->MouseY))
-                    setFlag(data->flags, FLG_MouseOver);
-                else
-                    clearFlag(data->flags, FLG_MouseOver);
-                */
                 back = TRUE;
-
-                clearFlag(data->flags, FLG_MouseOver);
-
-                /*
-                if (isFlagSet(data->flags, FLG_Raised) && isFlagSet(data->flags FLG_MouseOver))
-                {
-                  SetSuperAttrs(cl,obj, MUIA_FrameDynamic, TRUE,
-                                        MUIA_FrameVisible, TRUE,
-                                      //(isFlagSet(data->userFlags, UFLG_NtRaiseActive) && isFlagSet(data->flags, FLG_MouseOver)) ? TRUE : FALSE,
-                                        TAG_DONE);
-                }
-                */
+                clearFlag(data->flags,FLG_MouseOver);
             }
-    }
+    	}
+	}
 
-    if (isFlagSet(data->flags, FLG_Borderless))
+    if (isFlagSet(data->flags,FLG_Borderless))
     {
         if (back)
         {
-            //if (isFlagsSet(data->flags, FLG_Sunny))
-            //    setFlag(data->flags, FLG_RedrawBack);
+            if (!pressed || sel)
+            {
+                data->flags |= FLG_RedrawBack;
+                redraw = TRUE;
+            }
 
-            if (isFlagClear(data->flags, FLG_Disabled) && isFlagSet(data->flags, FLG_Raised) && isFlagSet(data->flags, FLG_MouseOver) && !(pressed || isFlagSet(data->flags, FLG_Selected)))
+            if (isFlagClear(data->flags,FLG_Disabled) && isFlagSet(data->flags,FLG_Raised) && isFlagSet(data->flags,FLG_MouseOver) && !(pressed || isFlagSet(data->flags,FLG_Selected)))
                 nnsuperset(cl,obj,MUIA_Background,data->activeBack);
-            else
-                nnsuperset(cl,obj,MUIA_Background,data->parentBack);
+            else nnsuperset(cl,obj,MUIA_Background,data->parentBack);
         }
     }
 
-    if(setidcmp && isFlagSet(data->flags, FLG_Visible))
+    if(setidcmp && isFlagSet(data->flags,FLG_Visible))
     {
         if (checkIn(obj,data,_window(obj)->MouseX,_window(obj)->MouseY))
-            setFlag(data->flags, FLG_MouseOver);
-        else
-            clearFlag(data->flags, FLG_MouseOver);
+            setFlag(data->flags,FLG_MouseOver);
+        else clearFlag(data->flags,FLG_MouseOver);
     }
 
-    if (isFlagSet(data->flags, FLG_Sunny))
+    if (isFlagSet(data->flags,FLG_Sunny))
         redraw = back;
 
     res = DoSuperMethodA(cl,obj,(Msg)msg);
-    clearFlag(data->flags, FLG_RedrawBack);
-    if (redraw)
-        MUI_Redraw(obj,MADF_DRAWOBJECT);
+    clearFlag(data->flags,FLG_RedrawBack);
+    if (redraw) MUI_Redraw(obj,MADF_DRAWOBJECT);
 
-    if (vmt)
-        vmt->ti_Tag = MUIA_TheButton_ViewMode;
+    if (vmt)  vmt->ti_Tag  = MUIA_TheButton_ViewMode;
+    if (rat)  rat->ti_Tag  = MUIA_TheButton_Raised;
+    if (sct)  sct->ti_Tag  = MUIA_TheButton_Scaled;
+    if (sut)  sut->ti_Tag  = MUIA_TheButton_Sunny;
+    if (lpt)  lpt->ti_Tag  = MUIA_TheButton_LabelPos;
+    if (ekt)  ekt->ti_Tag  = MUIA_TheButton_EnableKey;
+    if (ract) ract->ti_Tag = MUIA_TheButton_NtRaiseActive;
 
-    if (rat)
-        rat->ti_Tag = MUIA_TheButton_Raised;
-
-    if (sct)
-        sct->ti_Tag = MUIA_TheButton_Scaled;
-
-    if (sut)
-        sut->ti_Tag = MUIA_TheButton_Sunny;
-
-    if (lpt)
-        lpt->ti_Tag = MUIA_TheButton_LabelPos;
-
-    if (ekt)
-        ekt->ti_Tag = MUIA_TheButton_EnableKey;
-
-    if (ract)
-        ract->ti_Tag = MUIA_TheButton_NtRaiseActive;
-
-    if (over && data->tb)
-        set(data->tb,MUIA_TheBar_MouseOver,data->id);
+    if (over && data->tb) set(data->tb,MUIA_TheBar_MouseOver,data->id);
 
     RETURN(res);
     return res;
@@ -949,23 +895,34 @@ B S R  FD  FV            FD = B * !S * R
 
 
         /* Active background */
-        if (!getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr))
+        /*if (!getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr))
             ptr = MUIDEF_TheBar_ButtonBack;
-        data->activeBack = ptr;
+        data->activeBack = ptr;*/
+        if (lib_flags & BASEFLG_MUI4)
+        {
+            getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr);
+            data->activeBack = ptr;
+        }
+        else
+        {
+            if ((getconfigitem(cl,obj,MUICFG_TheBar_UseButtonBack,&val) ? *val : MUIDEF_TheBar_UseButtonBack) &&
+                getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr)) data->activeBack = ptr;
+            else data->activeBack = NULL;
 
-        /* Frame shine */
-        if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShinePen,&ptr))
-            ptr = MUIDEF_TheBar_FrameShinePen;
-        data->shine = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
+	        // Frame shine
+	        if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShinePen,&ptr))
+	            ptr = MUIDEF_TheBar_FrameShinePen;
+	        data->shine = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
 
-        /* Frame shadow */
-        if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShadowPen,&ptr))
-            ptr = MUIDEF_TheBar_FrameShadowPen;
-        data->shadow = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
+	        // Frame shadow
+	        if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShadowPen,&ptr))
+	            ptr = MUIDEF_TheBar_FrameShadowPen;
+	        data->shadow = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
 
-        /* Frame style */
-        data->fStyle = getconfigitem(cl,obj,MUICFG_TheBar_FrameStyle,&val) ?
-            *val : MUIDEF_TheBar_FrameStyle;
+	        //Frame style
+	        data->fStyle = getconfigitem(cl,obj,MUICFG_TheBar_FrameStyle,&val) ?
+	            *val : MUIDEF_TheBar_FrameStyle;
+		}
 
         /* Disabled body */
         if (!getconfigitem(cl,obj,MUICFG_TheBar_DisBodyPen,&ptr))
@@ -1111,7 +1068,7 @@ B S R  FD  FV            FD = B * !S * R
         memset(&data->eh,0,sizeof(data->eh));
         data->eh.ehn_Class  = cl;
         data->eh.ehn_Object = obj;
-        data->eh.ehn_Events = IDCMP_MOUSEOBJECT; //IDCMP_MOUSEMOVE;
+        data->eh.ehn_Events = IDCMP_MOUSEOBJECT;
         data->eh.ehn_Flags  = MUI_EHF_GUIMODE;
 
         /* Compute frame size */
@@ -1401,7 +1358,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
-    if (isFlagClear(flags, FLG_RedrawBack) && (isFlagSet(msg->flags, MADF_DRAWUPDATE) || isFlagSet(msg->flags, MADF_DRAWOBJECT)))
+    if (isFlagClear(flags,FLG_RedrawBack) && isAnyFlagSet(msg->flags,MADF_DRAWUPDATE|MADF_DRAWOBJECT))
     {
         struct RastPort *rp = &data->rp;
         ULONG           bl = isFlagSet(flags, FLG_Borderless),
@@ -2352,14 +2309,14 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
 }
 
 /***********************************************************************/
-/*
-static IPTR
+
+/*static IPTR
 mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
 
     //if (isFlagSet(lib_flags, BASEFLG_MUI20)
-    //    return DoSuperMethodA(cl,obj,(Msg)msg);
+    //	  return DoSuperMethodA(cl,obj,(Msg)msg);
 
 
     if (data->tb &&
@@ -2367,7 +2324,7 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
          (isFlagSet(data->flags, FLG_Raised) && (isFlagClear(data->flags, FLG_MouseOver) || isFlagSet(data->flags, FLG_Selected) || !data->activeBack))||
          isFlagClear(data->flags, FLG_Raised)))
     {
-        DoMethod(data->tb,MUIM_CustomBackfill,
+        DoMethod(data->tb,MUIM_Backfill,
             msg->left,
             msg->top,
             msg->right,
@@ -2382,46 +2339,45 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
     }
 
     return 0;
-}
-*/
+}*/
+
 /***********************************************************************/
 
 static IPTR
 mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    IPTR result;
+    ULONG           dosuper = TRUE;
+    IPTR            result = 0; //gcc
 
     ENTER();
 
-    // we only use the Backfill method non-MUI4 systems
-    // as MUI4 deals with backfill things on its own
-    if(isFlagClear(lib_flags, BASEFLG_MUI4) &&
-       isFlagSet(data->flags, FLG_Selected))
-    {
-        Object *p = NULL;
+    if (isFlagClear(lib_flags,BASEFLG_MUI4))
+	{
+        Object *p = (Object *)xget(obj,MUIA_Parent);
 
-        get(obj,MUIA_Parent,&p);
-        if (!p)
+        if (p)
         {
-        	RETURN(0);
-        	return 0;
-        }
+        	if (isFlagSet(data->flags,FLG_IsSpacer) ||
+            	(isFlagClear(data->flags,FLG_Selected) &&
+                 (isFlagSet(data->flags,FLG_Raised|FLG_MouseOver) && !data->activeBack)))
+            {
+                result = DoMethod(p,MUIM_DrawBackground,
+		            msg->left,
+		            msg->top,
+		            msg->right-msg->left+1,
+		            msg->bottom-msg->top+1,
+		            msg->left+msg->xoffset,
+		            msg->top+msg->yoffset,
+		            0);
 
-        DoMethod(p,MUIM_DrawBackground,
-            msg->left,
-            msg->top,
-            msg->right-msg->left+1,
-            msg->bottom-msg->top+1,
-            msg->left+msg->xoffset,
-            msg->top+msg->yoffset,
-            0);
+				dosuper = FALSE;
+		    }
+	    }
+	}
 
-        RETURN(0);
-        return 0;
-    }
-
-    result = DoSuperMethodA(cl,obj,(Msg)msg);
+    if (dosuper)
+    	result = DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,msg->xoffset,msg->yoffset,0);
 
     RETURN(result);
     return result;
