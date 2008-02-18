@@ -34,7 +34,11 @@
 #undef GetOutlinePen
 #include <graphics/gfxmacros.h>
 
+#if defined(__amigaos4__)
+#include <graphics/blitattr.h>
+#else
 #include <proto/cybergraphics.h>
+#endif
 
 /***********************************************************************/
 
@@ -53,10 +57,6 @@
         UWORD , __p8, d6, \
         ULONG , __p9, d7, \
         , CYBERGRAPHICS_BASE_NAME, 0, 0, 0, 0, 0, 0)
-  #endif
-#elif defined(__amigaos4__)
-  #if !defined(WritePixelArrayAlpha) && defined(__USE_INLINE__)
-    #define WritePixelArrayAlpha(srcRect, SrcX, SrcY, SrcMod, rp, DestX, DestY, SizeX, SizeY, globalAlpha) ICyberGfx->WritePixelArrayAlpha(srcRect, SrcX, SrcY, SrcMod, rp, DestX, DestY, SizeX, SizeY, globalAlpha)
   #endif
 #elif !defined(__AROS__)
   #ifndef WritePixelArrayAlpha
@@ -78,10 +78,6 @@
           ULONG , __p9, d7, \
           , CYBERGRAPHICS_BASE_NAME)
     #endif
-  #endif
-#elif defined(__amigaos4__)
-  #ifndef WritePixelArrayAlpha
-  #define WritePixelArrayAlpha ICyberGfx->WritePixelArrayAlpha
   #endif
 #endif
 
@@ -1660,21 +1656,82 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                     if (chunky)
                     {
+                      #if defined(__amigaos4__)
+                      if(isFlagSet(data->image->flags, BRFLG_EmptyAlpha))
+                        BltBitMapTags(BLITA_Source,         chunky,
+                                      BLITA_Dest,           rp,
+                                      BLITA_SrcType,        BLITT_ARGB32,
+                                      BLITA_SrcX,           x,
+                                      BLITA_SrcY,           y,
+                                      BLITA_SrcBytesPerRow, isFlagSet(data->flags, FLG_Scaled) ? iw * 4 : data->image->dataWidth * 4,
+                                      BLITA_DestType,       BLITT_RASTPORT,
+                                      BLITA_DestX,          ixp,
+                                      BLITA_DestY,          iyp,
+                                      BLITA_Width,          iw,
+                                      BLITA_Height,         ih,
+                                      BLITA_UseSrcAlpha,    TRUE,
+                                      TAG_DONE);
+                      else
+                        BltBitMapTags(BLITA_Source,         chunky,
+                                      BLITA_Dest,           rp,
+                                      BLITA_SrcType,        BLITT_ARGB32,
+                                      BLITA_SrcX,           x,
+                                      BLITA_SrcY,           y,
+                                      BLITA_SrcBytesPerRow, isFlagSet(data->flags, FLG_Scaled) ? iw * 4 : data->image->dataWidth * 4,
+                                      BLITA_DestType,       BLITT_RASTPORT,
+                                      BLITA_DestX,          ixp,
+                                      BLITA_DestY,          iyp,
+                                      BLITA_Width,          iw,
+                                      BLITA_Height,         ih,
+                                      BLITA_UseSrcAlpha,    TRUE,
+                                      BLITA_Alpha,          (data->disMode == MUIV_TheButton_DisMode_Blend || data->disMode == MUIV_TheButton_DisMode_BlendGrey) ? 0x4fffffff : 0xffffffff,
+                                      TAG_DONE);
+                      #else
                       if(isFlagSet(data->image->flags, BRFLG_EmptyAlpha))
                         WritePixelArray(chunky,x,y, isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
                       else
                         WritePixelArrayAlpha(chunky,x,y, isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,
                             ((data->disMode==MUIV_TheButton_DisMode_Blend) || (data->disMode==MUIV_TheButton_DisMode_BlendGrey)) ? 0x4fffffff : 0xffffffff);
 
+                      #endif
                     }
                     else
                     {
                         if(bm)
                         {
-                    	    if (mask)
+                          #if defined(__amigaos4__)
+                    	    if(mask != NULL)
+                            BltBitMapTags(BLITA_Source,         bm,
+                                          BLITA_Dest,           rp,
+                                          BLITA_SrcType,        BLITT_BITMAP,
+                                          BLITA_SrcX,           x,
+                                          BLITA_SrcY,           y,
+                                          BLITA_DestType,       BLITT_RASTPORT,
+                                          BLITA_DestX,          ixp,
+                                          BLITA_DestY,          iyp,
+                                          BLITA_Width,          iw,
+                                          BLITA_Height,         ih,
+                                          BLITA_Minterm,        (ABC|ABNC|ANBC),
+                                          BLITA_MaskPlane,      mask,
+                                          TAG_DONE);
+                          else
+                            BltBitMapTags(BLITA_Source,         bm,
+                                          BLITA_Dest,           rp,
+                                          BLITA_SrcType,        BLITT_BITMAP,
+                                          BLITA_SrcX,           x,
+                                          BLITA_SrcY,           y,
+                                          BLITA_DestType,       BLITT_RASTPORT,
+                                          BLITA_DestX,          ixp,
+                                          BLITA_DestY,          iyp,
+                                          BLITA_Width,          iw,
+                                          BLITA_Height,         ih,
+                                          TAG_DONE);
+                          #else
+                    	    if (mask != NULL)
                     	        BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
                     	    else
                     	        BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
+                          #endif
                         }
                     }
                 }
@@ -1885,7 +1942,23 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                     sbm.Depth       = 1;
                                     sbm.Planes[0]   = mask;
 
+                                    #if defined(__amigaos4__)
+                                    BltBitMapTags(BLITA_Source,         &sbm,
+                                                  BLITA_Dest,           tbmask,
+                                                  BLITA_SrcType,        BLITT_BITMAP,
+                                                  BLITA_SrcX,           x,
+                                                  BLITA_SrcY,           y,
+                                                  BLITA_DestType,       BLITT_BITMAP,
+                                                  BLITA_DestX,          0,
+                                                  BLITA_DestY,          0,
+                                                  BLITA_Width,          iw,
+                                                  BLITA_Height,         ih,
+                                                  BLITA_Mask,           0xff,
+                                                  BLITA_MaskPlane,      NULL,
+                                                  TAG_DONE);
+                                    #else
                                     BltBitMap(&sbm,x,y,tbmask,0,0,iw,ih,0xc0,0xff,NULL);
+                                    #endif
 
                                     tmask = tbmask->Planes[0];
                                 }
@@ -1900,7 +1973,23 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                 struct RastPort trp;
                                 UWORD grid[] = { 0x5555, 0xAAAA };
 
+                                #if defined(__amigaos4__)
+                                BltBitMapTags(BLITA_Source,         bm,
+                                              BLITA_Dest,           tbm,
+                                              BLITA_SrcType,        BLITT_BITMAP,
+                                              BLITA_SrcX,           x,
+                                              BLITA_SrcY,           y,
+                                              BLITA_DestType,       BLITT_BITMAP,
+                                              BLITA_DestX,          0,
+                                              BLITA_DestY,          0,
+                                              BLITA_Width,          iw,
+                                              BLITA_Height,         ih,
+                                              BLITA_Mask,           0xff,
+                                              BLITA_MaskPlane,      NULL,
+                                              TAG_DONE);
+                                #else
                                 BltBitMap(bm,x,y,tbm,0,0,iw,ih,0xc0,0xff,NULL);
+                                #endif
 
                                 copymem(&trp,rp,sizeof(trp));
                                 trp.Layer  = NULL;
@@ -1911,7 +2000,23 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                                 RectFill(&trp,0,0,iw-1,ih-1);
 
+                                #if defined(__amigaos4__)
+                                BltBitMapTags(BLITA_Source,         tbm,
+                                              BLITA_Dest,           rp,
+                                              BLITA_SrcType,        BLITT_BITMAP,
+                                              BLITA_SrcX,           0,
+                                              BLITA_SrcY,           0,
+                                              BLITA_DestType,       BLITT_RASTPORT,
+                                              BLITA_DestX,          ixp,
+                                              BLITA_DestY,          iyp,
+                                              BLITA_Width,          iw,
+                                              BLITA_Height,         ih,
+                                              BLITA_Minterm,        (ABC|ABNC|ANBC),
+                                              BLITA_MaskPlane,      tmask,
+                                              TAG_DONE);
+                                #else
                                 BltMaskBitMapRastPort(tbm,0,0,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),tmask);
+                                #endif
 
                                 if (tmask!=mask)
                                 {
@@ -1929,22 +2034,83 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                     if (!done)
                     {
-    	                if (chunky)
+      	                if (chunky)
                         {
-	                        if (isFlagSet(data->image->flags, BRFLG_EmptyAlpha))
-                              WritePixelArray(chunky,x,y,isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
-                          else
-                              WritePixelArrayAlpha(chunky,x,y,isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,0xffffffff);
+                            #if defined(__amigaos4__)
+                            if(isFlagSet(data->image->flags, BRFLG_EmptyAlpha))
+                              BltBitMapTags(BLITA_Source,         chunky,
+                                            BLITA_Dest,           rp,
+                                            BLITA_SrcType,        BLITT_ARGB32,
+                                            BLITA_SrcX,           x,
+                                            BLITA_SrcY,           y,
+                                            BLITA_SrcBytesPerRow, isFlagSet(data->flags, FLG_Scaled) ? iw * 4 : data->image->dataWidth * 4,
+                                            BLITA_DestType,       BLITT_RASTPORT,
+                                            BLITA_DestX,          ixp,
+                                            BLITA_DestY,          iyp,
+                                            BLITA_Width,          iw,
+                                            BLITA_Height,         ih,
+                                            BLITA_UseSrcAlpha,    TRUE,
+                                            TAG_DONE);
+                            else
+                              BltBitMapTags(BLITA_Source,         chunky,
+                                            BLITA_Dest,           rp,
+                                            BLITA_SrcType,        BLITT_ARGB32,
+                                            BLITA_SrcX,           x,
+                                            BLITA_SrcY,           y,
+                                            BLITA_SrcBytesPerRow, isFlagSet(data->flags, FLG_Scaled) ? iw * 4 : data->image->dataWidth * 4,
+                                            BLITA_DestType,       BLITT_RASTPORT,
+                                            BLITA_DestX,          ixp,
+                                            BLITA_DestY,          iyp,
+                                            BLITA_Width,          iw,
+                                            BLITA_Height,         ih,
+                                            BLITA_UseSrcAlpha,    TRUE,
+                                            BLITA_Alpha,          0xffffffff,
+                                            TAG_DONE);
+                            #else
+                            if (isFlagSet(data->image->flags, BRFLG_EmptyAlpha))
+                                WritePixelArray(chunky,x,y,isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
+                            else
+                                WritePixelArrayAlpha(chunky,x,y,isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,0xffffffff);
+                            #endif
                         }
                         else
                         {
                             if(bm)
                             {
-    	                        //if (isFlagSet(data->image->flags, BRFLG_EmptyAlpha) && mask)
-    	                        if(mask)
-                                    BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
+      	                      //if (isFlagSet(data->image->flags, BRFLG_EmptyAlpha) && mask)
+                              #if defined(__amigaos4__)
+                        	    if(mask != NULL)
+                                BltBitMapTags(BLITA_Source,         bm,
+                                              BLITA_Dest,           rp,
+                                              BLITA_SrcType,        BLITT_BITMAP,
+                                              BLITA_SrcX,           x,
+                                              BLITA_SrcY,           y,
+                                              BLITA_DestType,       BLITT_RASTPORT,
+                                              BLITA_DestX,          ixp,
+                                              BLITA_DestY,          iyp,
+                                              BLITA_Width,          iw,
+                                              BLITA_Height,         ih,
+                                              BLITA_Minterm,        (ABC|ABNC|ANBC),
+                                              BLITA_MaskPlane,      mask,
+                                              TAG_DONE);
+                              else
+                                BltBitMapTags(BLITA_Source,         bm,
+                                              BLITA_Dest,           rp,
+                                              BLITA_SrcType,        BLITT_BITMAP,
+                                              BLITA_SrcX,           x,
+                                              BLITA_SrcY,           y,
+                                              BLITA_DestType,       BLITT_RASTPORT,
+                                              BLITA_DestX,          ixp,
+                                              BLITA_DestY,          iyp,
+                                              BLITA_Width,          iw,
+                                              BLITA_Height,         ih,
+                                              TAG_DONE);
+                              #else
+      	                      if(mask != NULL)
+                                  BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
                         	    else
-                                    BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
+                                  BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
+                              #endif
                             }
                         }
 
