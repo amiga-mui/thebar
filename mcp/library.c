@@ -186,6 +186,8 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
   }
   #endif
 
+  CloseCat();
+
   if(CyberGfxBase)
   {
     DROPINTERFACE(ICyberGfx);
