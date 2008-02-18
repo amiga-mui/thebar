@@ -575,7 +575,7 @@ Gitter
 ; Grid
 ;
 Msg_DisMode_FullGrid
-Volles Gitter
+volles Gitter
 ; Full grid
 ;
 Msg_DisMode
@@ -629,6 +629,12 @@ Wie Knopf
 Msg_Event_MouseObject
 Mausobjekt
 ; MouseObject
+;
+Msg_DisMode_Blend
+Angleichen
+;
+Msg_DisMode_BlendGrey
+Angleichen/Grau
 ;
 Msg_Item_Defaults
 Grundeinstellungen
