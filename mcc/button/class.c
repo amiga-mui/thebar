@@ -614,9 +614,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                         tag->ti_Tag = TAG_IGNORE;
 
                         SetSuperAttrs(cl,obj,MUIA_Selected,     tidata,
-                                             MUIA_FrameDynamic, tidata  ? FALSE : ((data->flags & FLG_Raised) ? TRUE : FALSE),
-                                             MUIA_FrameVisible, !tidata ? FALSE : ((data->userFlags & UFLG_NtRaiseActive) ? FALSE : TRUE),
-                                             MUIA_ShowSelState, (data->userFlags & UFLG_NtRaiseActive) ? FALSE : tidata,
+                                             MUIA_FrameDynamic, tidata  ? FALSE : isFlagSet(data->flags, FLG_Raised),
+                                             MUIA_FrameVisible, !tidata ? FALSE : isFlagClear(data->userFlags, UFLG_NtRaiseActive),
+                                             MUIA_ShowSelState, isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : tidata,
                                              TAG_DONE);
                     }
                 }
@@ -784,12 +784,18 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 redraw = TRUE;
             }
 
-            if (isFlagClear(data->flags,FLG_Disabled) &&
-                isFlagSet(data->flags,FLG_Raised) &&
-                isFlagSet(data->flags,FLG_MouseOver) &&
-                !(pressed || isFlagSet(data->flags,FLG_Selected)))
-                nnsuperset(cl,obj,MUIA_Background,data->activeBack);
-            else nnsuperset(cl,obj,MUIA_Background,isFlagSet(lib_flags,BASEFLG_MUI4) ? "" : data->parentBack);
+            if(isFlagClear(data->flags,FLG_Disabled) &&
+               isFlagSet(data->flags,FLG_Raised) &&
+               isFlagSet(data->flags,FLG_MouseOver) &&
+               !pressed &&
+               isFlagClear(data->flags,FLG_Selected))
+            {
+               nnsuperset(cl,obj,MUIA_Background,data->activeBack);
+            }
+            else
+            {
+                nnsuperset(cl,obj,MUIA_Background,isFlagSet(lib_flags,BASEFLG_MUI4) ? "" : data->parentBack);
+            }
         }
     }
 
@@ -797,7 +803,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     {
         if (checkIn(obj,data,_window(obj)->MouseX,_window(obj)->MouseY))
             setFlag(data->flags,FLG_MouseOver);
-        else clearFlag(data->flags,FLG_MouseOver);
+        else
+            clearFlag(data->flags,FLG_MouseOver);
     }
 
     if (isFlagSet(data->flags,FLG_Sunny))
@@ -805,7 +812,10 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     res = DoSuperMethodA(cl,obj,(Msg)msg);
     clearFlag(data->flags,FLG_RedrawBack);
-    if (redraw) MUI_Redraw(obj,MADF_DRAWOBJECT);
+    if (redraw)
+    {
+        MUI_Redraw(obj,MADF_DRAWOBJECT);
+    }
 
     if (vmt)  vmt->ti_Tag  = MUIA_TheButton_ViewMode;
     if (rat)  rat->ti_Tag  = MUIA_TheButton_Raised;
@@ -815,7 +825,10 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     if (ekt)  ekt->ti_Tag  = MUIA_TheButton_EnableKey;
     if (ract) ract->ti_Tag = MUIA_TheButton_NtRaiseActive;
 
-    if (over && data->tb) set(data->tb,MUIA_TheBar_MouseOver,data->id);
+    if (over && data->tb)
+    {
+        set(data->tb,MUIA_TheBar_MouseOver,data->id);
+    }
 
     RETURN(res);
     return res;
@@ -901,16 +914,18 @@ B S R  FD  FV            FD = B * !S * R
         /*if (!getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr))
             ptr = MUIDEF_TheBar_ButtonBack;
         data->activeBack = ptr;*/
-        if (lib_flags & BASEFLG_MUI4)
+        if(isFlagSet(lib_flags, BASEFLG_MUI4))
         {
             getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr);
             data->activeBack = ptr;
         }
         else
         {
-            if ((getconfigitem(cl,obj,MUICFG_TheBar_UseButtonBack,&val) ? *val : MUIDEF_TheBar_UseButtonBack) &&
-                getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr)) data->activeBack = ptr;
-            else data->activeBack = NULL;
+            if((getconfigitem(cl,obj,MUICFG_TheBar_UseButtonBack,&val) ? *val : MUIDEF_TheBar_UseButtonBack) &&
+               getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr))
+                data->activeBack = ptr;
+            else
+                data->activeBack = NULL;
 
 	        // Frame shine
 	        if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShinePen,&ptr))
@@ -1387,13 +1402,15 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                 ixp = ml+(mw-iw)/2;
                 iyp = mt+(data->fSize ? 1 : 0)+tisp;
-                if (data->labelLen && vm==MUIV_TheButton_ViewMode_TextGfx) iyp += th+data->vertTextGfxSpacing;
+                if (data->labelLen && vm==MUIV_TheButton_ViewMode_TextGfx)
+                    iyp += th+data->vertTextGfxSpacing;
                 break;
 
             case MUIV_TheButton_LabelPos_Bottom:
                 txp = ml+(mw-tw)/2;
                 typ = mt+(data->fSize ? 1 : 0)+tisp-tmy;
-                if (ih && vm==MUIV_TheButton_ViewMode_TextGfx) typ += ih+data->vertTextGfxSpacing;
+                if (ih && vm==MUIV_TheButton_ViewMode_TextGfx)
+                    typ += ih+data->vertTextGfxSpacing;
 
                 ixp = ml+(mw-iw)/2;
                 iyp = mt+(data->fSize ? 1 : 0)+tisp;
@@ -1643,7 +1660,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                     if (chunky)
                     {
-                      if(isFlagSet(data->image->flags, BRFLG_EmpytAlpha))
+                      if(isFlagSet(data->image->flags, BRFLG_EmptyAlpha))
                         WritePixelArray(chunky,x,y, isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
                       else
                         WritePixelArrayAlpha(chunky,x,y, isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,

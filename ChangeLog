@@ -5,33 +5,22 @@ MUI TheBar MCC class - ChangeLog
 2008-02-18  Alfonso Ranieri <alforan@tin.it>
 
   *  ARGGGGGGGGGGG!
-
   *  OK, We are near something to be called "stable";
      still to test on classic...
-
-
-2008-02-18  Alfonso Ranieri <alforan@tin.it>
-
   *  OK, now the hard part: making button/class.c to work again 
      everywhere. This would take time...
-
-
-2008-02-18  Alfonso Ranieri <alforan@tin.it>
-
   *  trunk/mcp/class.c - Fixes again
-
 
 2008-02-18  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcc/button/class.c: used the isFlagSet/Clear() were they were not used yet
+    and restructured the source a little bit to better make clear which "if()"
+    causes which reactions. Also fixed the partly screwed up ChangeLog.
   * mcc/private.h: fixed broken OS3 build.
-
 
 2008-02-18  Alfonso Ranieri <alforan@tin.it>
 
   * trunk/mcp/class.c - Trying to make it work with any MUI. Not sure if it is totally 
-=======
-  * trunk/mcp/class.c - Trying to make it work with any MUI. Not sure if it is totally
->>>>>>> .r194
     fixed at the moment. Should be tested on MUI3.9/OS4 and classic
   * trunk/mcp/locale/TheBar_mcp.cd - added some missing definition
   * trunk/mcp/private.h - Removed some conditional preprocessor definition
