@@ -20,6 +20,7 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-18  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcp/locale/german.ct: updated german translation to latest changes.
   * mcp/library.c: the catalog was never closed upon expunge.
   * mcc/class.c: some minor code cleanup.
   * mcc/button/class.c: the OS4 build now uses the new BltBitMapTags() function
