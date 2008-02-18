@@ -1713,6 +1713,20 @@ scaleStripBitMaps(struct InstData *data)
 /***********************************************************************/
 
 void
+clearBitMaps(struct InstData *data)
+{
+    data->normalBM = data->greyBM    = data->snormalBM =
+    data->sgreyBM  = data->dnormalBM = data->dgreyBM   = NULL;
+
+    data->nchunky  = data->gchunky  = data->snchunky = data->sgchunky =
+    data->dnchunky = data->dgchunky = NULL;
+
+    data->mask = data->smask = data->dmask = NULL;
+}
+
+/***********************************************************************/
+
+void
 freeBitMaps(struct InstData *data)
 {
   ENTER();
@@ -1727,182 +1741,153 @@ freeBitMaps(struct InstData *data)
   #endif
   {
     if(data->nchunky)
-    {
       gfree(data->nchunky);
-      data->nchunky = NULL;
-	  }
 
     if(data->snchunky)
-    {
       gfree(data->snchunky);
-      data->snchunky = NULL;
-    }
 
-	  if(data->dnchunky)
-    {
+    if(data->dnchunky)
       gfree(data->dnchunky);
-      data->dnchunky = NULL;
-    }
   }
 
   if(!data->normalBM)
   {
-    LEAVE();
-    return;
-  }
-
-  if(isFlagClear(data->flags, FLG_CyberDeep) && isFlagClear(data->flags, FLG_Strip))
-  {
-    struct ColorMap *cm = data->screen->ViewPort.ColorMap;
-    struct pen *pens, *gpens, *spens, *sgpens, *dpens, *dgpens;
-    int i;
-
-    pens  = data->pens;
-    gpens = (data->greyBM) ? data->gpens : NULL;
-
-    if((spens = ((data->snormalBM) ? data->spens : NULL)))
-      sgpens = (data->sgreyBM) ? data->sgpens : NULL;
-    else
-      sgpens = NULL;
-
-    if((dpens = ((data->dnormalBM) ? data->dpens : NULL)))
-      dgpens = (data->dgreyBM) ? data->dgpens : NULL;
-    else
-      dgpens = NULL;
-
-    for(i=256; i--;)
+    if(isFlagClear(data->flags, FLG_CyberDeep) && isFlagClear(data->flags, FLG_Strip))
     {
-      if(pens)
+      struct ColorMap *cm = data->screen->ViewPort.ColorMap;
+      struct pen *pens, *gpens, *spens, *sgpens, *dpens, *dgpens;
+      int i;
+
+      pens  = data->pens;
+      gpens = (data->greyBM) ? data->gpens : NULL;
+
+      if((spens = ((data->snormalBM) ? data->spens : NULL)))
+        sgpens = (data->sgreyBM) ? data->sgpens : NULL;
+      else
+        sgpens = NULL;
+
+      if((dpens = ((data->dnormalBM) ? data->dpens : NULL)))
+        dgpens = (data->dgreyBM) ? data->dgpens : NULL;
+      else
+        dgpens = NULL;
+
+      for(i=256; i--;)
       {
-        if(pens->done)
+        if(pens)
         {
-          ReleasePen(cm,pens->pen);
-          pens->done = 0;
-        }
-
-        pens++;
-      }
-
-      if(gpens)
-      {
-        if(gpens->done)
-        {
-          ReleasePen(cm,gpens->pen);
-          gpens->done = 0;
-        }
-
-        gpens++;
-      }
-
-      if(spens)
-      {
-        if(sgpens)
-        {
-          if(sgpens->done)
+          if(pens->done)
           {
-            ReleasePen(cm,sgpens->pen);
-            sgpens->done = 0;
+            ReleasePen(cm,pens->pen);
+            pens->done = 0;
           }
 
-          sgpens++;
+          pens++;
         }
 
-        if(spens->done)
+        if(gpens)
         {
-          ReleasePen(cm,spens->pen);
-          spens->done = 0;
-        }
-
-        spens++;
-      }
-
-      if(dpens)
-      {
-        if(dgpens)
-        {
-          if(dgpens->done)
+          if(gpens->done)
           {
-            ReleasePen(cm,dgpens->pen);
-            dgpens->done = 0;
+            ReleasePen(cm,gpens->pen);
+            gpens->done = 0;
           }
 
-          dgpens++;
+          gpens++;
         }
 
-        if(dpens->done)
+        if(spens)
         {
-          ReleasePen(cm,dpens->pen);
-          dpens->done = 0;
+          if(sgpens)
+          {
+            if(sgpens->done)
+            {
+              ReleasePen(cm,sgpens->pen);
+              sgpens->done = 0;
+            }
+
+            sgpens++;
+          }
+
+          if(spens->done)
+          {
+            ReleasePen(cm,spens->pen);
+            spens->done = 0;
+          }
+
+          spens++;
         }
 
-        dpens++;
+        if(dpens)
+        {
+          if(dgpens)
+          {
+            if(dgpens->done)
+            {
+              ReleasePen(cm,dgpens->pen);
+              dgpens->done = 0;
+            }
+
+            dgpens++;
+          }
+
+          if(dpens->done)
+          {
+            ReleasePen(cm,dpens->pen);
+            dpens->done = 0;
+          }
+
+          dpens++;
+        }
       }
     }
-  }
 
-  FreeBitMap(data->normalBM);
-  data->normalBM = NULL;
+    FreeBitMap(data->normalBM);
 
-  if(data->greyBM)
-  {
-    FreeBitMap(data->greyBM);
-    data->greyBM = NULL;
-  }
+    if(data->greyBM)
+      FreeBitMap(data->greyBM);
 
-  if(data->mask)
-  {
-    if(isFlagSet(data->flags, FLG_CyberMap))
-      FREERASTERCG(data->mask);
-    else
-      FREERASTER(data->mask);
-
-    data->mask = NULL;
-  }
-
-  if(data->snormalBM)
-  {
-    if(data->sgreyBM)
-    {
-      FreeBitMap(data->sgreyBM);
-      data->sgreyBM = NULL;
-    }
-
-    if(data->smask)
+    if(data->mask)
     {
       if(isFlagSet(data->flags, FLG_CyberMap))
-        FREERASTERCG(data->smask);
+        FREERASTERCG(data->mask);
       else
-        FREERASTER(data->smask);
-
-      data->smask = NULL;
+        FREERASTER(data->mask);
     }
 
-    FreeBitMap(data->snormalBM);
-    data->snormalBM = NULL;
+    if(data->snormalBM)
+    {
+      if(data->sgreyBM)
+        FreeBitMap(data->sgreyBM);
+
+      if(data->smask)
+      {
+        if(isFlagSet(data->flags, FLG_CyberMap))
+          FREERASTERCG(data->smask);
+        else
+          FREERASTER(data->smask);
+      }
+
+      FreeBitMap(data->snormalBM);
+    }
+
+    if(data->dnormalBM)
+    {
+      if(data->dgreyBM)
+        FreeBitMap(data->dgreyBM);
+
+      if(data->dmask)
+      {
+        if(isFlagSet(data->flags, FLG_CyberMap))
+          FREERASTERCG(data->dmask);
+        else
+          FREERASTER(data->dmask);
+      }
+
+      FreeBitMap(data->dnormalBM);
+    }
   }
 
-  if(data->dnormalBM)
-  {
-    if(data->dgreyBM)
-    {
-      FreeBitMap(data->dgreyBM);
-      data->dgreyBM = NULL;
-    }
-
-    if(data->dmask)
-    {
-      if(isFlagSet(data->flags, FLG_CyberMap))
-        FREERASTERCG(data->dmask);
-      else
-        FREERASTER(data->dmask);
-
-      data->dmask = NULL;
-    }
-
-    FreeBitMap(data->dnormalBM);
-    data->dnormalBM = NULL;
-  }
-
+  clearBitMaps(data);
   LEAVE();
 }
 
@@ -1957,3 +1942,4 @@ build(struct InstData *data)
 }
 
 /***********************************************************************/
+

@@ -255,6 +255,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             isFlagSet(pack.flags, FLG_NoClick) ? TAG_IGNORE : MUIA_InputMode,  imode,
             MUIA_Font, (pack.vMode==MUIV_TheButton_ViewMode_Text) ? MUIV_Font_Button : MUIV_Font_Tiny,
             isFlagSet(pack.flags, FLG_Borderless) ? TAG_IGNORE : MUIA_Frame, MUIV_Frame_Button,
+            isFlagSet(pack.flags, FLG_Borderless) ? TAG_IGNORE : MUIA_Background, MUII_ButtonBack,
             isFlagSet(lib_flags, BASEFLG_MUI20) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameDynamic : TAG_IGNORE, TRUE,
             isFlagSet(lib_flags, BASEFLG_MUI20) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameVisible : TAG_IGNORE, FALSE,
             isFlagSet(lib_flags, BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, isFlagSet(pack.flags, FLG_Borderless),
@@ -823,7 +824,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
             if (isFlagClear(data->flags, FLG_Disabled) && isFlagSet(data->flags, FLG_Raised) && isFlagSet(data->flags, FLG_MouseOver) && !(pressed || isFlagSet(data->flags, FLG_Selected)))
                 nnsuperset(cl,obj,MUIA_Background,data->activeBack);
             else
-                nnsuperset(cl,obj,MUIA_Background,"");
+                nnsuperset(cl,obj,MUIA_Background,data->parentBack);
         }
     }
 
