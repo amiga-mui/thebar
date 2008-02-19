@@ -916,7 +916,6 @@ getSource(struct MUIS_TheBar_Brush *image)
 
     ENTER();
 
-    SHOWVALUE(DBF_ALWAYS, image->compressedSize);
     if (image->compressedSize)
     {
         ULONG size = image->dataTotalWidth*image->dataHeight;
@@ -1195,7 +1194,6 @@ buildBitMapsCyber(struct InstData *data)
 
     ENTER();
 
-    D(DBF_ALWAYS, "buildBitMapsCyber");
     if ((make = gmalloc(sizeof(struct make))) == NULL)
     {
     	LEAVE();
@@ -1230,7 +1228,6 @@ buildBitMapsCyber(struct InstData *data)
         return;
     }
 
-    D(DBF_ALWAYS, "made sources RGB");
     if((data->normalBM = AllocBitMap(w,h,24,BMF_MINPLANES|BMF_CLEAR,data->screen->RastPort.BitMap)))
     {
         struct RastPort rport;
@@ -1459,7 +1456,6 @@ buildBitMaps(struct InstData *data)
 
     ENTER();
 
-    D(DBF_ALWAYS, "buildBitMaps");
     if ((make = gmalloc(sizeof(struct make))) == NULL)
     {
     	LEAVE();
