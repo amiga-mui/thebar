@@ -2,6 +2,12 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-19  Jens Langner <Jens.Langner@light-speed.de>
+
+  * Debug.h: replaced all abort() usages in our ASSERT() macros with the
+    respective calls to assert(). This should prevent the MorphOS compile
+    from not linking and be a bit more intuitiv IMHO. :)
+
 2008-02-19  Thore Böckelmann <tboeckel@gmx.de>
 
   * demo/demo[2345].c: fixed some demos to let the appearance cycle show the
