@@ -4,6 +4,8 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-19  Thore Böckelmann <tboeckel@gmx.de>
 
+  * demo/demo[2345].c: fixed some demos to let the appearance cycle show the
+    actual default mode.
   * mcc/class.c, mcc/button/class.c, mcc/button/build.c: some code cleanup.
   * mcc/brc1.c, mcc/button/brc1.c: fixed a bug in the ByteRun1 decoder which
     caused internal images to be not drawn at all (like in demo5 and demo8).
