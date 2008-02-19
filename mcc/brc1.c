@@ -22,6 +22,8 @@
 
 #include "class.h"
 
+#include "Debug.h"
+
 /***********************************************************************/
 
 #define DUMP     0
@@ -36,49 +38,72 @@
 /***********************************************************************/
 
 int
-BRCUnpack(signed char *pSource,signed char *pDest,LONG srcBytes0,LONG dstBytes0)
+BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0)
 {
-    signed char *source = pSource, *dest = pDest;
-    SHORT       n;
-    LONG        srcBytes = srcBytes0, dstBytes = dstBytes0;
+  signed char *source = pSource;
+  signed char *dest = pDest;
+  LONG srcBytes = srcBytes0;
+  LONG dstBytes = dstBytes0;
+  int result = BRCUnpackOK;
 
-    while(dstBytes>0)
+  ENTER();
+
+  while(dstBytes > 0)
+  {
+    SHORT n;
+
+    if(--srcBytes < 0)
     {
-        if ((srcBytes -= 1)<0) return BRCUnpackError;
-        n = *source++;
-
-        if (n>=0)
-        {
-            n += 1;
-
-            if (((srcBytes -= n)<0) || ((dstBytes -= n)<0))
-            	return BRCUnpackError;
-
-            do
-            {
-                *dest++ = *source++;
-            } while(--n>0);
-        }
-        else
-            if (n!=-128)
-            {
-                signed char c;
-
-                n = -n+1;
-
-                if (((srcBytes -= 1)<0) || ((dstBytes -= n)<0))
-                	return BRCUnpackError;
-
-                c = *source++;
-
-                do
-                {
-                    *dest++ = c;
-                } while(--n>0);
-            }
+      result = BRCUnpackError;
+      break;
     }
 
-    return BRCUnpackOK;
+    n = *source++;
+
+    if(n >= 0)
+    {
+      n++;
+
+      srcBytes -= n;
+      dstBytes -= n;
+      if(srcBytes < 0 || dstBytes < 0)
+      {
+        result = BRCUnpackError;
+        break;
+      }
+
+      do
+      {
+        *dest++ = *source++;
+      }
+      while(--n > 0);
+    }
+    else if(n != -128)
+    {
+      signed char c;
+
+      n = -n + 1;
+
+      srcBytes--;
+      dstBytes -= n;
+      if(srcBytes < 0 || dstBytes < 0)
+      {
+        result = BRCUnpackError;
+        break;
+      }
+
+      c = *source++;
+
+      do
+      {
+        *dest++ = c;
+      }
+      while(--n > 0);
+    }
+  }
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/

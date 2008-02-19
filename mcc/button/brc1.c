@@ -20,7 +20,7 @@
 
 ***************************************************************************/
 
-#include <exec/types.h>
+#include "class.h"
 
 #include "Debug.h"
 
@@ -32,32 +32,45 @@
 #define MAXRUN 128
 #define MAXDAT 128
 
+#define BRCUnpackOK    0
+#define BRCUnpackError 1
+
 /***********************************************************************/
 
-BOOL BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0)
+int
+BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0)
 {
   signed char *source = pSource;
   signed char *dest = pDest;
   LONG srcBytes = srcBytes0;
   LONG dstBytes = dstBytes0;
+  int result = BRCUnpackOK;
 
   ENTER();
 
   while(dstBytes > 0)
   {
-    WORD n;
+    SHORT n;
 
-    if((srcBytes -= 1) < 0)
+    if(--srcBytes < 0)
+    {
+      result = BRCUnpackError;
       break;
+    }
 
     n = *source++;
 
     if(n >= 0)
     {
-      n += 1;
+      n++;
 
-      if((srcBytes -= n) < 0 || (dstBytes -= n) < 0)
+      srcBytes -= n;
+      dstBytes -= n;
+      if(srcBytes < 0 || dstBytes < 0)
+      {
+        result = BRCUnpackError;
         break;
+      }
 
       do
       {
@@ -69,10 +82,15 @@ BOOL BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG ds
     {
       signed char c;
 
-      n = -n+1;
+      n = -n + 1;
 
-      if((srcBytes -= 1) < 0 || (dstBytes -= n) < 0)
+      srcBytes--;
+      dstBytes -= n;
+      if(srcBytes < 0 || dstBytes < 0)
+      {
+        result = BRCUnpackError;
         break;
+      }
 
       c = *source++;
 
@@ -84,8 +102,8 @@ BOOL BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG ds
     }
   }
 
-  RETURN(dstBytes <= 0);
-  return dstBytes <= 0;
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
