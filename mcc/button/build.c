@@ -909,13 +909,14 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
 /***********************************************************************/
 
-static BYTE *
+static APTR
 getSource(struct MUIS_TheBar_Brush *image)
 {
-    BYTE *src;
+    APTR src;
 
     ENTER();
 
+    SHOWVALUE(DBF_ALWAYS, image->compressedSize);
     if (image->compressedSize)
     {
         ULONG size = image->dataTotalWidth*image->dataHeight;
@@ -923,13 +924,13 @@ getSource(struct MUIS_TheBar_Brush *image)
         if (isFlagSet(image->flags, BRFLG_ARGB))
             size *= 4;
 
-        if (!(src = gmalloc(size)))
+        if ((src = gmalloc(size)) == NULL)
         {
         	RETURN(NULL);
         	return NULL;
         }
 
-        if(BRCUnpack(image->data,src,image->compressedSize,size))
+        if(BRCUnpack(image->data,src,image->compressedSize,size) != 0)
         {
             gfree(src);
             RETURN(NULL);
@@ -961,7 +962,7 @@ freeSource(struct MUIS_TheBar_Brush *image,UBYTE *back)
 
 /***********************************************************************/
 
-static ULONG
+static BOOL
 makeSources(struct InstData *data,struct make *make)
 {
     ENTER();
@@ -974,6 +975,8 @@ makeSources(struct InstData *data,struct make *make)
         if (!(data->image->data = getSource(data->image)))
         {
             data->image->data = back;
+
+            RETURN(FALSE);
             return FALSE;
         }
 
@@ -1058,7 +1061,7 @@ makeSources(struct InstData *data,struct make *make)
 
 /***********************************************************************/
 
-static ULONG
+static BOOL
 makeSourcesRGB(struct InstData *data,struct make *make)
 {
     ENTER();
@@ -1068,9 +1071,11 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         struct copy    copy;
         UBYTE *back = data->image->data;
 
-        if (!(data->image->data = getSource(data->image)))
+        if ((data->image->data = getSource(data->image)) == NULL)
         {
             data->image->data = back;
+
+            RETURN(FALSE);
             return FALSE;
         }
 
@@ -1190,7 +1195,8 @@ buildBitMapsCyber(struct InstData *data)
 
     ENTER();
 
-    if (!(make = gmalloc(sizeof(struct make))))
+    D(DBF_ALWAYS, "buildBitMapsCyber");
+    if ((make = gmalloc(sizeof(struct make))) == NULL)
     {
     	LEAVE();
     	return;
@@ -1216,13 +1222,15 @@ buildBitMapsCyber(struct InstData *data)
         setFlag(make->flags, MFLG_Grey);
     setFlag(make->flags, MFLG_Cyber);
 
-    if (!makeSourcesRGB(data,make))
+    if (makeSourcesRGB(data,make) == FALSE)
     {
         gfree(make);
+
         LEAVE();
         return;
     }
 
+    D(DBF_ALWAYS, "made sources RGB");
     if((data->normalBM = AllocBitMap(w,h,24,BMF_MINPLANES|BMF_CLEAR,data->screen->RastPort.BitMap)))
     {
         struct RastPort rport;
@@ -1451,7 +1459,8 @@ buildBitMaps(struct InstData *data)
 
     ENTER();
 
-    if (!(make = gmalloc(sizeof(struct make))))
+    D(DBF_ALWAYS, "buildBitMaps");
+    if ((make = gmalloc(sizeof(struct make))) == NULL)
     {
     	LEAVE();
     	return;

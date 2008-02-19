@@ -119,7 +119,9 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     if (isFlagSet(flags, FLG_TextOnly))
     {
         viewMode = MUIV_TheBar_ViewMode_Text;
-        brush = sbrush = dbrush = NULL;
+        brush = NULL;
+        sbrush = NULL;
+        dbrush = NULL;
     }
     else
     {
@@ -140,83 +142,109 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
                 dbrush = NULL;
         }
         else
-            brush = sbrush = dbrush = NULL;
+        {
+            brush = NULL;
+            sbrush = NULL;
+            dbrush = NULL;
+        }
     }
 
     tag = attrs;
 
     #if defined(VIRTUAL)
     tag->ti_Tag   = MUIA_TheButton_InVirtgroup;
-    tag++->ti_Data  = TRUE;
+    tag->ti_Data    = TRUE;
+    tag++;
     #endif
 
     tag->ti_Tag    = MUIA_Disabled;
-    tag++->ti_Data = isFlagSet(bflags, BFLG_Disabled);
+    tag->ti_Data   = isFlagSet(bflags, BFLG_Disabled);
+    tag++;
 
     tag->ti_Tag    = MUIA_Selected;
-    tag++->ti_Data = isFlagSet(bflags, BFLG_Selected);
+    tag->ti_Data   = isFlagSet(bflags, BFLG_Selected);
+    tag++;
 
     tag->ti_Tag    = MUIA_Group_Horiz;
-    tag++->ti_Data = isFlagSet(flags, FLG_Horiz);
+    tag->ti_Data   = isFlagSet(flags, FLG_Horiz);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_MinVer;
-    tag++->ti_Data = 16;
+    tag->ti_Data   = 16;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_TheBar;
-    tag++->ti_Data = (IPTR)obj;
+    tag->ti_Data   = (IPTR)obj;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Image;
-    tag++->ti_Data = (IPTR)brush;
+    tag->ti_Data   = (IPTR)brush;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_SelImage;
-    tag++->ti_Data = (IPTR)sbrush;
+    tag->ti_Data   = (IPTR)sbrush;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_DisImage;
-    tag++->ti_Data = (IPTR)dbrush;
+    tag->ti_Data   = (IPTR)dbrush;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Label;
-    tag++->ti_Data = (IPTR)button->text;
+    tag->ti_Data   = (IPTR)button->text;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Immediate;
-    tag++->ti_Data = isFlagSet(bflags, BFLG_Immediate);
+    tag->ti_Data   = isFlagSet(bflags, BFLG_Immediate);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Toggle;
-    tag++->ti_Data = isFlagSet(bflags, BFLG_Toggle);
+    tag->ti_Data   = isFlagSet(bflags, BFLG_Toggle);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Borderless;
-    tag++->ti_Data = isFlagSet(flags, FLG_Borderless);
+    tag->ti_Data   = isFlagSet(flags, FLG_Borderless);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Raised;
-    tag++->ti_Data = isFlagSet(flags, FLG_Raised);
+    tag->ti_Data   = isFlagSet(flags, FLG_Raised);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Sunny;
-    tag++->ti_Data = isFlagSet(flags, FLG_Sunny);
+    tag->ti_Data   = isFlagSet(flags, FLG_Sunny);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Scaled;
-    tag++->ti_Data = isFlagSet(flags, FLG_Scaled);
+    tag->ti_Data   = isFlagSet(flags, FLG_Scaled);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_EnableKey;
-    tag++->ti_Data = isFlagSet(flags, FLG_EnableKeys);
+    tag->ti_Data   = isFlagSet(flags, FLG_EnableKeys);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_ViewMode;
-    tag++->ti_Data = viewMode;
+    tag->ti_Data   = viewMode;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_LabelPos;
-    tag++->ti_Data = data->labelPos;
+    tag->ti_Data   = data->labelPos;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_ID;
-    tag++->ti_Data = button->ID;
+    tag->ti_Data   = button->ID;
+    tag++;
 
     if (button->help)
     {
         tag->ti_Tag    = MUIA_ShortHelp;
-        tag++->ti_Data = (IPTR)button->help;
+        tag->ti_Data   = (IPTR)button->help;
+        tag++;
     }
 
     if (isFlagSet(flags, FLG_FreeStrip))
     {
         tag->ti_Tag    = MUIA_TheButton_Strip;
-        tag++->ti_Data = (IPTR)&data->strip;
+        tag->ti_Data   = (IPTR)&data->strip;
+        tag++;
     }
 
     if (userFlags || userFlags2)
@@ -224,89 +252,106 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
         if (isFlagSet(userFlags, UFLG_UserHorizTextGfxSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_HorizTextGfxSpacing;
-            tag++->ti_Data = data->horizTextGfxSpacing;
+            tag->ti_Data   = data->horizTextGfxSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserVertTextGfxSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_VertTextGfxSpacing;
-            tag++->ti_Data = data->vertTextGfxSpacing;
+            tag->ti_Data   = data->vertTextGfxSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserHorizInnerSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_HorizInnerSpacing;
-            tag++->ti_Data = data->horizInnerSpacing;
+            tag->ti_Data   = data->horizInnerSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserTopInnerSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_TopInnerSpacing;
-            tag++->ti_Data = data->topInnerSpacing;
+            tag->ti_Data   = data->topInnerSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserBottomInnerSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_BottomInnerSpacing;
-            tag++->ti_Data = data->bottomInnerSpacing;
+            tag->ti_Data   = data->bottomInnerSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserPrecision))
         {
             tag->ti_Tag    = MUIA_TheButton_Precision;
-            tag++->ti_Data = data->precision;
+            tag->ti_Data   = data->precision;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserDisMode))
         {
             tag->ti_Tag    = MUIA_TheButton_DisMode;
-            tag++->ti_Data = data->disMode;
+            tag->ti_Data   = data->disMode;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserScale))
         {
             tag->ti_Tag    = MUIA_TheButton_Scale;
-            tag++->ti_Data = data->scale;
+            tag->ti_Data   = data->scale;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserSpecialSelect))
         {
             tag->ti_Tag    = MUIA_TheButton_SpecialSelect;
-            tag++->ti_Data = isFlagSet(userFlags, UFLG_SpecialSelect);
+            tag->ti_Data   = isFlagSet(userFlags, UFLG_SpecialSelect);
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserTextOverUseShine))
         {
             tag->ti_Tag    = MUIA_TheButton_TextOverUseShine;
-            tag++->ti_Data = isFlagSet(userFlags, UFLG_TextOverUseShine);
+            tag->ti_Data   = isFlagSet(userFlags, UFLG_TextOverUseShine);
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserIgnoreSelImages))
         {
             tag->ti_Tag    = MUIA_TheButton_IgnoreSelImages;
-            tag++->ti_Data = isFlagSet(userFlags, UFLG_IgnoreSelImages);
+            tag->ti_Data   = isFlagSet(userFlags, UFLG_IgnoreSelImages);
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserIgnoreDisImages))
         {
             tag->ti_Tag    = MUIA_TheButton_IgnoreDisImages;
-            tag++->ti_Data = isFlagSet(userFlags, UFLG_IgnoreDisImages);
+            tag->ti_Data   = isFlagSet(userFlags, UFLG_IgnoreDisImages);
+            tag++;
         }
 
         if (isFlagSet(userFlags2, UFLG2_UserDontMove))
         {
             tag->ti_Tag    = MUIA_TheButton_DontMove;
-            tag++->ti_Data = isFlagSet(userFlags2, UFLG2_DontMove);
+            tag->ti_Data   = isFlagSet(userFlags2, UFLG2_DontMove);
+            tag++;
         }
 
         if (isFlagSet(userFlags2, UFLG2_NtRaiseActive))
         {
             tag->ti_Tag    = MUIA_TheButton_NtRaiseActive;
-            tag++->ti_Data = isFlagSet(userFlags2, UFLG2_NtRaiseActive);
+            tag->ti_Data   = isFlagSet(userFlags2, UFLG2_NtRaiseActive);
+            tag++;
         }
     }
 
     tag->ti_Tag = TAG_DONE;
+
+    // make sure we don't cause a buffer overrun
+    ASSERT(((UBYTE *)tag - (UBYTE *)attrs) / sizeof(struct TagItem) <= sizeof(attrs) / sizeof(struct TagItem));
 
     o = button->class ? NewObjectA(button->class,NULL,attrs) :
                         MUI_NewObjectA((STRPTR)MUIC_TheButton,attrs);
@@ -1557,8 +1602,8 @@ ULONG ptable[] =
 
 static BOOL
 makePicsFun(struct pack *pt,
-	   	      APTR pool,
-            ULONG dostrip,
+            APTR pool,
+            BOOL dostrip,
             struct MUIS_TheBar_Brush *sb,
             struct MUIS_TheBar_Brush *ssb,
             struct MUIS_TheBar_Brush *dsb,
@@ -1571,7 +1616,7 @@ makePicsFun(struct pack *pt,
 
     sb->data = ssb->data = dsb->data = NULL;
 
-  	if (dostrip || pt->strip || pt->pics)
+  	if (dostrip == TRUE || pt->strip || pt->pics)
     {
         struct Process *me;
         struct Window  *win;
@@ -1581,15 +1626,17 @@ makePicsFun(struct pack *pt,
         win = me->pr_WindowPtr;
         me->pr_WindowPtr = (struct Window *)-1;
 
-        if (pt->idrawer && (idrawer = Lock(pt->idrawer,SHARED_LOCK))) odir = CurrentDir(idrawer);
-        else idrawer = (BPTR)NULL;
+        if (pt->idrawer && (idrawer = Lock(pt->idrawer,SHARED_LOCK)))
+            odir = CurrentDir(idrawer);
+        else
+            idrawer = (BPTR)NULL;
 
-        if (dostrip || pt->strip)
+        if (dostrip == TRUE || pt->strip)
         {
             struct MUIS_TheBar_Button *b;
             ULONG                     brpsize, brsize, totsize;
 
-            if (dostrip)
+            if (dostrip == TRUE)
             {
                 copymem(sb,pt->stripBrush,sizeof(*sb));
                 if (pt->sstripBrush)
