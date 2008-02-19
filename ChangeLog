@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-19  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/brc1.c, mcc/button/brc1.c: fixed a bug in the ByteRun1 decoder which
+    caused internal images to be not drawn at all (like in demo5 and demo8).
+
 2008-02-18  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/button/utils.c: the own strlcpy() and strlcat() functions are only
@@ -14,7 +19,7 @@ MUI TheBar MCC class - ChangeLog
   *  ARGGGGGGGGGGG!
   *  OK, We are near something to be called "stable";
      still to test on classic...
-  *  OK, now the hard part: making button/class.c to work again 
+  *  OK, now the hard part: making button/class.c to work again
      everywhere. This would take time...
   *  trunk/mcp/class.c - Fixes again
 
@@ -32,7 +37,7 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-18  Alfonso Ranieri <alforan@tin.it>
 
-  * trunk/mcp/class.c - Trying to make it work with any MUI. Not sure if it is totally 
+  * trunk/mcp/class.c - Trying to make it work with any MUI. Not sure if it is totally
     fixed at the moment. Should be tested on MUI3.9/OS4 and classic
   * trunk/mcp/locale/TheBar_mcp.cd - added some missing definition
   * trunk/mcp/private.h - Removed some conditional preprocessor definition
