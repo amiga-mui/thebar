@@ -209,7 +209,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
       return 0;
     }
 
-    if(!(pool = CreatePool(MEMF_ANY, 2048, 1024)))
+    if((pool = CreatePool(MEMF_ANY, 2048, 1024)) == NULL)
     {
       RETURN(0);
       return 0;
@@ -1565,9 +1565,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         x = y = 0;
                     }
                 }
-                else
-                {
-                if (isFlagSet(data->flags, FLG_Sunny))
+                else if (isFlagSet(data->flags, FLG_Sunny))
                 {
                     if (strip)
                     {
@@ -1622,6 +1620,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         }
                     }
                     else
+                    {
                         if (strip)
                         {
     	                    if (useChunky)
@@ -1647,7 +1646,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                             x = y = 0;
                         }
-                }
+                    }
                 }
 
                 if((done = (bm || chunky)))
@@ -1700,7 +1699,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         if(bm)
                         {
                           #if defined(__amigaos4__)
-                    	    if(mask != NULL)
+                    	  if(mask != NULL)
                             BltBitMapTags(BLITA_Source,         bm,
                                           BLITA_Dest,           rp,
                                           BLITA_SrcType,        BLITT_BITMAP,
@@ -1727,10 +1726,10 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                           BLITA_Height,         ih,
                                           TAG_DONE);
                           #else
-                    	    if (mask != NULL)
-                    	        BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
-                    	    else
-                    	        BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
+                    	  if (mask != NULL)
+                    	      BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
+                    	  else
+                    	      BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
                           #endif
                         }
                     }
@@ -1886,37 +1885,37 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 }
                 else if(!ov && isFlagSet(data->flags, FLG_Sunny))
                 {
-                        if (strip)
+                    if (strip)
+                    {
+    	                if (isFlagSet(data->flags, FLG_Scaled))
                         {
-        	                if (isFlagSet(data->flags, FLG_Scaled))
-                            {
-                                if (useChunky)
-                                    chunky = data->gchunky;
+                            if (useChunky)
+                                chunky = data->gchunky;
 
-                                if (data->greyBM)
-                                {
-                                    bm = data->greyBM;
-                                }
-                            }
-                            else
+                            if (data->greyBM)
                             {
-                                if (useChunky)
-                                    if (data->strip->gchunky)
-                                        chunky = data->strip->gchunky;
-
-                                if (data->strip->greyBM)
-                                    bm = data->strip->greyBM;
+                                bm = data->greyBM;
                             }
                         }
                         else
                         {
                             if (useChunky)
-                                if (data->gchunky)
-                                    chunky = data->gchunky;
+                                if (data->strip->gchunky)
+                                    chunky = data->strip->gchunky;
 
-                            if (data->greyBM)
-                                bm = data->greyBM;
+                            if (data->strip->greyBM)
+                                bm = data->strip->greyBM;
                         }
+                    }
+                    else
+                    {
+                        if (useChunky)
+                            if (data->gchunky)
+                                chunky = data->gchunky;
+
+                        if (data->greyBM)
+                            bm = data->greyBM;
+                    }
                 }
 
                 if (bm || chunky)
@@ -2079,7 +2078,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                             {
       	                      //if (isFlagSet(data->image->flags, BRFLG_EmptyAlpha) && mask)
                               #if defined(__amigaos4__)
-                        	    if(mask != NULL)
+                              if(mask != NULL)
                                 BltBitMapTags(BLITA_Source,         bm,
                                               BLITA_Dest,           rp,
                                               BLITA_SrcType,        BLITT_BITMAP,
@@ -2108,7 +2107,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                               #else
       	                      if(mask != NULL)
                                   BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
-                        	    else
+                        	  else
                                   BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
                               #endif
                             }
