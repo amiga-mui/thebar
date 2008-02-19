@@ -696,18 +696,23 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             data->width  = lm->lm_MinMax.MinWidth;
             data->height = lm->lm_MinMax.MinHeight;
 
+			/* Please check what was commented */
             #if defined(VIRTUAL)
-              #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-              data->objWidth  = lm->lm_MinMax.MinWidth;
-              data->objHeight = lm->lm_MinMax.MinHeight;
-              #else
-              if(isFlagClear(data->flags, FLG_Framed))
+              //#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
+              data->objWidth   = lm->lm_MinMax.MinWidth;
+              data->objMWidth  = lm->lm_MinMax.MaxWidth;
+              data->objHeight  = lm->lm_MinMax.MinHeight;
+              data->objMHeight = lm->lm_MinMax.MaxHeight;
+              //#else
+              /*if(isFlagClear(data->flags, FLG_Framed))
               {
                 data->objWidth  = lm->lm_MinMax.MinWidth;
-    	          data->objHeight = lm->lm_MinMax.MinHeight;
+                data->objMWidth = lm->lm_MinMax.MaxWidth;
+                data->objHeight = lm->lm_MinMax.MinHeight;
+                data->objMeight = lm->lm_MinMax.MaxHeight;
               }
-   	          #endif
-	          #endif // VIRTUAL
+   	          #endif*/
+	        #endif // VIRTUAL
 
             data->lcols = cols;
             data->lrows = rows;
@@ -3181,18 +3186,38 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 /***********************************************************************/
 
 /*
+** Don't ask neither change.
+** This is such a strange thing, I can't explain,
+** In some rare condition without "forcing" the
+** already computed dimensions of the object in
+** AskMinMax, the group gets wrong height and
+** strange things happens. Very rare, but with
+** few lines of code, we simply force the right
+** dimensions and all is fine. Just for MUI<4.
+*/
+
+#ifdef VIRTUAL
 static ULONG
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
-    //register struct data *data = INST_DATA(cl,obj);
-    ULONG res = DoSuperMethodA(cl, obj, msg);
+    ULONG res = DoSuperMethodA(cl,obj,(Msg)msg);
 
-    msg->MinMaxInfo->MinWidth  = _subwidth(obj);
-    msg->MinMaxInfo->MinHeight = _subheight(obj);
+  	if (isFlagClear(lib_flags,BASEFLG_MUI4))
+    {
+	    struct InstData *data = INST_DATA(cl,obj);
+
+	    msg->MinMaxInfo->MinWidth  = data->objWidth;
+	    msg->MinMaxInfo->DefWidth  = data->objWidth;
+	    msg->MinMaxInfo->MaxWidth  = data->objMWidth;
+
+	    msg->MinMaxInfo->MinHeight = data->objHeight;
+	    msg->MinMaxInfo->DefHeight = data->objHeight;
+	    msg->MinMaxInfo->MaxHeight = data->objMHeight;
+	}
 
     return res;
 }
-*/
+#endif
 
 /***********************************************************************/
 
@@ -4491,7 +4516,9 @@ DISPATCHER(_Dispatcher)
     #endif
     case MUIM_Backfill:                 return mBackfill(cl,obj,(APTR)msg);
 
-    //case MUIM_AskMinMax:                return mAskMinMax(cl,obj,(APTR)msg);
+	#ifdef VIRTUAL
+    case MUIM_AskMinMax:                return mAskMinMax(cl,obj,(APTR)msg);
+	#endif
     case MUIM_CreateDragImage:          return mCreateDragImage(cl,obj,(APTR)msg);
     case MUIM_DeleteDragImage:          return mDeleteDragImage(cl,obj,(APTR)msg);
     //case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);
