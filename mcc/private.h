@@ -143,7 +143,9 @@ struct InstData
 
     #if defined(VIRTUAL)
     ULONG			               objWidth;
+    ULONG			               objMWidth;
     ULONG			               objHeight;
+    ULONG			               objMHeight;
     #endif
 
     char          		           frameSpec[256];

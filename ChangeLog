@@ -2,6 +2,20 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-19  Alfonso Ranieri <alforan@tin.it>
+
+  * Some little change to mcc/class.c and mcc/private.h
+    I noted a strange group layout happening in very rare
+    condition on MUI<4 and Virtual. Find a solution simply
+    forcing askMinMax. Example: strange on 68K, press the 
+    search button; bar height is incresed by one!
+    
+    Now the last part: I did't have a gcc 68K installed on MOS
+    neither on gentoo. I grabbed one, but I am not able to compile
+    TheBar with that. If someone could address me what I need for a 
+    safe 68K compilation... (I use SASC on MorphOS and atm TheBar 
+    seems very difficoult to compile with sas).
+
 2008-02-19  Jens Langner <Jens.Langner@light-speed.de>
 
   * Debug.h: replaced all abort() usages in our ASSERT() macros with the
