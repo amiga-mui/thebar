@@ -519,6 +519,15 @@ How to verify if the mouse is over a button:\n\
 - IntuiTicks: it is verified periodically\n\
 - MouseMove: it is verified at every mouse move
 ;
+Msg_SpacersSize_None (//)
+None
+;
+Msg_SpacersSize_OnePoint (//)
+One point
+;
+Msg_SpacersSize_TwoPoint (//)
+Two points
+;
 ;
 Msg_Info_First (600//)
 %s\n\

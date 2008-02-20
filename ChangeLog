@@ -2,6 +2,30 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-20  Alfonso Ranieri <alforan@tin.it>
+
+  * mcp/class.c - some changes to make it works on any MUI
+  * mcp/locale/TheBar_mcp.cd - added more space spacer strings
+  * mcc/class.c - again layout changes and added more space spacer
+  * mcc/button/class.c - many changes, expecially to mDraw()  
+  * include/mui/TheBar_mcc.h - added more space spacer definitions
+  Works fine on MorphOS/MUI4 and MorphOS/MUI3.9 - Compiles on gentoo 
+  cross for OS4, but TheBar-Test.c (see later); to test on classic.
+  Is TheBar-Test.c really needed? There are many demos that it could
+  be removed.
+
+--- Log for TheBar-Test ---
+.obj_os4/TheBar-Test.o(.sbss+0xc): In function `SaveFunc':
+TheBar-Test.c:103: multiple definition of `UtilityBase'
+/usr/local/amiga/ppc-amigaos/SDK/newlib/lib/crtbegin.o(.sbss+0x8): first defined here
+.obj_os4/TheBar-Test.o(.sbss+0x28): In function `SaveFunc':
+TheBar-Test.c:104: multiple definition of `IUtility'
+/usr/local/amiga/ppc-amigaos/SDK/newlib/lib/crtbegin.o(.sbss+0x4): first defined here
+collect2: ld returned 1 exit status
+make: *** [bin_os4/TheBar-Test] Error 1
+---
+
+
 2008-02-19  Alfonso Ranieri <alforan@tin.it>
 
   * Some little change to mcc/class.c and mcc/private.h
