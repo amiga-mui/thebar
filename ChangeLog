@@ -4,6 +4,7 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-20  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcp/locale/german.ct: updated german translation to latest changes.
   * mcc/class.c, mcc/button/class.c: reverted some of Alfonso's latest changes
     as these were based on old code. Alfonso, please learn how to use SubVersion
     properly. Otherwise our changes will get lost without comment.
