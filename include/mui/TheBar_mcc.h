@@ -274,9 +274,18 @@ enum
   MUIV_TheBar_SpacersSize_Quarter,
   MUIV_TheBar_SpacersSize_Half,
   MUIV_TheBar_SpacersSize_One,
+  MUIV_TheBar_SpacersSize_None,
+  MUIV_TheBar_SpacersSize_OnePoint,
+  MUIV_TheBar_SpacersSize_TwoPoint,
 
   MUIV_TheBar_SpacersSize_Last,
 };
+
+/* These are private for now */
+#define MUIV_TheBar_SpacersSize_PointsFlag   0x40
+#define MUIV_TheBar_SpacersSize_Points(x)    (MUIV_TheBar_SpacersSize_PointsFlag | (((ULONG)x) & 0x3f))
+#define MUIV_TheBar_SpacersSize_GetPoints(x) (((ULONG)x) & 0x3f)
+#define MUIV_TheBar_SpacersSize_IsValid(x)   ((((ULONG)x) & MUIV_TheBar_SpacersSize_PointsFlag) ? ((((ULONG)x) & 0xffffffbf)<=0x3f) : (((ULONG)x)<MUIV_TheBar_SpacersSize_Last))
 
 #define MUIV_TheBar_SkipPic ((STRPTR)(-1))
 
