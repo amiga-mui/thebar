@@ -119,7 +119,9 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     if (isFlagSet(flags, FLG_TextOnly))
     {
         viewMode = MUIV_TheBar_ViewMode_Text;
-        brush = sbrush = dbrush = NULL;
+        brush = NULL;
+        sbrush = NULL;
+        dbrush = NULL;
     }
     else
     {
@@ -140,83 +142,109 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
                 dbrush = NULL;
         }
         else
-            brush = sbrush = dbrush = NULL;
+        {
+            brush = NULL;
+            sbrush = NULL;
+            dbrush = NULL;
+        }
     }
 
     tag = attrs;
 
     #if defined(VIRTUAL)
     tag->ti_Tag   = MUIA_TheButton_InVirtgroup;
-    tag++->ti_Data  = TRUE;
+    tag->ti_Data    = TRUE;
+    tag++;
     #endif
 
     tag->ti_Tag    = MUIA_Disabled;
-    tag++->ti_Data = isFlagSet(bflags, BFLG_Disabled);
+    tag->ti_Data   = isFlagSet(bflags, BFLG_Disabled);
+    tag++;
 
     tag->ti_Tag    = MUIA_Selected;
-    tag++->ti_Data = isFlagSet(bflags, BFLG_Selected);
+    tag->ti_Data   = isFlagSet(bflags, BFLG_Selected);
+    tag++;
 
     tag->ti_Tag    = MUIA_Group_Horiz;
-    tag++->ti_Data = isFlagSet(flags, FLG_Horiz);
+    tag->ti_Data   = isFlagSet(flags, FLG_Horiz);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_MinVer;
-    tag++->ti_Data = 16;
+    tag->ti_Data   = 16;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_TheBar;
-    tag++->ti_Data = (IPTR)obj;
+    tag->ti_Data   = (IPTR)obj;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Image;
-    tag++->ti_Data = (IPTR)brush;
+    tag->ti_Data   = (IPTR)brush;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_SelImage;
-    tag++->ti_Data = (IPTR)sbrush;
+    tag->ti_Data   = (IPTR)sbrush;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_DisImage;
-    tag++->ti_Data = (IPTR)dbrush;
+    tag->ti_Data   = (IPTR)dbrush;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Label;
-    tag++->ti_Data = (IPTR)button->text;
+    tag->ti_Data   = (IPTR)button->text;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Immediate;
-    tag++->ti_Data = isFlagSet(bflags, BFLG_Immediate);
+    tag->ti_Data   = isFlagSet(bflags, BFLG_Immediate);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Toggle;
-    tag++->ti_Data = isFlagSet(bflags, BFLG_Toggle);
+    tag->ti_Data   = isFlagSet(bflags, BFLG_Toggle);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Borderless;
-    tag++->ti_Data = isFlagSet(flags, FLG_Borderless);
+    tag->ti_Data   = isFlagSet(flags, FLG_Borderless);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Raised;
-    tag++->ti_Data = isFlagSet(flags, FLG_Raised);
+    tag->ti_Data   = isFlagSet(flags, FLG_Raised);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Sunny;
-    tag++->ti_Data = isFlagSet(flags, FLG_Sunny);
+    tag->ti_Data   = isFlagSet(flags, FLG_Sunny);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_Scaled;
-    tag++->ti_Data = isFlagSet(flags, FLG_Scaled);
+    tag->ti_Data   = isFlagSet(flags, FLG_Scaled);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_EnableKey;
-    tag++->ti_Data = isFlagSet(flags, FLG_EnableKeys);
+    tag->ti_Data   = isFlagSet(flags, FLG_EnableKeys);
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_ViewMode;
-    tag++->ti_Data = viewMode;
+    tag->ti_Data   = viewMode;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_LabelPos;
-    tag++->ti_Data = data->labelPos;
+    tag->ti_Data   = data->labelPos;
+    tag++;
 
     tag->ti_Tag    = MUIA_TheButton_ID;
-    tag++->ti_Data = button->ID;
+    tag->ti_Data   = button->ID;
+    tag++;
 
     if (button->help)
     {
         tag->ti_Tag    = MUIA_ShortHelp;
-        tag++->ti_Data = (IPTR)button->help;
+        tag->ti_Data   = (IPTR)button->help;
+        tag++;
     }
 
     if (isFlagSet(flags, FLG_FreeStrip))
     {
         tag->ti_Tag    = MUIA_TheButton_Strip;
-        tag++->ti_Data = (IPTR)&data->strip;
+        tag->ti_Data   = (IPTR)&data->strip;
+        tag++;
     }
 
     if (userFlags || userFlags2)
@@ -224,89 +252,106 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
         if (isFlagSet(userFlags, UFLG_UserHorizTextGfxSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_HorizTextGfxSpacing;
-            tag++->ti_Data = data->horizTextGfxSpacing;
+            tag->ti_Data   = data->horizTextGfxSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserVertTextGfxSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_VertTextGfxSpacing;
-            tag++->ti_Data = data->vertTextGfxSpacing;
+            tag->ti_Data   = data->vertTextGfxSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserHorizInnerSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_HorizInnerSpacing;
-            tag++->ti_Data = data->horizInnerSpacing;
+            tag->ti_Data   = data->horizInnerSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserTopInnerSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_TopInnerSpacing;
-            tag++->ti_Data = data->topInnerSpacing;
+            tag->ti_Data   = data->topInnerSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserBottomInnerSpacing))
         {
             tag->ti_Tag    = MUIA_TheButton_BottomInnerSpacing;
-            tag++->ti_Data = data->bottomInnerSpacing;
+            tag->ti_Data   = data->bottomInnerSpacing;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserPrecision))
         {
             tag->ti_Tag    = MUIA_TheButton_Precision;
-            tag++->ti_Data = data->precision;
+            tag->ti_Data   = data->precision;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserDisMode))
         {
             tag->ti_Tag    = MUIA_TheButton_DisMode;
-            tag++->ti_Data = data->disMode;
+            tag->ti_Data   = data->disMode;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserScale))
         {
             tag->ti_Tag    = MUIA_TheButton_Scale;
-            tag++->ti_Data = data->scale;
+            tag->ti_Data   = data->scale;
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserSpecialSelect))
         {
             tag->ti_Tag    = MUIA_TheButton_SpecialSelect;
-            tag++->ti_Data = isFlagSet(userFlags, UFLG_SpecialSelect);
+            tag->ti_Data   = isFlagSet(userFlags, UFLG_SpecialSelect);
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserTextOverUseShine))
         {
             tag->ti_Tag    = MUIA_TheButton_TextOverUseShine;
-            tag++->ti_Data = isFlagSet(userFlags, UFLG_TextOverUseShine);
+            tag->ti_Data   = isFlagSet(userFlags, UFLG_TextOverUseShine);
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserIgnoreSelImages))
         {
             tag->ti_Tag    = MUIA_TheButton_IgnoreSelImages;
-            tag++->ti_Data = isFlagSet(userFlags, UFLG_IgnoreSelImages);
+            tag->ti_Data   = isFlagSet(userFlags, UFLG_IgnoreSelImages);
+            tag++;
         }
 
         if (isFlagSet(userFlags, UFLG_UserIgnoreDisImages))
         {
             tag->ti_Tag    = MUIA_TheButton_IgnoreDisImages;
-            tag++->ti_Data = isFlagSet(userFlags, UFLG_IgnoreDisImages);
+            tag->ti_Data   = isFlagSet(userFlags, UFLG_IgnoreDisImages);
+            tag++;
         }
 
         if (isFlagSet(userFlags2, UFLG2_UserDontMove))
         {
             tag->ti_Tag    = MUIA_TheButton_DontMove;
-            tag++->ti_Data = isFlagSet(userFlags2, UFLG2_DontMove);
+            tag->ti_Data   = isFlagSet(userFlags2, UFLG2_DontMove);
+            tag++;
         }
 
         if (isFlagSet(userFlags2, UFLG2_NtRaiseActive))
         {
             tag->ti_Tag    = MUIA_TheButton_NtRaiseActive;
-            tag++->ti_Data = isFlagSet(userFlags2, UFLG2_NtRaiseActive);
+            tag->ti_Data   = isFlagSet(userFlags2, UFLG2_NtRaiseActive);
+            tag++;
         }
     }
 
     tag->ti_Tag = TAG_DONE;
+
+    // make sure we don't cause a buffer overrun
+    ASSERT(((UBYTE *)tag - (UBYTE *)attrs) / sizeof(struct TagItem) <= sizeof(attrs) / sizeof(struct TagItem));
 
     o = button->class ? NewObjectA(button->class,NULL,attrs) :
                         MUI_NewObjectA((STRPTR)MUIC_TheButton,attrs);
@@ -398,7 +443,6 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             LONG   cols = 0, rows = 0, numBut, c;
             UWORD  butMaxMinWidth, butMaxMinHeight, maxMinWidth, maxMinHeight, width, height, addSpace;
 
-            D(DBF_ALWAYS, "layout start");
             butMaxMinWidth  = butMaxMinHeight = numBut = 0;
 
             for(cstate = (Object *)lm->lm_Children->mlh_Head; (child = NextObject(&cstate)); )
@@ -411,8 +455,6 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                 if ((butMaxMinHeight<MUI_MAXMAX) && (_minheight(child)>butMaxMinHeight))
                     butMaxMinHeight = _minheight(child);
-
-                D(DBF_ALWAYS, "but %3ld minh %3ld", numBut, _minheight(child));
 
                 numBut++;
             }
@@ -478,29 +520,29 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                             switch (data->spacersSize)
                             {
                                 case MUIV_TheBar_SpacersSize_Quarter:
-                                 w /= 4;
-                                 break;
+                                  w /= 4;
+                                break;
 
                                 case MUIV_TheBar_SpacersSize_Half:
-                                 w /= 2;
-                                 break;
+                                  w /= 2;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_None:
-                                	w = 0;
-                                    break;
+                                  w = 0;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_OnePoint:
-                                	w = 1;
-                                    break;
+                                  w = 1;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_TwoPoint:
-                                    w = 2;
-                                    break;
+                                  w = 2;
+                                break;
 
                                 default:
-                                	if (data->spacersSize & MUIV_TheBar_SpacersSize_PointsFlag)
-										w = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
-                                    break;
+                              	  if(isFlagSet(data->spacersSize, MUIV_TheBar_SpacersSize_PointsFlag))
+								    w = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
+                                break;
                             }
                             addSpace = 0;
                             break;
@@ -559,29 +601,29 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                             switch (data->spacersSize)
                             {
                                 case MUIV_TheBar_SpacersSize_Quarter:
-                                 w /= 4;
-                                 break;
+                                  w /= 4;
+                                break;
 
                                 case MUIV_TheBar_SpacersSize_Half:
-                                 w /= 2;
-                                 break;
+                                  w /= 2;
+                                break;
 
-								case MUIV_TheBar_SpacersSize_None:
-                                	w = 0;
-                                    break;
+                 				case MUIV_TheBar_SpacersSize_None:
+                                  w = 0;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_OnePoint:
-                                	w = 1;
-                                    break;
+                                  w = 1;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_TwoPoint:
-                                    w = 2;
-                                    break;
+                                  w = 2;
+                                break;
 
                                 default:
-                                	if (data->spacersSize & MUIV_TheBar_SpacersSize_PointsFlag)
-										w = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
-                                    break;
+                                  if(isFlagSet(data->spacersSize, MUIV_TheBar_SpacersSize_PointsFlag))
+								    w = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
+                                break;
                             }
                             height += w;
                             addSpace = 0;
@@ -682,7 +724,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             data->width  = lm->lm_MinMax.MinWidth;
             data->height = lm->lm_MinMax.MinHeight;
 
-			/* PLease check what was commented */
+			/* Please check what was commented */
             #if defined(VIRTUAL)
               //#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
               data->objWidth   = lm->lm_MinMax.MinWidth;
@@ -703,7 +745,6 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             data->lcols = cols;
             data->lrows = rows;
 
-            D(DBF_ALWAYS, "layout end");
             RETURN(0);
             return 0;
         }
@@ -777,33 +818,33 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                             break;
 
                         case MUIV_TheButton_Spacer_Button:
-                            width  = data->buttonWidth;
+                            width = data->buttonWidth;
                             switch (data->spacersSize)
                             {
                                 case MUIV_TheBar_SpacersSize_Quarter:
-                                 	width /= 4;
-                                 	break;
+                                  width /= 4;
+                                break;
 
                                 case MUIV_TheBar_SpacersSize_Half:
-                                	width /= 2;
-                                 	break;
+                                  width /= 2;
+                                break;
 
-								case MUIV_TheBar_SpacersSize_None:
-                                	width = 0;
-                                    break;
+                 				case MUIV_TheBar_SpacersSize_None:
+                                  width = 0;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_OnePoint:
-                                	width = 1;
-                                    break;
+                                  width = 1;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_TwoPoint:
-                                    width = 2;
-                                    break;
+                                  width = 2;
+                                break;
 
                                 default:
-                                	if (data->spacersSize & MUIV_TheBar_SpacersSize_PointsFlag)
-										width = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
-                                    break;
+                                  if(isFlagSet(data->spacersSize, MUIV_TheBar_SpacersSize_PointsFlag))
+								    width = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
+                                break;
                             }
                             height = data->buttonHeight;
                             if (x)
@@ -1009,29 +1050,29 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                             switch (data->spacersSize)
                             {
                                 case MUIV_TheBar_SpacersSize_Quarter:
-                                	height /= 4;
-                                 	break;
+                                  height /= 4;
+                                break;
 
                                 case MUIV_TheBar_SpacersSize_Half:
-                                	height /= 2;
-                                 	break;
+                                  height /= 2;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_None:
-                                	height = 0;
-                                    break;
+                                  height = 0;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_OnePoint:
-                                	height = 1;
-                                    break;
+                                  height = 1;
+                                break;
 
 								case MUIV_TheBar_SpacersSize_TwoPoint:
-                                    height = 2;
-                                    break;
+                                  height = 2;
+                                break;
 
                                 default:
-                                	if (data->spacersSize & MUIV_TheBar_SpacersSize_PointsFlag)
-										height = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
-                                    break;
+                                  if(isFlagSet(data->spacersSize, MUIV_TheBar_SpacersSize_PointsFlag))
+									height = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
+                                break;
                             }
                             width  = data->buttonWidth;
                             if (y)
@@ -1620,23 +1661,25 @@ ULONG ptable[] =
 ** This makes sense in normal operations.
 */
 
-static ULONG
+static BOOL
 makePicsFun(struct pack *pt,
-	   	    APTR pool,
-			ULONG dostrip,
+            APTR pool,
+            BOOL dostrip,
             struct MUIS_TheBar_Brush *sb,
-			struct MUIS_TheBar_Brush *ssb,
+            struct MUIS_TheBar_Brush *ssb,
             struct MUIS_TheBar_Brush *dsb,
             UWORD *nbrPtr)
 {
-    ULONG pics = FALSE;
+    BOOL pics = FALSE;
     UWORD nbr = 0;
 
     ENTER();
 
-    sb->data = ssb->data = dsb->data = NULL;
+    sb->data = NULL;
+    ssb->data = NULL;
+    dsb->data = NULL;
 
-	if (dostrip || pt->strip || pt->pics)
+    if (dostrip == TRUE || pt->strip || pt->pics)
     {
         struct Process *me;
         struct Window  *win;
@@ -1646,26 +1689,32 @@ makePicsFun(struct pack *pt,
         win = me->pr_WindowPtr;
         me->pr_WindowPtr = (struct Window *)-1;
 
-        if (pt->idrawer && (idrawer = Lock(pt->idrawer,SHARED_LOCK))) odir = CurrentDir(idrawer);
-        else idrawer = (BPTR)NULL;
+        if (pt->idrawer && (idrawer = Lock(pt->idrawer,SHARED_LOCK)))
+            odir = CurrentDir(idrawer);
+        else
+            idrawer = (BPTR)NULL;
 
-        if (dostrip || pt->strip)
+        if (dostrip == TRUE || pt->strip)
         {
             struct MUIS_TheBar_Button *b;
             ULONG                     brpsize, brsize, totsize;
 
-            if (dostrip)
+            if (dostrip == TRUE)
             {
                 copymem(sb,pt->stripBrush,sizeof(*sb));
-                if (pt->sstripBrush) copymem(ssb,pt->sstripBrush,sizeof(*ssb));
-                if (pt->dstripBrush) copymem(dsb,pt->dstripBrush,sizeof(*dsb));
+                if (pt->sstripBrush)
+                    copymem(ssb,pt->sstripBrush,sizeof(*ssb));
+                if (pt->dstripBrush)
+                    copymem(dsb,pt->dstripBrush,sizeof(*dsb));
             }
             else
             {
                 if (loadDTBrush(pool,sb,pt->strip))
                 {
-                    if (pt->sstrip) loadDTBrush(pool,ssb,pt->sstrip);
-                    if (pt->dstrip) loadDTBrush(pool,dsb,pt->dstrip);
+                    if (pt->sstrip)
+                        loadDTBrush(pool,ssb,pt->sstrip);
+                    if (pt->dstrip)
+                        loadDTBrush(pool,dsb,pt->dstrip);
                 }
             }
 
@@ -1700,8 +1749,10 @@ makePicsFun(struct pack *pt,
                 brsize  = sizeof(struct MUIS_TheBar_Brush)*nbr;
 
                 totsize = brpsize+brsize;
-                if (ssb->data) totsize += brpsize+brsize;
-                if (dsb->data) totsize += brpsize+brsize;
+                if (ssb->data)
+                    totsize += brpsize+brsize;
+                if (dsb->data)
+                    totsize += brpsize+brsize;
 
                 if ((pt->brushes = allocVecPooled(pool,totsize)))
                 {
@@ -1728,15 +1779,19 @@ makePicsFun(struct pack *pt,
                             pt->sbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
                             sbrush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt->sbrushes+brpsize);
                         }
-                        else sbrush = NULL;
+                        else
+                            sbrush = NULL;
 
                         if (dsb->data)
                         {
-                            if (ssb->data) pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
-                            else pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
+                            if (ssb->data)
+                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
+                            else
+                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
                             dbrush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt->dbrushes+brpsize);
                         }
-                        else dbrush = NULL;
+                        else
+                            dbrush = NULL;
 
                         for (x = i = vofs = 0; i<(int)rows; i++, vofs += h+vertSpace)
                         {
@@ -1776,8 +1831,8 @@ makePicsFun(struct pack *pt,
                         }
 
                         pt->brushes[x] = NULL;
-                        if (sbrush) pt->sbrushes[x] = NULL;
-                        if (dbrush) pt->dbrushes[x] = NULL;
+                        pt->sbrushes[x] = NULL;
+                        pt->dbrushes[x] = NULL;
 
                         pics = TRUE;
                     }
@@ -1792,10 +1847,8 @@ makePicsFun(struct pack *pt,
                         freeVecPooled(pool,pt->brushes);
 
                         pt->brushes = NULL;
-                        if (pt->sbrushes)
-                            pt->sbrushes = NULL;
-                        if (pt->dbrushes)
-                            pt->dbrushes = NULL;
+                        pt->sbrushes = NULL;
+                        pt->dbrushes = NULL;
                     }
                 }
             }
@@ -1850,30 +1903,36 @@ makePicsFun(struct pack *pt,
 
                         if (pt->dpics)
                         {
-                            if (pt->spics) pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
-                            else pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
+                            if (pt->spics)
+                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
+                            else
+                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
 
                             dbrush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt->dbrushes+brpsize);
                         }
 
                         p = pt->pics;
-                        if (pt->sbrushes) sp = pt->spics;
-                        if (pt->dbrushes) dp = pt->dpics;
+                        if (pt->sbrushes)
+                            sp = pt->spics;
+                        if (pt->dbrushes)
+                            dp = pt->dpics;
 
                         for (i = 0; *p; i++, p++)
                         {
-                            if (!loadDTBrush(pool,pt->brushes[i] = brush+i,*p)) break;
+                            if (!loadDTBrush(pool,pt->brushes[i] = brush+i,*p))
+                                break;
 
                             if (pt->sbrushes)
                             {
-                                if (*sp!=MUIV_TheBar_SkipPic) loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp);
+                                if (*sp!=MUIV_TheBar_SkipPic)
+                                    loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp);
                                 sp++;
                             }
 
                             if (pt->dbrushes)
                             {
-                                if (*dp!=MUIV_TheBar_SkipPic) loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp);
-
+                                if (*dp!=MUIV_TheBar_SkipPic)
+                                    loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp);
                                 dp++;
                             }
                         }
@@ -1883,14 +1942,14 @@ makePicsFun(struct pack *pt,
                             freeVecPooled(pool,pt->brushes);
 
                             pt->brushes = NULL;
-                            if (pt->sbrushes) pt->sbrushes = NULL;
-                            if (pt->dbrushes) pt->dbrushes = NULL;
+                            pt->sbrushes = NULL;
+                            pt->dbrushes = NULL;
                         }
                         else
                         {
                             pt->brushes[i] = NULL;
-                            if (pt->sbrushes) pt->sbrushes[i] = NULL;
-                            if (pt->dbrushes) pt->dbrushes[i] = NULL;
+                            pt->sbrushes[i] = NULL;
+                            pt->dbrushes[i] = NULL;
 
                             setFlag(pt->flags, FLG_FreeBrushes);
                             pics = TRUE;
@@ -1909,28 +1968,30 @@ makePicsFun(struct pack *pt,
         me->pr_WindowPtr = win;
     }
 
-	if (pics) *nbrPtr = nbr;
+  	if (pics == TRUE)
+        *nbrPtr = nbr;
 
-	RETURN(pics);
+    RETURN(pics);
     return pics;
 }
 
-static ULONG
+static BOOL
 makePics(struct pack *pt,
-		 APTR pool,
-		 struct MUIS_TheBar_Brush *sb,
-		 struct MUIS_TheBar_Brush *ssb,
+         APTR pool,
+         struct MUIS_TheBar_Brush *sb,
+         struct MUIS_TheBar_Brush *ssb,
          struct MUIS_TheBar_Brush *dsb,
-		 UWORD *nbrPtr)
+         UWORD *nbrPtr)
 {
-    ULONG pics;
+    BOOL pics;
 
     ENTER();
 
     pics = makePicsFun(pt,pool,FALSE,sb,ssb,dsb,nbrPtr);
-    if (!pics && pt->stripBrush) pics = makePicsFun(pt,pool,TRUE,sb,ssb,dsb,nbrPtr);
+    if (pics == FALSE && pt->stripBrush)
+        pics = makePicsFun(pt,pool,TRUE,sb,ssb,dsb,nbrPtr);
 
-    if (!pics && pt->brushes)
+    if (pics == FALSE && pt->brushes)
     {
         struct MUIS_TheBar_Brush **brush;
         UWORD                    nbr;
@@ -1954,13 +2015,13 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     APTR                      pool;
     struct TagItem            *attrs = msg->ops_AttrList;
     struct MUIS_TheBar_Brush  sb, ssb, dsb;
-    ULONG                     pics;
+    BOOL                      pics;
     UWORD                     nbr = 0;
 
     ENTER();
 
     if ((GetTagData(MUIA_TheBar_MinVer,0,attrs) > LIB_VERSION) ||
-        !(pool = CreatePool(MEMF_ANY,2048,1024)))
+        (pool = CreatePool(MEMF_ANY,2048,1024)) == NULL)
         return 0;
 
     memset(&pt,0,sizeof(pt));
@@ -2157,9 +2218,12 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
             if (isFlagSet(userFlags2, UFLG2_UserSpacersSize))
             {
-                /*if (pt.spacersSize<MUIV_TheBar_SpacersSize_Last)
+                /*
+                if (pt.spacersSize<MUIV_TheBar_SpacersSize_Last)
                     data->spacersSize = pt.spacersSize;
-                else clearFlag(userFlags2, UFLG2_UserSpacersSize);*/
+                else
+                    clearFlag(userFlags2, UFLG2_UserSpacersSize);
+                */
                 if (MUIV_TheBar_SpacersSize_IsValid(pt.spacersSize))
                 	data->spacersSize = pt.spacersSize;
                 else
@@ -3193,7 +3257,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 ** AskMinMax, the group gets wrong height and
 ** strange things happens. Very rare, but with
 ** few lines of code, we simply force the right
-** dimensions and all is fine. Just in MUI<4.
+** dimensions and all is fine. Just for MUI<4.
 */
 
 #ifdef VIRTUAL
@@ -4464,7 +4528,6 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 
         data->di.di = data->dm;
 
-
         result = (IPTR)&data->di;
     }
 
@@ -4474,7 +4537,8 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 
 /***********************************************************************/
 
-/*static IPTR
+/*
+static IPTR
 mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -4492,7 +4556,8 @@ mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg
 
     RETURN(0);
     return 0;
-}*/
+}
+*/
 
 /***********************************************************************/
 
