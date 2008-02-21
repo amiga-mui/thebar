@@ -1675,7 +1675,7 @@ makePicsFun(struct pack *pt,
 
     ENTER();
 
-    sb->data = NULL;
+    sb->data  = NULL;
     ssb->data = NULL;
     dsb->data = NULL;
 
@@ -1691,8 +1691,7 @@ makePicsFun(struct pack *pt,
 
         if (pt->idrawer && (idrawer = Lock(pt->idrawer,SHARED_LOCK)))
             odir = CurrentDir(idrawer);
-        else
-            idrawer = (BPTR)NULL;
+        else idrawer = (BPTR)NULL;
 
         if (dostrip == TRUE || pt->strip)
         {
@@ -1702,19 +1701,15 @@ makePicsFun(struct pack *pt,
             if (dostrip == TRUE)
             {
                 copymem(sb,pt->stripBrush,sizeof(*sb));
-                if (pt->sstripBrush)
-                    copymem(ssb,pt->sstripBrush,sizeof(*ssb));
-                if (pt->dstripBrush)
-                    copymem(dsb,pt->dstripBrush,sizeof(*dsb));
+                if (pt->sstripBrush) copymem(ssb,pt->sstripBrush,sizeof(*ssb));
+                if (pt->dstripBrush) copymem(dsb,pt->dstripBrush,sizeof(*dsb));
             }
             else
             {
                 if (loadDTBrush(pool,sb,pt->strip))
                 {
-                    if (pt->sstrip)
-                        loadDTBrush(pool,ssb,pt->sstrip);
-                    if (pt->dstrip)
-                        loadDTBrush(pool,dsb,pt->dstrip);
+                    if (pt->sstrip) loadDTBrush(pool,ssb,pt->sstrip);
+                    if (pt->dstrip) loadDTBrush(pool,dsb,pt->dstrip);
                 }
             }
 
@@ -1779,19 +1774,15 @@ makePicsFun(struct pack *pt,
                             pt->sbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
                             sbrush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt->sbrushes+brpsize);
                         }
-                        else
-                            sbrush = NULL;
+                        else sbrush = NULL;
 
                         if (dsb->data)
                         {
-                            if (ssb->data)
-                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
-                            else
-                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
+                            if (ssb->data) pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
+                            else pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
                             dbrush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt->dbrushes+brpsize);
                         }
-                        else
-                            dbrush = NULL;
+                        else dbrush = NULL;
 
                         for (x = i = vofs = 0; i<(int)rows; i++, vofs += h+vertSpace)
                         {
@@ -1831,15 +1822,14 @@ makePicsFun(struct pack *pt,
                         }
 
                         pt->brushes[x] = NULL;
-                        pt->sbrushes[x] = NULL;
-                        pt->dbrushes[x] = NULL;
+                        if (sbrush) pt->sbrushes[x] = NULL;
+                        if (dbrush) pt->dbrushes[x] = NULL;
 
                         pics = TRUE;
                     }
                 }
 
-                if (pics)
-                    setFlag(pt->flags, FLG_FreeStrip);
+                if (pics) setFlag(pt->flags, FLG_FreeStrip);
                 else
                 {
                     if (pt->brushes)
@@ -1847,8 +1837,8 @@ makePicsFun(struct pack *pt,
                         freeVecPooled(pool,pt->brushes);
 
                         pt->brushes = NULL;
-                        pt->sbrushes = NULL;
-                        pt->dbrushes = NULL;
+                        if (pt->sbrushes) pt->sbrushes = NULL;
+                        if (pt->dbrushes) pt->dbrushes = NULL;
                     }
                 }
             }
@@ -1903,19 +1893,15 @@ makePicsFun(struct pack *pt,
 
                         if (pt->dpics)
                         {
-                            if (pt->spics)
-                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
-                            else
-                                pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
+                            if (pt->spics) pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)sbrush+brsize);
+                            else pt->dbrushes = (struct MUIS_TheBar_Brush **)((UBYTE *)brush+brsize);
 
                             dbrush = (struct MUIS_TheBar_Brush *)((UBYTE *)pt->dbrushes+brpsize);
                         }
 
                         p = pt->pics;
-                        if (pt->sbrushes)
-                            sp = pt->spics;
-                        if (pt->dbrushes)
-                            dp = pt->dpics;
+                        if (pt->sbrushes) sp = pt->spics;
+                        if (pt->dbrushes) dp = pt->dpics;
 
                         for (i = 0; *p; i++, p++)
                         {
@@ -1942,14 +1928,14 @@ makePicsFun(struct pack *pt,
                             freeVecPooled(pool,pt->brushes);
 
                             pt->brushes = NULL;
-                            pt->sbrushes = NULL;
-                            pt->dbrushes = NULL;
+                            if (pt->sbrushes) pt->sbrushes = NULL;
+                            if (pt->dbrushes) pt->dbrushes = NULL;
                         }
                         else
                         {
                             pt->brushes[i] = NULL;
-                            pt->sbrushes[i] = NULL;
-                            pt->dbrushes[i] = NULL;
+                            if (pt->sbrushes) pt->sbrushes[i] = NULL;
+                            if (pt->dbrushes) pt->dbrushes[i] = NULL;
 
                             setFlag(pt->flags, FLG_FreeBrushes);
                             pics = TRUE;
