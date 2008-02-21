@@ -1755,7 +1755,7 @@ freeBitMaps(struct InstData *data)
       gfree(data->dnchunky);
   }
 
-  if(!data->normalBM)
+  if(data->normalBM)
   {
     if(isFlagClear(data->flags, FLG_CyberDeep) && isFlagClear(data->flags, FLG_Strip))
     {

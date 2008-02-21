@@ -4,7 +4,13 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-21  Alfonso Ranieri <alforan@tin.it>
 
-  * mcc/class. - fixed hits in makePicsFun() because not checking
+  * mcc/build.c , button/build.c - in freeBitMaps() it must be
+    "if(strip->normalBM)" and not "if(!strip->normalBM)",
+    (again, who changed that?)
+
+2008-02-21  Alfonso Ranieri <alforan@tin.it>
+
+  * mcc/class.c - fixed hits in makePicsFun() because not checking
     some stuff (who changed that?)
 
 2008-02-20  Jens Langner <Jens.Langner@light-speed.de>
