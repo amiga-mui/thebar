@@ -125,7 +125,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
     		ULONG success = TRUE;
 
       		// check for MUI 3.9+
-      		if (MUIMasterBase->lib_Version>=MUIVER20*20)
+      		if (MUIMasterBase->lib_Version >= MUIVER20)
       		{
         		lib_flags |= BASEFLG_MUI20;
 
