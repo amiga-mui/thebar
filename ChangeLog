@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-20  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp/library.c: fixed incorrect MUI3.9 version check because 20*20 is
+    definitly not 20 :)
+
 2008-02-20  Alfonso Ranieri <alforan@tin.it>
 
   * mcp/popbackground.c - fixed dispatchers definitions and some broken SetAttrs
