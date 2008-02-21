@@ -1442,7 +1442,7 @@ freeBitMaps(struct InstData *data)
             freeVecPooled(data->pool,data->strip.dnchunky);
     }
 
-    if(!strip->normalBM)
+    if(strip->normalBM)
     {
         if (isFlagClear(data->flags, FLG_CyberDeep))
         {
