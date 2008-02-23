@@ -254,7 +254,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             isFlagSet(pack.flags, FLG_Borderless) ? TAG_IGNORE : MUIA_Background, MUII_ButtonBack,
             isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameDynamic : TAG_IGNORE, TRUE,
             isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameVisible : TAG_IGNORE, FALSE,
-            isFlagSet(lib_flags, BASEFLG_MUI4) ? TAG_IGNORE : MUIA_CustomBackfill, isFlagSet(pack.flags, FLG_Borderless),
+            isFlagSet(lib_flags, BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, isFlagSet(pack.flags, FLG_Borderless),
             TAG_MORE,(IPTR)attrs)))
     {
         struct InstData *data = INST_DATA(cl,obj);
@@ -761,7 +761,6 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 		if (isFlagSet(data->flags,FLG_Disabled))
         {
         	clearFlag(data->flags,FLG_MouseOver);
-
         }
         else
         {
@@ -811,10 +810,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     res = DoSuperMethodA(cl,obj,(Msg)msg);
     clearFlag(data->flags,FLG_RedrawBack);
-    if (redraw)
-    {
-        MUI_Redraw(obj,MADF_DRAWOBJECT);
-    }
+    if (redraw) MUI_Redraw(obj,MADF_DRAWOBJECT);
 
     if (vmt)  vmt->ti_Tag  = MUIA_TheButton_ViewMode;
     if (rat)  rat->ti_Tag  = MUIA_TheButton_Raised;
@@ -2136,7 +2132,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         }
 
         if(isFlagClear(lib_flags, BASEFLG_MUI4) && bl &&
-           ((se && isFlagClear(data->userFlags, UFLG_NtRaiseActive)) || (ov && ra)))
+           ((se && isFlagClear(data->userFlags, UFLG_NtRaiseActive)) || (ov && ra && !di)))
         {
             ULONG dsize = data->fSize>1;
             LONG  shine, shadow;
@@ -2487,74 +2483,43 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
 
 /***********************************************************************/
 
-/*static IPTR
-mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
-{
-    struct InstData *data = INST_DATA(cl,obj);
-
-    //if (isFlagSet(lib_flags, BASEFLG_MUI20)
-    //	  return DoSuperMethodA(cl,obj,(Msg)msg);
-
-
-    if (data->tb &&
-        (isFlagSet(data->flags, FLG_IsSpacer) ||
-         (isFlagSet(data->flags, FLG_Raised) && (isFlagClear(data->flags, FLG_MouseOver) || isFlagSet(data->flags, FLG_Selected) || !data->activeBack))||
-         isFlagClear(data->flags, FLG_Raised)))
-    {
-        DoMethod(data->tb,MUIM_Backfill,
-            msg->left,
-            msg->top,
-            msg->right,
-            msg->bottom,
-            msg->left+msg->xoffset,
-            msg->top+msg->yoffset,
-            0);
-    }
-    else
-    {
-        DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,msg->xoffset,msg->yoffset,0);
-    }
-
-    return 0;
-}*/
-
-/***********************************************************************/
-
 static IPTR
 mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     ULONG           dosuper = TRUE;
+ 	Object 			*p;
     IPTR            result = 0; //gcc
 
     ENTER();
-
-    if (isFlagClear(lib_flags,BASEFLG_MUI4))
-	{
-        Object *p = (Object *)xget(obj,MUIA_Parent);
-
-        if (p)
+	
+    p = (Object *)xget(obj,MUIA_Parent);
+    if (p)
+    {
+    	if ((data->flags & FLG_IsSpacer) ||
+     		((data->flags & FLG_Raised) && (!(data->flags & FLG_MouseOver) || (data->flags & FLG_Selected) || !data->activeBack))||
+     		!(data->flags & FLG_Raised))
         {
-        	if (isFlagSet(data->flags,FLG_IsSpacer) ||
-            	(isFlagClear(data->flags,FLG_Selected) &&
-                 (isFlagSet(data->flags,FLG_Raised|FLG_MouseOver) && !data->activeBack)))
-            {
-                result = DoMethod(p,MUIM_DrawBackground,
-		            msg->left,
-		            msg->top,
-		            msg->right-msg->left+1,
-		            msg->bottom-msg->top+1,
-		            msg->left+msg->xoffset,
-		            msg->top+msg->yoffset,
-		            0);
+            result = DoMethod(p,MUIM_Backfill,
+	            msg->left,
+	            msg->top,
+	            msg->right,
+	            msg->bottom,
+	            msg->left+msg->xoffset,
+	            msg->top+msg->yoffset,
+	            0);
 
-				dosuper = FALSE;
-		    }
+			dosuper = FALSE;
 	    }
-	}
+    }
 
     if (dosuper)
-    	result = DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,msg->xoffset,msg->yoffset,0);
+    {
+	    if (isFlagSet(lib_flags,BASEFLG_MUI20))
+    	  result = DoSuperMethodA(cl,obj,(Msg)msg);
+		else
+          result = DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,msg->xoffset,msg->yoffset,0);
+	}
 
     RETURN(result);
     return result;
