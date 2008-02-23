@@ -232,7 +232,18 @@ struct MUIS_Popbackground_Status
 #define MUIA_Window_IconifyGadget    0x8042BC26
 #endif
 
-/***********************************************************************/
+
+#ifndef MUIA_Imagedisplay_Spec
+#define MUIA_Imagedisplay_Spec 0x8042a547 
+#endif
+
+#ifndef MUIA_Imageadjust_Type
+#define MUIA_Imageadjust_Type 0x80422f2b
+#endif
+
+#ifndef MUIA_Framedisplay_Spec
+#define MUIA_Framedisplay_Spec 0x80421794
+#endif
 
 #ifndef MUIM_Mccprefs_RegisterGadget
 #define MUIM_Mccprefs_RegisterGadget 0x80424828
@@ -253,6 +264,35 @@ struct MUIS_Popbackground_Status
 #endif
 #ifndef MUIV_Imageadjust_Type_Pen
 #define MUIV_Imageadjust_Type_Pen 3
+#endif
+
+#ifndef MUIC_Crawling
+#define MUIC_Crawling "Crawling.mcc"
+#endif
+
+#ifndef CrawlingObject 
+#define CrawlingObject MUI_NewObject(MUIC_Crawling
+#endif
+
+#ifndef MUIM_CreateDragImage
+#define MUIM_CreateDragImage 0x8042eb6f /* V18 */ /* Custom Class */
+struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
+
+struct MUI_DragImage
+{
+    struct BitMap *bm;
+    WORD width;  
+    WORD height;
+    WORD touchx; 
+    WORD touchy;
+    ULONG flags;
+};
+
+#endif
+
+#ifndef MUIM_DeleteDragImage 
+#define MUIM_DeleteDragImage 0x80423037
+struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;}; 
 #endif
 
 /***********************************************************************/

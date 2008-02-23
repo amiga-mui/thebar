@@ -24,8 +24,6 @@
 #include "private.h"
 #include "rev.h"
 
-#include <mui/muiundoc.h>
-
 #include "TheBar_mcp.h"
 
 #include "SDI_hook.h"

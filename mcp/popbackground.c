@@ -25,8 +25,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <mui/muiundoc.h>
-
 #include "locale.h"
 #include "private.h"
 
