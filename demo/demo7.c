@@ -140,7 +140,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     Object *bar, *list;
 
-    Printf("new()\n");
+    //Printf("new()\n");
     if ((obj = (Object *)DoSuperNew(cl,obj,
 
             Child, bar = TheBarVirtObject,
@@ -314,7 +314,7 @@ BOOPSI_DISPATCHER(IPTR,_dispatcher,cl,obj,msg)
 DISPATCHER(_dispatcher)
 #endif
 {
-    Printf("dispatcher()\n");
+    //Printf("dispatcher()\n");
     switch(msg->MethodID)
     {
         case OM_NEW:          return mNew(cl,obj,(APTR)msg);
@@ -330,6 +330,8 @@ DISPATCHER(_dispatcher)
 BOOPSI_DISPATCHER_END
 #endif
 
+const char *usedClasses[] = {"TheBar.mcc",NULL};
+    
 int
 main(UNUSED int argc,char **argv)
 {
@@ -343,7 +345,7 @@ main(UNUSED int argc,char **argv)
         {
             struct MUI_CustomClass *mainGroupClass;
 
-            if ((mainGroupClass = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct data),ENTRY(_dispatcher))) != NULL)
+            if ((mainGroupClass = MUI_CreateCustomClass(NULL,(STRPTR)MUIC_Group,NULL,sizeof(struct data),ENTRY(_dispatcher))) != NULL)
             {
                 Object *app, *win;
 
@@ -352,8 +354,9 @@ main(UNUSED int argc,char **argv)
                         MUIA_Application_Version,       "$VER: TheBarDemo7 1.0 (24.6.2003)",
                         MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
                         MUIA_Application_Author,        "Alfonso Ranieri <alforan@tin.it>",
-                        MUIA_Application_Description,  "TheBar example",
-                        MUIA_Application_Base,         "THEBAREXAMPLE",
+                        MUIA_Application_Description,   "TheBar example",
+                        MUIA_Application_Base,          "THEBAREXAMPLE",
+                        MUIA_Application_UsedClasses,   usedClasses,
 
                         SubWindow, win = WindowObject,
                             MUIA_Window_ID,             MAKE_ID('M','A','I','N'),

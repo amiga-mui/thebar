@@ -32,8 +32,6 @@
 #include <intuition/icclass.h>
 #include <intuition/gadgetclass.h>
 
-#include <mui/muiundoc.h>
-
 #include "locale.h"
 #include "private.h"
 

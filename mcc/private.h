@@ -27,8 +27,6 @@
 
 #include "TheBar_mcp.h"
 
-#include <mui/muiundoc.h>
-
 /***************************************************************************/
 
 extern ULONG lib_flags;

@@ -32,8 +32,6 @@
 #include <datatypes/pictureclass.h>
 #include <libraries/asl.h>
 
-#include <mui/muiundoc.h>
-
 #include <stdlib.h>
 #include <stdio.h>
 

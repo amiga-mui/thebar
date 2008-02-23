@@ -2,6 +2,13 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-23  Alfonso Ranieri <alforan@tin.it>
+
+  * Added MUIA_Application_UsedClasses to all demos
+  * Removed include/mui/muiundoc.h and needed only
+    needed MUI undocs stuff to each class.h
+  * Some little fix somewhere
+
 2008-02-23  Matthias Rustler <mrustler@gmx.de>
   * Update of AROS port
 

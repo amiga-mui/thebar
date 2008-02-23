@@ -24,8 +24,6 @@
 #include "private.h"
 #include "locale.h"
 
-#include <mui/muiundoc.h>
-
 #include "SDI_stdarg.h"
 #include "SDI_compiler.h"
 
@@ -59,32 +57,36 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 /***********************************************************************/
 
 #if !defined(__MORPHOS__) && !defined(__AROS__)
-
 int
 stch_l(const char *chr_ptr,long *u_ptr)
 {
 	const char *str = chr_ptr;
     ULONG      val = 0;
 
-	for (;;)
+	if (str)
 	{
-        unsigned char c = (unsigned char)*str;
+		for (;;)
+		{
+        	unsigned char c = (unsigned char)*str;
 
-        if (c>='0' && c<='9') c -= '0';
-        else if (c>='a' && c<='f') c -= 'a'-10;
-	         else if (c>='A' && c<='F') c -= 'A'-10;
-				  else break;
+			if (!c) break;
 
-		val <<= 4;
-        val += c;
-        str++;
+        	if (c>='0' && c<='9') c -= '0';
+        	else if (c>='a' && c<='f') c -= 'a'-10;
+	    	     else if (c>='A' && c<='F') c -= 'A'-10;
+					  else break;
+
+			val <<= 4;
+        	val += c;
+        
+			str++;
+		}
 	}
-
+	
 	*u_ptr = (long)val;
 
-	return (int)(str-chr_ptr);
+	return str-chr_ptr;
 }
-
 #endif
 
 /***********************************************************************/

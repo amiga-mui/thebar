@@ -27,8 +27,6 @@
 #include <prefs/prefhdr.h>
 #include <libraries/asl.h>
 
-#include <mui/muiundoc.h>
-
 #include "locale.h"
 #include "rev.h"
 

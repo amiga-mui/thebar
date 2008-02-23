@@ -99,6 +99,28 @@ struct scale
 };
 
 /***********************************************************************/
+/*
+** MUI undocs
+*/
+
+#ifndef MUIM_Backfill
+#define MUIM_Backfill 0x80428d73
+struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; LONG lum; };
+#endif
+
+#ifndef MUIA_CustomBackfill
+#define MUIA_CustomBackfill  0x80420a63
+#endif
+
+#ifndef MUIM_CustomBackfill  
+#define MUIM_CustomBackfill  MUIM_Backfill
+#endif
+
+#ifndef MUIP_CustomBackfill
+#define MUIP_CustomBackfill  MUIP_Backfill
+#endif
+
+/***********************************************************************/
 
 // xget()
 // Gets an attribute value from a MUI object
