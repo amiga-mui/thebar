@@ -1202,17 +1202,22 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                 if (cdepth)
                 {
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
-                  #if defined(__MORPHOS__) || defined(__AROS__)
-                  // ignore the return code for MOS and AROS, OS3 and OS4 do it correctly
+
+			      #if !defined(__amigaos4__) && !defined(__AROS__)
+                  // ignore the return code for mos broken pdt
+                  if (isFlagSet(lib_flags,BASEFLG_BROKENMOSPDT)) res = TRUE;
+				  #endif
+
+                  #ifdef __AROS__
+                  // ignore the return code for AROS
                   res = TRUE;
                   #endif
                 }
                 else
                 {
+                  // NOPE AROSMAN. YOU CAN'T IGNORE THIS ONE; JUST SKIP to ReadLine8()!
+                  #ifndef __AROS__
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_LUT8,width,0,0,width,height);
-                  #ifdef __AROS__
-                  // ignore the return code for AROS (?), MOS, OS3 and OS4 do it correctly
-                  res = TRUE;
                   #endif
                 }
 

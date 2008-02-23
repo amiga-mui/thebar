@@ -2,6 +2,26 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-22  Alfonso Ranieri <alforan@tin.it>
+
+  * mcp/utils.c - changed stch_l(); it must be
+    int stch_l(const char *chr_ptr,long *u_ptr);
+    returning the number of the converted chars,
+    otherwise os3 mcp classes are all not working well;
+  * mcp/library.c - added a ClassExpunge() call if ClassInit()
+    fails;
+  * mcp/class.c - fixed group frame gadget in prefs os3
+    section;
+  * mcc/private.h - added BASEFLG_BROKENMOSPDT flags
+    for that damned morphos broken picdt;
+  * mcc/class.c - loadDTBrush() does a better check for
+    MorphOS now; mSetup() start a handler for MUI3.8 so
+    that borderless-raised buttons can be deactivated if
+    the window becomes inactive;
+  * mcc/library.c - added a ClassExpunge() call if ClassInit()
+    fails;
+  * there must be something else I don't remember atm.
+
 2008-02-21  Alfonso Ranieri <alforan@tin.it>
 
   * mcc/build.c , button/build.c - in freeBitMaps() it must be

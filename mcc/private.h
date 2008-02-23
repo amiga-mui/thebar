@@ -41,9 +41,10 @@ extern struct Library *PictureDTBase;
 
 enum
 {
-  BASEFLG_Init  = 1<<0,
-  BASEFLG_MUI20 = 1<<1,
-  BASEFLG_MUI4  = 1<<2,
+  BASEFLG_Init         = 1<<0,
+  BASEFLG_MUI20        = 1<<1,
+  BASEFLG_MUI4         = 1<<2,
+  BASEFLG_BROKENMOSPDT = 1<<3,
 };
 
 /***************************************************************************/
