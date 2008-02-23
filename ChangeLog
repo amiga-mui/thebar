@@ -2,20 +2,19 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-22  Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mui/muiundoc.h: Added aliases for the MUIM_Backfill and
+    MUIP_Backfill definitions which were often called "CustomBackfill"
+    for MUI versions prior to 3.9.
+
 2008-02-22  Alfonso Ranieri <alforan@tin.it>
 
   * Fixed mcc/library.c mos broken dt check
-
-2008-02-22  Alfonso Ranieri <alforan@tin.it>
-
-  OK, last fixes. It now works on MOS/MUI3.9
-  MOS/MUI4 classic/MUI3.8. Please don't add
-  any feature or whatever, but consider it
-  frozen.
-
-
-2008-02-22  Alfonso Ranieri <alforan@tin.it>
-
+  * OK, last fixes. It now works on MOS/MUI3.9
+    MOS/MUI4 classic/MUI3.8. Please don't add
+    any feature or whatever, but consider it
+    frozen.
   * mcp/utils.c - changed stch_l(); it must be
     int stch_l(const char *chr_ptr,long *u_ptr);
     returning the number of the converted chars,
@@ -39,9 +38,6 @@ MUI TheBar MCC class - ChangeLog
   * mcc/build.c , button/build.c - in freeBitMaps() it must be
     "if(strip->normalBM)" and not "if(!strip->normalBM)",
     (again, who changed that?)
-
-2008-02-21  Alfonso Ranieri <alforan@tin.it>
-
   * mcc/class.c - fixed hits in makePicsFun() because not checking
     some stuff (who changed that?)
 
