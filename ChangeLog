@@ -4,6 +4,10 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-22  Alfonso Ranieri <alforan@tin.it>
 
+  * Fixed mcc/library.c mos broken dt check
+
+2008-02-22  Alfonso Ranieri <alforan@tin.it>
+
   OK, last fixes. It now works on MOS/MUI3.9
   MOS/MUI4 classic/MUI3.8. Please don't add
   any feature or whatever, but consider it

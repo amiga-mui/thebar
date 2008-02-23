@@ -119,7 +119,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
 
         if (mos)
         {
-          if (PictureDTBase->lib_Version<=50)
+          if ((PictureDTBase->lib_Version<50) ||
+              (PictureDTBase->lib_Version==50 && PictureDTBase->lib_Revision<17))
           	  setFlag(lib_flags,BASEFLG_BROKENMOSPDT);
 	    }
   	  }
