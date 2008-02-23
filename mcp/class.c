@@ -892,11 +892,11 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     }
 	else
     {
-    	ptr = (STRPTR)xget(data->frameShinePen, MUIA_Pendisplay_Spec);
-	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_FrameShinePen);
+    	ptr = (STRPTR)xget(data->barFrameShinePen, MUIA_Pendisplay_Spec);
+	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarFrameShinePen);
 
-    	ptr = (STRPTR)xget(data->frameShadowPen, MUIA_Pendisplay_Spec);
-	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_FrameShadowPen);
+    	ptr = (STRPTR)xget(data->barFrameShadowPen, MUIA_Pendisplay_Spec);
+	    addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_BarFrameShadowPen);
 
     	val = xget(data->frameStyle, MUIA_Cycle_Active);
 	    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_FrameStyle);

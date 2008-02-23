@@ -294,7 +294,7 @@ ULONG xget(Object *obj, const ULONG attr);
 Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
-ULONG stch_l(char *chr_ptr, ULONG *u_ptr);
+int stch_l(const char *chr_ptr, long *u_ptr);
 #endif
 
 /* utils.c */

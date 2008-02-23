@@ -113,6 +113,18 @@ static BOOL ClassInit(UNUSED struct Library *base)
 
       PictureDTBase = OpenLibrary("picture.datatype", 0);
 
+      #if !defined(__amigaos4__) && !defined(__AROS__)
+      {
+        struct Resident *mos = FindResident("MorphOS");
+
+        if (mos)
+        {
+          if (PictureDTBase->lib_Version<=50)
+          	  setFlag(lib_flags,BASEFLG_BROKENMOSPDT);
+	    }
+  	  }
+      #endif
+
       // check the version of MUI)
       if(MUIMasterBase->lib_Version >= MUIVER20)
       {
@@ -129,6 +141,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
       return(TRUE);
     }
   }
+
+  ClassExpunge(base);
 
   RETURN(FALSE);
   return(FALSE);
@@ -172,7 +186,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
     DataTypesBase = NULL;
   }
 
-  clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
+  clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4|BASEFLG_BROKENMOSPDT);
 
   LEAVE();
 

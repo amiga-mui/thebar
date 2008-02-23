@@ -128,6 +128,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
     }
   }
 
+  ClassExpunge(base);
+
   RETURN(FALSE);
   return(FALSE);
 }
