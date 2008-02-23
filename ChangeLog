@@ -4,23 +4,31 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-22  Alfonso Ranieri <alforan@tin.it>
 
+  OK, last fixes. It now works on MOS/MUI3.9
+  MOS/MUI4 classic/MUI3.8. Please don't add
+  any feature or whatever, but consider it
+  frozen.
+
+
+2008-02-22  Alfonso Ranieri <alforan@tin.it>
+
   * mcp/utils.c - changed stch_l(); it must be
     int stch_l(const char *chr_ptr,long *u_ptr);
     returning the number of the converted chars,
-    otherwise os3 mcp classes are all not working well;
+    otherwise os3 mcp classes are all not working well
   * mcp/library.c - added a ClassExpunge() call if ClassInit()
-    fails;
-  * mcp/class.c - fixed group frame gadget in prefs os3
-    section;
+    fails
+  * mcp/class.c - fixed group frame gadget to prefs os3
+    section
   * mcc/private.h - added BASEFLG_BROKENMOSPDT flags
-    for that damned morphos broken picdt;
+    for that damned morphos broken picdt
   * mcc/class.c - loadDTBrush() does a better check for
     MorphOS now; mSetup() start a handler for MUI3.8 so
     that borderless-raised buttons can be deactivated if
-    the window becomes inactive;
+    the window becomes inactive
   * mcc/library.c - added a ClassExpunge() call if ClassInit()
-    fails;
-  * there must be something else I don't remember atm.
+    fails
+  * there must be something else I don't remember
 
 2008-02-21  Alfonso Ranieri <alforan@tin.it>
 

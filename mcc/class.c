@@ -3043,7 +3043,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     {
 	  if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
       {
-	    strlcpy(data->frameSpec, ptr, sizeof(data->frameSpec));
+	    strlcpy(data->frameSpec,ptr,sizeof(data->frameSpec));
     	SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(IPTR)data->frameSpec,TAG_DONE);
 	  }
     }
@@ -3181,11 +3181,14 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
                 DoMethod(button->obj,MUIM_TheButton_Build);
     }
 
-    memset(&data->eh,0,sizeof(data->eh));
-    data->eh.ehn_Class  = cl;
-    data->eh.ehn_Object = obj;
-    data->eh.ehn_Events = IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW;
-    //DoMethod(_win(obj),MUIM_Window_AddEventHandler,(IPTR)&data->eh);
+  	if (isFlagClear(lib_flags,BASEFLG_MUI20))
+    {
+	    memset(&data->eh,0,sizeof(data->eh));
+    	data->eh.ehn_Class  = cl;
+	    data->eh.ehn_Object = obj;
+    	data->eh.ehn_Events = IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW;
+	    DoMethod(_win(obj),MUIM_Window_AddEventHandler,(IPTR)&data->eh);
+	}
 
     #if defined(VIRTUAL)
     setFlag(data->flags, FLG_IsInVirtgroup);
@@ -3224,7 +3227,8 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
         freeFramePens(obj,data);
     #endif
 
-    //DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
+  	if (isFlagClear(lib_flags,BASEFLG_MUI20))
+    	DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
 
     if (isFlagSet(data->flags, FLG_FreeStrip))
         freeBitMaps(data);
@@ -3584,7 +3588,7 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 
   ENTER();
 
-  if(isAnyFlagSet(lib_flags,BASEFLG_MUI20|BASEFLG_MUI4))
+  if (isFlagSet(lib_flags,BASEFLG_MUI20))
 	return DoSuperMethodA(cl,obj,(Msg)msg);
 
   if(data->gradbm)
@@ -4528,27 +4532,37 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 
 /***********************************************************************/
 
-/*
+
 static IPTR
 mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    struct Button *button, *succ;
-
-    ENTER();
-
-    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
+  	if (isFlagClear(lib_flags,BASEFLG_MUI20))
     {
-        if (isFlagSet(button->flags, BFLG_Sleep))
-            continue;
+    	struct InstData *data = INST_DATA(cl,obj);
+	    struct Button *button, *succ;
 
-        set(button->obj,MUIA_TheButton_MouseOver,FALSE);
-    }
+	    ENTER();
 
-    RETURN(0);
-    return 0;
+	    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
+	    {
+	        if (isFlagSet(button->flags, BFLG_Sleep))
+	            continue;
+
+	        set(button->obj,MUIA_TheButton_MouseOver,FALSE);
+	    }
+
+	    RETURN(0);
+	    return 0;
+	}
+    else
+    {
+        ULONG res = DoSuperMethodA(cl,obj,(Msg)msg);
+
+	    RETURN(res);
+	    return res;
+	}
 }
-*/
+
 
 /***********************************************************************/
 
@@ -4580,7 +4594,7 @@ DISPATCHER(_Dispatcher)
 	#endif
     case MUIM_CreateDragImage:          return mCreateDragImage(cl,obj,(APTR)msg);
     case MUIM_DeleteDragImage:          return mDeleteDragImage(cl,obj,(APTR)msg);
-    //case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);
+    case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);
 
     case MUIM_Group_InitChange:         return mInitChange(cl,obj,(APTR)msg);
     case MUIM_Group_ExitChange:         return mExitChange(cl,obj,(APTR)msg);
