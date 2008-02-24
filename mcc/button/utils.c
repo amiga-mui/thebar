@@ -322,11 +322,11 @@ ULONG peekQualifier(void)
 
   if((port = CreateMsgPort()) != NULL)
   {
-    struct IORequest *iorequest;
+    struct IOStdReq *iorequest;
 
-    if((iorequest = CreateIORequest(port, sizeof(*iorequest))) != NULL)
+    if((iorequest = (struct IOStdReq *)CreateIORequest(port, sizeof(*iorequest))) != NULL)
     {
-      if(OpenDevice("input.device", 0, iorequest, 0) == 0)
+      if(OpenDevice("input.device", 0, (struct IORequest*)iorequest, 0) == 0)
       {
         struct Library *InputBase = (struct Library *)iorequest->io_Device;
         #ifdef __amigaos4__
@@ -336,7 +336,7 @@ ULONG peekQualifier(void)
         rc = PeekQualifier();
 
         DROPINTERFACE(IInput);
-        CloseDevice(iorequest);
+        CloseDevice((struct IORequest*)iorequest);
       }
       DeleteIORequest(iorequest);
     }

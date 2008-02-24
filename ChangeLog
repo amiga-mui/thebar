@@ -10,7 +10,10 @@ MUI TheBar MCC class - ChangeLog
   * Some little fix somewhere
 
 2008-02-23  Matthias Rustler <mrustler@gmx.de>
+
   * Update of AROS port
+  * Replaced IORequest by IOStdReq to silence the "iorequest too short"
+    warnings under AROS
 
 2008-02-22  Jens Langner <Jens.Langner@light-speed.de>
 
