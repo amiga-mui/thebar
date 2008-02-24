@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-24  Alfonso Ranieri <alforan@tin.it>
+
+  * gooooshhh what a bug in class.c while loading brushes...
+    This is my very own fault :P
+
 2008-02-23  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/utils.c: fixed a minor compiler warning.
