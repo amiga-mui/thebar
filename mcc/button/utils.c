@@ -58,7 +58,7 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 }
 #endif
 
-
+#if !defined(__amigaos4__)
 /***********************************************************************/
 
 // own strlcpy/strlcat are only required for classic OS3 compiles and also
@@ -91,7 +91,9 @@ strlcpy(char *dst, const char *src, size_t siz)
 
         return(s - src - 1);        /* count does not include NUL */
 }
+#endif
 
+#if !defined(__amigaos4__)
 size_t
 strlcat(char *dst, const char *src, size_t siz)
 {
@@ -119,6 +121,7 @@ strlcat(char *dst, const char *src, size_t siz)
 
         return(dlen + (s - src));        /* count does not include NUL */
 }
+#endif
 
 #endif
 
@@ -338,7 +341,7 @@ ULONG peekQualifier(void)
         DROPINTERFACE(IInput);
         CloseDevice((struct IORequest*)iorequest);
       }
-      DeleteIORequest(iorequest);
+      DeleteIORequest((struct IORequest *)iorequest);
     }
     DeleteMsgPort(port);
   }

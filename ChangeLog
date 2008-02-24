@@ -2,6 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-23  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/utils.c: fixed a minor compiler warning.
+
 2008-02-23  Alfonso Ranieri <alforan@tin.it>
 
   * Added MUIA_Application_UsedClasses to all demos
