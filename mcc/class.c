@@ -114,12 +114,13 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
       }
     }
 
+	brush  = NULL;
+    sbrush = NULL;
+    dbrush = NULL;
+
     if (isFlagSet(flags, FLG_TextOnly))
     {
         viewMode = MUIV_TheBar_ViewMode_Text;
-        brush = NULL;
-        sbrush = NULL;
-        dbrush = NULL;
     }
     else
     {
@@ -131,19 +132,9 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
 
             if (data->sbrushes)
                 sbrush = data->sbrushes[button->img];
-            else
-                sbrush = NULL;
 
             if (data->dbrushes)
                 dbrush = data->dbrushes[button->img];
-            else
-                dbrush = NULL;
-        }
-        else
-        {
-            brush = NULL;
-            sbrush = NULL;
-            dbrush = NULL;
         }
     }
 
@@ -1914,14 +1905,20 @@ makePicsFun(struct pack *pt,
                             if (pt->sbrushes)
                             {
                                 if (*sp!=MUIV_TheBar_SkipPic)
-                                    loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp);
+                                {
+                                	if (!loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp))
+                                    	pt->sbrushes[i] = NULL;
+                                }
                                 sp++;
                             }
 
                             if (pt->dbrushes)
                             {
                                 if (*dp!=MUIV_TheBar_SkipPic)
-                                    loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp);
+                                {
+								    if (!loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp))
+                                        pt->dbrushes[i] = NULL;
+                                }
                                 dp++;
                             }
                         }
