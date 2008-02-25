@@ -4,6 +4,10 @@ MUI TheBar MCC class - ChangeLog
 
 2008-02-25  Alfonso Ranieri <alforan@tin.it>
 
+  * Fixed makefiles DESTDIR locations
+
+2008-02-25  Alfonso Ranieri <alforan@tin.it>
+
   * Added install target in makefiles
   * Revisited mos broken dt detection
   * Little fix to b2chunky even if that app is quite
