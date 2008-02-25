@@ -89,6 +89,7 @@ DATE  = date
 RM    = rm -f
 RMDIR = rm -rf
 MKDIR = mkdir
+CP    = cp
 
 # override commands for native builds
 ifeq ($(HOST), AmigaOS4)
@@ -163,6 +164,8 @@ ifeq ($(OS), os4)
   # additional object files required
   M68KSTUBS = $(OBJDIR)/mccclass_68k.o
 
+  # install dest dir
+  DESTDIR = MUI:Libs/MUI
 else
 ifeq ($(OS), os3)
 
@@ -179,6 +182,9 @@ ifeq ($(OS), os3)
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
+
+  # install dest dir
+  DESTDIR = MUI:Libs/MUI
 
 else
 ifeq ($(OS), mos)
@@ -197,6 +203,9 @@ ifeq ($(OS), mos)
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug
 
+  # install dest dir
+  DESTDIR = Sys:Classes/MUI
+
 else
 ifeq ($(OS), aros)
 
@@ -211,6 +220,8 @@ ifeq ($(OS), aros)
   # Compiler/Linker flags
   CPU     =
 
+  # install dest dir
+  DESTDIR = MUI:Libs/MUI
 endif
 endif
 endif
@@ -332,6 +343,12 @@ distclean: clean
 	-$(RMDIR) $(OBJDIR)/mcc
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)
+
+.PHONY: install
+install: all
+	@$(CP) $(MCCTARGET) $(DESTDIR)
+	@$(CP) $(MCCVTARGET) $(DESTDIR)
+	@printf '\033[32mInstalled.\033[0m\n'
 
 ## DEPENDENCY INCLUDE #################
 

@@ -2,6 +2,13 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-25  Alfonso Ranieri <alforan@tin.it>
+
+  * Added install target in makefiles
+  * Revisited mos broken dt detection
+  * Little fix to b2chunky even if that app is quite
+    broken and obsolete
+
 2008-02-24  Alfonso Ranieri <alforan@tin.it>
 
   * gooooshhh what a bug in class.c while loading brushes...
