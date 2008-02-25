@@ -114,14 +114,15 @@ static BOOL ClassInit(UNUSED struct Library *base)
       PictureDTBase = OpenLibrary("picture.datatype", 0);
 
       #if !defined(__amigaos4__) && !defined(__AROS__)
+      if (PictureDTBase)
       {
-        struct Resident *mos = FindResident("MorphOS");
-
-        if (mos)
+        if (FindResident("MorphOS"))
         {
           if ((PictureDTBase->lib_Version<50) ||
               (PictureDTBase->lib_Version==50 && PictureDTBase->lib_Revision<17))
+          {
           	  setFlag(lib_flags,BASEFLG_BROKENMOSPDT);
+          }
 	    }
   	  }
       #endif
