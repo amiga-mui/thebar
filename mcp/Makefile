@@ -89,7 +89,7 @@ DATE  = date
 RM    = rm -f
 RMDIR = rm -rf
 MKDIR = mkdir
-CP    = cp
+CP    = copy
 
 # override commands for native builds
 ifeq ($(HOST), AmigaOS4)
@@ -225,7 +225,7 @@ ifeq ($(OS), aros)
   CPU     =
 
   # install dest dir
-  DESTDIR = MUI:Libs/MUI
+  DESTDIR = Sys:Classes/Zune
 endif
 endif
 endif
