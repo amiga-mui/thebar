@@ -2,6 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-29  Alfonso Ranieri <alforan@tin.it>
+
+  * Updated demo/demo7.c
+
 2008-02-25  Alfonso Ranieri <alforan@tin.it>
 
   * Fixed makefiles DESTDIR locations
