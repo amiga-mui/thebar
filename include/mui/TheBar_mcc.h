@@ -18,6 +18,10 @@
 ** Lesser General Public License for more details.
 **
 ** TheBar class Support Site: http://www.sf.net/projects/thebar
+**
+** $Id$
+** $URL$
+**
 **/
 
 #ifndef LIBRARIES_MUI_H

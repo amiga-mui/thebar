@@ -2,6 +2,15 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+#### v26.1 RELEASE ############################################################
+
+2008-03-01 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v26.1 release preparation changes.
+  * doc/MCC_TheBar.doc, include/mui/TheBar_mcc.h: added Id and URL SVN
+    keywords so that developers can easily identify which version of the
+    doc and include file they have and where to look for an updated version.
+
 2008-02-29  Alfonso Ranieri <alforan@tin.it>
 
   * Updated demo/demo7.c
