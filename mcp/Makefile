@@ -246,7 +246,8 @@ MCCOBJS = $(OBJDIR)/library.o \
 CATALOGS = $(LOCALE)/german.catalog \
            $(LOCALE)/french.catalog \
            $(LOCALE)/swedish.catalog \
-           $(LOCALE)/czech.catalog
+           $(LOCALE)/czech.catalog \
+           $(LOCALE)/italian.catalog
 
 #
 
