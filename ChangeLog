@@ -6,6 +6,10 @@ MUI TheBar MCC class - ChangeLog
 
 2008-03-02 Alfonso Ranieri <alforan@tin.it>
 
+  * Catalog name reverted to "TheBar.catalog"
+
+2008-03-02 Alfonso Ranieri <alforan@tin.it>
+
   * button/class.c: added a check for MUIA_NoNotify
     when setting MUIA_Selected in OM_SET, because it
     is done by hands

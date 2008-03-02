@@ -275,7 +275,7 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 	@printf '\033[33mGenerating $@\033[0m\n'
-	@$(FC) $(LOCALE)/TheBar_mcp.cd $< CATALOG $@
+	@$(FC) $(LOCALE)/TheBar.cd $< CATALOG $@
 
 #
 
@@ -288,9 +288,9 @@ $(OBJDIR)/library.o: library.c ../include/mccinit.c \
   ../include/mui/TheBar_mcc.h private.h rev.h
 
 locale.h: locale.c
-locale.c: locale/TheBar_mcp.cd C_h.sd C_c.sd
+locale.c: locale/TheBar.cd C_h.sd C_c.sd
 	@printf '\033[33mGenerating locale file $@...\033[0m\n'
-	@$(FC) locale/TheBar_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
+	@$(FC) locale/TheBar.cd locale.h=C_h.sd locale.c=C_c.sd
 
 ## DEPENDENCY GENERATION ##############
 
@@ -309,7 +309,7 @@ depend: locale.c
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 	@printf '\033[33mGenerating $@\033[0m\n'
-	@$(FC) $(LOCALE)/TheBar_mcp.cd $< CATALOG $@
+	@$(FC) $(LOCALE)/TheBar.cd $< CATALOG $@
 
 .IGNORE: $(CATALOGS)
 
