@@ -4,12 +4,18 @@ MUI TheBar MCC class - ChangeLog
 
 #### v26.1 RELEASE ############################################################
 
+2008-03-02 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: some more final v26.1 release preparation changes.
+  * mcp/Makefile: added the italian translation to the makefile.
+  * mcp/locale/italian.ct: renamed italiano.ct to italian.ct as we use plain
+    english names or otherwise we get trouble with SVN when we add other
+    catalog with names that do not conform to US-ASCII.
+
 2008-03-02 Alfonso Ranieri <alforan@tin.it>
 
-  * Catalog name reverted to "TheBar.catalog"
-
-2008-03-02 Alfonso Ranieri <alforan@tin.it>
-
+  * mcp/locale: catalog name reverted to "TheBar.catalog"
+  * mcp/locale/italiano.ct: added italian catalog translation
   * button/class.c: added a check for MUIA_NoNotify
     when setting MUIA_Selected in OM_SET, because it
     is done by hands
