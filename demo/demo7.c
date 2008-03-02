@@ -93,8 +93,8 @@ struct data
     ULONG  nbarPos;
     ULONG  ibarPos;
 
-    ULONG  noHoriz;
-    ULONG  noVert;
+    BOOL noHoriz;
+    BOOL noVert;
 };
 
 enum
@@ -121,7 +121,7 @@ struct MUIS_TheBar_Button buttons[] =
 
 #define TEXT "\
 This example shows how to move the bar around.\n\n\
-Of course, this is only a semplification of a real situation, where more than four positions are available and many objects are involved.\n\n\
+Of course, this is only a simplification of a real situation, where more than four positions are available and many objects are involved.\n\n\
 Programmers should always avoid to Init/Exit Change and to set Horiz on groups or whatever when not strictly needed!\
 "
 
@@ -184,6 +184,7 @@ ULONG
 mDragBegin(struct IClass *cl,Object *obj,UNUSED struct MUIP_DragBegin *msg)
 {
     struct data *data = INST_DATA(cl,obj);
+
     data->ibarPos = 0;
 
     return 0;
@@ -209,31 +210,47 @@ findPos(Object *obj,ULONG obPos,LONG mx,LONG my)
     switch (obPos)
     {
         case BARPOS_LEFT:
-            if (mx<l+w) bPos = BARPOS_LEFT;
-            else if (mx>r-w) bPos = BARPOS_RIGHT;
-                 else if (my<t+h) bPos = BARPOS_TOP;
-                      else if (my>b-h) bPos = BARPOS_BOTTOM;
+            if (mx<l+w)
+                bPos = BARPOS_LEFT;
+            else if (mx>r-w)
+                bPos = BARPOS_RIGHT;
+            else if (my<t+h)
+                bPos = BARPOS_TOP;
+            else if (my>b-h)
+                bPos = BARPOS_BOTTOM;
             break;
 
         case BARPOS_RIGHT:
-            if (mx>r-w) bPos = BARPOS_RIGHT;
-            else if (mx<l+w) bPos = BARPOS_LEFT;
-                 else if (my<t+h) bPos = BARPOS_TOP;
-                      else if (my>b-h) bPos = BARPOS_BOTTOM;
+            if (mx>r-w)
+                bPos = BARPOS_RIGHT;
+            else if (mx<l+w)
+                bPos = BARPOS_LEFT;
+            else if (my<t+h)
+                bPos = BARPOS_TOP;
+            else if (my>b-h)
+                bPos = BARPOS_BOTTOM;
             break;
 
         case BARPOS_TOP:
-            if (my<t+h) bPos = BARPOS_TOP;
-            else if (mx<l+w) bPos = BARPOS_LEFT;
-                 else if (mx>r-w) bPos = BARPOS_RIGHT;
-                      else if (my>b-h) bPos = BARPOS_BOTTOM;
+            if (my<t+h)
+                bPos = BARPOS_TOP;
+            else if (mx<l+w)
+                bPos = BARPOS_LEFT;
+            else if (mx>r-w)
+                bPos = BARPOS_RIGHT;
+            else if (my>b-h)
+                bPos = BARPOS_BOTTOM;
             break;
 
         case BARPOS_BOTTOM:
-            if (my>b-h) bPos = BARPOS_BOTTOM;
-            else if (mx<l+w) bPos = BARPOS_LEFT;
-                 else if (mx>r-w) bPos = BARPOS_RIGHT;
-                      else if (my<t+h) bPos = BARPOS_TOP;
+            if (my>b-h)
+                bPos = BARPOS_BOTTOM;
+            else if (mx<l+w)
+                bPos = BARPOS_LEFT;
+            else if (mx>r-w)
+                bPos = BARPOS_RIGHT;
+            else if (my<t+h)
+                bPos = BARPOS_TOP;
             break;
     }
 
@@ -246,16 +263,19 @@ mDragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
     struct data *data = INST_DATA(cl,obj);
     ULONG       bPos, obPos;
 
-    if (!msg->update) return MUIV_DragReport_Refresh;
+    if (!msg->update)
+        return MUIV_DragReport_Refresh;
 
     obPos = data->barPos;
     bPos  = findPos(obj,obPos,msg->x,msg->y);
 
-    if (bPos==0) return MUIV_DragReport_Continue;
+    if (bPos==0)
+        return MUIV_DragReport_Continue;
 
     switch (obPos)
     {
-        case BARPOS_TOP: case BARPOS_BOTTOM:
+        case BARPOS_TOP:
+        case BARPOS_BOTTOM:
             if ((bPos==BARPOS_LEFT || bPos==BARPOS_RIGHT) && data->noVert)
             {
                 data->ibarPos = bPos;
@@ -263,7 +283,8 @@ mDragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
             }
             break;
 
-        case BARPOS_LEFT: case BARPOS_RIGHT:
+        case BARPOS_LEFT:
+        case BARPOS_RIGHT:
             if ((bPos==BARPOS_TOP || bPos==BARPOS_BOTTOM) && data->noHoriz)
             {
                 data->ibarPos = bPos;
@@ -328,8 +349,10 @@ mAdjustBar(struct IClass *cl,Object *obj,UNUSED Msg msg)
 
     if (first!=ofirst)
     {
-        if (first) DoSuperMethod(cl,obj,MUIM_Group_Sort,data->bar,data->list,NULL);
-        else DoSuperMethod(cl,obj,MUIM_Group_Sort,data->list,data->bar,NULL);
+        if (first)
+            DoSuperMethod(cl,obj,MUIM_Group_Sort,data->bar,data->list,NULL);
+        else
+            DoSuperMethod(cl,obj,MUIM_Group_Sort,data->list,data->bar,NULL);
     }
 
     if (horiz!=ohoriz)
@@ -353,22 +376,19 @@ ULONG
 mShow(struct IClass *cl,Object *obj,Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
-    Object      *o;
-    ULONG       width, height, minWidth, minHeight;
+    Object *parent;
 
     if (!DoSuperMethodA(cl,obj,msg))
         return FALSE;
 
-    width  = _mwidth(obj);
-    height = _mheight(obj);
+    // get the parent group, containing the list and the bar
+    get(obj, MUIA_Parent, &parent);
 
-    o = (Object *)DoMethod(data->bar,MUIM_TheBar_GetObject,0);
-
-    minWidth = _width(o)+_subwidth(data->bar);
-    data->noVert = _minwidth(data->list)+minWidth>width;
-
-    minHeight = _height(o)+_subheight(obj);
-    data->noHoriz = _minheight(data->list)+minHeight>height;
+    // These are rough estimations assuming that the single buttons have square dimensions.
+    // Horizontal placement is forbidden if the group's width is less than the bar's height.
+    data->noHoriz = _width(parent) < _minheight(data->bar);
+    // Vertical placement is forbidden if the group's height is less than the bar's width.
+    data->noVert = _height(parent) < _minwidth(data->bar);
 
     return TRUE;
 }

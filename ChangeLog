@@ -2,6 +2,12 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-04  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/demo7.c: slightly adapted the placement restrictions to respect the
+    parent group's width and height. This really fixes the size expansion
+    problems of too small windows.
+
 #### v26.1 RELEASE ############################################################
 
 2008-03-02 Jens Langner <Jens.Langner@light-speed.de>
