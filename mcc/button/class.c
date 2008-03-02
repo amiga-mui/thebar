@@ -614,6 +614,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                                              MUIA_FrameDynamic, tidata  ? FALSE : isFlagSet(data->flags, FLG_Raised),
                                              MUIA_FrameVisible, !tidata ? FALSE : isFlagClear(data->userFlags, UFLG_NtRaiseActive),
                                              MUIA_ShowSelState, isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : tidata,
+                                             MUIA_NoNotify,     GetTagData(MUIA_NoNotify,FALSE,msg->ops_AttrList),
                                              TAG_DONE);
                     }
                 }
