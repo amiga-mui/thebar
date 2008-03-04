@@ -4,6 +4,11 @@ MUI TheBar MCC class - ChangeLog
 
 2008-03-04  Thore Böckelmann <tboeckel@gmx.de>
 
+  * #?/Makefile: removed -lm from the linker libs as nothing needs floating
+    point math. Also added dump as target.
+
+2008-03-03  Thore Böckelmann <tboeckel@gmx.de>
+
   * demo/demo7.c: slightly adapted the placement restrictions to respect the
     parent group's width and height. This really fixes the size expansion
     problems of too small windows.
@@ -117,16 +122,16 @@ MUI TheBar MCC class - ChangeLog
 2008-02-20  Alfonso Ranieri <alforan@tin.it>
 
   * mcp/popbackground.c - fixed dispatchers definitions and some broken SetAttrs
-  * mcp/library.c - fixed os3 classes init with no check 
-  * mcp/coloradjust.c - those GetAttr() made it crashes on various systems. Not 
+  * mcp/library.c - fixed os3 classes init with no check
+  * mcp/coloradjust.c - those GetAttr() made it crashes on various systems. Not
     investigated just put under #ifdef
   * mcp/backgroundadjust.c - fixed dispatchers definitions
-  
-  While doing all that bug fixing work, I realized that the actual form of TheBar sources 
-  are in a strange form. I really think SDI should be rewritten for a better information 
+
+  While doing all that bug fixing work, I realized that the actual form of TheBar sources
+  are in a strange form. I really think SDI should be rewritten for a better information
   incapsulation. Sharing all istance data, methods, dispatchers everywhere is a *bad* MUI
   programming practice and something I always avoid. Now, let's fix it and then will see...
-  
+
 2008-02-20  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/german.ct: updated german translation to latest changes.

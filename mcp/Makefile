@@ -140,7 +140,7 @@ DEBUGSYM = -gstabs
 CFLAGS   = -I. -I../include $(CPU) $(WARN) $(OPTFLAGS) \
            $(DEBUG) $(DEBUGSYM) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM) -nostartfiles
-LDLIBS   = -lm
+LDLIBS   =
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -317,6 +317,10 @@ $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 catalogs: $(CATALOGS)
 
 #
+
+.PHONY: dump
+dump:
+	-$(OBJDUMP) --section-headers --all-headers --reloc --disassemble-all $(MCPTARGET) > $(MCPTARGET).dump
 
 .PHONY: clean
 clean:
