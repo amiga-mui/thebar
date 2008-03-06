@@ -2,6 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-06  Pär Boberg <pbobbenb@spray.se>
+
+  * mcp/locale/swedish.ct: Updated according to changes.
+
 2008-03-04  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?/Makefile: removed -lm from the linker libs as nothing needs floating
