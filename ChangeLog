@@ -2,6 +2,32 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-09  Alfonso Ranieri <alforan@tin.it>
+  Big changes:
+
+  * added msprintf() based on RawDoFmt() for MorphOS and OS3. 
+    OS4 people said clib/newlib sprintf() is to be preferred.
+    Don't know about Aros, so I left sprintf() usage for it.
+
+  * Changed the way localization works. Restored my old locale
+    handling way. Now static arrays are inited in ClassInit() via 
+    a double lists of strings/id. It is not strictly needed, but it
+    will work when mccinit.c will be changed (?) to close/dispose stuff
+    in libClose() (I think that is the way libs should work).
+
+  * Many changes, many indeed. Now "private.h" just contains the main class instance
+    data and the prototypes of the few functions that operate on it (aka "friends functions").
+    private.h should be only included in class.c (and build.c); mccinit.c compels us to
+    include it in library.c too. That is not nice, but... All other stuff are in class.h and
+    in class_protos.h. All the changes above generated a chain of changes to Makefile, 
+    dependencies and so on. I don't think I broke anything. All compiles fine (but for OS4
+    for which I STILL need the missing definitions of the Blit stuff). 
+    Some files were moved to more "reasonable" position. F.e., TheBar.cd is now in mcp and not in
+    mcp/locale and TheBar_mcp.h is in include/mui .
+
+  * Probably other things I don't remember...
+
+
 2008-03-06  Pär Boberg <pbobbenb@spray.se>
 
   * mcp/locale/swedish.ct: Updated according to changes.

@@ -16,14 +16,10 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #include "class.h"
 #include "private.h"
-
-#include "Debug.h"
 
 /***********************************************************************/
 

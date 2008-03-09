@@ -16,28 +16,13 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
-
-#include <proto/exec.h>
-#include <proto/muimaster.h>
-
-/******************************************************************************/
-/*                                                                            */
-/* MCC/MCP name and version                                                   */
-/*                                                                            */
-/* ATTENTION:  The FIRST LETTER of NAME MUST be UPPERCASE                     */
-/*                                                                            */
-/******************************************************************************/
 
 #include "class.h"
 #include "private.h"
 #include "rev.h"
 
-#include "mcc_common.h"
-
-#include "Debug.h"
+/******************************************************************************/
 
 #define VERSION       LIB_VERSION
 #define REVISION      LIB_REVISION
@@ -76,25 +61,22 @@ struct CyberGfxIFace *ICyberGfx = NULL;
 #endif
 
 // some variables we carry for the whole lifetime of the lib
-struct MUI_CustomClass *lib_thisClass = NULL;
-struct MUI_CustomClass *lib_spacerClass = NULL;
+struct MUI_CustomClass *lib_thisClass    = NULL;
+struct MUI_CustomClass *lib_spacerClass  = NULL;
 struct MUI_CustomClass *lib_dragBarClass = NULL;
 ULONG lib_flags = 0;
 
 /******************************************************************************/
-/* define the functions used by the startup code ahead of including mccinit.c */
-/******************************************************************************/
+
 static BOOL ClassInit(UNUSED struct Library *base);
 static BOOL ClassExpunge(UNUSED struct Library *base);
 
 /******************************************************************************/
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/******************************************************************************/
-#include "mccinit.c"
+
+#include <mccinit.c>
 
 /******************************************************************************/
-/* define all implementations of our user functions                           */
-/******************************************************************************/
+
 static BOOL ClassInit(UNUSED struct Library *base)
 {
   ENTER();
@@ -128,11 +110,11 @@ static BOOL ClassInit(UNUSED struct Library *base)
       #endif
 
       // check the version of MUI)
-      if(MUIMasterBase->lib_Version >= MUIVER20)
+      if(MUIMasterBase->lib_Version>=20)
       {
         setFlag(lib_flags, BASEFLG_MUI20);
 
-        if(MUIMasterBase->lib_Version > MUIVER20 || MUIMasterBase->lib_Revision >= 5341)
+        if(MUIMasterBase->lib_Version>20 || MUIMasterBase->lib_Revision >= 5341)
           setFlag(lib_flags, BASEFLG_MUI4);
       }
 
@@ -150,6 +132,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
   return(FALSE);
 }
 
+/******************************************************************************/
 
 static BOOL ClassExpunge(UNUSED struct Library *base)
 {
@@ -196,10 +179,13 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
   return(TRUE);
 }
 
+/******************************************************************************/
+
 #ifdef __AROS__
 #include <aros/symbolsets.h>
-
 ADD2INITLIB(ClassInit, 0);
 ADD2EXPUNGELIB(ClassExpunge, 0);
-
 #endif
+
+/******************************************************************************/
+

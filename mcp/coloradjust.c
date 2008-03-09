@@ -16,8 +16,6 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #ifdef __AROS__
@@ -25,17 +23,11 @@
 #endif
 
 #include "class.h"
-
 #include <proto/colorwheel.h>
 #include <gadgets/gradientslider.h>
 #include <gadgets/colorwheel.h>
 #include <intuition/icclass.h>
 #include <intuition/gadgetclass.h>
-
-#include "locale.h"
-#include "private.h"
-
-#include "SDI_hook.h"
 
 /***********************************************************************/
 
@@ -210,7 +202,7 @@ mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
     #ifdef __AROS__
     // AROS's get() doesn't like a structure as storage pointer
     GetAttr(obj,WHEEL_HSB, (IPTR*)&data->hsb);
-	#else
+    #else
     get(obj,WHEEL_HSB, (ULONG)&data->hsb);
     #endif
 
@@ -231,11 +223,11 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
         struct ColorWheelHSB hsb;
 
         #ifdef __AROS__
-		// AROS's get() doesn't like a structure as storage pointer
+        // AROS's get() doesn't like a structure as storage pointer
         GetAttr(obj,WHEEL_HSB,(IPTR*)&hsb);
-		#else
-		get(obj,WHEEL_HSB,(ULONG)&hsb);
-		#endif
+        #else
+        get(obj,WHEEL_HSB,(ULONG)&hsb);
+        #endif
         SetAttrs(obj,WHEEL_Hue,hsb.cw_Hue,WHEEL_Saturation,hsb.cw_Saturation,WHEEL_Brightness,hsb.cw_Brightness,TAG_DONE);
     }
 
