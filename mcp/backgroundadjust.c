@@ -16,26 +16,12 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
-
 #include "class.h"
-#include "private.h"
-#include "locale.h"
-
 #include <proto/datatypes.h>
 #include <datatypes/pictureclass.h>
 #include <libraries/asl.h>
-
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "SDI_hook.h"
 
 /***********************************************************************/
 
@@ -110,7 +96,7 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         for (i = 0; i<18; i++)
         {
-            snprintf(data->specs[i], sizeof(data->specs[i]), "0:%d", i+MUII_BACKGROUND);
+            msnprintf(data->specs[i], sizeof(data->specs[i]), (STRPTR)"0:%d", i+MUII_BACKGROUND);
 
             data->patterns[i] = ImageObject,
                 ButtonFrame,
@@ -285,7 +271,7 @@ mPatternsGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec
 
     if (data->pattern>=0)
     {
-        sprintf(msg->spec, "0:%ld", data->pattern+MUII_BACKGROUND);
+        msprintf(msg->spec, (STRPTR)"0:%ld", data->pattern+MUII_BACKGROUND);
         return MUIV_Popbackground_GetSpec_Spec;
     }
 
@@ -759,7 +745,7 @@ mBitmapGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *
     STRPTR                      x;
 
     get(data->bitmap,MUIA_String_Contents,&x);
-    sprintf(msg->spec,"5:%s",x);
+    msprintf(msg->spec,(STRPTR)"5:%s",x);
     return MUIV_Popbackground_GetSpec_Spec;
 }
 
@@ -1489,7 +1475,7 @@ mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
             {
                 char buf[32];
 
-                snprintf(buf,sizeof(buf),"2:%s",x);
+                msnprintf(buf,sizeof(buf),(STRPTR)"2:%s",x);
                 set(obj,MUIA_Imagedisplay_Spec,buf);
             }
 

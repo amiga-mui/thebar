@@ -20,13 +20,8 @@
 
 ***************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
-
-#include <clib/alib_protos.h>
-
-#include <exec/tasks.h>
-#include <libraries/mui.h>
+#include "class.h"
+#include "private.h"
 
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -34,12 +29,17 @@
 #include <proto/intuition.h>
 #include <proto/utility.h>
 
-#include "private.h"
-#include "mcc_common.h"
-#include "class.h"
-#include "Debug.h"
+#include <clib/alib_protos.h>
 
-#include "SDI_hook.h"
+#include <exec/tasks.h>
+#include <libraries/mui.h>
+
+#include <SDI_hook.h>
+#include <mcc_common.h>
+#include <debug.h>
+
+#include <stdio.h>
+#include <string.h>
 
 #if defined(__amigaos4__)
 struct Library *GfxBase = NULL;
@@ -111,7 +111,7 @@ HOOKPROTONHNO(SleepFunc, ULONG, Object **sb)
 {
   ULONG sleeping;
 
-  DoMethod(*sb, MUIM_TheBar_GetAttr, 6, MUIA_TheBar_Attr_Sleep, &sleeping);
+  DoMethod(*sb, MUIM_TheBar_GetAttr, 6, MUIA_TheBar_Attr_Sleep, (ULONG)&sleeping);
 
   D(DBF_STARTUP, "SleepHook triggered: %08lx %ld\n", (ULONG)*sb, sleeping);
 
@@ -183,9 +183,9 @@ int main(void)
                                GroupFrameT("Settings"),
                                Child, HGroup,
                                  Child, Label2("Appearance"),
-                                 Child, appearance = MUI_MakeObject(MUIO_Cycle,NULL,appearances),
+                                 Child, appearance = MUI_MakeObject(MUIO_Cycle,NULL,(ULONG)appearances),
                                  Child, Label2("Label pos"),
-                                 Child, labelPos = MUI_MakeObject(MUIO_Cycle,NULL,labelPoss),
+                                 Child, labelPos = MUI_MakeObject(MUIO_Cycle,NULL,(ULONG)labelPoss),
                                End,
                                Child, HGroup,
                                  Child, HSpace(0),
@@ -203,7 +203,7 @@ int main(void)
                                  Child, HSpace(0),
                                End,
                              End,
-                             Child, update = MUI_MakeObject(MUIO_Button,"_Update"),
+                             Child, update = MUI_MakeObject(MUIO_Button,(ULONG)"_Update"),
                            End,
                          End,
                        End))
@@ -211,15 +211,15 @@ int main(void)
         ULONG sigs = 0, id;
 
         DoMethod(win,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
-        DoMethod(update,MUIM_Notify,MUIA_Pressed,FALSE,app,2,MUIM_Application_ReturnID,TAG_USER);
+        DoMethod(update,MUIM_Notify,MUIA_Pressed,FALSE,(ULONG)app,2,MUIM_Application_ReturnID,TAG_USER);
 
         set(win,MUIA_Window_Open,TRUE);
 
         // now we generate some notifies
-        DoMethod(sb, MUIM_TheBar_Notify, 5, MUIA_Pressed, FALSE, sb, 3, MUIM_CallHook, &SleepHook, sb);
-        DoMethod(sb, MUIM_TheBar_Notify, 6, MUIA_Pressed, FALSE, sb, 3, MUIM_CallHook, &SaveHook, MUIV_TheBar_Qualifier);
+        DoMethod(sb, MUIM_TheBar_Notify, 5, MUIA_Pressed, FALSE, (ULONG)sb, 3, MUIM_CallHook, (ULONG)&SleepHook, (ULONG)sb);
+        DoMethod(sb, MUIM_TheBar_Notify, 6, MUIA_Pressed, FALSE, (ULONG)sb, 3, MUIM_CallHook, (ULONG)&SaveHook, MUIV_TheBar_Qualifier);
 
-        while((LONG)(id = DoMethod(app,MUIM_Application_NewInput,&sigs)) != MUIV_Application_ReturnID_Quit)
+        while((LONG)(id = DoMethod(app,MUIM_Application_NewInput,(ULONG)&sigs)) != MUIV_Application_ReturnID_Quit)
         {
           if(id==TAG_USER)
           {

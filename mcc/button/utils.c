@@ -16,19 +16,9 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #include "class.h"
-
-#include "SDI_stdarg.h"
-#include "mcc_common.h"
-
-#include "Debug.h"
-
-#include <stdlib.h>
-
 #include <proto/input.h>
 
 /***********************************************************************/

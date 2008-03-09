@@ -16,8 +16,6 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #ifndef DEBUG_H

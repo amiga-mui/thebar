@@ -24,11 +24,6 @@
 #include "private.h"
 #include "rev.h"
 
-#include "TheBar_mcp.h"
-
-#include "SDI_hook.h"
-#include "Debug.h"
-
 #undef GetOutlinePen
 #include <graphics/gfxmacros.h>
 
@@ -2281,7 +2276,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
       // f.e. a notification on MUIA_Selected,MUIV_EveryTime is not possible
       // so, we simply add a third parm to the message, which will store the real value
       // and in mSendNotify, we use that value
-      result = DoSuperMethod(cl, obj, MUIM_Notify, msg->TrigAttr, msg->TrigVal, obj, 3, MUIM_TheButton_SendNotify, notify,MUIV_TriggerValue);
+      result = DoSuperMethod(cl, obj, MUIM_Notify, msg->TrigAttr, msg->TrigVal, (IPTR)obj, 3, MUIM_TheButton_SendNotify, (IPTR)notify,MUIV_TriggerValue);
 
       // in case the DoSuperMethod returns an error we go and cleanup the notify again
       if(result == 0)

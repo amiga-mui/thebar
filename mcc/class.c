@@ -20,17 +20,11 @@
 
 ***************************************************************************/
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
-
 #include "class.h"
 #include "private.h"
-
-#include "SDI_hook.h"
-#include "Debug.h"
-
 #include "rev.h"
+
+/***********************************************************************/
 
 #ifndef PDTA_AlphaChannel
 /* does the image contain alpha channel data? */
@@ -3856,7 +3850,7 @@ mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
   {
     // now we kill the notify as we have identifed the button
     if(msg->dest != NULL)
-      DoMethod(button->obj, MUIM_KillNotifyObj, msg->attr, msg->dest);
+      DoMethod(button->obj, MUIM_KillNotifyObj, (ULONG)msg->attr, (ULONG)msg->dest);
     else
       DoMethod(button->obj, MUIM_KillNotify, msg->attr);
   }

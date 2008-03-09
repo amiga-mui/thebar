@@ -1,6 +1,3 @@
-#ifndef _PRIVATE_H
-#define _PRIVATE_H
-
 /***************************************************************************
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
@@ -22,30 +19,6 @@
  $Id$
 
 ***************************************************************************/
-
-#include <mui/TheBar_mcc.h>
-
-#include "TheBar_mcp.h"
-
-/***************************************************************************/
-
-extern ULONG lib_flags;
-
-extern struct MUI_CustomClass *lib_thisClass;
-extern struct MUI_CustomClass *lib_spacerClass;
-extern struct MUI_CustomClass *lib_dragBarClass;
-
-extern struct Library *PictureDTBase;
-
-enum
-{
-  BASEFLG_Init         = 1<<0,
-  BASEFLG_MUI20        = 1<<1,
-  BASEFLG_MUI4         = 1<<2,
-  BASEFLG_BROKENMOSPDT = 1<<3,
-};
-
-/***************************************************************************/
 
 struct pen
 {
@@ -283,31 +256,4 @@ void build(struct InstData *data);
 void freeBitMaps(struct InstData *data);
 
 /***********************************************************************/
-
-#define MUIVER20 20
-
-/***********************************************************************/
-
-// some general macros
-#define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
-#define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
-#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(IPTR)ptr)
-
-#if defined(__MORPHOS__)
-#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
-#else
-#define copymem(to,from,len)            memcpy((to),(from),(len));
-#endif
-
-#if !defined(IsMinListEmpty)
-#define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
-#endif
-
-#define setFlag(mask, flag)             (mask) |= (flag)
-#define clearFlag(mask, flag)           (mask) &= ~(flag)
-#define isAnyFlagSet(mask, flag)        (((mask) & (flag)) != 0)
-#define isFlagSet(mask, flag)           (((mask) & (flag)) == (flag))
-#define isFlagClear(mask, flag)         (((mask) & (flag)) == 0)
-
-#endif /* _PRIVATE_H */
 
