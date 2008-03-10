@@ -105,12 +105,12 @@ struct InstData
     ULONG                       flags2;                 // As it says
     ULONG                       userFlags;              // As it says
 
-    UBYTE	                      *nchunky;               // Normal chunky
-    UBYTE	                      *gchunky;               // Sunny chunky
-    UBYTE               	      *snchunky;              // Selected chunky
-    UBYTE               	      *sgchunky;              // Selected sunny chunky
-    UBYTE        	              *dnchunky;              // Disabled chunky
-    UBYTE	                      *dgchunky;              // Disabled sunny chunky
+    UBYTE                         *nchunky;               // Normal chunky
+    UBYTE                         *gchunky;               // Sunny chunky
+    UBYTE                         *snchunky;              // Selected chunky
+    UBYTE                         *sgchunky;              // Selected sunny chunky
+    UBYTE                         *dnchunky;              // Disabled chunky
+    UBYTE                         *dgchunky;              // Disabled sunny chunky
 
     struct MinList              notifyList;             // list of set notifies on the button
 
@@ -118,7 +118,7 @@ struct InstData
 
     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     ULONG                       allowAlphaChannel;
-	#endif
+    #endif
 };
 
 /* flags */

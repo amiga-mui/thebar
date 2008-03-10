@@ -95,7 +95,7 @@ enum
 
 /* these systems are able to handle alpha channel information */
 #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-	#define WITH_ALPHA 1
+    #define WITH_ALPHA 1
 #endif
 
 #define _riflags(obj) (muiRenderInfo(obj)->mri_Flags)
@@ -152,11 +152,11 @@ ULONG xget(Object *obj, const ULONG attr);
 #endif
 
 #ifdef __AROS__
-	#define spacerObject  BOOPSIOBJMACRO_START(lib_spacerClass->mcc_Class)
-	#define dragBarObject BOOPSIOBJMACRO_START(lib_dragBarClass->mcc_Class)
+    #define spacerObject  BOOPSIOBJMACRO_START(lib_spacerClass->mcc_Class)
+    #define dragBarObject BOOPSIOBJMACRO_START(lib_dragBarClass->mcc_Class)
 #else
-	#define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
-	#define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
+    #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
+    #define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
 #endif
 
 /***********************************************************************/
@@ -227,9 +227,9 @@ struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;};
 // xget()
 // Gets an attribute value from a MUI object
 #ifdef __AROS__
-	#define xget XGET
+    #define xget XGET
 #else
-	ULONG xget(Object *obj, const ULONG attr);
+    ULONG xget(Object *obj, const ULONG attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
   // as some attributes (e.g. MUIA_Selected) always return FALSE, even

@@ -29,7 +29,7 @@
 
 #include <SDI_compiler.h>
 
-#include "Debug.h"
+#include "debug.h"
 #include "rev.h"
 
 // redefinition section

@@ -114,14 +114,14 @@ struct InstData
     ULONG                          spacersSize;
 
     #if defined(VIRTUAL)
-    ULONG			               objWidth;
-    ULONG			               objMWidth;
-    ULONG			               objHeight;
-    ULONG			               objMHeight;
+    ULONG                          objWidth;
+    ULONG                          objMWidth;
+    ULONG                          objHeight;
+    ULONG                          objMHeight;
     #endif
 
-    char          		           frameSpec[256];
-    ULONG			               userFrame;
+    char                           frameSpec[256];
+    ULONG                          userFrame;
 
     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     ULONG                          allowAlphaChannel;
@@ -208,7 +208,7 @@ enum
     UFLG2_UserNtRaiseActive        = 1<<2,
     UFLG2_NtRaiseActive            = 1<<3,
     UFLG2_UserSpacersSize          = 1<<4,
-    UFLG2_UserFrame	               = 1<<5,
+    UFLG2_UserFrame                = 1<<5,
 };
 
 /***********************************************************************/

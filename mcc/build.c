@@ -144,7 +144,7 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
                     {
                         UBYTE p = *src++;
 
-			                  if (!aflag)
+                              if (!aflag)
                         {
                             alpha[x>>3] = 0;
                             aflag = 1;
@@ -287,7 +287,7 @@ LUT8ToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
 
                 if (alpha)
                 {
-		            if (!aflag)
+                    if (!aflag)
                     {
                         alpha[x>>3] = 0;
                         aflag = 1;
@@ -300,7 +300,7 @@ LUT8ToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
 
                     if (!(bitmask >>= 1))
                     {
-                    	bitmask = 0x80;
+                        bitmask = 0x80;
                         aflag = 0;
                     }
                 }
@@ -431,18 +431,18 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
                     {
                         ULONG hi;
 
-            			if (!aflag)
+                        if (!aflag)
                         {
                             alpha[x>>3] = 0;
                             aflag = 1;
                         }
 
                         #if defined(WITH_ALPHA)
-    	                if (useAlpha)
-    	                    hi = *src<0xFF;
+                        if (useAlpha)
+                            hi = *src<0xFF;
                         #else
-            	        if (useAlpha)
-            	            hi = (data->allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
+                        if (useAlpha)
+                            hi = (data->allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
                         #endif
                         else
                             hi = (c & 0x00FFFFFF)==trColor;
@@ -456,8 +456,8 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
                             aflag = 0;
                         }
 
-        		        if (*src)
-        		            reallyHasAlpha = TRUE;
+                        if (*src)
+                            reallyHasAlpha = TRUE;
                     }
 
                     if (gdest)
@@ -492,7 +492,7 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
 
             if(!reallyHasAlpha)
               setFlag(image->flags, BRFLG_EmptyAlpha);
-    	    else
+            else
               clearFlag(image->flags, BRFLG_EmptyAlpha);
 
             maskDone = TRUE;
@@ -524,13 +524,13 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
                     {
                         ULONG hi;
 
-            			if (!aflag)
+                        if (!aflag)
                         {
                             alpha[x>>3] = 0;
                             aflag = 1;
                         }
 
-			            #if defined(WITH_ALPHA)
+                        #if defined(WITH_ALPHA)
                         if (useAlpha)
                             hi = *src<0xFF;
                         #else
@@ -549,8 +549,8 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
                             aflag = 0;
                         }
 
-        		    	if (*src)
-        		    	    reallyHasAlpha = TRUE;
+                        if (*src)
+                            reallyHasAlpha = TRUE;
                     }
 
                     if (gdest)
@@ -735,7 +735,7 @@ RGBToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
                 {
                     ULONG hi;
 
-		            if (!aflag)
+                    if (!aflag)
                     {
                         alpha[x>>3] = 0;
                         aflag = 1;
@@ -753,7 +753,7 @@ RGBToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
 
                     if (!(bitmask >>= 1))
                     {
-                    	bitmask = 0x80;
+                        bitmask = 0x80;
                         aflag = 0;
                     }
                 }
@@ -1138,24 +1138,24 @@ buildBitMapsCyber(struct InstData *data)
     if (data->allowAlphaChannel && isFlagSet(data->image.flags, BRFLG_AlphaMask))
     #endif
     {
-    	data->strip.nchunky  = make->chunky;
-	    data->strip.gchunky  = make->gchunky;
+        data->strip.nchunky  = make->chunky;
+        data->strip.gchunky  = make->gchunky;
 
         data->strip.snchunky = make->schunky;
-    	data->strip.sgchunky = make->sgchunky;
+        data->strip.sgchunky = make->sgchunky;
 
         data->strip.dnchunky = make->dchunky;
-	    data->strip.dgchunky = make->dgchunky;
+        data->strip.dgchunky = make->dgchunky;
     }
     else
     {
-    	// free unused chunky blocks
-	    if (make->chunky)
-	        freeVecPooled(data->pool,make->chunky);
-	    if (make->schunky)
-	        freeVecPooled(data->pool,make->schunky);
-	    if (make->dchunky)
-	        freeVecPooled(data->pool,make->dchunky);
+        // free unused chunky blocks
+        if (make->chunky)
+            freeVecPooled(data->pool,make->chunky);
+        if (make->schunky)
+            freeVecPooled(data->pool,make->schunky);
+        if (make->dchunky)
+            freeVecPooled(data->pool,make->dchunky);
     }
 
     freeVecPooled(data->pool,make);
@@ -1423,17 +1423,17 @@ freeBitMaps(struct InstData *data)
 
     #if defined(WITH_ALPHA)
     if (isFlagSet(data->image.flags, BRFLG_AlphaMask))
-	#else
+    #else
     if (data->allowAlphaChannel && isFlagSet(data->image.flags, BRFLG_AlphaMask))
-	#endif
+    #endif
     {
-    	if (data->strip.nchunky)
+        if (data->strip.nchunky)
             freeVecPooled(data->pool,data->strip.nchunky);
 
         if (data->strip.snchunky)
             freeVecPooled(data->pool,data->strip.snchunky);
 
-	    if (data->strip.dnchunky)
+        if (data->strip.dnchunky)
             freeVecPooled(data->pool,data->strip.dnchunky);
     }
 
@@ -1572,7 +1572,7 @@ freeBitMaps(struct InstData *data)
 
             FreeBitMap(strip->dnormalBM);
         }
-	}
+    }
 
     memset(strip,0,sizeof(struct MUIS_TheBar_Strip));
     LEAVE();
