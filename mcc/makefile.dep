@@ -1,0 +1,9 @@
+library.o: library.c class.h debug.h class_protos.h private.h rev.h
+brc1.o: brc1.c class.h debug.h class_protos.h
+build.o: build.c class.h debug.h class_protos.h private.h
+class.o: class.c class.h debug.h class_protos.h private.h rev.h
+dragbar.o: dragbar.c class.h debug.h class_protos.h
+scale.o: scale.c class.h debug.h class_protos.h
+spacer.o: spacer.c class.h debug.h class_protos.h
+utils.o: utils.c class.h debug.h class_protos.h
+debug.o: debug.c debug.h rev.h

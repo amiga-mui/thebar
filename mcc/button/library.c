@@ -74,86 +74,86 @@ static BOOL ClassExpunge(UNUSED struct Library *base);
 
 static BOOL ClassInit(UNUSED struct Library *base)
 {
-	ENTER();
+    ENTER();
 
-	if ((lib_pool = CreatePool(MEMF_ANY, 2048, 1024)))
-	{
-    	InitSemaphore(&lib_poolSem);
+    if ((lib_pool = CreatePool(MEMF_ANY, 2048, 1024)))
+    {
+        InitSemaphore(&lib_poolSem);
 
-    	if ((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-       		GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
-    	{
-      		if ((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
-         		GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
-      		{
-		        // we open the cybgraphics.library but without failing if
-        		// it doesn't exist
-				if ((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-           		   GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
-       			{ }
+        if ((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
+            GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
+        {
+            if ((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
+                GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
+            {
+                // we open the cybgraphics.library but without failing if
+                // it doesn't exist
+                if ((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
+                   GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
+                { }
 
-        		PictureDTBase = OpenLibrary("picture.datatype",0);
+                PictureDTBase = OpenLibrary("picture.datatype",0);
 
-		        // check the version of MUI)
-        		if (MUIMasterBase->lib_Version>=20)
-        		{
-          			setFlag(lib_flags,BASEFLG_MUI20);
+                // check the version of MUI)
+                if (MUIMasterBase->lib_Version>=20)
+                {
+                    setFlag(lib_flags,BASEFLG_MUI20);
 
-          			if (MUIMasterBase->lib_Version>20 || MUIMasterBase->lib_Revision>=5341)
-            			setFlag(lib_flags,BASEFLG_MUI4);
-		        }
+                    if (MUIMasterBase->lib_Version>20 || MUIMasterBase->lib_Revision>=5341)
+                        setFlag(lib_flags,BASEFLG_MUI4);
+                }
 
-        		setFlag(lib_flags, BASEFLG_Init);
+                setFlag(lib_flags, BASEFLG_Init);
 
-        		RETURN(TRUE);
-        		return(TRUE);
-      		}
-    	}
-  	}
+                RETURN(TRUE);
+                return(TRUE);
+            }
+        }
+    }
 
-	ClassExpunge(base);
+    ClassExpunge(base);
 
-	RETURN(FALSE);
-  	return(FALSE);
+    RETURN(FALSE);
+    return(FALSE);
 }
 
 /******************************************************************************/
 
 static BOOL ClassExpunge(UNUSED struct Library *base)
 {
-	ENTER();
+    ENTER();
 
-  	if (PictureDTBase)
-  	{
-    	CloseLibrary(PictureDTBase);
-		PictureDTBase = NULL;
-  	}
+    if (PictureDTBase)
+    {
+        CloseLibrary(PictureDTBase);
+        PictureDTBase = NULL;
+    }
 
-  	if (CyberGfxBase)
-  	{
-    	DROPINTERFACE(ICyberGfx);
-		CloseLibrary(CyberGfxBase);
-		CyberGfxBase = NULL;
-  	}
+    if (CyberGfxBase)
+    {
+        DROPINTERFACE(ICyberGfx);
+        CloseLibrary(CyberGfxBase);
+        CyberGfxBase = NULL;
+    }
 
-	if (DiskfontBase)
-	{
-    	DROPINTERFACE(IDiskfont);
-		CloseLibrary(DiskfontBase);
-		DiskfontBase = NULL;
-  	}
+    if (DiskfontBase)
+    {
+        DROPINTERFACE(IDiskfont);
+        CloseLibrary(DiskfontBase);
+        DiskfontBase = NULL;
+    }
 
-  	if (DataTypesBase)
-  	{
-    	DROPINTERFACE(IDataTypes);
-	    CloseLibrary(DataTypesBase);
-    	DataTypesBase = NULL;
-  	}
+    if (DataTypesBase)
+    {
+        DROPINTERFACE(IDataTypes);
+        CloseLibrary(DataTypesBase);
+        DataTypesBase = NULL;
+    }
 
-  	clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
+    clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
 
-	RETURN(TRUE);
-	return(TRUE);
+    RETURN(TRUE);
+    return(TRUE);
 }
 
 /******************************************************************************/

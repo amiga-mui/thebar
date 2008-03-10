@@ -96,7 +96,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base);
 /******************************************************************************/
 
 #include "icon.bh"
-#include "mccinit.c"
+#include <mccinit.c>
 
 /******************************************************************************/
 

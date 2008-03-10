@@ -60,18 +60,18 @@
 */
 
 #if defined(__amigaos4__)
-extern struct Library         *SysBase;
-extern struct Library         *DOSBase;
-extern struct Library         *GfxBase;
-extern struct Library         *IntuitionBase;
+extern struct Library          *SysBase;
+extern struct Library          *DOSBase;
+extern struct Library          *GfxBase;
+extern struct Library          *IntuitionBase;
 #else
-extern struct ExecBase        *SysBase;
-extern struct DosLibrary      *DOSBase;
-extern struct IntuitionBase   *IntuitionBase;
-extern struct GfxBase         *GfxBase;
+extern struct ExecBase         *SysBase;
+extern struct DosLibrary       *DOSBase;
+extern struct IntuitionBase    *IntuitionBase;
+extern struct GfxBase          *GfxBase;
 #endif
-extern struct Library         *UtilityBase;
-extern struct Library         *MUIMasterBase;
+extern struct Library          *UtilityBase;
+extern struct Library          *MUIMasterBase;
 
 extern struct Library          *DataTypesBase;
 extern struct Library          *CyberGfxBase;
@@ -80,7 +80,7 @@ extern struct Library          *PictureDTBase;
 
 extern struct SignalSemaphore  lib_poolSem;
 extern APTR                    lib_pool;
-extern ULONG 				   lib_alpha;
+extern ULONG                   lib_alpha;
 extern ULONG                   lib_flags;
 
 enum
@@ -97,7 +97,7 @@ enum
 
 /* these systems are able to handle alpha channel information */
 #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-	#define WITH_ALPHA			1
+    #define WITH_ALPHA          1
 #endif
 
 #define _riflags(obj) (muiRenderInfo(obj)->mri_Flags)

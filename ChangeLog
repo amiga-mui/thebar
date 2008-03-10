@@ -2,6 +2,14 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-10  Alfonso Ranieri <alforan@tin.it>
+  (Less) Big changes again:
+  * makefiles rewritten. Sorry the previous ignored dependencies
+    (try "make && touch rev.h && make", if you don't believe me...).
+    The main difference is that now DEBUG=1 must be specified if you
+    want debugging infos.
+  * Other small changes...
+    
 2008-03-09  Alfonso Ranieri <alforan@tin.it>
   Big changes:
 

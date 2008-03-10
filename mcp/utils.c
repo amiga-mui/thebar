@@ -520,7 +520,7 @@ msnprintf(STRPTR buf,int size,STRPTR fmt,...)
     #ifdef __MORPHOS__
     va_list       va;
     va_start(va,fmt);
-	#endif
+    #endif
 
     st.buf     = buf;
     st.size    = size;

@@ -43,23 +43,23 @@ enum
 static IPTR
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-	ENTER();
+    ENTER();
 
-	if ((obj = (Object *)DoSuperNew(cl,obj,
-    		MUIA_InputMode,      MUIV_InputMode_Immediate,
-    		MUIA_ShowSelState,   FALSE,
+    if ((obj = (Object *)DoSuperNew(cl,obj,
+            MUIA_InputMode,      MUIV_InputMode_Immediate,
+            MUIA_ShowSelState,   FALSE,
             isFlagSet(lib_flags,BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, TRUE,
-    	TAG_DONE)))
-	{
-    	struct data *data = INST_DATA(cl,obj);
+        TAG_DONE)))
+    {
+        struct data *data = INST_DATA(cl,obj);
 
-		data->bar   = (Object *)GetTagData(MUIA_TheButton_TheBar,FALSE,msg->ops_AttrList);
+        data->bar   = (Object *)GetTagData(MUIA_TheButton_TheBar,FALSE,msg->ops_AttrList);
         data->flags = (GetTagData(MUIA_Group_Horiz,FALSE,msg->ops_AttrList) ? FLG_Horiz : 0) |
                       (GetTagData(MUIA_ShowMe,TRUE,msg->ops_AttrList) ? FLG_ShowMe : 0);
-  	}
+    }
 
-	RETURN((IPTR)obj);
-	return (IPTR)obj;
+    RETURN((IPTR)obj);
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
@@ -67,20 +67,20 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static IPTR
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-	struct data *data = INST_DATA(cl,obj);
-  	IPTR        result = FALSE;
+    struct data *data = INST_DATA(cl,obj);
+    IPTR        result = FALSE;
 
-	ENTER();
+    ENTER();
 
-	switch (msg->opg_AttrID)
-  	{
-    	case MUIA_TheButton_Spacer: *msg->opg_Storage = MUIV_TheButton_Spacer_DragBar; result = TRUE; break;
-	    case MUIA_ShowMe:           *msg->opg_Storage = isFlagSet(data->flags, FLG_ShowMe) ? TRUE : FALSE; result = TRUE; break;
-    	default:                    result = DoSuperMethodA(cl,obj,(Msg)msg);
-	}
+    switch (msg->opg_AttrID)
+    {
+        case MUIA_TheButton_Spacer: *msg->opg_Storage = MUIV_TheButton_Spacer_DragBar; result = TRUE; break;
+        case MUIA_ShowMe:           *msg->opg_Storage = isFlagSet(data->flags, FLG_ShowMe) ? TRUE : FALSE; result = TRUE; break;
+        default:                    result = DoSuperMethodA(cl,obj,(Msg)msg);
+    }
 
-	RETURN(result);
-  	return result;
+    RETURN(result);
+    return result;
 }
 
 /***********************************************************************/
@@ -90,7 +90,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     struct TagItem *tag, *tstate;
-    IPTR 		   result = 0;
+    IPTR           result = 0;
 
     ENTER();
 
@@ -145,8 +145,8 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
     if (!DoSuperMethodA(cl,obj,(Msg)msg))
     {
-		RETURN(FALSE);
-      	return FALSE;
+        RETURN(FALSE);
+        return FALSE;
     }
 
     if (!getconfigitem(cl,obj,MUICFG_TheBar_DragBarShinePen,&pen))
@@ -199,33 +199,33 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
-	struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
-  	ENTER();
+    ENTER();
 
-  	DoSuperMethodA(cl,obj,(Msg)msg);
+    DoSuperMethodA(cl,obj,(Msg)msg);
 
-  	if (isFlagSet(data->flags,FLG_Horiz))
-  	{
+    if (isFlagSet(data->flags,FLG_Horiz))
+    {
         msg->MinMaxInfo->MinWidth  += 9;
         msg->MinMaxInfo->MinHeight += 4;
         msg->MinMaxInfo->DefWidth  += 9;
         msg->MinMaxInfo->DefHeight += 4;
         msg->MinMaxInfo->MaxWidth  += 9;
         msg->MinMaxInfo->MaxHeight  = MBQ_MUI_MAXMAX;
-  	}
-  	else
-  	{
+    }
+    else
+    {
         msg->MinMaxInfo->MinWidth  += 4;
         msg->MinMaxInfo->MinHeight += 9;
         msg->MinMaxInfo->DefWidth  += 4;
         msg->MinMaxInfo->DefHeight += 9;
         msg->MinMaxInfo->MaxWidth   = MBQ_MUI_MAXMAX;
         msg->MinMaxInfo->MaxHeight += 9;
-  	}
+    }
 
-	RETURN(0);
-	return 0;
+    RETURN(0);
+    return 0;
 }
 
 /***********************************************************************/
@@ -298,25 +298,25 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 static IPTR
 mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
-	struct data *data = INST_DATA(cl,obj);
-  	IPTR        result = 0;
+    struct data *data = INST_DATA(cl,obj);
+    IPTR        result = 0;
 
-  	ENTER();
+    ENTER();
 
-  	if (data->bar)
-  	{
-    	result = DoMethod(data->bar,MUIM_Backfill,msg->left,
+    if (data->bar)
+    {
+        result = DoMethod(data->bar,MUIM_Backfill,msg->left,
                                                   msg->top,
                                                   msg->right,
                                                   msg->bottom,
                                                   msg->left+msg->xoffset,
                                                   msg->top+msg->yoffset,
                                                   0);
-  	}
-  	else
-  	{
-    	result = DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,
-														  msg->top,
+    }
+    else
+    {
+        result = DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,
+                                                          msg->top,
                                                           msg->right-msg->left+1,
                                                           msg->bottom-msg->top+1,
                                                           msg->xoffset,
@@ -324,7 +324,7 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
                                                           0);
     }
 
-  	RETURN(result);
+    RETURN(result);
   return result;
 }
 
@@ -336,18 +336,18 @@ BOOPSI_DISPATCHER(IPTR,DragBarDispatcher,cl,obj,msg)
 DISPATCHER(DragBarDispatcher)
 #endif
 {
-	switch(msg->MethodID)
-  	{
-    	case OM_NEW:              return mNew(cl,obj,(APTR)msg);
-		case OM_GET:              return mGet(cl,obj,(APTR)msg);
-    	case OM_SET:              return mSets(cl,obj,(APTR)msg);
-    	case MUIM_AskMinMax:      return mAskMinMax(cl,obj,(APTR)msg);
-    	case MUIM_Draw:           return mDraw(cl,obj,(APTR)msg);
-    	case MUIM_Backfill:       return mBackfill(cl,obj,(APTR)msg);
-    	case MUIM_Setup:          return mSetup(cl,obj,(APTR)msg);
-    	case MUIM_Cleanup:        return mCleanup(cl,obj,(APTR)msg);
-    	default:                  return DoSuperMethodA(cl,obj,msg);
-  	}
+    switch(msg->MethodID)
+    {
+        case OM_NEW:              return mNew(cl,obj,(APTR)msg);
+        case OM_GET:              return mGet(cl,obj,(APTR)msg);
+        case OM_SET:              return mSets(cl,obj,(APTR)msg);
+        case MUIM_AskMinMax:      return mAskMinMax(cl,obj,(APTR)msg);
+        case MUIM_Draw:           return mDraw(cl,obj,(APTR)msg);
+        case MUIM_Backfill:       return mBackfill(cl,obj,(APTR)msg);
+        case MUIM_Setup:          return mSetup(cl,obj,(APTR)msg);
+        case MUIM_Cleanup:        return mCleanup(cl,obj,(APTR)msg);
+        default:                  return DoSuperMethodA(cl,obj,msg);
+    }
 }
 #ifdef __AROS__
 BOOPSI_DISPATCHER_END
@@ -358,20 +358,20 @@ BOOPSI_DISPATCHER_END
 BOOL
 initDragBarClass(void)
 {
-	BOOL result = FALSE;
+    BOOL result = FALSE;
 
-	ENTER();
+    ENTER();
 
-  	if ((lib_dragBarClass = MUI_CreateCustomClass(NULL,(STRPTR)MUIC_Area,NULL,sizeof(struct data),ENTRY(DragBarDispatcher))))
-  	{
-    	if(isFlagSet(lib_flags, BASEFLG_MUI20))
-      		lib_dragBarClass->mcc_Class->cl_ID = (STRPTR)"TheBar_DragBar";
+    if ((lib_dragBarClass = MUI_CreateCustomClass(NULL,(STRPTR)MUIC_Area,NULL,sizeof(struct data),ENTRY(DragBarDispatcher))))
+    {
+        if(isFlagSet(lib_flags, BASEFLG_MUI20))
+            lib_dragBarClass->mcc_Class->cl_ID = (STRPTR)"TheBar_DragBar";
 
-    	result = TRUE;
-  	}
+        result = TRUE;
+    }
 
-  	RETURN(result);
-  	return result;
+    RETURN(result);
+    return result;
 }
 
 /***********************************************************************/
