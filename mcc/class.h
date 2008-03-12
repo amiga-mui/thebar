@@ -112,12 +112,6 @@ enum
 #undef get
 #define get(obj,attr,store)             GetAttr((ULONG)(attr),(APTR)obj,(ULONG *)((ULONG)(store)))
 
-#if defined(__MORPHOS__)
-#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
-#else
-#define copymem(to,from,len)            memcpy((to),(from),(len));
-#endif
-
 #define setFlag(mask, flag)             (mask) |= (flag)
 #define clearFlag(mask, flag)           (mask) &= ~(flag)
 #define isAnyFlagSet(mask, flag)        (((mask) & (flag)) != 0)

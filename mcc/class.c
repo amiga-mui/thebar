@@ -1252,7 +1252,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                     {
                         brush->dataTotalWidth = tw;
 
-                        if (colors && numColors) copymem(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                        if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                         brush->numColors = numColors;
 
                         if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
@@ -1305,7 +1305,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                         }
                         else
                         {
-                            if (colors && numColors) copymem(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                            if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                             brush->numColors = numColors;
 
                             if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
@@ -1688,9 +1688,9 @@ makePicsFun(struct pack *pt,
 
             if (dostrip == TRUE)
             {
-                copymem(sb,pt->stripBrush,sizeof(*sb));
-                if (pt->sstripBrush) copymem(ssb,pt->sstripBrush,sizeof(*ssb));
-                if (pt->dstripBrush) copymem(dsb,pt->dstripBrush,sizeof(*dsb));
+                memcpy(sb,pt->stripBrush,sizeof(*sb));
+                if (pt->sstripBrush) memcpy(ssb,pt->sstripBrush,sizeof(*ssb));
+                if (pt->dstripBrush) memcpy(dsb,pt->dstripBrush,sizeof(*dsb));
             }
             else
             {
@@ -1778,7 +1778,7 @@ makePicsFun(struct pack *pt,
 
                             for (j = hofs = 0; j<(int)cols; j++, hofs += w+horizSpace)
                             {
-                                copymem(pt->brushes[x] = brush,sb,sizeof(struct MUIS_TheBar_Brush));
+                                memcpy(pt->brushes[x] = brush,sb,sizeof(struct MUIS_TheBar_Brush));
                                 brush->left   = hofs;
                                 brush->top    = vofs;
                                 brush->width  = w;
@@ -1787,7 +1787,7 @@ makePicsFun(struct pack *pt,
 
                                 if (sbrush)
                                 {
-                                    copymem(pt->sbrushes[x] = sbrush,ssb,sizeof(struct MUIS_TheBar_Brush));
+                                    memcpy(pt->sbrushes[x] = sbrush,ssb,sizeof(struct MUIS_TheBar_Brush));
                                     sbrush->left   = hofs;
                                     sbrush->top    = vofs;
                                     sbrush->width  = w;
@@ -1797,7 +1797,7 @@ makePicsFun(struct pack *pt,
 
                                 if (dbrush)
                                 {
-                                    copymem(pt->dbrushes[x] = dbrush,dsb,sizeof(struct MUIS_TheBar_Brush));
+                                    memcpy(pt->dbrushes[x] = dbrush,dsb,sizeof(struct MUIS_TheBar_Brush));
                                     dbrush->left   = hofs;
                                     dbrush->top    = vofs;
                                     dbrush->width  = w;
@@ -2058,11 +2058,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         if (isFlagSet(data->flags, FLG_FreeStrip))
         {
             if (sb.data)
-                copymem(&data->image,&sb,sizeof(data->image));
+                memcpy(&data->image,&sb,sizeof(data->image));
             if (ssb.data)
-                copymem(&data->simage,&ssb,sizeof(data->simage));
+                memcpy(&data->simage,&ssb,sizeof(data->simage));
             if (dsb.data)
-                copymem(&data->dimage,&dsb,sizeof(data->dimage));
+                memcpy(&data->dimage,&dsb,sizeof(data->dimage));
         }
 
         data->userFlags  = pt.userFlags;
@@ -3005,7 +3005,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             {
                 if (isFlagClear(lib_flags, BASEFLG_MUI20) && getconfigitem(cl,obj,MUICFG_TheBar_Gradient,&ptr))
                 {
-                    copymem(&data->grad,ptr,sizeof(data->grad));
+                    memcpy(&data->grad,ptr,sizeof(data->grad));
                     SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,NULL,TAG_DONE);
                     setFlag(data->flags2, FLG2_Gradient);
                     done = TRUE;
@@ -3550,7 +3550,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     {
         struct RastPort rp;
 
-        copymem(&rp,_rp(obj),sizeof(rp));
+        memcpy(&rp,_rp(obj),sizeof(rp));
 
         SetAPen(&rp,MUIPEN(data->barFrameShinePen));
         Move(&rp,_left(obj),_bottom(obj));
@@ -3717,7 +3717,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         if((clone = allocVecPooled(data->pool, size)))
         {
           // copy the data of the notify
-          copymem(clone, notify, size);
+          memcpy(clone, notify, size);
 
           // add it to our clone list
           AddTail((struct List *)&button->notifyListClone, (struct Node *)clone);
@@ -3820,8 +3820,8 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
       notify->TrigVal       = msg->value;
       notify->DestObj       = msg->dest;
 
-      // fill the rest with copymem
-      copymem(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
+      // fill the rest with memcpy
+      memcpy(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
 
       // now we set the notify as we have identifed the button
       result = DoMethodA(button->obj, (Msg)notify);
@@ -4111,7 +4111,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
           if((clone = allocVecPooled(data->pool, size)))
           {
             // copy the data of the notify
-            copymem(clone, notify, size);
+            memcpy(clone, notify, size);
 
             // add it to our clone list
             AddTail((struct List *)&bt->notifyListClone, (struct Node *)clone);
