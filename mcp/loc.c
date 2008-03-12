@@ -1,4 +1,3 @@
-
 /***************************************************************************
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
@@ -46,12 +45,12 @@ openCatalogVR(CONST_STRPTR name,ULONG minVer,ULONG minRev)
 STRPTR
 tr(ULONG id)
 {
-    register int low, high;
+    int low, high;
 
     for (low = 0, high = (sizeof(CatCompArray)/sizeof(struct CatCompArrayType))-1; low<=high; )
     {
-        register int                     mid = (low+high)>>1, cond;
-        register struct CatCompArrayType *cca = (struct CatCompArrayType *)CatCompArray+mid;
+        int                     mid = (low+high)>>1, cond;
+        struct CatCompArrayType *cca = (struct CatCompArrayType *)CatCompArray+mid;
 
         if ((cond = id-cca->cca_ID)==0)
             return lib_cat ? (STRPTR)GetCatalogStr(lib_cat,id,cca->cca_Str) : cca->cca_Str;
@@ -150,14 +149,14 @@ initStrings(void)
 {
     if (openCatalogVR((CONST_STRPTR)"TheBar.catalog",0,0))
     {
-        register struct CatCompArrayType *cca;
-        register int                     cnt;
+        struct CatCompArrayType *cca;
+        int                     cnt;
 
         for (cnt = (sizeof(CatCompArray)/sizeof(struct CatCompArrayType))-1, cca = (struct CatCompArrayType *)CatCompArray+cnt;
              cnt>=0;
              cnt--, cca--)
         {
-            register STRPTR s;
+            STRPTR s;
 
             if ((s = (STRPTR)GetCatalogStr(lib_cat,cca->cca_ID,cca->cca_Str))) cca->cca_Str = s;
         }
@@ -181,9 +180,7 @@ initStrings(void)
 ULONG
 getKeyChar(STRPTR string)
 {
-    register ULONG res = 0;
-
-    if (!LocaleBase) return 0;
+    ULONG res = 0;
 
     if (string)
     {
