@@ -105,60 +105,60 @@ ClassInit(UNUSED struct Library *base)
 {
     ENTER();
 
-    if ((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-        GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
-    {
-        if ((IFFParseBase = OpenLibrary("iffparse.library", 37)) &&
-            GETINTERFACE(IIFFParse, struct IFFParseIFace *, IFFParseBase))
+    if ((DataTypesBase = OpenLibrary("datatypes.library",37)) &&
+        GETINTERFACE(IDataTypes,struct DataTypesIFace *,DataTypesBase) &&
+        (IFFParseBase = OpenLibrary("iffparse.library",37)) &&
+        GETINTERFACE(IIFFParse,struct IFFParseIFace *,IFFParseBase) &&
+        (LocaleBase = (APTR)OpenLibrary("locale.library",36)) &&
+		GETINTERFACE(ILocale,struct LocaleIFace *,LocaleBase))
+	{
+    	ULONG success = TRUE;
+
+        // check for MUI 3.9+
+        if (MUIMasterBase->lib_Version>=20)
         {
-            ULONG success = TRUE;
+        	lib_flags |= BASEFLG_MUI20;
 
-            // check for MUI 3.9+
-            if (MUIMasterBase->lib_Version >= 20)
+            // check for MUI 4.0+
+            if (MUIMasterBase->lib_Version>20 || MUIMasterBase->lib_Revision>=5341)
+            	lib_flags |= BASEFLG_MUI4;
+        }
+
+        // on MUI 3.1 system's we do have to
+        // initialize our subclasses as well
+        #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+        if (!(lib_flags & BASEFLG_MUI20))
+        {
+        	if (!initColoradjust() ||
+            	!initPenadjust() ||
+                !initBackgroundadjust() ||
+                !initPoppen() ||
+                !initPopbackground())
             {
-                lib_flags |= BASEFLG_MUI20;
-
-                // check for MUI 4.0+
-                if (MUIMasterBase->lib_Version>20 || MUIMasterBase->lib_Revision>=5341)
-                    lib_flags |= BASEFLG_MUI4;
+            	success = FALSE;
             }
+        }
+        #endif
 
-            // on MUI 3.1 system's we do have to
-            // initialize our subclasses as well
-            #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-            if (!(lib_flags & BASEFLG_MUI20))
+        if (success)
+        {
+        	initStrings();
+
+            // we open the cybgraphics.library but without failing if
+            // it doesn't exist
+            CyberGfxBase = OpenLibrary("cybergraphics.library",41);
+			#ifdef __amigaos4__
+            if (!GETINTERFACE(ICyberGfx,struct CyberGfxIFace *,CyberGfxBase))
             {
-                if (!initColoradjust() ||
-                    !initPenadjust() ||
-                    !initBackgroundadjust() ||
-                    !initPoppen() ||
-                    !initPopbackground())
-                {
-                    success = FALSE;
-                }
-            }
+		        CloseLibrary(CyberGfxBase);
+        		CyberGfxBase = NULL;
+			}
             #endif
 
-            if (success)
-            {
-                // open the locale library which is not mandatory of course
-                if ((LocaleBase = (APTR)OpenLibrary("locale.library", 36)) &&
-                    GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
-                {
-                    initStrings();
-                }
+            lib_flags |= BASEFLG_Init;
 
-                // we open the cybgraphics.library but without failing if
-                // it doesn't exist
-                if ((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-                    GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
-                { }
-
-                lib_flags |= BASEFLG_Init;
-
-                RETURN(TRUE);
-                return(TRUE);
-            }
+            RETURN(TRUE);
+            return(TRUE);
         }
     }
   
@@ -225,10 +225,8 @@ ClassExpunge(UNUSED struct Library *base)
 
 #ifdef __AROS__
 #include <aros/symbolsets.h>
-
 ADD2INITLIB(ClassInit, 0);
 ADD2EXPUNGELIB(ClassExpunge, 0);
-
 #endif
 
 /******************************************************************************/
