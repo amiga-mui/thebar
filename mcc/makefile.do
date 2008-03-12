@@ -4,12 +4,22 @@
 
 # what are we going to build
 ifeq ($(T),mcc)
-  NAME  = $(TNAME)
-  ODIR  = $(OBJDIR)/mcc
+  NAME     = $(TNAME)
+  ODIR     = $(OBJDIR)/mcc
+  LDFLAGS += -Wl,-Map,$@.map
 else
-  NAME  = $(TVNAME)
-  ODIR  = $(OBJDIR)/mccv
-  DMORE = -DVIRTUAL
+ifeq ($(T),test)
+  NAME     = $(TTNAME)
+  ODIR     = $(OBJDIR)/mcc
+  OBJS     = $(TESTOBJS)
+  LDFLAGS := $(filter-out -nostartfiles,$(LDFLAGS))
+  CFLAGS  := $(filter-out -nostartfiles,$(CFLAGS))
+else
+  NAME     = $(TVNAME)
+  ODIR     = $(OBJDIR)/mccv
+  DMORE    = -DVIRTUAL
+  LDFLAGS += -Wl,-Map,$@.map
+endif
 endif
 
 # set vars
@@ -34,5 +44,5 @@ $(OBJS):
 	@$(CC) $(CFLAGS) $< -o $(ODIR)/$@
 
 # include dependencies file
--include $(DEPFILE)
+include $(DEPFILE)
 
