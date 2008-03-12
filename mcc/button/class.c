@@ -605,7 +605,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     {
                         tag->ti_Tag = TAG_IGNORE;
 
-                        SetSuperAttrs(cl,obj,MUIA_Selected,     tidata,
+                        SetSuperAttrs(cl,obj,MUIA_Selected,     tidata ? TRUE : FALSE,
                                              MUIA_FrameDynamic, tidata  ? FALSE : isFlagSet(data->flags, FLG_Raised),
                                              MUIA_FrameVisible, !tidata ? FALSE : isFlagClear(data->userFlags, UFLG_NtRaiseActive),
                                              MUIA_ShowSelState, isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : tidata,
@@ -1231,7 +1231,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     {
         struct RastPort rp;
 
-        copymem(&rp,&_screen(obj)->RastPort,sizeof(rp));
+        memcpy(&rp,&_screen(obj)->RastPort,sizeof(rp));
 
         if (data->vMode==MUIV_TheButton_ViewMode_Text)
             SetFont(&rp,data->tf);
@@ -1972,7 +1972,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                 BltBitMap(bm,x,y,tbm,0,0,iw,ih,0xc0,0xff,NULL);
                                 #endif
 
-                                copymem(&trp,rp,sizeof(trp));
+                                memcpy(&trp,rp,sizeof(trp));
                                 trp.Layer  = NULL;
                                 trp.BitMap = tbm;
 
@@ -2264,7 +2264,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
     if((notify = allocVecPooled(data->pool, size)))
     {
       // now we fill the notify structure
-      copymem(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
+      memcpy(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
 
       // add the new notify to the notifies list of the button
       AddTail((struct List *)&data->notifyList, (struct Node *)notify);
@@ -2410,7 +2410,7 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
           ULONG *para = (ULONG *)(((LONG)&notify->msg.FollowParams)+sizeof(ULONG));
 
           // now we fill the notify structure
-          copymem(destMessage, para, sizeof(ULONG)*(notify->msg.FollowParams));
+          memcpy(destMessage, para, sizeof(ULONG)*(notify->msg.FollowParams));
 
           // parse through the destMessage and replace certain
           // variable with their correct values.

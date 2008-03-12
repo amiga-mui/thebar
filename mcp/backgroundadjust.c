@@ -1150,7 +1150,7 @@ mGradientSwap(struct IClass *cl,Object *obj, UNUSED Msg msg)
     get(data->from,MUIA_Coloradjust_RGB,&rgb1);
     get(data->to,MUIA_Coloradjust_RGB,&rgb2);
 
-    copymem(&rgb,rgb1,sizeof(rgb));
+    memcpy(&rgb,rgb1,sizeof(rgb));
 
     set(data->from,MUIA_Coloradjust_RGB,rgb2);
     set(data->to,MUIA_Coloradjust_RGB,&rgb);
@@ -1351,7 +1351,7 @@ specToGadgets(struct IClass *cl,Object *obj,STRPTR spec,struct MUIS_TheBar_Gradi
 
             case MUIV_Popbackground_SetSpec_Grad:
             {
-                copymem(&data->grad,grad,sizeof(data->grad));
+                memcpy(&data->grad,grad,sizeof(data->grad));
                 set(obj,MUIA_Group_ActivePage,i);
                 data->flags |= FLG_GradientMode;
 

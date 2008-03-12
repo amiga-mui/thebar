@@ -292,12 +292,6 @@ struct MUIS_Popbackground_Status
 #undef nnset
 #define nnset(obj,attr,value)          SetAttrs((Object *)(obj),MUIA_NoNotify,TRUE,(ULONG)(attr),(ULONG)(value),TAG_DONE)
 
-#if defined(__MORPHOS__)
-#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
-#else
-#define copymem(to,from,len)            memcpy((to),(from),(len));
-#endif
-
 // xget()
 // Gets an attribute value from a MUI object
 #ifdef __AROS__

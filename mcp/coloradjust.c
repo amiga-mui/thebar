@@ -120,7 +120,7 @@ mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
                    data->hsb.cw_Saturation != ((struct ColorWheelHSB *)tidata)->cw_Saturation ||
                    data->hsb.cw_Brightness != ((struct ColorWheelHSB *)tidata)->cw_Brightness)
                 {
-                  copymem(&data->hsb,(struct ColorWheelHSB *)tidata,sizeof(data->hsb));
+                  memcpy(&data->hsb,(struct ColorWheelHSB *)tidata,sizeof(data->hsb));
                 }
                 else
                 {
@@ -176,7 +176,7 @@ mColorWheelShow(struct IClass *cl,Object *obj,Msg msg)
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
-    copymem(&hsb,&data->hsb,sizeof(hsb));
+    memcpy(&hsb,&data->hsb,sizeof(hsb));
     if (data->hsb.cw_Hue) data->hsb.cw_Hue = 0;
     else data->hsb.cw_Hue = 1;
     SetSuperAttrs(cl, obj, WHEEL_HSB, &hsb, TAG_DONE);
