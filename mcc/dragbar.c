@@ -244,7 +244,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         struct RastPort rp;
         WORD   l, t, r, b;
 
-        copymem(&rp,_rp(obj),sizeof(rp));
+        memcpy(&rp,_rp(obj),sizeof(rp));
 
         l = _mleft(obj);
         t = _mtop(obj);

@@ -119,7 +119,7 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
-    copymem(&rp,&_screen(obj)->RastPort,sizeof(rp));
+    memcpy(&rp,&_screen(obj)->RastPort,sizeof(rp));
     SetFont(&rp,_font(obj));
     TextExtent(&rp,"X",1,&te);
     w = te.te_Height;
