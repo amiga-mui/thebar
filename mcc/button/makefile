@@ -1,9 +1,4 @@
-# TheButton.mcc makefile
-# Invoke it as:
-# "make"               - to generate the target in host format
-# "make OS=os"         - to generate the target in os format, where os is one of os4, os3, morphos, aros
-# "make DEBUG=1"       - to generate the target in host format with debugging
-# "make OS=os DEBUG=1" - to generate the target in os format, where os is one of os4, os3, morphos, aros with debugging
+# TheButton MCC makefile
 
 # host
 ifndef (HOST)
@@ -40,8 +35,14 @@ ifndef (OS)
 endif
 
 # debug
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUG),1) 
  override DEBUG = -DDEBUG -O0
+else
+ifeq ($(DEBUG),yes)
+ override DEBUG = -DDEBUG -O0
+else
+ override DEBUG =
+endif
 endif
 
 # commands
@@ -80,7 +81,7 @@ DEPFILE = makefile.dep
 
 # common compiler/linker flags
 WARN     = -W -Wall
-OPTFLAGS = -O2
+OPTFLAGS = -O3 -funroll-loops
 DEBUGSYM = -gstabs
 CFLAGS   = -c -I../../include $(CPU) $(WARN) $(OPTFLAGS) -fomit-frame-pointer $(DEBUGSYM) $(DEBUG)
 LDFLAGS  = $(CPU) $(DEBUGSYM) -nostartfiles
@@ -181,12 +182,39 @@ clean:
 	@$(RM) $(BINDIR)/$(TNAME) $(BINDIR)/$(TNAME).db $(BINDIR)/$(TNAME).map 
 	@echo "  <= Done."
 
+# cleanall
+.PHONY: cleanall
+cleanall:
+	@echo "  => Cleaning all..."
+	@for i in aros os3 os4 mos; do\
+		$(RM) $(addprefix .obj_$$i/,$(OBJS)) $(M68KSTUBS);\
+		$(RM) bin_$$i/$(TNAME) bin_$$i/$(TNAME).db bin_$$i/$(TNAME).map;\
+	done
+	@echo "  <= Done."
+
 # install
 .PHONY: install
 install: all
 	@echo "  => Installing..."
 	@$(CP) $(BINDIR)/$(TNAME) $(DESTDIR)
 	@echo "  <= Done."
+
+.PHONY: help
+help:
+	@echo "Cleaning targets:"
+	@echo "  clean		- Remove OS generated files"
+	@echo "  cleanall	- Remove all generated files"
+	@echo ""
+	@echo "Other generic targets:"
+	@echo "  all		- Build $(TNAME)"
+	@echo ""
+	@echo "Install targets:"
+	@echo "  install	- Install $(TNAME)"
+	@echo ""
+	@echo "Parameters:"
+	@echo "  make OS=aros|os3|os4|morphos => build $(TNAME) in OS format"
+	@echo "  make DEBUG=1|yes => build $(TNAME) with debugging informations"
+	@echo ""
 
 # create the dependencies file
 .PHONY: depend
