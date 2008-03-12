@@ -2,6 +2,22 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-11  Alfonso Ranieri <alforan@tin.it>
+
+  * #?/library.c ClassInit() changed
+  * mcp/library.c locale.library is now needed
+  * #?/makefile little changes to check for DEBUG in a 
+    better way
+  * added trunk/makefile that build/clean everything
+  * mcp/loc.c removed "register" usage
+  * button/class.c changed "tidata" to "tidata ? TRUE :FALSE"
+    in superset of MUIA_Selected in mSets()
+  * #?/makefiles added cleanall
+  * mcc/makefile does compile TheBar-Test now
+  * #?makefile/added help and cleanall targets
+  * #? removed copymem() for memcpy()
+  * TheBar-Test.c fixed to compile and work. It freezed on MorphOS
+
 2008-03-11  Vit Sindlar <sindlarv at centrum dot cz>
 
   * mcp/locale/czech.ct: updated Czech catalog translation
