@@ -47,16 +47,19 @@ tr(ULONG id)
 {
     int low, high;
 
-    for (low = 0, high = (sizeof(CatCompArray)/sizeof(struct CatCompArrayType))-1; low<=high; )
+    for (low = 0, high = (sizeof(CatCompArray)/sizeof(CatCompArray[0]))-1; low<=high; )
     {
-        int                     mid = (low+high)>>1, cond;
+        int                     mid = (low+high) / 2, cond;
         struct CatCompArrayType *cca = (struct CatCompArrayType *)CatCompArray+mid;
 
-        if ((cond = id-cca->cca_ID)==0)
-            return lib_cat ? (STRPTR)GetCatalogStr(lib_cat,id,cca->cca_Str) : cca->cca_Str;
+        cond = id - cca->cca_ID;
 
-        if (cond<0) high = mid-1;
-        else low = mid+1;
+        if(cond == 0)
+            return lib_cat ? (STRPTR)GetCatalogStr(lib_cat, id, cca->cca_Str) : cca->cca_Str;
+        else if(cond<0)
+            high = mid-1;
+        else
+            low = mid+1;
     }
 
     return (STRPTR)"";
@@ -64,9 +67,9 @@ tr(ULONG id)
 
 /****************************************************************************/
 
-#define IDSSIZE(ids) (sizeof(ids)/sizeof(ULONG))
+#define IDSSIZE(ids) (sizeof(ids)/sizeof(ids[0]))
 
-static ULONG regIDs[] =
+static const ULONG regIDs[] =
 {
     Msg_Reg_Colors,
     Msg_Reg_Appearance,
@@ -76,7 +79,7 @@ static ULONG regIDs[] =
 };
 STRPTR regs[IDSSIZE(regIDs)];
 
-static ULONG frameIDs[] =
+static const ULONG frameIDs[] =
 {
     Msg_FrameStyle_Recessed,
     Msg_FrameStyle_Normal,
@@ -84,7 +87,7 @@ static ULONG frameIDs[] =
 };
 STRPTR frames[IDSSIZE(frameIDs)];
 
-static ULONG precisionIDs[] =
+static const ULONG precisionIDs[] =
 {
     Msg_Precision_Gui,
     Msg_Precision_Icon,
@@ -94,7 +97,7 @@ static ULONG precisionIDs[] =
 };
 STRPTR precisions[IDSSIZE(precisionIDs)];
 
-static ULONG dismodeIDs[] =
+static const ULONG dismodeIDs[] =
 {
     Msg_DisMode_Shape,
     Msg_DisMode_Grid,
@@ -106,7 +109,7 @@ static ULONG dismodeIDs[] =
 };
 STRPTR dismodes[IDSSIZE(dismodeIDs)];
 
-static ULONG spacersSizeIDs[] =
+static const ULONG spacersSizeIDs[] =
 {
     Msg_SpacersSize_Quarter,
     Msg_SpacersSize_Half,
@@ -118,7 +121,7 @@ static ULONG spacersSizeIDs[] =
 };
 STRPTR spacersSizes[IDSSIZE(spacersSizeIDs)];
 
-static ULONG viewModeIDs[] =
+static const ULONG viewModeIDs[] =
 {
     Msg_TextGfx,
     Msg_Gfx,
@@ -127,7 +130,7 @@ static ULONG viewModeIDs[] =
 };
 STRPTR viewModes[IDSSIZE(viewModeIDs)];
 
-static ULONG labelPosIDs[] =
+static const ULONG labelPosIDs[] =
 {
     Msg_LabelPos_Bottom,
     Msg_LabelPos_Top,
@@ -138,10 +141,12 @@ static ULONG labelPosIDs[] =
 STRPTR labelPoss[IDSSIZE(labelPosIDs)];
 
 void
-localizeArray(STRPTR *strings,ULONG *ids)
+localizeArray(STRPTR *strings, const ULONG *ids)
 {
     while (*ids)
         *strings++ = tr(*ids++);
+    // make sure the translated string array is NULL terminated
+    *strings = NULL;
 }
 
 void
@@ -152,13 +157,14 @@ initStrings(void)
         struct CatCompArrayType *cca;
         int                     cnt;
 
-        for (cnt = (sizeof(CatCompArray)/sizeof(struct CatCompArrayType))-1, cca = (struct CatCompArrayType *)CatCompArray+cnt;
+        for (cnt = (sizeof(CatCompArray)/sizeof(CatCompArray[0]))-1, cca = (struct CatCompArrayType *)CatCompArray+cnt;
              cnt>=0;
              cnt--, cca--)
         {
             STRPTR s;
 
-            if ((s = (STRPTR)GetCatalogStr(lib_cat,cca->cca_ID,cca->cca_Str))) cca->cca_Str = s;
+            if ((s = (STRPTR)GetCatalogStr(lib_cat, cca->cca_ID, cca->cca_Str)))
+                cca->cca_Str = s;
         }
     }
 
@@ -185,7 +191,8 @@ getKeyChar(STRPTR string)
     if (string)
     {
         for (; *string && *string!='_'; string++);
-        if (*string++) res = ToLower(*string);
+        if (*string++)
+            res = ToLower(*string);
     }
 
     return res;
