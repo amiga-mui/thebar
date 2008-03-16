@@ -2,6 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-16  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/library.c: fixed some identation issues.
+
 2008-03-11  Alfonso Ranieri <alforan@tin.it>
 
   * #?/library.c ClassInit() changed
