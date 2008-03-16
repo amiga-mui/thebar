@@ -46,7 +46,7 @@ struct CatCompArrayType
     STRPTR cca_Str;
 };
 
-static const struct CatCompArrayType CatCompArray[] =
+static struct CatCompArrayType CatCompArray[] =
 {
     {%i,(STRPTR)(%i_STR)},
     {0,NULL} /* Yes, I know about %%%(,); I just like it this way. */
