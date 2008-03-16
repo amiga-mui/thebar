@@ -4,6 +4,8 @@ MUI TheBar MCC class - ChangeLog
 
 2008-03-16  Thore Böckelmann <tboeckel@gmx.de>
 
+  * mcp/loc_h.sd: removed the const specifier since the array is modified and
+    this modification will clash OS4's read-only memory layout.
   * mcp/library.c: fixed some identation issues.
 
 2008-03-11  Alfonso Ranieri <alforan@tin.it>
