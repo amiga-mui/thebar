@@ -110,8 +110,8 @@ ClassInit(UNUSED struct Library *base)
         (IFFParseBase = OpenLibrary("iffparse.library",37)) &&
         GETINTERFACE(IIFFParse,struct IFFParseIFace *,IFFParseBase) &&
         (LocaleBase = (APTR)OpenLibrary("locale.library",36)) &&
-		GETINTERFACE(ILocale,struct LocaleIFace *,LocaleBase))
-	{
+        GETINTERFACE(ILocale,struct LocaleIFace *,LocaleBase))
+    {
     	ULONG success = TRUE;
 
         // check for MUI 3.9+
@@ -131,9 +131,9 @@ ClassInit(UNUSED struct Library *base)
         {
         	if (!initColoradjust() ||
             	!initPenadjust() ||
-                !initBackgroundadjust() ||
-                !initPoppen() ||
-                !initPopbackground())
+              !initBackgroundadjust() ||
+              !initPoppen() ||
+              !initPopbackground())
             {
             	success = FALSE;
             }
@@ -142,17 +142,17 @@ ClassInit(UNUSED struct Library *base)
 
         if (success)
         {
-        	initStrings();
+            initStrings();
 
             // we open the cybgraphics.library but without failing if
             // it doesn't exist
             CyberGfxBase = OpenLibrary("cybergraphics.library",41);
-			#ifdef __amigaos4__
+            #ifdef __amigaos4__
             if (!GETINTERFACE(ICyberGfx,struct CyberGfxIFace *,CyberGfxBase))
             {
-		        CloseLibrary(CyberGfxBase);
-        		CyberGfxBase = NULL;
-			}
+              CloseLibrary(CyberGfxBase);
+              CyberGfxBase = NULL;
+            }
             #endif
 
             lib_flags |= BASEFLG_Init;
