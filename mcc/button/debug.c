@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: Debug.c 76 2007-06-22 06:10:49Z thboeckel $
+ $Id: debug.c 28039 2008-03-16 12:59:13Z mazze $
 
 ***************************************************************************/
 
