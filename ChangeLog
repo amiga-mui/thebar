@@ -2,6 +2,16 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-19  Thore Böckelmann <tboeckel@gmx.de>
+
+  * makefile: modified the toplevel makefile to use AmigaOS commands only and
+    not rely on any specific Unix extension of the echo command. "avail flush"
+    will surely fail on any Unix system. Replaced all "cd <subdir> && make"
+    combinations by "make -C <subdir>" calls. Also replaced all "make" calls
+    by "$(MAKE)" which will use the command name which the make process was
+    invoked with instead of the hardcoded "make". For OS4 this allows to use
+    gmake instead of make.
+
 2008-03-17  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?/vastubs.c, #?/makefile: added vararg stubs for OS3 to be able to link
