@@ -2,6 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-19  Matthias Rustler <mrustler@gmx.de>
+
+  * AROS port updated
+
 2008-03-19  Thore Böckelmann <tboeckel@gmx.de>
 
   * makefile: modified the toplevel makefile to use AmigaOS commands only and
