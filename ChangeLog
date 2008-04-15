@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-04-15  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/vastubs.c, demo/Makefile: added vararg stubs for OS3 to be able to link
+    against clib2.
+
 2008-03-19  Matthias Rustler <mrustler@gmx.de>
 
   * AROS port updated
