@@ -2,6 +2,12 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+#### v26.2 RELEASE ############################################################
+
+2008-06-19 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final preparations for the upcoming release of v26.2
+
 2008-04-15  Thore Böckelmann <tboeckel@gmx.de>
 
   * demo/vastubs.c, demo/Makefile: added vararg stubs for OS3 to be able to link
