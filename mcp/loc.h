@@ -12,10 +12,10 @@
 #endif
 
 #ifdef CATCOMP_ARRAY
-    #undef CATCOMP_NUMBERS
-    #define CATCOMP_NUMBERS
+	#undef CATCOMP_NUMBERS
+	#define CATCOMP_NUMBERS
     #undef CATCOMP_STRINGS
-    #define CATCOMP_STRINGS
+	#define CATCOMP_STRINGS
 #endif
 
 /****************************************************************************/
@@ -245,17 +245,17 @@ const unsigned char Msg_GroupBackground_Help_STR[] = "Bar background.";
 const unsigned char Msg_GroupBackground_Title_STR[] = "Bar background";
 const unsigned char Msg_UseGroupBackground_STR[] = "Active";
 const unsigned char Msg_UseGroupBackground_Help_STR[] = "If selected, the bar gets\n"\
-    "your preferred background,\n"\
-    "otherwise it gets its\n"\
-    "parent background.";
+	"your preferred background,\n"\
+	"otherwise it gets its\n"\
+	"parent background.";
 const unsigned char Msg_ButtonBackground_STR[] = "Buttons";
 const unsigned char Msg_ButtonBackground_Help_STR[] = "Active buttons background.";
 const unsigned char Msg_ButtonBackground_Title_STR[] = "Active buttons background";
 const unsigned char Msg_UseButtonBackground_STR[] = "Active";
 const unsigned char Msg_UseButtonBackground_Help_STR[] = "If selected, the buttons get\n"\
-    "your preferred background,\n"\
-    "otherwise they get their\n"\
-    "parent background.";
+	"your preferred background,\n"\
+	"otherwise they get their\n"\
+	"parent background.";
 const unsigned char Msg_Title_Frame_STR[] = "Buttons frame";
 const unsigned char Msg_FrameShinePen_STR[] = "Shine";
 const unsigned char Msg_FrameShinePen_Help_STR[] = "Active buttons frame shine pen.";
@@ -270,15 +270,15 @@ const unsigned char Msg_FrameStyle_Help_STR[] = "Active buttons frame style.";
 const unsigned char Msg_Title_Disabled_STR[] = "Disabled buttons";
 const unsigned char Msg_DisabledBody_STR[] = "Body";
 const unsigned char Msg_DisabledBody_Help_STR[] = "Disabled buttons body pen. It is used as\n"\
-    "main pen for disabled buttons in Shape\n"\
-    "mode and as grid pen for disabled\n"\
-    "buttons in Grid modes.";
+	"main pen for disabled buttons in Shape\n"\
+	"mode and as grid pen for disabled\n"\
+	"buttons in Grid modes.";
 const unsigned char Msg_DisabledBody_Title_STR[] = "Body pen";
 const unsigned char Msg_DisabledShadow_STR[] = "Shadow";
 const unsigned char Msg_DisabledShadow_Help_STR[] = "Disabled buttons shadow pen. It is used as\n"\
-    "secondary pen for disabled buttons in Shape\n"\
-    "mode and as text pen for disabled buttons\n"\
-    "in Grid modes.";
+	"secondary pen for disabled buttons in Shape\n"\
+	"mode and as text pen for disabled buttons\n"\
+	"in Grid modes.";
 const unsigned char Msg_DisabledShadow_Title_STR[] = "Shadow pen";
 const unsigned char Msg_Title_BarSpacer_STR[] = "Bar spacer";
 const unsigned char Msg_BarSpacerShinePen_STR[] = "Shine";
@@ -306,7 +306,7 @@ const unsigned char Msg_DragBarFill_Help_STR[] = "DragBar fill pen.";
 const unsigned char Msg_DragBarFill_Title_STR[] = "DragBar fill pen";
 const unsigned char Msg_UseDragBarFill_STR[] = "Use";
 const unsigned char Msg_UseDragBarFill_Help_STR[] = "If selected, the dragbar fill\n"\
-    "pen is used.";
+	"pen is used.";
 const unsigned char Msg_Frame_STR[] = "Frame";
 const unsigned char Msg_Frame_Help_STR[] = "Bar frame";
 const unsigned char Msg_Frame_Title_STR[] = "Bar frame";
@@ -317,9 +317,9 @@ const unsigned char Msg_TextGfxFont_Help_STR[] = "Text and image buttons font.";
 const unsigned char Msg_ViewMode_STR[] = "View mode";
 const unsigned char Msg_ViewMode_Help_STR[] = "Adjust the appearance of the buttons.";
 const unsigned char Msg_Appearance_Text_STR[] = "The options below are used by TheBar if and only if the\n"\
-    "object requested for it at creation time. It means that\n"\
-    "if the programmer didn't decide otherwise, they are simply\n"\
-    "ignored.";
+	"object requested for it at creation time. It means that\n"\
+	"if the programmer didn't decide otherwise, they are simply\n"\
+	"ignored.";
 const unsigned char Msg_TextGfx_STR[] = "Icons and text";
 const unsigned char Msg_Gfx_STR[] = "Icons only";
 const unsigned char Msg_Text_STR[] = "Text only";
@@ -327,22 +327,22 @@ const unsigned char Msg_Borderless_STR[] = "Borderless";
 const unsigned char Msg_Borderless_Help_STR[] = "If selected, buttons are borderless.";
 const unsigned char Msg_Sunny_STR[] = "Highlight";
 const unsigned char Msg_Sunny_Help_STR[] = "If selected, buttons, normally in black\n"\
-    "and white, are colored when the\n"\
-    "mouse is over them.";
+	"and white, are colored when the\n"\
+	"mouse is over them.";
 const unsigned char Msg_Raised_STR[] = "Raised";
 const unsigned char Msg_Raised_Help_STR[] = "If selected, buttons, normally frameless,\n"\
-    "are framed when the mouse is over them.";
+	"are framed when the mouse is over them.";
 const unsigned char Msg_Scaled_STR[] = "Scaled";
 const unsigned char Msg_Scaled_Help_STR[] = "If selected, buttons are scaled.";
 const unsigned char Msg_BarSpacer_STR[] = "Bar spacer";
 const unsigned char Msg_BarSpacer_Help_STR[] = "If selected, a bar spacer is used\n"\
-    "as buttons separator.";
+	"as buttons separator.";
 const unsigned char Msg_EnableKeys_STR[] = "Enable keys";
 const unsigned char Msg_EnableKeys_Help_STR[] = "If selected, buttons short cuts\n"\
-    "are active.";
+	"are active.";
 const unsigned char Msg_LabelPos_STR[] = "Labels at";
 const unsigned char Msg_LabelPos_Help_STR[] = "Adjust the position of text in\n"\
-    "Icons and text buttons.";
+	"Icons and text buttons.";
 const unsigned char Msg_LabelPos_Bottom_STR[] = "Bottom";
 const unsigned char Msg_LabelPos_Top_STR[] = "Top";
 const unsigned char Msg_LabelPos_Right_STR[] = "Right";
@@ -354,37 +354,37 @@ const unsigned char Msg_VertGroupSpacing_STR[] = "Vert";
 const unsigned char Msg_VertGroupSpacing_Help_STR[] = "Pixels between two bar rows.";
 const unsigned char Msg_BarSpacerSpacing_STR[] = "Bar";
 const unsigned char Msg_BarSpacerSpacing_Help_STR[] = "Pixels between a Bar spacer\n"\
-    "and the previous/next object.";
+	"and the previous/next object.";
 const unsigned char Msg_Title_InnerSpacing_STR[] = "Buttons";
 const unsigned char Msg_HorizInnerSpacing_STR[] = "Horiz";
 const unsigned char Msg_HorizInnerSpacing_Help_STR[] = "Pixels between the left/right frame\n"\
-    "border and the button contents.";
+	"border and the button contents.";
 const unsigned char Msg_TopInnerSpacing_STR[] = "Top";
 const unsigned char Msg_TopInnerSpacing_Help_STR[] = "Pixels between the top frame border\n"\
-    "and the button contents.";
+	"and the button contents.";
 const unsigned char Msg_BottomInnerSpacing_STR[] = "Bottom";
 const unsigned char Msg_BottomInnerSpacing_Help_STR[] = "Pixels between the bottom frame border\n"\
-    "and the button contents.";
+	"and the button contents.";
 const unsigned char Msg_Title_BarFrameSpacing_STR[] = "Bar frame";
 const unsigned char Msg_LeftBarFrameSpacing_STR[] = "Left";
 const unsigned char Msg_LeftBarFrameSpacing_Help_STR[] = "Pixels between the left frame border\n"\
-    "and the bar contents.";
+	"and the bar contents.";
 const unsigned char Msg_RightBarFrameSpacing_STR[] = "Right";
 const unsigned char Msg_RightBarFrameSpacing_Help_STR[] = "Pixels between the right frame border\n"\
-    "and the bar contents.";
+	"and the bar contents.";
 const unsigned char Msg_TopBarFrameSpacing_STR[] = "Top";
 const unsigned char Msg_TopBarFrameSpacing_Help_STR[] = "Pixels between the top frame border\n"\
-    "and the bar contents.";
+	"and the bar contents.";
 const unsigned char Msg_BottomBarFrameSpacing_STR[] = "Bottom";
 const unsigned char Msg_BottomBarFrameSpacing_Help_STR[] = "Pixels between the bottom frame border\n"\
-    "and the bar contents.";
+	"and the bar contents.";
 const unsigned char Msg_Title_TextGfxSpacing_STR[] = "Text/Gfx";
 const unsigned char Msg_HorizTextGfxSpacing_STR[] = "Horiz";
 const unsigned char Msg_HorizTextGfxSpacing_Help_STR[] = "Pixels between an image and\n"\
-    "its left/right placed label.";
+	"its left/right placed label.";
 const unsigned char Msg_VertTextGfxSpacing_STR[] = "Vert";
 const unsigned char Msg_VertTextGfxSpacing_Help_STR[] = "Pixels between an image and\n"\
-    "its bottom/top placed label.";
+	"its bottom/top placed label.";
 const unsigned char Msg_Precision_Gui_STR[] = "Bad";
 const unsigned char Msg_Precision_Icon_STR[] = "Poor";
 const unsigned char Msg_Precision_Image_STR[] = "Good";
@@ -395,24 +395,24 @@ const unsigned char Msg_Event_IntuiTicks_STR[] = "IntuiTicks";
 const unsigned char Msg_Event_MouseMove_STR[] = "MouseMove";
 const unsigned char Msg_Event_STR[] = "Event";
 const unsigned char Msg_Event_Help_STR[] = "How to verify if the mouse is over a button:\n"\
-    "- IntuiTicks: it is verified periodically\n"\
-    "- MouseMove: it is verified at every mouse move\n"\
-    "- MouseObject, it is verified at when the mouse\n"\
-    "over a new object";
+	"- IntuiTicks: it is verified periodically\n"\
+	"- MouseMove: it is verified at every mouse move\n"\
+	"- MouseObject, it is verified at when the mouse\n"\
+	"over a new object";
 const unsigned char Msg_Scale_STR[] = "Scale";
 const unsigned char Msg_Scale_Help_STR[] = "Scale factor for scaled images.";
 const unsigned char Msg_SpecialSelect_STR[] = "Special select";
 const unsigned char Msg_SpecialSelect_Help_STR[] = "If selected, buttons contents is moved\n"\
-    "when they are selected or active.";
+	"when they are selected or active.";
 const unsigned char Msg_TextOverUseShine_STR[] = "Special text";
 const unsigned char Msg_TextOverUseShine_Help_STR[] = "If selected, active buttons labels\n"\
-    "are drawn with the shine pen.";
+	"are drawn with the shine pen.";
 const unsigned char Msg_IgnoreSelImages_STR[] = "Ignore selected images";
 const unsigned char Msg_IgnoreSelImages_Help_STR[] = "If selected, selected images\n"\
-    "are ignored.";
+	"are ignored.";
 const unsigned char Msg_IgnoreDisImages_STR[] = "Ignore disabled images";
 const unsigned char Msg_IgnoreDisImages_Help_STR[] = "If selected, disabled images\n"\
-    "are ignored.";
+	"are ignored.";
 const unsigned char Msg_DisMode_Shape_STR[] = "Shape";
 const unsigned char Msg_DisMode_Grid_STR[] = "Grid";
 const unsigned char Msg_DisMode_FullGrid_STR[] = "Full grid";
@@ -420,7 +420,7 @@ const unsigned char Msg_DisMode_STR[] = "Disable";
 const unsigned char Msg_DisMode_Help_STR[] = "How to render disabled buttons.";
 const unsigned char Msg_DontMove_STR[] = "Don't move";
 const unsigned char Msg_DontMove_Help_STR[] = "If selected, the contents of the buttons\n"\
-    "is not moved when they are active.";
+	"is not moved when they are active.";
 const unsigned char Msg_DisMode_Sunny_STR[] = "Grey";
 const unsigned char Msg_NtRaiseActive_STR[] = "Don't raise active buttons";
 const unsigned char Msg_NtRaiseActive_Help_STR[] = "If selected, active buttons are not raised.";
@@ -434,17 +434,17 @@ const unsigned char Msg_DisMode_Blend_STR[] = "Blend";
 const unsigned char Msg_DisMode_BlendGrey_STR[] = "Blend grey";
 const unsigned char Msg_Item_Defaults_STR[] = "Reset to defaults";
 const unsigned char Msg_NoMUI20Event_Help_STR[] = "How to verify if the mouse is over a button:\n"\
-    "- IntuiTicks: it is verified periodically\n"\
-    "- MouseMove: it is verified at every mouse move";
+	"- IntuiTicks: it is verified periodically\n"\
+	"- MouseMove: it is verified at every mouse move";
 const unsigned char Msg_SpacersSize_None_STR[] = "None";
 const unsigned char Msg_SpacersSize_OnePoint_STR[] = "One point";
 const unsigned char Msg_SpacersSize_TwoPoint_STR[] = "Two points";
 const unsigned char Msg_Info_First_STR[] = "%s\n"\
-    "Copyright (c) 2003-2008 Alfonso Ranieri\n"\
-    "and TheBar Open Source Team";
+	"Copyright (c) 2003-2008 Alfonso Ranieri\n"\
+	"and TheBar Open Source Team";
 const unsigned char Msg_Info_Reserved_STR[] = "Distributed under the terms of the LGPL2.";
 const unsigned char Msg_Info_Rest_STR[] = "For recent versions and updates visit:\n"\
-    "http://www.sourceforge.net/projects/thebar";
+	"http://www.sourceforge.net/projects/thebar";
 const unsigned char Msg_Info_Translator_STR[] = "";
 const unsigned char Msg_Item_Globals_STR[] = "Reset to global";
 const unsigned char Msg_Item_LastSaved_STR[] = "Last saved";
@@ -459,10 +459,10 @@ const unsigned char Msg_Popback_Bitmap_STR[] = "Bitmap";
 const unsigned char Msg_Popback_Gradient_STR[] = "Gradient";
 const unsigned char Msg_Popback_HorizGradient_STR[] = "Horizontal";
 const unsigned char Msg_Popback_HorizGradientHelp_STR[] = "If selected, you get a\n"\
-    "horizontal gradient.";
+	"horizontal gradient.";
 const unsigned char Msg_Popback_VertGradient_STR[] = "Vertical";
 const unsigned char Msg_Popback_VertGradientHelp_STR[] = "If selected, you get a\n"\
-    "vertical gradient.";
+	"vertical gradient.";
 const unsigned char Msg_Popback_From_STR[] = "From color";
 const unsigned char Msg_Popback_To_STR[] = "To color";
 const unsigned char Msg_Popback_Swap_STR[] = "Swap";
@@ -502,7 +502,7 @@ struct CatCompArrayType
     STRPTR cca_Str;
 };
 
-static const struct CatCompArrayType CatCompArray[] =
+static struct CatCompArrayType CatCompArray[] =
 {
     {Msg_Reg_Colors,(STRPTR)(Msg_Reg_Colors_STR)},
     {Msg_Reg_Appearance,(STRPTR)(Msg_Reg_Appearance_STR)},

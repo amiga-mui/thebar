@@ -64,6 +64,7 @@ class.o: class.c class.h ../include/proto/cybergraphics.h \
   ../include/SDI_stdarg.h ../include/SDI_compiler.h ../include/SDI_hook.h \
   ../include/SDI_stdarg.h debug.h class_protos.h private.h rev.h
 debug.o: debug.c
+vastubs.o: vastubs.c
 TheBar-Test.o: TheBar-Test.c class.h ../include/proto/cybergraphics.h \
   ../include/proto/muimaster.h ../include/libraries/mui.h \
   ../include/interfaces/muimaster.h ../include/inline4/muimaster.h \

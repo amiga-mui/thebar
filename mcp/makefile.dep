@@ -29,6 +29,7 @@ class.o: class.c class.h ../include/proto/cybergraphics.h \
   ../include/SDI_compiler.h ../include/SDI_hook.h debug.h loc.h \
   class_protos.h rev.h private.h
 debug.o: debug.c
+vastubs.o: vastubs.c
 coloradjust.o: coloradjust.c class.h ../include/proto/cybergraphics.h \
   ../include/proto/muimaster.h ../include/libraries/mui.h \
   ../include/interfaces/muimaster.h ../include/inline4/muimaster.h \

@@ -59,3 +59,4 @@ class.o: class.c class.h ../../include/proto/cybergraphics.h \
   ../../include/SDI_stdarg.h ../../include/SDI_hook.h debug.h \
   class_protos.h private.h rev.h
 debug.o: debug.c
+vastubs.o: vastubs.c
