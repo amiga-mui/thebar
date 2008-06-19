@@ -217,7 +217,7 @@ install: all
 catalogs:
 	@echo "  => Generating catalogs..."
 	@for i in $(patsubst %.ct,%,$(subst locale/,,$(wildcard locale/*.ct))); do\
-		$(FC) TheBar.cd locale/$$i.ct CATALOG "locale/TheBar_"$$i"_catalog";\
+		$(FC) TheBar.cd locale/$$i.ct CATALOG "locale/TheBar_"$$i".catalog";\
 	done
 	@echo "  <= Done."
 
