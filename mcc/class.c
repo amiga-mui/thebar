@@ -2000,17 +2000,17 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     ENTER();
 
-    if((GetTagData(MUIA_TheBar_MinVer, 0 ,attrs) > LIB_VERSION)
+    if(GetTagData(MUIA_TheBar_MinVer, 0 ,attrs) > LIB_VERSION)
     {
       RETURN(0);
       return 0;
     }
 
     #if defined(__amigaos4__)
-    pool = AllocSysObject(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
-                                                        ASOPOOL_Puddle, 2048,
-                                                        ASOPOOL_Threshold, 1024,
-                                                        TAG_DONE);
+    pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                                            ASOPOOL_Puddle, 2048,
+                                                            ASOPOOL_Threshold, 1024,
+                                                            TAG_DONE);
     #else
     pool = CreatePool(MEMF_ANY,2048,1024);
     #endif
