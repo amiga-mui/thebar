@@ -2000,9 +2000,25 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     ENTER();
 
-    if ((GetTagData(MUIA_TheBar_MinVer,0,attrs) > LIB_VERSION) ||
-        (pool = CreatePool(MEMF_ANY,2048,1024)) == NULL)
-        return 0;
+    if((GetTagData(MUIA_TheBar_MinVer, 0 ,attrs) > LIB_VERSION)
+    {
+      RETURN(0);
+      return 0;
+    }
+
+    #if defined(__amigaos4__)
+    pool = AllocSysObject(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                                        ASOPOOL_Puddle, 2048,
+                                                        ASOPOOL_Threshold, 1024,
+                                                        TAG_DONE);
+    #else
+    pool = CreatePool(MEMF_ANY,2048,1024);
+    #endif
+    if(pool == NULL)
+    {
+      RETURN(0);
+      return 0;
+    }
 
     memset(&pt,0,sizeof(pt));
 
@@ -2264,7 +2280,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     }
     else
     {
+    	#if defined(__amigaos4__)
+    	FreeSysObject(ASOT_MEMPOOL, pool);
+    	#else
         DeletePool(pool);
+        #endif
     }
 
     RETURN((IPTR)obj);
@@ -2299,7 +2319,14 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
   res = DoSuperMethodA(cl, obj, msg);
 
   // delete our previously allocated memory pool
-  DeletePool(pool);
+  if(pool != NULL)
+  {
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_MEMPOOL, pool);
+    #else
+    DeletePool(pool);
+    #endif
+  }
 
   RETURN(res);
   return res;

@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: replaced the obsolete CreatePool() and DeletePool() calls with
+    AllocSysObject() and FreeSysObject() calls for the OS4 build.
+
 #### v26.2 RELEASE ############################################################
 
 2008-06-19 Jens Langner <Jens.Langner@light-speed.de>
