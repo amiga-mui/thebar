@@ -2,6 +2,13 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2009-01-15  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/libary.c: replaced the obsolete CreatePool() and DeletePool()
+    calls with AllocSysObject() and FreeSysObject() calls for the OS4 build.
+    Additionally the pool is now deleted upon expunge. This was never done
+    before!!
+
 2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: replaced the obsolete CreatePool() and DeletePool() calls with

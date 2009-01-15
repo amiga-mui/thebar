@@ -76,7 +76,13 @@ static BOOL ClassInit(UNUSED struct Library *base)
 {
     ENTER();
 
+    #if defined(__amigaos4__)
+    if ((lib_pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                                     ASOPOOL_Puddle, 2048,
+                                                     ASOPOOL_Threshold, 1024)) != NULL)
+    #else
     if ((lib_pool = CreatePool(MEMF_ANY, 2048, 1024)))
+    #endif
     {
         InitSemaphore(&lib_poolSem);
 
@@ -148,6 +154,16 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
         DROPINTERFACE(IDataTypes);
         CloseLibrary(DataTypesBase);
         DataTypesBase = NULL;
+    }
+
+    if (lib_pool != NULL)
+    {
+    	#if defined(__amigaos4__)
+    	FreeSysObject(ASOT_MEMPOOL, lib_pool);
+    	#else
+    	DeletePool(lib_pool);
+    	#endif
+    	lib_pool =  NULL;
     }
 
     clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
