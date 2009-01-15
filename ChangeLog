@@ -8,6 +8,8 @@ MUI TheBar MCC class - ChangeLog
     calls with AllocSysObject() and FreeSysObject() calls for the OS4 build.
     Additionally the pool is now deleted upon expunge. This was never done
     before!!
+  * mcc/button/class.c, mcc/button/utils.c: replace the remaining deprecated
+    function calls by AllocSysObject() calls.
 
 2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
 
