@@ -205,9 +205,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     #if defined(__amigaos4__)
     if ((pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
                                                  ASOPOOL_Puddle, 2048,
-                                                 ASOPOOL_Threshold, 1024)) != NULL)
+                                                 ASOPOOL_Threshold, 1024)) == NULL)
     #else
-    if ((pool = CreatePool(MEMF_ANY, 2048, 1024)))
+    if ((pool = CreatePool(MEMF_ANY, 2048, 1024)) == NULL)
     #endif
     {
       RETURN(0);
