@@ -313,11 +313,21 @@ ULONG peekQualifier(void)
 
   ENTER();
 
+  #if defined(__amigaos4__)
+  if((port = AllocSysObject(ASOT_PORT, TAG_DONE)) != NULL)
+  #else
   if((port = CreateMsgPort()) != NULL)
+  #endif
   {
     struct IOStdReq *iorequest;
 
+    #if defined(__amigaos4__)
+    if((iorequest = AllocSysObjectTags(ASOT_IOREQUEST, ASOIOR_ReplyPort, port,
+                                                       ASOIOR_Size, sizeof(*iorequest),
+                                                       TAG_DONE)) != NULL)
+    #else
     if((iorequest = (struct IOStdReq *)CreateIORequest(port, sizeof(*iorequest))) != NULL)
+    #endif
     {
       if(OpenDevice("input.device", 0, (struct IORequest*)iorequest, 0) == 0)
       {
@@ -331,9 +341,19 @@ ULONG peekQualifier(void)
         DROPINTERFACE(IInput);
         CloseDevice((struct IORequest*)iorequest);
       }
+
+      #if defined(__amigaos4__)
+      FreeSysObject(ASOT_IOREQUEST, iorequest);
+      #else
       DeleteIORequest((struct IORequest *)iorequest);
+      #endif
     }
+
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_PORT, port);
+    #else
     DeleteMsgPort(port);
+    #endif
   }
 
   RETURN(rc);
