@@ -2,6 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2009-01-16  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: added missing TAG_DONE.
+
 2009-01-15  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/libary.c: replaced the obsolete CreatePool() and DeletePool()
