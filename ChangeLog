@@ -2,6 +2,9 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+$Id$
+$URL$
+
 2009-04-05  Thore Böckelmann <tboeckel@gmx.de>
 
   * updated the SDI headers and mccinit.c to their latest fixed versions.
