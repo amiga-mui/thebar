@@ -2,6 +2,10 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2009-04-05  Thore Böckelmann <tboeckel@gmx.de>
+
+  * updated the SDI headers and mccinit.c to their latest fixed versions.
+
 2009-01-19  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/library.c: added another missing TAG_DONE.
