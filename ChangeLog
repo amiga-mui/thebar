@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-04-08  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: changed the about string to match our other public classes and
+    to point out that the version displayed is the version of TheBar.mcp and of
+    nothing else.
+
 2009-04-05  Thore Böckelmann <tboeckel@gmx.de>
 
   * updated the SDI headers and mccinit.c to their latest fixed versions.

@@ -53,7 +53,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         char            buf[128];
         const char      *t;
 
-        msnprintf(buf, sizeof(buf), (STRPTR)tr(Msg_Info_First), "\33bTheBar " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
+        msnprintf(buf, sizeof(buf), (STRPTR)tr(Msg_Info_First), "\33bTheBar.mcp " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
 
         if((t = tr(Msg_Info_Translator)) && *t)
         {
@@ -285,7 +285,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                         // >BarFrame spacing
                         (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : Child,
-                        (lib_flags & BASEFLG_MUI20) ? 0 : (VGroup, 
+                        (lib_flags & BASEFLG_MUI20) ? 0 : (VGroup,
                             GroupFrameT(tr(Msg_Title_BarFrameSpacing)),
                             //Child, owspace(1),
                             Child, ColGroup(4),
