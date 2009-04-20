@@ -4,7 +4,7 @@ library.o: library.c class.h ../include/proto/cybergraphics.h \
   ../include/mui/TheBar_mcc.h ../include/mui/TheBar_mcp.h \
   ../include/SDI_compiler.h ../include/SDI_stdarg.h \
   ../include/SDI_compiler.h ../include/SDI_hook.h debug.h loc.h \
-  class_protos.h private.h rev.h ../include/mcc_common.h \
+  class_protos.h private.h version.h ../include/mcc_common.h \
   ../include/SDI_hook.h ../include/SDI_lib.h ../include/SDI_stdarg.h \
   icon.bh ../include/mccinit.c
 utils.o: utils.c class.h ../include/proto/cybergraphics.h \
@@ -27,7 +27,7 @@ class.o: class.c class.h ../include/proto/cybergraphics.h \
   ../include/mui/TheBar_mcc.h ../include/mui/TheBar_mcp.h \
   ../include/SDI_compiler.h ../include/SDI_stdarg.h \
   ../include/SDI_compiler.h ../include/SDI_hook.h debug.h loc.h \
-  class_protos.h rev.h private.h
+  class_protos.h version.h private.h
 debug.o: debug.c
 vastubs.o: vastubs.c
 coloradjust.o: coloradjust.c class.h ../include/proto/cybergraphics.h \
