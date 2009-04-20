@@ -5,7 +5,7 @@ library.o: library.c class.h ../include/proto/cybergraphics.h \
   ../include/mui/TheBar_mcp.h ../include/mcc_common.h \
   ../include/SDI_compiler.h ../include/SDI_hook.h ../include/SDI_lib.h \
   ../include/SDI_stdarg.h ../include/SDI_compiler.h ../include/SDI_hook.h \
-  ../include/SDI_stdarg.h debug.h class_protos.h private.h rev.h \
+  ../include/SDI_stdarg.h debug.h class_protos.h private.h version.h \
   ../include/mccinit.c
 utils.o: utils.c class.h ../include/proto/cybergraphics.h \
   ../include/proto/muimaster.h ../include/libraries/mui.h \
@@ -62,7 +62,7 @@ class.o: class.c class.h ../include/proto/cybergraphics.h \
   ../include/mui/TheBar_mcp.h ../include/mcc_common.h \
   ../include/SDI_compiler.h ../include/SDI_hook.h ../include/SDI_lib.h \
   ../include/SDI_stdarg.h ../include/SDI_compiler.h ../include/SDI_hook.h \
-  ../include/SDI_stdarg.h debug.h class_protos.h private.h rev.h
+  ../include/SDI_stdarg.h debug.h class_protos.h private.h version.h
 debug.o: debug.c
 vastubs.o: vastubs.c
 TheBar-Test.o: TheBar-Test.c class.h ../include/proto/cybergraphics.h \
