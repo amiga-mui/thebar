@@ -29,12 +29,6 @@
 
 /***********************************************************************/
 
-#ifdef __AROS__
-#define MUIA_Text_Copy TAG_IGNORE
-#endif
-
-/***********************************************************************/
-
 enum MItems { MI_GLOBALS, MI_LASTSAVED, MI_RESTORE, MI_DEFAULTS };
 
 enum
@@ -1146,11 +1140,7 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,_DispatcherP,cl,obj,msg)
-#else
 DISPATCHER(_DispatcherP)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -1165,8 +1155,5 @@ DISPATCHER(_DispatcherP)
     default:                                    return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/

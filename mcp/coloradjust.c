@@ -20,10 +20,6 @@
 
 ***************************************************************************/
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
-
 #include "class.h"
 #include <proto/colorwheel.h>
 #include <gadgets/gradientslider.h>
@@ -37,18 +33,10 @@ struct Library *ColorWheelBase = NULL;
 struct Library *GradientSliderBase = NULL;
 
 static struct MUI_CustomClass *gradientslider = NULL;
-#ifdef __AROS__
-#define gradientsliderObject BOOPSIOBJMACRO_START(gradientslider->mcc_Class)
-#else
 #define gradientsliderObject NewObject(gradientslider->mcc_Class,NULL
-#endif
 
 static struct MUI_CustomClass *colorwheel = NULL;
-#ifdef __AROS__
-#define colorwheelObject BOOPSIOBJMACRO_START(colorwheel->mcc_Class)
-#else
 #define colorwheelObject NewObject(colorwheel->mcc_Class,NULL
-#endif
 
 /***********************************************************************/
 
@@ -238,11 +226,7 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,colorWheelDispatcher,cl,obj,msg)
-#else
 DISPATCHER(colorWheelDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -254,9 +238,6 @@ DISPATCHER(colorWheelDispatcher)
     default:               return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -491,11 +472,7 @@ mGradientSliderHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_Hand
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,gradientSliderDispatcher,cl,obj,msg)
-#else
 DISPATCHER(gradientSliderDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -510,9 +487,6 @@ DISPATCHER(gradientSliderDispatcher)
     default:               return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -963,11 +937,7 @@ mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,coloradjustDispatcher,cl,obj,msg)
-#else
 DISPATCHER(coloradjustDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -981,9 +951,6 @@ DISPATCHER(coloradjustDispatcher)
     default:             return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 

@@ -224,12 +224,3 @@ ClassExpunge(UNUSED struct Library *base)
 }
 
 /******************************************************************************/
-
-#ifdef __AROS__
-#include <aros/symbolsets.h>
-ADD2INITLIB(ClassInit, 0);
-ADD2EXPUNGELIB(ClassExpunge, 0);
-#endif
-
-/******************************************************************************/
-

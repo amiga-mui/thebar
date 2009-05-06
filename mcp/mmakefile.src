@@ -32,15 +32,15 @@ INCLUDE_FILES := ../include/mui/TheBar_mcc.h
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar/Locale/Catalogs
 
 #MM
-contrib-zune-classes-thebar-mcp-catalogs : loc.h loc.c \
+contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/deutsch/TheBar.catalog \
     $(TARGETDIR)/czech/TheBar.catalog \
     $(TARGETDIR)/svenska/TheBar.catalog \
     $(TARGETDIR)/italiano/TheBar.catalog \
     $(TARGETDIR)/français/TheBar.catalog
 
-loc.h: TheBar.cd loc_h.sd
-	@$(FLEXCAT) TheBar.cd loc.h=loc_h.sd
+locale.h: TheBar.cd locale_h.sd
+	@$(FLEXCAT) TheBar.cd locale.h=locale_h.sd
 
 $(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
 	@$(MKDIR) $(TARGETDIR)/deutsch
