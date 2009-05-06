@@ -5,6 +5,15 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-06 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: adapted all sources to be compilable with an AROS cross compiler
+    rather than having to directly use the AROS build system. Now also SDI
+    is completely used for AROS compatibility. However, we have to still
+    investigate if the cross-compiler compiled AROS binaries work as
+    expected. But this is a clear step forward in getting everything
+    compiled out-of-the-box with our own build system.
+
 2009-05-04 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/SDI_lib.h: updated to the latest version.

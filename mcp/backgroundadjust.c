@@ -28,39 +28,19 @@
 /***********************************************************************/
 
 static struct MUI_CustomClass *patterns = NULL;
-#ifdef __AROS__
-#define patternsObject BOOPSIOBJMACRO_START(patterns->mcc_Class)
-#else
 #define patternsObject NewObject(patterns->mcc_Class,NULL
-#endif
 
 static struct MUI_CustomClass *dtpic = NULL;
-#ifdef __AROS__
-#define dtpicObject BOOPSIOBJMACRO_START(dtpic->mcc_Class)
-#else
 #define dtpicObject NewObject(dtpic->mcc_Class,NULL
-#endif
 
 static struct MUI_CustomClass *bitmap = NULL;
-#ifdef __AROS__
-#define bitmapObject BOOPSIOBJMACRO_START(bitmap->mcc_Class)
-#else
 #define bitmapObject NewObject(bitmap->mcc_Class,NULL
-#endif
 
 static struct MUI_CustomClass *gradientfield;
-#ifdef __AROS__
-#define gradientfieldObject BOOPSIOBJMACRO_START(gradientfield->mcc_Class)
-#else
 #define gradientfieldObject NewObject(gradientfield->mcc_Class,NULL
-#endif
 
 static struct MUI_CustomClass *gradient = NULL;
-#ifdef __AROS__
-#define gradientObject BOOPSIOBJMACRO_START(gradient->mcc_Class)
-#else
 #define gradientObject NewObject(gradient->mcc_Class,NULL
-#endif
 
 /***********************************************************************/
 
@@ -302,11 +282,7 @@ mPatternsSelectPattern(struct IClass *cl,Object *obj,struct MUIP_Popbackground_S
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,patternsDispatcher,cl,obj,msg)
-#else
 DISPATCHER(patternsDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -320,9 +296,6 @@ DISPATCHER(patternsDispatcher)
     default:                               return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -623,11 +596,7 @@ mDTPicDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,dtpicDispatcher,cl,obj,msg)
-#else
 DISPATCHER(dtpicDispatcher)
-#endif
 {
   switch(msg->MethodID)
   {
@@ -641,9 +610,6 @@ DISPATCHER(dtpicDispatcher)
     default:             return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -767,11 +733,7 @@ mBitmapShowBitmap(struct IClass *cl,Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,bitmapDispatcher,cl,obj,msg)
-#else
 DISPATCHER(bitmapDispatcher)
-#endif
 {
     switch (msg->MethodID)
     {
@@ -782,9 +744,6 @@ DISPATCHER(bitmapDispatcher)
         default:                            return DoSuperMethodA(cl,obj,msg);
     }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -929,11 +888,7 @@ mGradientFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,gradientFieldDispatcher,cl,obj,msg)
-#else
 DISPATCHER(gradientFieldDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -944,9 +899,6 @@ DISPATCHER(gradientFieldDispatcher)
     default:         return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -1162,11 +1114,7 @@ mGradientSwap(struct IClass *cl,Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,gradientDispatcher,cl,obj,msg)
-#else
 DISPATCHER(gradientDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -1178,9 +1126,6 @@ DISPATCHER(gradientDispatcher)
     default:                             return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -1486,11 +1431,7 @@ mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,backDispatcher,cl,obj,msg)
-#else
 DISPATCHER(backDispatcher)
-#endif
 {
     switch (msg->MethodID)
     {
@@ -1502,9 +1443,6 @@ DISPATCHER(backDispatcher)
         default:             return DoSuperMethodA(cl,obj,msg);
     }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 

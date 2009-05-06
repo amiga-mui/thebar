@@ -28,10 +28,6 @@
 ** Includes
 */
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
-
 #define __NOLIBBASE__
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -64,7 +60,7 @@
 
 #include "debug.h"
 #define CATCOMP_NUMBERS
-#include "loc.h"
+#include "locale.h"
 
 /***********************************************************************/
 /*
@@ -82,7 +78,11 @@ extern struct DosLibrary      *DOSBase;
 extern struct IntuitionBase   *IntuitionBase;
 extern struct GfxBase         *GfxBase;
 #endif
+#if defined(__AROS__)
+extern struct UtilityBase     *UtilityBase;
+#else
 extern struct Library         *UtilityBase;
+#endif
 extern struct Library         *MUIMasterBase;
 
 extern struct Library         *DataTypesBase;
@@ -269,19 +269,11 @@ struct MUIS_Popbackground_Status
 ** Macros
 */
 
-#ifdef __AROS__
-#define coloradjustObject       BOOPSIOBJMACRO_START(lib_coloradjust->mcc_Class)
-#define penadjustObject         BOOPSIOBJMACRO_START(lib_penadjust->mcc_Class)
-#define backgroundadjustObject  BOOPSIOBJMACRO_START(lib_backgroundadjust->mcc_Class)
-#define poppenObject            BOOPSIOBJMACRO_START(lib_poppen->mcc_Class)
-#define popbackObject           BOOPSIOBJMACRO_START(lib_popbackground->mcc_Class)
-#else
 #define coloradjustObject       NewObject(lib_coloradjust->mcc_Class,NULL
 #define penadjustObject         NewObject(lib_penadjust->mcc_Class,NULL
 #define backgroundadjustObject  NewObject(lib_backgroundadjust->mcc_Class,NULL
 #define poppenObject            NewObject(lib_poppen->mcc_Class,NULL
 #define popbackObject           NewObject(lib_popbackground->mcc_Class,NULL
-#endif
 
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
@@ -296,19 +288,14 @@ struct MUIS_Popbackground_Status
 
 // xget()
 // Gets an attribute value from a MUI object
-#ifdef __AROS__
-#define xget XGET
-#else
-ULONG xget(Object *obj, const ULONG attr);
+ULONG xget(Object *obj, const IPTR attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
   // as some attributes (e.g. MUIA_Selected) always return FALSE, even
   // when they are supported by the object. But setting b=0 right before
   // the GetAttr() should catch the case when attr doesn't exist at all
-  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+  #define xget(OBJ, ATTR) ({IPTR b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
-#endif
-
 
 #define olabel(id)    Label(tr(id))
 #define olabel1(id)   Label1(tr(id))
@@ -318,7 +305,6 @@ ULONG xget(Object *obj, const ULONG attr);
 #define oclabel(id)   CLabel(tr(id))
 #define owspace(w)    RectangleObject, MUIA_Weight, (w), End
 #define ofhspace(str) RectangleObject, MUIA_FixHeightTxt, (str), End
-
 
 #ifdef __MORPHOS__
 #undef NewObject
