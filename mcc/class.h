@@ -69,7 +69,11 @@ extern struct DosLibrary      *DOSBase;
 extern struct IntuitionBase   *IntuitionBase;
 extern struct GfxBase         *GfxBase;
 #endif
+#if defined(__AROS__)
+extern struct UtilityBase     *UtilityBase;
+#else
 extern struct Library         *UtilityBase;
+#endif
 extern struct Library         *MUIMasterBase;
 
 extern struct Library         *DataTypesBase;
@@ -130,30 +134,21 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 
 // xget()
 // Gets an attribute value from a MUI object
-#ifdef __AROS__
-#define xget XGET
-#else
-ULONG xget(Object *obj, const ULONG attr);
+ULONG xget(Object *obj, const IPTR attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
   // as some attributes (e.g. MUIA_Selected) always return FALSE, even
   // when they are supported by the object. But setting b=0 right before
   // the GetAttr() should catch the case when attr doesn't exist at all
-  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+  #define xget(OBJ, ATTR) ({IPTR b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
-#endif /* __AROS__ */
 
 #if !defined(IsMinListEmpty)
 #define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
 #endif
 
-#ifdef __AROS__
-    #define spacerObject  BOOPSIOBJMACRO_START(lib_spacerClass->mcc_Class)
-    #define dragBarObject BOOPSIOBJMACRO_START(lib_dragBarClass->mcc_Class)
-#else
-    #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
-    #define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
-#endif
+#define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
+#define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
 
 /***********************************************************************/
 
@@ -222,23 +217,6 @@ struct MUI_DragImage
 #define MUIM_DeleteDragImage 0x80423037
 struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;};
 #endif
-
-/*
-// xget()
-// Gets an attribute value from a MUI object
-#ifdef __AROS__
-    #define xget XGET
-#else
-    ULONG xget(Object *obj, const ULONG attr);
-#if defined(__GNUC__)
-  // please note that we do not evaluate the return value of GetAttr()
-  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
-  // when they are supported by the object. But setting b=0 right before
-  // the GetAttr() should catch the case when attr doesn't exist at all
-  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
-#endif
-#endif
-*/
 
 /****************************************************************************/
 

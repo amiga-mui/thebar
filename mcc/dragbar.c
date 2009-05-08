@@ -332,11 +332,7 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,DragBarDispatcher,cl,obj,msg)
-#else
 DISPATCHER(DragBarDispatcher)
-#endif
 {
     switch(msg->MethodID)
     {
@@ -351,9 +347,6 @@ DISPATCHER(DragBarDispatcher)
         default:                  return DoSuperMethodA(cl,obj,msg);
     }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
