@@ -22,7 +22,7 @@
 
 ###########################################################################
 # This makefile is a very generic one. It tries to identify both, the host
-# and the target operating system for which this app should be compiled.
+# and the target operating system for which YAM should be compiled.
 # However, this auto-detection can be easily overridden by directly
 # specifying an option on the commandline while calling 'make'.
 #
@@ -150,46 +150,38 @@ endif
 PREFIX   = $(CDTHIS)
 OBJDIR   = .obj_$(OS)
 BINDIR   = bin_$(OS)
-LOCALE   = locale
 VPATH    = $(OBJDIR)
 DEPFILE  = Makefile.dep
 DESTDIR  = MUI:Libs/MUI
 
 # target definition
-TARGET    = $(BINDIR)/TheBar.mcp
-TESTTARGET= $(BINDIR)/TheBar-Test
+TARGET    = $(BINDIR)/TheButton.mcc
+TESTTARGET= $(BINDIR)/TheButton-Test
 
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
 DEBUGSYM = -gstabs
-CFLAGS   = -I. -I../include $(CPU) $(WARN) \
-           $(OPTFLAGS) $(DEBUG) $(DEBUGSYM) $(USER_CFLAGS) -c
+CFLAGS   = -I. -I../../include $(CPU) $(WARN) $(OPTFLAGS) \
+           $(DEBUG) $(DEBUGSYM) $(USER_CFLAGS) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM)
 LDLIBS   =
 
 ###########################################################################
 # object files definition
+#
 
-MCPOBJS = library.o \
+MCCOBJS = library.o \
           utils.o \
-          locale.o \
+          brc1.o \
+          scale.o \
+          build.o \
           class.o \
           debug.o \
           vastubs.o
 
-EXTRAOBJS = coloradjust.o \
-            backgroundadjust.o \
-            penadjust.o \
-            popbackground.o \
-            poppen.o
-
-CATALOGS = $(LOCALE)/german.catalog \
-           $(LOCALE)/italian.catalog \
-           $(LOCALE)/czech.catalog \
-           $(LOCALE)/french.catalog \
-           $(LOCALE)/swedish.catalog
+OBJS = $(addprefix $(OBJDIR)/,$(MCCOBJS))
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -214,7 +206,6 @@ ifeq ($(OS), os4)
 
   # additional object files required
   M68KSTUBS = $(OBJDIR)/mccclass_68k.o
-  OBJS      = $(addprefix $(OBJDIR)/,$(MCPOBJS))
 
 else
 ifeq ($(OS), os3)
@@ -235,14 +226,12 @@ ifeq ($(OS), os3)
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
 
-  OBJS = $(addprefix $(OBJDIR)/,$(MCPOBJS)) $(addprefix $(OBJDIR)/,$(EXTRAOBJS))
-
 else
 ifeq ($(OS), mos)
 
   ##############################
   # MorphOS
-  
+
   DESTDIR = SYS:Classes/MUI
 
   # Compiler/link/strip commands
@@ -257,8 +246,6 @@ ifeq ($(OS), mos)
   CFLAGS  += -noixemul -DNO_PPCINLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug
-
-  OBJS = $(addprefix $(OBJDIR)/,$(MCPOBJS))
 
 else
 ifeq ($(OS), aros-i386)
@@ -278,8 +265,6 @@ ifeq ($(OS), aros-i386)
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
   LDLIBS += -larossupport -lrom -lmui
 
-  OBJS = $(addprefix $(OBJDIR)/,$(MCPOBJS))
-
 else
 ifeq ($(OS), aros-ppc)
 
@@ -297,8 +282,6 @@ ifeq ($(OS), aros-ppc)
   # Compiler/Linker flags
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
   LDLIBS += -larossupport -lrom -lmui
-
-  OBJS = $(addprefix $(OBJDIR)/,$(MCPOBJS))
 
 else
 ifeq ($(OS), aros-x86_64)
@@ -318,8 +301,6 @@ ifeq ($(OS), aros-x86_64)
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
   LDLIBS += -larossupport -lrom -lmui
 
-  OBJS = $(addprefix $(OBJDIR)/,$(MCPOBJS))
-
 endif
 endif
 endif
@@ -335,7 +316,7 @@ endif
 .PHONY: all
 ifeq ($(wildcard $(DEPFILE)),$(DEPFILE))
 # great, we have a dependecies file, let's make our target
-all: $(BINDIR) $(OBJDIR) locale.h $(M68KSTUBS) $(TARGET)
+all: $(BINDIR) $(OBJDIR) $(M68KSTUBS) $(TARGET)
 else
 # no dependecies, create it and then call make again
 all: depend
@@ -357,13 +338,9 @@ $(OBJDIR)/%.o: %.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
-$(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
+$(OBJDIR)/mccclass_68k.o: ../../include/mccclass_68k.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
-
-$(LOCALE)/%.catalog: $(LOCALE)/%.ct
-	@echo "  MK $@"
-	@$(FC) $(LOCALE)/TheBar.cd $< CATALOG $@
 
 # for linking the target
 $(TARGET): $(M68KSTUBS) $(OBJS)
@@ -379,22 +356,8 @@ $(TESTTARGET): $(TESTOBJS)
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../include/mccinit.c \
-  ../include/mui/TheBar_mcc.h private.h version.h
-
-locale.h: $(LOCALE)/TheBar.cd locale_h.sd
-	@echo "  MK $@"
-	@$(FC) $(LOCALE)/TheBar.cd locale.h=locale_h.sd 
-
-## CATALOG GENERATION #################
-
-$(LOCALE)/%.catalog: $(LOCALE)/%.ct
-	@echo "  MK $@"
-	@$(FC) $(LOCALE)/TheBar.cd $< CATALOG $@
-
-.IGNORE: $(CATALOGS)
-
-catalogs: $(CATALOGS)
+$(OBJDIR)/library.o: library.c ../../include/mccinit.c \
+  ../../include/mui/TheBar_mcc.h private.h version.h
 
 .PHONY: dump
 dump:
@@ -422,15 +385,15 @@ install: all
 .PHONY: help
 help:
 	@echo "Cleaning targets:"
-	@echo "  clean		 - Cleanup working directory for clean compile"
+	@echo "  clean     - Cleanup working directory for clean compile"
 	@echo "  distclean - Also cleanup autogenerated files"
 	@echo ""
 	@echo "Other generic targets:"
-	@echo "  all		- Build $(TARGET)"
-	@echo "  catalogs	- Build all available catalogs"
+	@echo "  all      - Build $(TARGET)"
+	@echo "  catalogs - Build all available catalogs"
 	@echo ""
 	@echo "Install targets:"
-	@echo "  install	- Install $(TARGET) into $(DESTDIR)"
+	@echo "  install  - Install $(TARGET) into $(DESTDIR)"
 	@echo ""
 	@echo "Parameters:"
 	@echo "  make OS=os3|os4|mos|aros-i386|aros-i686|aros-ppc|aros-x86_64"
@@ -440,10 +403,10 @@ help:
 ## DEPENDENCY GENERATION ##############
 
 .PHONY: depend
-depend: locale.h
+depend: 
 	@echo "  MK $(DEPFILE)"
 	@echo "# AUTOGENERATED! DO NOT EDIT!!!" >$(DEPFILE)
-	@$(CC) -MM $(CFLAGS) $(patsubst %.o,%.c, $(MCPOBJS)) $(patsubst %.o,%.c, $(EXTRAOBJS)) >>$(DEPFILE)
+	@$(CC) -MM $(CFLAGS) $(patsubst %.o,%.c, $(MCCOBJS)) >>$(DEPFILE)
 	@echo "# AUTOGENERATED! DO NOT EDIT!!!" >>$(DEPFILE)
 
 # include dependencies file
