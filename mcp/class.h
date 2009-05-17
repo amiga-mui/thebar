@@ -23,6 +23,10 @@
 #ifndef _CLASS_H
 #define _CLASS_H
 
+#ifdef __AROS__
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 /***********************************************************************/
 /*
 ** Includes
@@ -269,11 +273,19 @@ struct MUIS_Popbackground_Status
 ** Macros
 */
 
+#ifdef __AROS__
+#define coloradjustObject       BOOPSIOBJMACRO_START(lib_coloradjust->mcc_Class)
+#define penadjustObject         BOOPSIOBJMACRO_START(lib_penadjust->mcc_Class)
+#define backgroundadjustObject  BOOPSIOBJMACRO_START(lib_backgroundadjust->mcc_Class)
+#define poppenObject            BOOPSIOBJMACRO_START(lib_poppen->mcc_Class)
+#define popbackObject           BOOPSIOBJMACRO_START(lib_popbackground->mcc_Class)
+#else
 #define coloradjustObject       NewObject(lib_coloradjust->mcc_Class,NULL
 #define penadjustObject         NewObject(lib_penadjust->mcc_Class,NULL
 #define backgroundadjustObject  NewObject(lib_backgroundadjust->mcc_Class,NULL
 #define poppenObject            NewObject(lib_poppen->mcc_Class,NULL
 #define popbackObject           NewObject(lib_popbackground->mcc_Class,NULL
+#endif
 
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
@@ -318,6 +330,12 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 /*
 ** MUI undoc stuff
 */
+
+#ifdef __AROS__
+#define MUIA_Text_Copy               0x80427727
+#warning MUIA_Text_Copy doesn't exist in Zune's mui.h.
+#warning Examine if this can cause trouble!
+#endif
 
 #ifndef MUIA_Window_MenuGadget
 #define MUIA_Window_MenuGadget       0x8042324E
@@ -374,12 +392,16 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 #endif
 
 #ifndef CrawlingObject 
+#ifdef __AROS__
+#define CrawlingObject MUIOBJMACRO_START(MUIC_Crawling)
+#else
 #define CrawlingObject MUI_NewObject(MUIC_Crawling
+#endif
 #endif
 
 #ifndef MUIM_CreateDragImage
 #define MUIM_CreateDragImage 0x8042eb6f /* V18 */ /* Custom Class */
-struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
+struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STACKED LONG touchy; STACKED ULONG flags; }; /* Custom Class */
 
 struct MUI_DragImage
 {
@@ -395,7 +417,7 @@ struct MUI_DragImage
 
 #ifndef MUIM_DeleteDragImage 
 #define MUIM_DeleteDragImage 0x80423037
-struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;}; 
+struct MUIP_DeleteDragImage {STACKED ULONG MethodID; STACKED struct MUI_DragImage *di;}; 
 #endif
 
 /***********************************************************************/

@@ -4,21 +4,22 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-thebar-mcp : includes linklibs contrib-zune-classes-thebar-mcp-catalogs
 
-FILES := backgroundadjust \
+FILES := \
+	 library \
+     backgroundadjust \
 	 class \
 	 coloradjust \
 	 debug \
-	 library \
-	 loc \
+	 locale \
 	 penadjust \
 	 popbackground \
 	 poppen \
 	 utils
 
-USER_INCLUDES := -I../include/aros
+USER_CFLAGS := -isystem ../include
 
-%build_module mmake=contrib-zune-classes-thebar-mcp \
-  modname=TheBar modtype=mcp moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \
+%build_module_simple mmake=contrib-zune-classes-thebar-mcp \
+  modname=TheBar modtype=mcp moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
   files=$(FILES) \
   uselibs="amiga mui rom m"
 
@@ -39,25 +40,25 @@ contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/italiano/TheBar.catalog \
     $(TARGETDIR)/français/TheBar.catalog
 
-locale.h: TheBar.cd locale_h.sd
-	@$(FLEXCAT) TheBar.cd locale.h=locale_h.sd
+locale.h: locale/TheBar.cd locale_h.sd
+	@$(FLEXCAT) locale/TheBar.cd locale.h=locale_h.sd
 
 $(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
 	@$(MKDIR) $(TARGETDIR)/deutsch
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/français/TheBar.catalog: locale/french.ct
 	@$(MKDIR) $(TARGETDIR)/français
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
 	@$(MKDIR) $(TARGETDIR)/svenska
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
 	@$(MKDIR) $(TARGETDIR)/italiano
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@

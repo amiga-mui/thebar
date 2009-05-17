@@ -147,8 +147,13 @@ ULONG xget(Object *obj, const IPTR attr);
 #define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
 #endif
 
+#ifdef __AROS__
+#define spacerObject  BOOPSIOBJMACRO_START(lib_spacerClass->mcc_Class)
+#define dragBarObject BOOPSIOBJMACRO_START(lib_dragBarClass->mcc_Class)
+#else
 #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
 #define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 
@@ -184,7 +189,7 @@ enum
 
 #ifndef MUIM_Backfill
 #define MUIM_Backfill 0x80428d73
-struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; LONG lum; };
+struct  MUIP_Backfill        { STACKED ULONG MethodID; STACKED LONG left; STACKED LONG top; STACKED LONG right; STACKED LONG bottom; STACKED LONG xoffset; STACKED LONG yoffset; STACKED LONG lum; };
 #endif
 
 #ifndef MUIA_CustomBackfill
@@ -201,7 +206,7 @@ struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; 
 
 #ifndef MUIM_CreateDragImage
 #define MUIM_CreateDragImage 0x8042eb6f /* V18 */ /* Custom Class */
-struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
+struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STACKED LONG touchy; STACKED ULONG flags; }; /* Custom Class */
 struct MUI_DragImage
 {
     struct BitMap *bm;

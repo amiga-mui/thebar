@@ -33,10 +33,13 @@ struct Library *ColorWheelBase = NULL;
 struct Library *GradientSliderBase = NULL;
 
 static struct MUI_CustomClass *gradientslider = NULL;
-#define gradientsliderObject NewObject(gradientslider->mcc_Class,NULL
 
 static struct MUI_CustomClass *colorwheel = NULL;
-#define colorwheelObject NewObject(colorwheel->mcc_Class,NULL
+
+#ifdef __AROS__
+#define gradientsliderObject BOOPSIOBJMACRO_START(gradientslider->mcc_Class)
+#define colorwheelObject BOOPSIOBJMACRO_START(colorwheel->mcc_Class)
+#endif
 
 /***********************************************************************/
 

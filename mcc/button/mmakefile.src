@@ -12,10 +12,10 @@ FILES := library \
 	 scale \
 	 utils
 
-USER_INCLUDES := -I../../include/aros
+USER_INCLUDES := -isystem ../../include
 
-%build_module mmake=contrib-zune-classes-thebutton-mcc \
-  modname=TheButton modtype=mcc moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \
+%build_module_simple mmake=contrib-zune-classes-thebutton-mcc \
+  modname=TheButton modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
   files=$(FILES) \
   uselibs="amiga mui rom"
 
