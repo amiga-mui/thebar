@@ -25,7 +25,12 @@
 /***********************************************************************/
 
 static struct MUI_CustomClass *penslist = NULL;
+
+#ifdef __AROS__
+#define penslistObject BOOPSIOBJMACRO_START(penslist->mcc_Class)
+#else
 #define penslistObject NewObject(penslist->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 

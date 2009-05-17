@@ -28,19 +28,24 @@
 /***********************************************************************/
 
 static struct MUI_CustomClass *patterns = NULL;
-#define patternsObject NewObject(patterns->mcc_Class,NULL
-
 static struct MUI_CustomClass *dtpic = NULL;
-#define dtpicObject NewObject(dtpic->mcc_Class,NULL
-
 static struct MUI_CustomClass *bitmap = NULL;
-#define bitmapObject NewObject(bitmap->mcc_Class,NULL
-
 static struct MUI_CustomClass *gradientfield;
-#define gradientfieldObject NewObject(gradientfield->mcc_Class,NULL
-
 static struct MUI_CustomClass *gradient = NULL;
+
+#ifdef __AROS__
+#define patternsObject BOOPSIOBJMACRO_START(patterns->mcc_Class)
+#define dtpicObject BOOPSIOBJMACRO_START(dtpic->mcc_Class)
+#define bitmapObject BOOPSIOBJMACRO_START(bitmap->mcc_Class)
+#define gradientfieldObject BOOPSIOBJMACRO_START(gradientfield->mcc_Class)
+#define gradientObject BOOPSIOBJMACRO_START(gradient->mcc_Class)
+#else
+#define patternsObject NewObject(patterns->mcc_Class,NULL
+#define dtpicObject NewObject(dtpic->mcc_Class,NULL
+#define bitmapObject NewObject(bitmap->mcc_Class,NULL
+#define gradientfieldObject NewObject(gradientfield->mcc_Class,NULL
 #define gradientObject NewObject(gradient->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 
