@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-18 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/coloradjust.c: added missing macro for creating ColorWheels and
+    GradientSliders.
+
 2009-05-06 Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: adapted all sources to be compilable with an AROS cross compiler

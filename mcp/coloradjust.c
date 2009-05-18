@@ -36,9 +36,12 @@ static struct MUI_CustomClass *gradientslider = NULL;
 
 static struct MUI_CustomClass *colorwheel = NULL;
 
-#ifdef __AROS__
+#if defined(__AROS__)
 #define gradientsliderObject BOOPSIOBJMACRO_START(gradientslider->mcc_Class)
 #define colorwheelObject BOOPSIOBJMACRO_START(colorwheel->mcc_Class)
+#else
+#define gradientsliderObject NewObject(gradientslider->mcc_Class, NULL
+#define colorwheelObject NewObject(colorwheel->mcc_Class, NULL
 #endif
 
 /***********************************************************************/
