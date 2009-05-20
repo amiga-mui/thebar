@@ -10,6 +10,13 @@ $URL$
   * mcp/coloradjust.c: added missing macro for creating ColorWheels and
     GradientSliders.
 
+2009-05-17 Matthias Rustler <mrustler@gmx.de>
+
+  * misc: Made TheBar buildable by the AROS build-system again. Use the
+    build_module_simple macro instead of build_module. This means that the
+    library initialisation code is used from TheBar instead of the AROS
+    build-system. Some minor 64-bit fixes (STACKED, IPTR).
+
 2009-05-06 Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: adapted all sources to be compilable with an AROS cross compiler
