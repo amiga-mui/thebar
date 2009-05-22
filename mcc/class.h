@@ -188,12 +188,12 @@ enum
 #endif
 
 #ifndef MUIM_Backfill
-#define MUIM_Backfill 0x80428d73
+#define MUIM_Backfill 0x80428d73UL
 struct  MUIP_Backfill        { STACKED ULONG MethodID; STACKED LONG left; STACKED LONG top; STACKED LONG right; STACKED LONG bottom; STACKED LONG xoffset; STACKED LONG yoffset; STACKED LONG lum; };
 #endif
 
 #ifndef MUIA_CustomBackfill
-#define MUIA_CustomBackfill  0x80420a63
+#define MUIA_CustomBackfill  0x80420a63UL
 #endif
 
 #ifndef MUIM_CustomBackfill  
@@ -205,7 +205,7 @@ struct  MUIP_Backfill        { STACKED ULONG MethodID; STACKED LONG left; STACKE
 #endif
 
 #ifndef MUIM_CreateDragImage
-#define MUIM_CreateDragImage 0x8042eb6f /* V18 */ /* Custom Class */
+#define MUIM_CreateDragImage 0x8042eb6fUL /* V18 */ /* Custom Class */
 struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STACKED LONG touchy; STACKED ULONG flags; }; /* Custom Class */
 struct MUI_DragImage
 {
@@ -219,7 +219,7 @@ struct MUI_DragImage
 #endif
 
 #ifndef MUIM_DeleteDragImage 
-#define MUIM_DeleteDragImage 0x80423037
+#define MUIM_DeleteDragImage 0x80423037UL
 struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;};
 #endif
 

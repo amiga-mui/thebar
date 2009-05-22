@@ -146,7 +146,7 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
     {
         Object *ok, *cancel;
 
-        data->win = WindowObject,
+        data->win = (Object *)WindowObject,
             MUIA_Window_Title,          (IPTR)data->title,
             MUIA_Window_LeftEdge,       _left(obj),
             MUIA_Window_TopEdge,        _bottom(obj)+1,
@@ -159,9 +159,9 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
             MUIA_Window_IconifyGadget,  FALSE,
 
             WindowContents, VGroup,
-                Child, data->pen = penadjustObject,
+                Child, (IPTR)(data->pen = (Object *)penadjustObject,
                     MUIA_Popbackground_PopObj, (IPTR)obj,
-                End,
+                End),
                 Child, HGroup,
                     Child, (IPTR)(ok = obutton(Msg_Pop_OK,Msg_Pop_OK_Help)),
                     Child, (IPTR)HSpace(0),

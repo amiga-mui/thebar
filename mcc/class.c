@@ -47,10 +47,10 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     {
         Object *spacer;
 
-        spacer = spacerObject,
+        spacer = (Object *)spacerObject,
             MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
             isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
-            MUIA_TheButton_TheBar, obj,
+            MUIA_TheButton_TheBar, (IPTR)obj,
         End;
 
         RETURN(spacer);
@@ -60,11 +60,11 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     {
       Object *spacer;
 
-      spacer = spacerObject,
+      spacer = (Object *)spacerObject,
                MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
                isFlagSet(flags, FLG_BarSpacer) ? TAG_IGNORE : MUIA_TheButton_Spacer, MUIV_TheButton_Spacer_Button,
                isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
-               MUIA_TheButton_TheBar, obj,
+               MUIA_TheButton_TheBar, (IPTR)obj,
       End;
 
       RETURN(spacer);
@@ -73,7 +73,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     else if(button->img==MUIV_TheBar_ImageSpacer)
     {
       if(isFlagClear(data->flags, FLG_TextOnly) && data->brushes &&((LONG)data->spacer>=0) && (data->viewMode!=MUIV_TheBar_ViewMode_Text) &&
-         (o = TheButtonObject,
+         (o = (Object *)TheButtonObject,
                MUIA_TheButton_MinVer,                                       16,
                MUIA_Group_Horiz,                                            isFlagSet(flags, FLG_Horiz),
                MUIA_TheButton_TheBar,                                       (IPTR)obj,
@@ -97,10 +97,10 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
       {
         Object *spacer;
 
-        spacer = spacerObject,
+        spacer = (Object *)spacerObject,
                  MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
                  isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
-                 MUIA_TheButton_TheBar, obj,
+                 MUIA_TheButton_TheBar, (IPTR)obj,
                End;
 
         RETURN(spacer);
@@ -2227,7 +2227,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         if (isFlagSet(data->flags, FLG_DragBar))
         {
-            if((data->db = dragBarObject,
+            if((data->db = (Object *)dragBarObject,
                     MUIA_Group_Horiz,      isFlagSet(data->flags, FLG_Horiz),
                     MUIA_TheButton_TheBar, (IPTR)obj,
                 End))
@@ -2544,7 +2544,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     {
                         setFlag(data->flags, FLG_DragBar);
 
-                        if((data->db = dragBarObject,
+                        if((data->db = (Object *)dragBarObject,
                                 MUIA_Group_Horiz,      isFlagSet(data->flags, FLG_Horiz),
                                 MUIA_TheButton_TheBar, (IPTR)obj,
                             End))
