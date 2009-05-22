@@ -20,10 +20,6 @@
 
 ***************************************************************************/
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
-
 #define __NOLIBBASE__
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -147,13 +143,8 @@ ULONG xget(Object *obj, const IPTR attr);
 #define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
 #endif
 
-#ifdef __AROS__
-#define spacerObject  BOOPSIOBJMACRO_START(lib_spacerClass->mcc_Class)
-#define dragBarObject BOOPSIOBJMACRO_START(lib_dragBarClass->mcc_Class)
-#else
 #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
 #define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
-#endif
 
 /***********************************************************************/
 

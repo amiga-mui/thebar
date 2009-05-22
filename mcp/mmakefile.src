@@ -16,7 +16,7 @@ FILES := \
 	 poppen \
 	 utils
 
-USER_CFLAGS := -isystem ../include
+USER_CFLAGS := -isystem ../include -DNO_INLINE_STDARG
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcp \
   modname=TheBar modtype=mcp moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
