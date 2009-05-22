@@ -49,7 +49,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         char            buf[128];
         const char      *t;
 
-        msnprintf(buf, sizeof(buf), (STRPTR)tr(Msg_Info_First), "\33bTheBar.mcp " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
+        snprintf(buf, sizeof(buf), (STRPTR)tr(Msg_Info_First), "\33bTheBar.mcp " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
 
         if((t = tr(Msg_Info_Translator)) && *t)
         {

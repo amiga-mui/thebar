@@ -50,11 +50,7 @@
 #include <mui/TheBar_mcc.h>
 #include <mui/TheBar_mcp.h>
 
-#if defined(__amigaos4__) || defined(__AROS__)
 #include <stdio.h>
-#define msprintf sprintf
-#define msnprintf snprintf
-#endif
 #include <string.h>
 #include <stdlib.h>
 
@@ -126,11 +122,6 @@ enum
 */
 extern STRPTR regs[], frames[], precisions[], dismodes[],
               spacersSizes[], viewModes[], labelPoss[];
-
-#if defined(__amigaos4__) || defined(__AROS__)
-#define msprintf sprintf
-#define msnprintf snprintf
-#endif
 
 /***************************************************************************/
 /*

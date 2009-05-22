@@ -39,10 +39,6 @@ Object *opopfri(ULONG key,ULONG title,ULONG help);
 Object *opopback(ULONG gradient,ULONG key,ULONG title,ULONG help);
 Object *opopframe(ULONG key,ULONG title,ULONG help);
 void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
-#if !defined(__amigaos4__) && !defined(__AROS__)
-STDARGS void msprintf(STRPTR buf,STRPTR fmt,...);
-STDARGS int msnprintf(STRPTR buf,int size,STRPTR fmt,...);
-#endif
 
 /* loc.c */
 struct Catalog *openCatalogVR(CONST_STRPTR name,ULONG minVer,ULONG minRev);

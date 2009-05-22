@@ -83,7 +83,7 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         for (i = 0; i<18; i++)
         {
-            msnprintf(data->specs[i], sizeof(data->specs[i]), (STRPTR)"0:%d", i+MUII_BACKGROUND);
+            snprintf(data->specs[i], sizeof(data->specs[i]), (STRPTR)"0:%d", i+MUII_BACKGROUND);
 
             data->patterns[i] = (Object *)ImageObject,
                 ButtonFrame,
@@ -258,7 +258,7 @@ mPatternsGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec
 
     if (data->pattern>=0)
     {
-        msprintf(msg->spec, (STRPTR)"0:%ld", data->pattern+MUII_BACKGROUND);
+        sprintf(msg->spec, (STRPTR)"0:%ld", data->pattern+MUII_BACKGROUND);
         return MUIV_Popbackground_GetSpec_Spec;
     }
 
@@ -718,7 +718,7 @@ mBitmapGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *
     STRPTR                      x;
 
     get(data->bitmap,MUIA_String_Contents,&x);
-    msprintf(msg->spec,(STRPTR)"5:%s",x);
+    sprintf(msg->spec,(STRPTR)"5:%s",x);
     return MUIV_Popbackground_GetSpec_Spec;
 }
 
@@ -1427,7 +1427,7 @@ mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
             {
                 char buf[32];
 
-                msnprintf(buf,sizeof(buf),(STRPTR)"2:%s",(char *)x);
+                snprintf(buf,sizeof(buf),(STRPTR)"2:%s",(char *)x);
                 set(obj,MUIA_Imagedisplay_Spec,buf);
             }
 
