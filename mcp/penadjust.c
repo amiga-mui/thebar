@@ -128,7 +128,7 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
     {
         char buf[64];
 
-        msnprintf(buf,sizeof(buf),(STRPTR)"2:m%ld",i);
+        snprintf(buf,sizeof(buf),(STRPTR)"2:m%ld",i);
 
         data->pens[i] = (Object *)ImageObject,
             MUIA_Image_FreeHoriz, TRUE,
@@ -141,7 +141,7 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
         if (data->pens[i])
         {
             data->pimages[i] = (APTR)DoMethod(data->list,MUIM_List_CreateImage,data->pens[i],0);
-            msnprintf(buf,sizeof(buf),(STRPTR)"\33O[%08lx] %s",data->pimages[i],pens[i]);
+            snprintf(buf,sizeof(buf),(STRPTR)"\33O[%08lx] %s",data->pimages[i],pens[i]);
             DoMethod(data->list,MUIM_List_InsertSingle,buf,MUIV_List_Insert_Bottom);
         }
     }
@@ -375,7 +375,7 @@ mPenadjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *ms
                 g = (c>>8) & 0xff;
                 b = c & 0xff;
 
-                msnprintf(spec, sizeof(spec), (STRPTR)"r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
+                snprintf(spec, sizeof(spec), (STRPTR)"r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
                 set(obj,MUIA_Pendisplay_Spec,spec);
             }
 
@@ -476,7 +476,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         {
           x = xget(data->mui, MUIA_List_Active);
           if(x>=0)
-            msnprintf(spec, sizeof(spec), (STRPTR)"m%ld",x);
+            snprintf(spec, sizeof(spec), (STRPTR)"m%ld",x);
           else
             res = MUIV_Popbackground_GetSpec_Fail;
 
@@ -487,7 +487,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         case PAGE_Colormap:
         {
           x = xget(data->colormap, MUIA_Numeric_Value);
-          msnprintf(spec, sizeof(spec), (STRPTR)"p%ld",x);
+          snprintf(spec, sizeof(spec), (STRPTR)"p%ld",x);
         }
         break;
 
@@ -496,7 +496,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         {
           struct MUI_RGBcolor *rgb = (struct MUI_RGBcolor *)xget(data->rgb, MUIA_Coloradjust_RGB);
 
-          msnprintf(spec, sizeof(spec), (STRPTR)"r%08lx,%08lx,%08lx", rgb->red, rgb->green, rgb->blue);
+          snprintf(spec, sizeof(spec), (STRPTR)"r%08lx,%08lx,%08lx", rgb->red, rgb->green, rgb->blue);
         }
         break;
     }
@@ -505,7 +505,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
     else
     {
         if (msg->flags & MUIV_Popbackground_GetSpec_Image)
-          msprintf(msg->spec, (STRPTR)"2:%s", spec);
+          sprintf(msg->spec, (STRPTR)"2:%s", spec);
         else
           strcpy(msg->spec, spec);
     }
