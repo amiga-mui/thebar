@@ -49,7 +49,7 @@
 #define MUIC_TheBar       "TheBar.mcc"
 #define MUIC_TheBarVirt   "TheBarVirt.mcc"
 
-#ifdef __AROS__
+#if defined(__AROS__) && !defined(NO_INLINE_STDARG)
 #define TheButtonObject   MUIOBJMACRO_START(MUIC_TheButton)
 #define TheBarObject      MUIOBJMACRO_START(MUIC_TheBar)
 #define TheBarVirtObject  MUIOBJMACRO_START(MUIC_TheBarVirt)
