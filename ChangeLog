@@ -10,6 +10,12 @@ $URL$
   * Bugfix: wrong order of arguments for GetAttr (only on AROS)
   * Some 64-bit fixes
   * Some warnings removed (integer <=> pointer conversion)
+  * Using of -DNO_INLINE_STDARG in the AROS metamakefiles made
+    it almost needless to use xxx_OBJMACRO_START together with
+    MUIMASTER_YES_INLINE_STDARG. The only place where I still
+    have to keep them are the public headers, because if an
+    application developer sets the MUIMASTER_YES... macro it
+    will not compile.
 
 2009-05-18 Thore Böckelmann <tboeckel@gmx.de>
 

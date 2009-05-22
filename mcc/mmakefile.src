@@ -17,7 +17,7 @@ FILES := \
 	 spacer \
 	 utils
 
-USER_INCLUDES := -isystem ../include
+USER_INCLUDES := -isystem ../include -DNO_INLINE_STDARG
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcc \
   modname=TheBar modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \

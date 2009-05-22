@@ -23,10 +23,6 @@
 #ifndef _CLASS_H
 #define _CLASS_H
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
-
 /***********************************************************************/
 /*
 ** Includes
@@ -264,19 +260,11 @@ struct MUIS_Popbackground_Status
 ** Macros
 */
 
-#ifdef __AROS__
-#define coloradjustObject       BOOPSIOBJMACRO_START(lib_coloradjust->mcc_Class)
-#define penadjustObject         BOOPSIOBJMACRO_START(lib_penadjust->mcc_Class)
-#define backgroundadjustObject  BOOPSIOBJMACRO_START(lib_backgroundadjust->mcc_Class)
-#define poppenObject            BOOPSIOBJMACRO_START(lib_poppen->mcc_Class)
-#define popbackObject           BOOPSIOBJMACRO_START(lib_popbackground->mcc_Class)
-#else
 #define coloradjustObject       NewObject(lib_coloradjust->mcc_Class,NULL
 #define penadjustObject         NewObject(lib_penadjust->mcc_Class,NULL
 #define backgroundadjustObject  NewObject(lib_backgroundadjust->mcc_Class,NULL
 #define poppenObject            NewObject(lib_poppen->mcc_Class,NULL
 #define popbackObject           NewObject(lib_popbackground->mcc_Class,NULL
-#endif
 
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
@@ -383,15 +371,11 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 #endif
 
 #ifndef CrawlingObject 
-#ifdef __AROS__
-#define CrawlingObject MUIOBJMACRO_START(MUIC_Crawling)
-#else
 #define CrawlingObject MUI_NewObject(MUIC_Crawling
-#endif
 #endif
 
 #ifndef MUIM_CreateDragImage
-#define MUIM_CreateDragImage 0x8042eb6f /* V18 */ /* Custom Class */
+#define MUIM_CreateDragImage 0x8042eb6fUL /* V18 */ /* Custom Class */
 struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STACKED LONG touchy; STACKED ULONG flags; }; /* Custom Class */
 
 struct MUI_DragImage
