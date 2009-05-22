@@ -197,7 +197,7 @@ mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
 
     #ifdef __AROS__
     // AROS's get() doesn't like a structure as storage pointer
-    GetAttr(obj,WHEEL_HSB, (IPTR*)&data->hsb);
+    GetAttr(WHEEL_HSB, obj, (IPTR*)&data->hsb);
     #else
     get(obj,WHEEL_HSB, (ULONG)&data->hsb);
     #endif
@@ -220,7 +220,7 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
 
         #ifdef __AROS__
         // AROS's get() doesn't like a structure as storage pointer
-        GetAttr(obj,WHEEL_HSB,(IPTR*)&hsb);
+        GetAttr(WHEEL_HSB,obj,(IPTR*)&hsb);
         #else
         get(obj,WHEEL_HSB,(ULONG)&hsb);
         #endif
@@ -542,7 +542,7 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
         }
         else
         {
-            data->color = ColorfieldObject,
+            data->color = (Object *)ColorfieldObject,
                 TextFrame,
                 MUIA_Background,  MUII_ButtonBack,
                 MUIA_InnerLeft,   2,
@@ -559,14 +559,14 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
             DoMethod(obj,OM_ADDMEMBER,data->color);
         }
 
-        o = VGroup,
+        o = (Object *)VGroup,
             Child, (IPTR)(data->red   = oslider(0,Msg_Coloradjust_RedHelp,0,255)),
             Child, (IPTR)(data->green = oslider(0,Msg_Coloradjust_GreenHelp,0,255)),
             Child, (IPTR)(data->blue  = oslider(0,Msg_Coloradjust_BlueHelp,0,255)),
             Child, HGroup,
                 MUIA_Group_HorizSpacing, 1,
-                Child, data->colorwheel = colorwheelObject, End,
-                Child, data->slider = gradientsliderObject, End,
+                Child, (IPTR)(data->colorwheel = (Object *)colorwheelObject, End),
+                Child, (IPTR)(data->slider = (Object *)gradientsliderObject, End),
             End,
         End;
         if (!o)
@@ -902,7 +902,7 @@ mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *
             if((p = strchr(spec,',')))
             {
                 *p = 0;
-                if (stch_l(spec,(LONG *)&rgb.cw_Red)==8)
+                if (stch_l(spec,(long *)&rgb.cw_Red)==8)
                 {
                     char *s;
 
@@ -910,10 +910,10 @@ mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *
                     if((p = strchr(s,',')))
                     {
                         *p = 0;
-                        if (stch_l(s,(LONG *)&rgb.cw_Green)==8)
+                        if (stch_l(s,(long *)&rgb.cw_Green)==8)
                         {
                             s = ++p;
-                            if (stch_l(s,(LONG *)&rgb.cw_Blue)==8) set(obj,MUIA_Coloradjust_RGB,&rgb);
+                            if (stch_l(s,(long *)&rgb.cw_Blue)==8) set(obj,MUIA_Coloradjust_RGB,&rgb);
                         }
                     }
                 }

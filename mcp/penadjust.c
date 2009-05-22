@@ -51,7 +51,7 @@ mPenslistNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_CycleChain,    TRUE,
-            MUIA_Listview_List, list = ListObject,
+            MUIA_Listview_List, list = (Object *)ListObject,
                 InputListFrame,
                 MUIA_Background,         MUII_ListBack,
                 MUIA_List_ConstructHook, MUIV_List_ConstructHook_String,
@@ -130,7 +130,7 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
 
         msnprintf(buf,sizeof(buf),(STRPTR)"2:m%ld",i);
 
-        data->pens[i] = ImageObject,
+        data->pens[i] = (Object *)ImageObject,
             MUIA_Image_FreeHoriz, TRUE,
             MUIA_Image_FreeVert,  TRUE,
             MUIA_FixWidth,        w,
@@ -260,7 +260,7 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
             MUIA_CycleChain,      TRUE,
 
             /* MUI */
-            Child, mui = penslistObject, End,
+            Child, mui = (Object *)penslistObject, End,
 
             /* Colormap */
             Child, VGroup,
@@ -270,7 +270,7 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
             End,
 
             /* RGB */
-            Child, rgb = coloradjustObject, End,
+            Child, rgb = (Object *)coloradjustObject, End,
 
             TAG_MORE, msg->ops_AttrList)))
     {
@@ -435,18 +435,18 @@ mPenadjustSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpe
             p = strchr(spec,',');
             if (!p) return MUIV_Popbackground_SetSpec_Fail;
             *p = 0;
-            if (stch_l(spec,(LONG *)&rgb.red)!=8) return MUIV_Popbackground_SetSpec_Fail;
+            if (stch_l(spec,(long *)&rgb.red)!=8) return MUIV_Popbackground_SetSpec_Fail;
             *p++ = ',';
 
             s = p;
             p = strchr(s,',');
             if (!p) return MUIV_Popbackground_SetSpec_Fail;
             *p = 0;
-            if (stch_l(s,(LONG *)&rgb.green)!=8) return MUIV_Popbackground_SetSpec_Fail;
+            if (stch_l(s,(long *)&rgb.green)!=8) return MUIV_Popbackground_SetSpec_Fail;
             *p++ = ',';
 
             s = p;
-            if (stch_l(s,(LONG *)&rgb.blue)!=8) return MUIV_Popbackground_SetSpec_Fail;
+            if (stch_l(s,(long *)&rgb.blue)!=8) return MUIV_Popbackground_SetSpec_Fail;
 
             set(data->rgb,MUIA_Coloradjust_RGB,&rgb);
             superset(cl,obj,MUIA_Group_ActivePage,PAGE_RGB);

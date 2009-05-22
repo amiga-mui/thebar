@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-22 Matthias Rustler <mrustler@gmx.de>
+  * Bugfix: wrong order of arguments for GetAttr (only on AROS)
+  * Some 64-bit fixes
+  * Some warnings removed (integer <=> pointer conversion)
+
 2009-05-18 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/coloradjust.c: added missing macro for creating ColorWheels and

@@ -53,7 +53,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         if((t = tr(Msg_Info_Translator)) && *t)
         {
-            trans = VGroup,
+            trans = (Object *)VGroup,
                 MUIA_InnerLeft,0,
                 MUIA_InnerBottom,0,
                 MUIA_InnerTop,0,
@@ -62,13 +62,13 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     MUIA_Text_PreParse, (IPTR)"\033c",
                     MUIA_Text_Contents, (IPTR)t,
                 End,
-                Child, (IPTR)ofhspace("a"),
+                Child, ofhspace((IPTR)"a"),
             End;
         }
         else
           trans = NULL;
 
-        if((prefs = VGroup,
+        if((prefs = (Object *)VGroup,
 
             Child, RegisterGroup(regs), // Register
 
@@ -85,8 +85,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                             (VGroup,
                                 Child, owspace(20),
                                 Child, HGroup,
-                                    Child, oflabel(Msg_Frame),
-                                    Child, data->frame = opopframe(Msg_Frame,Msg_Frame_Title,Msg_Frame_Help),
+                                    Child, (IPTR)oflabel(Msg_Frame),
+                                    Child, (IPTR)(data->frame = opopframe(Msg_Frame,Msg_Frame_Title,Msg_Frame_Help)),
                                 End,
                                 Child, owspace(20),
                              End) :
@@ -139,9 +139,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                             Child, (IPTR)(data->dragBarFillPen = opoppen(Msg_DragBarFill,Msg_DragBarFill_Title,Msg_DragBarFill_Help)),
                              Child, (IPTR)oflabel(Msg_UseDragBarFill),
                             Child, VGroup,
-                                Child, VSpace(0),
+                                Child, (IPTR)VSpace(0),
                                 Child, (IPTR)(data->useDragBarFillPen = ocheck(Msg_UseDragBarFill, Msg_UseDragBarFill_Help)),
-                                Child, VSpace(0),
+                                Child, (IPTR)VSpace(0),
                             End,
                         End,
                     End, // <DragBar
@@ -186,22 +186,22 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         Child, PopaslObject,
                             MUIA_ShortHelp,   (IPTR)tr(Msg_TextFont_Help),
                             MUIA_Popasl_Type, ASL_FontRequest,
-                            MUIA_Popstring_String, data->textFont = StringObject,
+                            MUIA_Popstring_String, (IPTR)(data->textFont = (Object *)StringObject,
                                 StringFrame,
                                 MUIA_CycleChain,  TRUE,
                                 MUIA_ControlChar, getKeyChar(tr(Msg_TextFont)),
-                            End,
+                            End),
                             MUIA_Popstring_Button, (IPTR)opop(MUII_PopFont,Msg_TextFont_Help),
                         End,
                         Child, (IPTR)olabel2(Msg_TextGfxFont),
                         Child, PopaslObject,
                             MUIA_ShortHelp,   (IPTR)tr(Msg_TextGfxFont_Help),
                             MUIA_Popasl_Type, ASL_FontRequest,
-                            MUIA_Popstring_String, data->textGfxFont = StringObject,
+                            MUIA_Popstring_String, (IPTR)(data->textGfxFont = (Object *)StringObject,
                                 StringFrame,
                                 MUIA_CycleChain,  TRUE,
                                 MUIA_ControlChar, getKeyChar(tr(Msg_TextGfxFont)),
-                            End,
+                            End),
                             MUIA_Popstring_Button, (IPTR)opop(MUII_PopFont,Msg_TextGfxFont_Help),
                         End,
                         Child, (IPTR)olabel2(Msg_Scale),
@@ -238,7 +238,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         Child, (IPTR)(data->enableKeys = ocheck(Msg_EnableKeys,Msg_EnableKeys_Help)),
                         Child, (IPTR)ollabel1(Msg_EnableKeys),
                       End,
-                      Child, HVSpace,
+                      Child, (IPTR)HVSpace,
                     End, // <Options
 
                 End, // <Appearance
@@ -309,14 +309,14 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                             //Child, owspace(1),
                         End, // <Text/Gfx spacing
                     End,
-                    Child, VSpace(0),
+                    Child, (IPTR)VSpace(0),
                 End, // <Spacing
 
                 Child, VGroup, // >Settings
                     Child, ColGroup(4),
                         Child, (IPTR)olabel2(Msg_Precision),
                         Child, (IPTR)(data->precision = ocycle(precisions,Msg_Precision,Msg_Precision_Help)),
-                        Child, olabel2(Msg_DisMode),
+                        Child, (IPTR)olabel2(Msg_DisMode),
                         Child, (IPTR)(data->disMode = ocycle(dismodes,Msg_DisMode,Msg_DisMode_Help)),
                         Child, (IPTR)olabel2(Msg_SpacersSize),
                         Child, (IPTR)(data->spacersSize = ocycle(spacersSizes,Msg_SpacersSize,Msg_SpacersSize_Help)),
@@ -327,23 +327,23 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         Child, ColGroup(5),
                             Child, (IPTR)(data->specialSelect = ocheck(Msg_SpecialSelect,Msg_SpecialSelect_Help)),
                             Child, (IPTR)ollabel1(Msg_SpecialSelect),
-                            Child, HVSpace,
+                            Child, (IPTR)HVSpace,
                             Child, (IPTR)(data->textOverUseShine = ocheck(Msg_TextOverUseShine,Msg_TextOverUseShine_Help)),
                             Child, (IPTR)ollabel1(Msg_TextOverUseShine),
 
                             Child, (IPTR)(data->dontMove = ocheck(Msg_DontMove,Msg_DontMove_Help)),
                             Child, (IPTR)ollabel1(Msg_DontMove),
-                            Child, HVSpace,
+                            Child, (IPTR)HVSpace,
                             Child, (IPTR)(data->ignoreSel = ocheck(Msg_IgnoreSelImages,Msg_IgnoreSelImages_Help)),
                             Child, (IPTR)ollabel1(Msg_IgnoreSelImages),
 
                             Child, (IPTR)(data->ignoreDis = ocheck(Msg_IgnoreDisImages,Msg_IgnoreDisImages_Help)),
                             Child, (IPTR)ollabel1(Msg_IgnoreDisImages),
-                            Child, HVSpace,
+                            Child, (IPTR)HVSpace,
                             Child, (IPTR)(data->ntRaiseActive = ocheck(Msg_NtRaiseActive,Msg_NtRaiseActive_Help)),
                             Child, (IPTR)ollabel1(Msg_NtRaiseActive),
                         End,
-                        Child, HVSpace,
+                        Child, (IPTR)HVSpace,
                     End,
                 End, // <Settings
 
@@ -366,7 +366,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     MUIA_Text_Contents, (IPTR)tr(Msg_Info_Reserved),
                 End,
 
-                Child, ofhspace("a"),
+                Child, ofhspace((IPTR)"a"),
 
                 Child, TextObject,
                     MUIA_Text_Copy,     TRUE,
@@ -374,7 +374,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     MUIA_Text_Contents, (IPTR)tr(Msg_Info_Rest),
                 End,
 
-                Child, ofhspace("a"),
+                Child, ofhspace((IPTR)"a"),
 
                 trans ? Child : TAG_IGNORE, trans,
 
@@ -991,7 +991,7 @@ loadPrefs(Object *obj, const char *fileName)
 
         if((iffh = AllocIFF()))
         {
-            if((iffh->iff_Stream = Open(fileName,MODE_OLDFILE)))
+            if((iffh->iff_Stream = (IPTR)Open(fileName,MODE_OLDFILE)))
             {
                 InitIFFasDOS(iffh);
 
@@ -1020,7 +1020,7 @@ loadPrefs(Object *obj, const char *fileName)
                     CloseIFF(iffh);
                 }
 
-                Close(iffh->iff_Stream);
+                Close((BPTR)iffh->iff_Stream);
             }
 
             FreeIFF(iffh);

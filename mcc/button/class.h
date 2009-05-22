@@ -111,14 +111,14 @@ enum
 #define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
 #define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
 
-#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
-#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
-#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))
-#define nnsuperset(cl,obj,tag,val)      SetSuperAttrs(cl,obj,tag,(ULONG)(val),MUIA_NoNotify,TRUE,TAG_DONE)
+#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(IPTR)ptr)
+#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
+#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
+#define nnsuperset(cl,obj,tag,val)      SetSuperAttrs(cl,obj,tag,(IPTR)(val),MUIA_NoNotify,TRUE,TAG_DONE)
 #undef set
-#define set(obj,attr,value)             SetAttrs((Object *)(obj),(ULONG)(attr),(ULONG)(value),TAG_DONE)
+#define set(obj,attr,value)             SetAttrs((Object *)(obj),(ULONG)(attr),(IPTR)(value),TAG_DONE)
 #undef get
-#define get(obj,attr,store)             GetAttr((ULONG)(attr),(APTR)obj,(ULONG *)((ULONG)(store)))
+#define get(obj,attr,store)             GetAttr((ULONG)(attr),(APTR)obj,(IPTR *)((IPTR)(store)))
 
 #define setFlag(mask, flag)             (mask) |= (flag)
 #define clearFlag(mask, flag)           (mask) &= ~(flag)
@@ -189,12 +189,12 @@ struct scale
 */
 
 #ifndef MUIM_Backfill
-#define MUIM_Backfill 0x80428d73
-struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; LONG lum; };
+#define MUIM_Backfill 0x80428d73UL
+struct  MUIP_Backfill        { STACKED ULONG MethodID; STACKED LONG left; STACKED LONG top; STACKED LONG right; STACKED LONG bottom; STACKED LONG xoffset; STACKED LONG yoffset; STACKED LONG lum; };
 #endif
 
 #ifndef MUIA_CustomBackfill
-#define MUIA_CustomBackfill  0x80420a63
+#define MUIA_CustomBackfill  0x80420a63UL
 #endif
 
 #ifndef MUIM_CustomBackfill  
@@ -206,15 +206,15 @@ struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; 
 #endif
 
 #ifndef IDCMP_MOUSEOBJECT
-#define IDCMP_MOUSEOBJECT 0x40000000
+#define IDCMP_MOUSEOBJECT 0x40000000UL
 #endif
 
 #ifndef MUIA_FrameDynamic
-#define MUIA_FrameDynamic 0x804223c9
+#define MUIA_FrameDynamic 0x804223c9UL
 #endif
 
 #ifndef MUIA_FrameVisible
-#define MUIA_FrameVisible 0x80426498
+#define MUIA_FrameVisible 0x80426498UL
 #endif
 
 /***********************************************************************/

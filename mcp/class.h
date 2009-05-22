@@ -138,7 +138,7 @@ extern STRPTR regs[], frames[], precisions[], dismodes[],
 */
 
 /* Tag base */
-#define COLORADJBASE 0xF76B1000
+#define COLORADJBASE 0xF76B1000UL
 
 /* Attributes */
 #define MUIA_Coloradj_RedComp    COLORADJBASE+0
@@ -292,11 +292,11 @@ struct MUIS_Popbackground_Status
 #define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(IPTR)(value),size,item)
 
 #undef get
-#define get(obj,attr,store)            GetAttr((ULONG)(attr),(APTR)obj,(ULONG *)((ULONG)(store)))
+#define get(obj,attr,store)            GetAttr((ULONG)(attr),(APTR)obj,(IPTR *)((IPTR)(store)))
 #undef set
-#define set(obj,attr,value)            SetAttrs((Object *)(obj),(ULONG)(attr),(ULONG)(value),TAG_DONE)
+#define set(obj,attr,value)            SetAttrs((Object *)(obj),(ULONG)(attr),(IPTR)(value),TAG_DONE)
 #undef nnset
-#define nnset(obj,attr,value)          SetAttrs((Object *)(obj),MUIA_NoNotify,TRUE,(ULONG)(attr),(ULONG)(value),TAG_DONE)
+#define nnset(obj,attr,value)          SetAttrs((Object *)(obj),MUIA_NoNotify,TRUE,(ULONG)(attr),(IPTR)(value),TAG_DONE)
 
 // xget()
 // Gets an attribute value from a MUI object
@@ -332,42 +332,42 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 */
 
 #ifdef __AROS__
-#define MUIA_Text_Copy               0x80427727
+#define MUIA_Text_Copy               0x80427727UL
 #warning MUIA_Text_Copy doesn't exist in Zune's mui.h.
 #warning Examine if this can cause trouble!
 #endif
 
 #ifndef MUIA_Window_MenuGadget
-#define MUIA_Window_MenuGadget       0x8042324E
+#define MUIA_Window_MenuGadget       0x8042324EUL
 #endif
 
 #ifndef MUIA_Window_SnapshotGadget
-#define MUIA_Window_SnapshotGadget   0x80423C55
+#define MUIA_Window_SnapshotGadget   0x80423C55UL
 #endif
 
 #ifndef MUIA_Window_ConfigGadget
-#define MUIA_Window_ConfigGadget     0x8042E262
+#define MUIA_Window_ConfigGadget     0x8042E262UL
 #endif
 
 #ifndef MUIA_Window_IconifyGadget
-#define MUIA_Window_IconifyGadget    0x8042BC26
+#define MUIA_Window_IconifyGadget    0x8042BC26UL
 #endif
 
 
 #ifndef MUIA_Imagedisplay_Spec
-#define MUIA_Imagedisplay_Spec 0x8042a547 
+#define MUIA_Imagedisplay_Spec 0x8042a547UL
 #endif
 
 #ifndef MUIA_Imageadjust_Type
-#define MUIA_Imageadjust_Type 0x80422f2b
+#define MUIA_Imageadjust_Type 0x80422f2bUL
 #endif
 
 #ifndef MUIA_Framedisplay_Spec
-#define MUIA_Framedisplay_Spec 0x80421794
+#define MUIA_Framedisplay_Spec 0x80421794UL
 #endif
 
 #ifndef MUIM_Mccprefs_RegisterGadget
-#define MUIM_Mccprefs_RegisterGadget 0x80424828
+#define MUIM_Mccprefs_RegisterGadget 0x80424828UL
 #endif
 
 #ifndef MUII_PopFont
@@ -416,7 +416,7 @@ struct MUI_DragImage
 #endif
 
 #ifndef MUIM_DeleteDragImage 
-#define MUIM_DeleteDragImage 0x80423037
+#define MUIM_DeleteDragImage 0x80423037UL
 struct MUIP_DeleteDragImage {STACKED ULONG MethodID; STACKED struct MUI_DragImage *di;}; 
 #endif
 

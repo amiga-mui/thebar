@@ -65,8 +65,8 @@
 
 /***********************************************************************/
 
-#define TBUTTAGBASE 0xF76B01C8
-#define TBTAGBASE   0xF76B022C
+#define TBUTTAGBASE 0xF76B01C8UL
+#define TBTAGBASE   0xF76B022CUL
 
 /***********************************************************************/
 /*

@@ -261,7 +261,7 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
     {
         Object *ok, *cancel;
 
-        data->win = WindowObject,
+        data->win = (Object *)WindowObject,
             MUIA_Window_Title,          (IPTR)data->title,
             MUIA_Window_LeftEdge,       _left(obj),
             MUIA_Window_TopEdge,        _bottom(obj)+1,
@@ -272,10 +272,10 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
             MUIA_Window_ConfigGadget,   FALSE,
             MUIA_Window_IconifyGadget,  FALSE,
             WindowContents, VGroup,
-                Child, data->back = backgroundadjustObject,
+                Child, (IPTR)(data->back = (Object *)backgroundadjustObject,
                     MUIA_Popbackground_PopObj,   (IPTR)obj,
                     MUIA_Popbackground_Gradient, data->flags & FLG_Gradient,
-                End,
+                End),
                 Child, HGroup,
                     Child, (IPTR)(ok = obutton(Msg_Pop_OK,Msg_Pop_OK_Help)),
                     Child, (IPTR)HSpace(0),
@@ -353,7 +353,7 @@ static IPTR
 mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
 {
   struct data *data = INST_DATA(cl,obj);
-  ULONG                x;
+  IPTR                x;
 
   if((x = xget(msg->obj, MUIA_Imagedisplay_Spec)))
     set(obj,MUIA_Imagedisplay_Spec,x);
@@ -361,7 +361,7 @@ mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
   {
     char spec[sizeof(struct MUI_PenSpec)+2];
 
-    msnprintf(spec,sizeof(spec),(STRPTR)"2:%s",x);
+    msnprintf(spec,sizeof(spec),(STRPTR)"2:%s",(char *)x);
     set(obj,MUIA_Imagedisplay_Spec,spec);
   }
   else if((x = xget(msg->obj,MUIA_Popbackground_Grad)))

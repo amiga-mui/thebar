@@ -28,7 +28,7 @@
 struct Catalog *
 openCatalogVR(CONST_STRPTR name,ULONG minVer,ULONG minRev)
 {
-    if ((lib_cat = OpenCatalog(NULL,(STRPTR)name,OC_BuiltInLanguage,(ULONG)"english",TAG_DONE)))
+    if ((lib_cat = OpenCatalog(NULL,(STRPTR)name,OC_BuiltInLanguage,(IPTR)"english",TAG_DONE)))
     {
         ULONG ver = lib_cat->cat_Version;
 

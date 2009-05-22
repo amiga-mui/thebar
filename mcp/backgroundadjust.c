@@ -72,7 +72,7 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
             Child, owspace(1),
             Child, HGroup,
                 Child, owspace(1),
-                Child, pgroup = RowGroup(3), End,
+                Child, (IPTR)(pgroup = (Object *)RowGroup(3), End),
                 Child, owspace(1),
             End,
             Child, owspace(1),
@@ -85,7 +85,7 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
         {
             msnprintf(data->specs[i], sizeof(data->specs[i]), (STRPTR)"0:%d", i+MUII_BACKGROUND);
 
-            data->patterns[i] = ImageObject,
+            data->patterns[i] = (Object *)ImageObject,
                 ButtonFrame,
                 MUIA_Background,      MUII_ButtonBack,
                 MUIA_InputMode,       MUIV_InputMode_Immediate,
@@ -97,7 +97,7 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 MUIA_FixHeight,       24,
                 MUIA_Image_FreeHoriz, TRUE,
                 MUIA_Image_FreeVert,  TRUE,
-                MUIA_Image_Spec,      data->specs[i],
+                MUIA_Image_Spec,      (IPTR)data->specs[i],
             End;
 
             if (data->patterns[i])
@@ -664,21 +664,21 @@ mBitmapNew(struct IClass *cl,Object *obj,struct opSet *msg)
             Child, ScrollgroupObject,
                 MUIA_Scrollgroup_Contents, VirtgroupObject,
                     MUIA_Frame, MUIV_Frame_Virtual,
-                    Child, pic = dtpicObject, End,
+                    Child, (IPTR)(pic = (Object *)dtpicObject, End),
                 End,
             End,
             Child, HGroup,
                 MUIA_Group_HorizSpacing, 1,
                 Child, PopaslObject,
-                    MUIA_Popstring_String, bitmap = StringObject,
+                    MUIA_Popstring_String, (IPTR)(bitmap = (Object *)StringObject,
                         MUIA_CycleChain,   TRUE,
                         StringFrame,
                         MUIA_String_MaxLen, 256,
-                    End,
-                    MUIA_Popstring_Button, abt = PopButton(MUII_PopFile),
+                    End),
+                    MUIA_Popstring_Button, (IPTR)(abt = PopButton(MUII_PopFile)),
                     MUIA_Popasl_Type,      ASL_FileRequest,
                 End,
-                Child, pbt = PopButton(MUII_PopUp),
+                Child, (IPTR)(pbt = PopButton(MUII_PopUp)),
             End,
             TAG_MORE, msg->ops_AttrList)))
     {
@@ -953,8 +953,8 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_Group_Horiz, TRUE,
 
-            Child, vgrad = gradientfieldObject,
-                MUIA_ShortHelp,           tr(Msg_Popback_VertGradientHelp),
+            Child, vgrad = (Object *)gradientfieldObject,
+                MUIA_ShortHelp,           (IPTR)tr(Msg_Popback_VertGradientHelp),
                 ButtonFrame,
                 MUIA_Background,          MUII_ButtonBack,
                 MUIA_InputMode,           MUIV_InputMode_Immediate,
@@ -963,8 +963,8 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
             End,
 
             Child, VGroup,
-                Child, hgrad = gradientfieldObject,
-                    MUIA_ShortHelp,  tr(Msg_Popback_HorizGradientHelp),
+                Child, hgrad = (Object *)gradientfieldObject,
+                    MUIA_ShortHelp,  (IPTR)tr(Msg_Popback_HorizGradientHelp),
                     ButtonFrame,
                     MUIA_Background, MUII_ButtonBack,
                     MUIA_InputMode,  MUIV_InputMode_Immediate,
@@ -1416,7 +1416,7 @@ static IPTR
 mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
     struct backData *data = INST_DATA(cl,obj);
-    IPTR x = (IPTR)NULL;
+    IPTR x = 0;
 
     if ((data->flags & FLG_Gradient) && get(msg->obj,MUIA_Popbackground_Grad,&x))
         set(obj,MUIA_Popbackground_Grad,x);
@@ -1427,7 +1427,7 @@ mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
             {
                 char buf[32];
 
-                msnprintf(buf,sizeof(buf),(STRPTR)"2:%s",x);
+                msnprintf(buf,sizeof(buf),(STRPTR)"2:%s",(char *)x);
                 set(obj,MUIA_Imagedisplay_Spec,buf);
             }
 
