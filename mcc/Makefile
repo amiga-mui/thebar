@@ -156,7 +156,7 @@ DESTDIR  = MUI:Libs/MUI
 
 # target definition
 TARGET    = $(BINDIR)/TheBar.mcc
-TARGETV   = $(BINDIR)/TheBartVirt.mcc
+TARGETV   = $(BINDIR)/TheBarVirt.mcc
 TESTTARGET= $(BINDIR)/TheBar-Test
 
 # Common compiler/linker flags

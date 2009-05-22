@@ -64,8 +64,23 @@ ifndef (OS)
   ifeq ($(HOST), MorphOS)
     OS = mos
   else
-  ifeq ($(HOST), Aros)
-    OS = aros
+  ifeq ($(HOST), AROS)
+    # now we find out which CPU system aros will be used
+    ifeq ($(shell uname -m), powerpc)
+      OS = aros-ppc
+    endif
+    ifeq ($(shell uname -m), ppc)
+      OS = aros-ppc
+    endif
+    ifeq ($(shell uname -m), i386)
+      OS = aros-i386
+    endif
+    ifeq ($(shell uname -m), i686)
+      OS = aros-i686
+    endif
+    ifeq ($(shell uname -m), x86_64)
+      OS = aros-x86_64
+    endif
   else
     OS = os4
   endif
@@ -211,19 +226,55 @@ ifeq ($(OS), mos)
   LDLIBS  += -ldebug
 
 else
-ifeq ($(OS), aros)
+ifeq ($(OS), aros-i386)
 
   ##############################
-  # AROS
+  # AROS (i386)
 
-  # Compiler/link/strip commands
-  CC      = i686-aros-gcc
-  STRIP   = i686-aros-strip
-  OBJDUMP = i686-aros-objdump
+  ifneq ($(HOST), AROS)
+    CC      = i386-aros-gcc
+    STRIP   = i386-aros-strip
+    OBJDUMP = i386-aros-objdump
+  endif
 
   # Compiler/Linker flags
-  CPU     =
+  CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
+  LDLIBS += -larossupport -lamiga -lmui
 
+else
+ifeq ($(OS), aros-ppc)
+
+  ##############################
+  # AROS (PPC)
+
+  ifneq ($(HOST), AROS)
+    CC      = ppc-aros-gcc
+    STRIP   = ppc-aros-strip
+    OBJDUMP = ppc-aros-objdump
+  endif
+
+  # Compiler/Linker flags
+  CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
+  LDLIBS += -larossupport -lamiga -lmui
+
+else
+ifeq ($(OS), aros-x86_64)
+
+  ##############################
+  # AROS (x86_64)
+
+  ifneq ($(HOST), AROS)
+    CC      = x86_64-aros-gcc
+    STRIP   = x86_64-aros-strip
+    OBJDUMP = x86_64-aros-objdump
+  endif
+
+  # Compiler/Linker flags
+  CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
+  LDLIBS += -larossupport -lamiga -lmui
+
+endif
+endif
 endif
 endif
 endif

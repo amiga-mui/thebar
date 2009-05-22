@@ -23,6 +23,14 @@ $URL$
     have to keep them are the public headers, because if an
     application developer sets the MUIMASTER_YES... macro it
     will not compile.
+  * Renamed TheBar*t*Virt.mcc to TheBarVirt.mcc
+  * Made the AROS version compiling with the normal Makefiles.
+    Copied AROS version of mui.h into include/libraries. If I
+    compile with the standard mui.h TheBar.mcp refuses to start
+    with strange error message (can't find crawler). As I wasn't
+    able to find the reason I copied the whole file.
+    Adjusted the Makefile for the demos.
+    Sync'd demos/vastubs.c with those for mcc/mcp
 
 2009-05-18 Thore Böckelmann <tboeckel@gmx.de>
 
