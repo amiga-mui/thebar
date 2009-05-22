@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-22 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mui/TheBar_mcc.h: we only use the xxx_OBJMACRO_START
+    macros in our public header in case NO_INLINE_STDARG is not
+    specified. This finally allows to compile TheBar with an AROS
+    cross compiler again.
+
 2009-05-22 Matthias Rustler <mrustler@gmx.de>
 
   * Bugfix: wrong order of arguments for GetAttr (only on AROS)
