@@ -5,6 +5,15 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-23 Matthias Rustler <mrustler@gmx.de>
+
+  * Get rid of all warnings like
+    passing argument 1 of '(struct TagItem *
+    (*)(const struct TagItem **, void *))(void *)*(ULONG *)(unsigned char
+    *)&((struct JumpVec *)UtilityBase + 4294967264u)->vec' from incompatible
+    pointer type
+    (Under AROS the argument of NextItem() is a "const struct TagItem **")
+
 2009-05-22 Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mui/TheBar_mcc.h: we only use the xxx_OBJMACRO_START

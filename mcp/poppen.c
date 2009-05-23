@@ -88,7 +88,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    struct TagItem          *tstate;
+    const struct TagItem *tstate;
     ULONG          redraw = FALSE;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )

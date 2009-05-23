@@ -68,9 +68,9 @@ mPenslistNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static IPTR
 mPenslistSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    struct penslistData *data = INST_DATA(cl,obj);
-    struct TagItem      *tag;
-    struct TagItem               *tstate;
+    struct penslistData  *data = INST_DATA(cl,obj);
+    struct TagItem       *tag;
+    const struct TagItem *tstate;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
@@ -310,7 +310,7 @@ mPenadjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct penadjustData *data = INST_DATA(cl,obj);
     struct TagItem       *tag;
-    struct TagItem                *tstate;
+    const struct TagItem *tstate;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
