@@ -378,7 +378,7 @@ mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
       g = (c>>8) & 0xff;
       b = c & 0xff;
 
-      snprintf(spec, sizeof(spec), (STRPTR)"2:r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
+      snprintf(spec, sizeof(spec), (STRPTR)"2:r%08x,%08x,%08x",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
       set(obj,MUIA_Imagedisplay_Spec,spec);
     }
   }
