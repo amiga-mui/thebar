@@ -78,7 +78,7 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         for (i = 0; i<18; i++)
         {
-            snprintf(data->specs[i], sizeof(data->specs[i]), (STRPTR)"0:%d", i+MUII_BACKGROUND);
+            snprintf(data->specs[i], sizeof(data->specs[i]), (STRPTR)"0:%d", (int)(i+MUII_BACKGROUND));
 
             data->patterns[i] = (Object *)ImageObject,
                 ButtonFrame,
