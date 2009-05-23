@@ -91,7 +91,8 @@ static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
-    struct TagItem *tag, *tstate;
+    struct TagItem *tag;
+    const struct TagItem *tstate;
     IPTR           result = 0;
 
     ENTER();
