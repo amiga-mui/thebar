@@ -38,16 +38,20 @@
 #############################################
 # find out the HOST operating system
 # on which this makefile is run
-ifndef (HOST)
-  HOST = $(shell uname)
-  ifeq ($(HOST), AmigaOS)
-    ifeq ($(shell uname -m), powerpc)
-      HOST = AmigaOS4
-    endif
-    ifeq ($(shell uname -m), ppc)
-      HOST = AmigaOS4
-    endif
+HOST ?= $(shell uname)
+ifeq ($(HOST), AmigaOS)
+  ifeq ($(shell uname -m), powerpc)
+    HOST = AmigaOS4
   endif
+  ifeq ($(shell uname -m), ppc)
+    HOST = AmigaOS4
+  endif
+endif
+
+# if no host is identifed (no uname tool)
+# we assume a AmigaOS build
+ifeq ($(HOST),)
+  HOST = AmigaOS
 endif
 
 #############################################
@@ -95,35 +99,39 @@ endif
 # might be overridden on the commandline.
 
 # common commands
-FLEX  = flex
-FC    = flexcat
-EXPR  = expr
-CHMOD = chmod
-SED   = sed
-DATE  = date
-RM    = rm -f
-RMDIR = rm -rf
-MKDIR = mkdir
+FLEX    = flex
+FC      = flexcat
+EXPR    = expr
+DATE    = date
+RM      = delete force
+RMDIR   = delete force all
+MKDIR   = makedir
+CHMOD   = protect FLAGS=rwed
+CP      = copy
+CC      = gcc
+STRIP   = strip
+OBJDUMP = objdump
 
-# override commands for native builds
-ifeq ($(HOST), AmigaOS4)
-  # AmigaOS4 host
-  RM    = delete force
-  RMDIR = delete force all
-  MKDIR = makedir
-  DATE  = gdate
-else
-ifeq ($(HOST), AmigaOS)
-  # AmigaOS3 host
-  RM    = delete force
-  RMDIR = delete force all
-  MKDIR = makedir
-else
-ifeq ($(HOST), MorphOS)
-  # MorphOS host
-  RM    = delete force
-  RMDIR = delete force all
-  MKDIR = makedir
+# path definitions
+CDUP  = /
+CDTHIS=
+
+# override some variables for non-native builds (cross-compiler)
+ifneq ($(HOST), AmigaOS)
+ifneq ($(HOST), AmigaOS4)
+ifneq ($(HOST), MorphOS)
+
+  # when we end up here this is either a unix or Aros host
+  # so lets use unix kind of commands
+  RM    = rm -f
+  RMDIR = rm -rf
+  MKDIR = mkdir -p
+  CHMOD = chmod 755
+  CP    = cp -f
+
+  CDUP  = ../
+  CDTHIS= ./
+
 endif
 endif
 endif
@@ -164,7 +172,7 @@ DEMO9TARGET  = $(BINDIR)/demo9
 DEMO10TARGET = $(BINDIR)/demo10
 
 # Common compiler/linker flags
-WARN     = -W -Wall -Wwrite-strings
+WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
 DEBUGSYM = -gstabs
@@ -187,6 +195,7 @@ ifeq ($(OS), os4)
   # Compiler/Linker flags
   CRT      = newlib
   CPU      = -mcpu=powerpc
+  WARN     += -Wdeclaration-after-statement -Wdisabled-optimization
   CFLAGS   += -mcrt=$(CRT) -D__USE_INLINE__ -D__NEW_TIMEVAL_DEFINITION_USED__ \
               -DNO_PPCINLINE_STDARG -Wa,-mregnames
   LDFLAGS  += -mcrt=$(CRT)
@@ -310,71 +319,81 @@ all: $(BINDIR) $(OBJDIR) $(DEMO1TARGET) $(DEMO2TARGET) $(DEMO3TARGET) $(DEMO4TAR
 
 # make the object directories
 $(OBJDIR):
-	@printf '\033[33mGenerating $@ directory\033[0m\n'
+	@echo "  MK $@"
 	@$(MKDIR) $(OBJDIR)
 
 
 # make the binary directories
 $(BINDIR):
-	@printf '\033[33mGenerating $@ directory\033[0m\n'
+	@echo "  MK $@"
 	@$(MKDIR) $(BINDIR)
 
 #
 
 $(OBJDIR)/%.o: %.c
-	@printf '\033[32mCompiling $<\033[0m\n'
+	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
 #
 
 $(DEMO1TARGET): $(DEMO1OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO1OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO2TARGET): $(DEMO2OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO2OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO3TARGET): $(DEMO3OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO3OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO4TARGET): $(DEMO4OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO4OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO5TARGET): $(DEMO5OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO5OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO6TARGET): $(DEMO6OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO6OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO7TARGET): $(DEMO7OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO7OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO8TARGET): $(DEMO8OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO8OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO9TARGET): $(DEMO9OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO9OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO10TARGET): $(DEMO10OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO10OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 #
