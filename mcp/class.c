@@ -46,10 +46,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     {
         struct InstData *data = INST_DATA(cl,obj);
         Object          *prefs, *trans;
-        char            buf[128];
+        char            buf[256];
         const char      *t;
 
-        snprintf(buf, sizeof(buf), (STRPTR)tr(Msg_Info_First), "\33bTheBar.mcp " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
+        snprintf(buf, sizeof(buf), "\033bTheBar " LIB_REV_STRING "\033n [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ")\n"
+                                   "Copyright (C) 2003-2005 Alfonso Ranieri\n" LIB_COPYRIGHT "\n");
 
         if((t = tr(Msg_Info_Translator)) && *t)
         {

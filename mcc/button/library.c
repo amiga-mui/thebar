@@ -34,7 +34,7 @@
 
 #define INSTDATA      InstData
 
-#define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
 #define USEDCLASSESP  used_classesP
