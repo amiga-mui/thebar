@@ -90,10 +90,10 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    struct data    *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    const struct TagItem *tstate;
-    IPTR           result = 0;
+    TAGSTATE tstate;
+    IPTR result = 0;
 
     ENTER();
 
