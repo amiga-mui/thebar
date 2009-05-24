@@ -97,9 +97,9 @@ mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct colorWheelData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    TAGSTATE tstate;
+    const struct TagItem *tstate;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -329,10 +329,10 @@ mGradientSliderSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct gradientSliderData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    TAGSTATE tstate;
+    const struct TagItem *tstate;
     BOOL rgb = FALSE;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -636,10 +636,10 @@ mColoradjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct coloradjustData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    TAGSTATE tstate;
+    const struct TagItem *tstate;
     BOOL nonotify = FALSE, wheel = FALSE, hsb = FALSE, rgb = FALSE, grad = FALSE, comp = FALSE;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 

@@ -552,7 +552,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     struct TagItem  *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
-    TAGSTATE tstate;
+    const struct TagItem *tstate;
     BOOL redraw, setidcmp, back, sel, pressed, over;
     IPTR res;
 
@@ -561,7 +561,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     redraw = setidcmp = back = sel = pressed = over = FALSE;
     vmt = rat = sct = sut = lpt = ekt = ract = NULL;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 

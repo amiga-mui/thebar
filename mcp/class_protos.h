@@ -23,7 +23,7 @@
 /* utils.c */
 #ifdef __MORPHOS__
 #elif defined(__AROS__)
-Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 int stch_l(const char *chr_ptr, long *u_ptr);

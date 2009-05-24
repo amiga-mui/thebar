@@ -101,10 +101,10 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct data *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    TAGSTATE *tstate;
+    const struct TagItem *tstate;
     BOOL redraw = FALSE;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 

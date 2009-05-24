@@ -70,9 +70,9 @@ mPenslistSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct penslistData  *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    TAGSTATE tstate;
+    const struct TagItem *tstate;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -313,9 +313,9 @@ mPenadjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct penadjustData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    TAGSTATE *tstate;
+    const struct TagItem *tstate;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 

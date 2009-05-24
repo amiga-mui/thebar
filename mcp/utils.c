@@ -27,7 +27,7 @@
 // DoSuperNew()
 // Calls parent NEW method within a subclass
 #if defined(__AROS__)
-Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
+IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE(tag1)
   retval = DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));

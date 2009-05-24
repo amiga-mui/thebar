@@ -5,6 +5,17 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-24 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: fixed all the rest of the compiler warnings when compiling for
+    AROS. Now the compilation should be clean and the binaries should work
+    on all supported platforms. Time for a new release? ;)
+  * include/mccinit.c: added some minor fixes to get rid of all the still
+    existing compiler warnings when compiling for AROS.
+  * misc: reverted the latest TAGSTATE change and used (APTR) casts in each
+    NextTagItem() call which also fixes the issue and also utilises the const
+    TagItem pointer for other platforms than AROS.
+
 2009-05-24 Thore Böckelmann <tboeckel@gmx.de>
 
   * #?/class.h, misc: introduced new macro TAGSTATE, because the argument of
