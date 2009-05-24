@@ -21,7 +21,7 @@
 #***************************************************************************/
 
 .PHONY: all
-all: button mcc mcp
+all: button mcc mcp demo
 
 .PHONY: button
 button:
@@ -35,20 +35,27 @@ mcc:
 mcp:
 	@$(MAKE) -C mcp --no-print-directory
 
+.PHONY: demo
+demo:
+	@$(MAKE) -C demo --no-print-directory
+
 .PHONY: clean
 clean:
 	@$(MAKE) -C mcc/button --no-print-directory clean
 	@$(MAKE) -C mcc --no-print-directory clean
 	@$(MAKE) -C mcp --no-print-directory clean
+	@$(MAKE) -C demo --no-print-directory clean
 
 .PHONY: cleanall
 cleanall:
 	@$(MAKE) -C mcc/button --no-print-directory cleanall
 	@$(MAKE) -C mcc --no-print-directory cleanall
 	@$(MAKE) -C mcp --no-print-directory cleanall
+	@$(MAKE) -C demo --no-print-directory cleanall
 
 .PHONY: install
 install:
 	@$(MAKE) -C mcc/button --no-print-directory install
 	@$(MAKE) -C mcc --no-print-directory install
 	@$(MAKE) -C mcp --no-print-directory install
+	@$(MAKE) -C demo --no-print-directory install
