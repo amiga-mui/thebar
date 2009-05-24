@@ -1,7 +1,7 @@
 /*******************************************************************************
 
         Name:           mccinit.c
-        Versionstring:  $VER: mccinit.c 1.14 (02.05.2009)
+        Versionstring:  $VER: mccinit.c 1.15 (24.05.2009)
         Author:         Jens Langner <Jens.Langner@light-speed.de>
         Distribution:   PD (public domain)
         Description:    library init file for easy generation of a MUI
@@ -47,6 +47,7 @@
   1.13  01.04.2009 : fixed the broken prototype for the assembler stackswap_call
                      function.
   1.14  02.05.2009 : added RTF_EXTENDED for the MorphOS build as well
+  1.15  24.05.2009 : fixed some compiler warnings appear on AROS compile
 
  About:
 
@@ -616,7 +617,7 @@ static BOOL callMccFunction(ULONG (*function)(struct LibraryHeader *), struct Li
       if((stack->stk_Lower = AllocVec(MIN_STACKSIZE, MEMF_PUBLIC)) != NULL)
       {
         // perform the StackSwap
-        stack->stk_Upper = (ULONG)stack->stk_Lower + MIN_STACKSIZE;
+        stack->stk_Upper = (APTR)(((IPTR)stack->stk_Lower) + MIN_STACKSIZE);
         stack->stk_Pointer = (APTR)stack->stk_Upper;
 
         // call routine but with embedding it into a [NewPPC]StackSwap()
@@ -657,7 +658,7 @@ static ULONG mccLibInit(struct LibraryHeader *base)
   if((DOSBase = (struct DosLibrary*)OpenLibrary("dos.library", 36)) &&
      (GfxBase = (struct GfxBase*)OpenLibrary("graphics.library", 36)) &&
      (IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 36)) &&
-     (UtilityBase = OpenLibrary("utility.library", 36)))
+     (UtilityBase = (APTR)OpenLibrary("utility.library", 36)))
   #endif
   {
     // we have to please the internal utilitybase
@@ -733,7 +734,7 @@ static ULONG mccLibInit(struct LibraryHeader *base)
     }
 
     DROPINTERFACE(IUtility);
-    CloseLibrary(UtilityBase);
+    CloseLibrary((struct Library *)UtilityBase);
     UtilityBase = NULL;
   }
 
@@ -806,7 +807,7 @@ static ULONG mccLibExpunge(UNUSED struct LibraryHeader *base)
   if(UtilityBase)
   {
     DROPINTERFACE(IUtility);
-    CloseLibrary(UtilityBase);
+    CloseLibrary((struct Library *)UtilityBase);
     UtilityBase = NULL;
   }
 

@@ -24,7 +24,7 @@
 #ifdef __MORPHOS__
 APTR DoSuperNew( struct IClass *cl, APTR obj, ... );
 #elif defined(__AROS__)
-Object *DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif
