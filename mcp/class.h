@@ -305,6 +305,12 @@ APTR NewObject(struct IClass *classPtr,CONST_STRPTR classID,ULONG tag1,...);
 Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 #endif
 
+#if defined(__AROS__)
+#define TAGSTATE const struct TagItem *
+#else
+#define TAGSTATE struct TagItem *
+#endif
+
 /***********************************************************************/
 /*
 ** MUI undoc stuff

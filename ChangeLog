@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-24 Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/class.h, misc: introduced new macro TAGSTATE, because the argument of
+    NextTagItem() seems to be very different on the various systems and the
+    latest changes produce warnings about incompatible pointer types on OS4
+    again.
+
 2009-05-23 Matthias Rustler <mrustler@gmx.de>
 
   * Get rid of all warnings like

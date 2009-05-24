@@ -69,8 +69,8 @@ static IPTR
 mPenslistSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct penslistData  *data = INST_DATA(cl,obj);
-    struct TagItem       *tag;
-    const struct TagItem *tstate;
+    struct TagItem *tag;
+    TAGSTATE tstate;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
@@ -312,8 +312,8 @@ static ULONG
 mPenadjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct penadjustData *data = INST_DATA(cl,obj);
-    struct TagItem       *tag;
-    const struct TagItem *tstate;
+    struct TagItem *tag;
+    TAGSTATE *tstate;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {

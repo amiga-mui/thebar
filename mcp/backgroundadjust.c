@@ -448,9 +448,9 @@ static IPTR
 mDTPicSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct dtpicData *data = INST_DATA(cl, obj);
-    const struct TagItem *tags;
+    TAGSTATE *tags;
     struct TagItem *tag;
-    ULONG rebuild, redraw;
+    BOOL rebuild, redraw;
     IPTR  res;
 
     rebuild = redraw = FALSE;
@@ -821,9 +821,9 @@ static IPTR
 mGradientFieldSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct gradientFieldData *data = INST_DATA(cl,obj);
-    struct TagItem           *tag;
-    const struct TagItem     *tstate;
-    ULONG                    redraw = FALSE;
+    struct TagItem *tag;
+    TAGSTATE *tstate;
+    BOOL redraw = FALSE;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
@@ -1363,8 +1363,8 @@ static IPTR
 mBackSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct backData *data = INST_DATA(cl,obj);
-    struct TagItem  *tag;
-    const struct TagItem *tstate;
+    struct TagItem *tag;
+    TAGSTATE *tstate;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {

@@ -552,9 +552,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     struct TagItem  *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
-    const struct TagItem  *tstate;
-    ULONG           redraw, setidcmp, back, sel, pressed, over;
-    IPTR            res;
+    TAGSTATE tstate;
+    BOOL redraw, setidcmp, back, sel, pressed, over;
+    IPTR res;
 
     ENTER();
 
