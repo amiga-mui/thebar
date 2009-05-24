@@ -146,6 +146,12 @@ ULONG xget(Object *obj, const IPTR attr);
 #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
 #define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
 
+#if defined(__AROS__)
+#define TAGSTATE const struct TagItem *
+#else
+#define TAGSTATE struct TagItem *
+#endif
+
 /***********************************************************************/
 
 struct scale

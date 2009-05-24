@@ -145,6 +145,12 @@ ULONG xget(Object *obj, const IPTR attr);
   #define xget(OBJ, ATTR) ({IPTR b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
 
+#if defined(__AROS__)
+#define TAGSTATE const struct TagItem *
+#else
+#define TAGSTATE struct TagItem *
+#endif
+
 /***********************************************************************/
 
 enum
