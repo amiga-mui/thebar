@@ -620,7 +620,7 @@ static BOOL callMccFunction(ULONG (*function)(struct LibraryHeader *), struct Li
         // perform the StackSwap
         #if defined(__AROS__)
         // AROS uses an APTR type for stk_Upper
-        stack->stk_Upper = (APTR)((ULONG)stack->stk_Lower + MIN_STACKSIZE);
+        stack->stk_Upper = (APTR)((IPTR)stack->stk_Lower + MIN_STACKSIZE);
         #else
         // all other systems use ULONG
         stack->stk_Upper = (ULONG)stack->stk_Lower + MIN_STACKSIZE;
