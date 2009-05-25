@@ -17,7 +17,8 @@ FILES := \
 	 spacer \
 	 utils
 
-USER_INCLUDES := -isystem ../include -DNO_INLINE_STDARG
+USER_INCLUDES := ../include
+USER_CFLAGS := -DNO_INLINE_STDARG
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcc \
   modname=TheBar modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
@@ -25,7 +26,7 @@ USER_INCLUDES := -isystem ../include -DNO_INLINE_STDARG
   uselibs="amiga mui rom m"
 
 
-USER_CFLAGS := -DVIRTUAL
+USER_CFLAGS := -DVIRTUAL -DNO_INLINE_STDARG
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mccv \
   modname=TheBarVirt modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \

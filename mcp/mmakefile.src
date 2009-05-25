@@ -6,17 +6,14 @@ include $(TOP)/config/make.cfg
 
 FILES := \
 	 library \
-     backgroundadjust \
-	 class \
-	 coloradjust \
-	 debug \
+	 utils \
 	 locale \
-	 penadjust \
-	 popbackground \
-	 poppen \
-	 utils
+	 class \
+	 debug \
+	 vastubs
 
-USER_CFLAGS := -isystem ../include -DNO_INLINE_STDARG
+USER_INCLUDES := ../include
+USER_CFLAGS := -DNO_INLINE_STDARG
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcp \
   modname=TheBar modtype=mcp moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \

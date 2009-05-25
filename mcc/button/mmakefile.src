@@ -12,7 +12,8 @@ FILES := library \
 	 scale \
 	 utils
 
-USER_INCLUDES := -isystem ../../include -DNO_INLINE_STDARG
+USER_INCLUDES := ../../include
+USER_CFLAGS := -DNO_INLINE_STDARG
 
 %build_module_simple mmake=contrib-zune-classes-thebutton-mcc \
   modname=TheButton modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
