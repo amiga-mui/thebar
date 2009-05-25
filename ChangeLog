@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v26.3 RELEASE ############################################################
+
+2009-05-25 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: bumped version date/revision and updated all readme files for the
+    new 26.3 release - Now with AROS binaries ;)
+
 2009-05-25 Thore Böckelmann <tboeckel@gmx.de>
 
   * mccinit.c: fixed the last compiler warning for OS3. AROS uses an APTR type
