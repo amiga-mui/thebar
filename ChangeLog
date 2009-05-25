@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-25 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mccinit.c: fixed the last compiler warning for OS3. AROS uses an APTR type
+    for StackSwapStruct->stk_Upper while all other systems use ULONG.
+
 2009-05-24 Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: fixed all the rest of the compiler warnings when compiling for
