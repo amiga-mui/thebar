@@ -1,7 +1,7 @@
 /*******************************************************************************
 
         Name:           mccinit.c
-        Versionstring:  $VER: mccinit.c 1.15 (24.05.2009)
+        Versionstring:  $VER: mccinit.c 1.16 (25.05.2009)
         Author:         Jens Langner <Jens.Langner@light-speed.de>
         Distribution:   PD (public domain)
         Description:    library init file for easy generation of a MUI
