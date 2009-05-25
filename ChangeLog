@@ -36,6 +36,9 @@ $URL$
     *)&((struct JumpVec *)UtilityBase + 4294967264u)->vec' from incompatible
     pointer type
     (Under AROS the argument of NextItem() is a "const struct TagItem **")
+  * Don't use #pragma packed on AROS-PPC. 
+  * Get rid of all warnings for format strings (e.g. %ld requires long int
+    but LONG given)
 
 2009-05-22 Jens Langner <Jens.Langner@light-speed.de>
 
