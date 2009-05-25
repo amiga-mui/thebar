@@ -136,10 +136,11 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
         if (data->pens[i])
         {
             data->pimages[i] = (APTR)DoMethod(data->list,MUIM_List_CreateImage,data->pens[i],0);
-            // We must have enough digits to store 64-bit addresses
-            // TODO: check if this really works
-            // snprintf(buf,sizeof(buf),(STRPTR)"\33O[%08lx] %s",data->pimages[i],pens[i]);
+            #if defined(__LP64__)
             snprintf(buf,sizeof(buf),(STRPTR)"\33O[%016lx] %s",(long unsigned int)data->pimages[i],pens[i]);
+            #else
+            snprintf(buf,sizeof(buf),(STRPTR)"\33O[%08lx] %s",data->pimages[i],pens[i]);
+            #endif
             DoMethod(data->list,MUIM_List_InsertSingle,buf,MUIV_List_Insert_Bottom);
         }
     }
