@@ -48,6 +48,7 @@
                      function.
   1.14  02.05.2009 : added RTF_EXTENDED for the MorphOS build as well
   1.15  24.05.2009 : fixed some compiler warnings appear on AROS compile
+  1.16  25.05.2009 : fixed some compiler warnings appear on OS3/MOS compile
 
  About:
 
@@ -617,7 +618,13 @@ static BOOL callMccFunction(ULONG (*function)(struct LibraryHeader *), struct Li
       if((stack->stk_Lower = AllocVec(MIN_STACKSIZE, MEMF_PUBLIC)) != NULL)
       {
         // perform the StackSwap
-        stack->stk_Upper = (APTR)(((IPTR)stack->stk_Lower) + MIN_STACKSIZE);
+        #if defined(__AROS__)
+        // AROS uses an APTR type for stk_Upper
+        stack->stk_Upper = (APTR)((ULONG)stack->stk_Lower + MIN_STACKSIZE);
+        #else
+        // all other systems use ULONG
+        stack->stk_Upper = (ULONG)stack->stk_Lower + MIN_STACKSIZE;
+        #endif
         stack->stk_Pointer = (APTR)stack->stk_Upper;
 
         // call routine but with embedding it into a [NewPPC]StackSwap()
