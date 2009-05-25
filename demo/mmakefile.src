@@ -19,7 +19,8 @@ FILES := demo1 \
 	 demo9 \
 	 demo10
 
-USER_INCLUDES := -isystem ../include -DNO_INLINE_STDARG
+USER_INCLUDES := -I../include
+USER_CFLAGS := -DNO_INLINE_STDARG
 
 %build_progs mmake=contrib-zune-classes-thebar-demos files=$(FILES) \
     targetdir=$(TARGETDIR) \
