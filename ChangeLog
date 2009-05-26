@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-26 Matthias Rustler <mrustler@gmx.de>
+
+  * Added a fix for the AROS metamakefiles which makes it possible
+    to build TheBar outside the source tree.
+
 2009-05-26  Gianfranco Gignina <sh1nkur0@libero.it>
 
   * mcc/class.c: When TheButton class is subclassed and pointer to this 
