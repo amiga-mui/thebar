@@ -427,27 +427,17 @@ TheBar.mcc/MUIA_TheBar_Buttons
          the button it the mutual exclude mask
 
        struct IClass *_class
-         If you want to subclass TheButton.mcc to add drag'n'drop
-         or what else, place the pointer to your class here: TheBar
-         will know how to recreate your buttons correctly.
-         Otherwise leave it NULL!
-         VERY IMPORTANT!:
-         TheBar will consider this pointer as a normal BOOPSI class
-         pointer, so you have to place here a pointer to struct IClass,
-         which is named mcc_Class into struct MUI_CustomClass, otherwise
-         you will have a crash!
-         
+         If you want to subclass TheButton.mcc to add drag'n drop
+         or whatever, place the pointer to your class here: TheBar
+         will know how to recreate your buttons correctly. Please
+         note, that this must be a pointer to a BOOPSI class. So
+         if you subclass from within an mcc you will have to use
+         the address of the mcc_Class pointer in struct MUI_CustomClass.
 
        Object *obj
          This will be filled after the creation of the bar with a
          pointer to the button. Remember not to cache it. Just
          get it and use it.
-
-       To create a 2 buttons mutual exclude group:
-       ...
-       {0, 4, "_Matches", "Matches page.", MUIV_TheBar_ButtonFlag_Immediate|MUIV_TheBar_ButtonFlag_Selected, 1<<5},
-       {1, 5, "_Edit", "Edit page.", MUIV_TheBar_ButtonFlag_Immediate, 1<<4},
-       ...
 
     EXAMPLE
      The following code will create a toolbar with two mutual
