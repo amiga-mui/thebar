@@ -5,6 +5,21 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-26  Gianfranco Gignina <sh1nkur0@libero.it>
+
+  * mcc/class.c: When TheButton class is subclassed and pointer to this subclass 
+    is added to struct MUIS_TheBar_Button like documentation said, this subclass
+	is not used for image spaces. More precisely, If it's used as space
+	MUIV_TheBar_ImageSpacer value, you should obtain setting
+	MUIA_TheBar_SpacerIndex to a right image number a TheButton object
+	which has same features of your TheButton subclass, and this
+	didn't happen. This fix solve this problem without damage normal
+	behaviour of TheBar. This fix permit to have a d&d space in case of
+	MUIV_TheBar_ImageSpacer and MUIA_TheBar_SpacerIndex right setted.
+	Now it's possible to sort, remove and add an (image) space button.
+  * doc/MCC_TheBar.doc: Specified an important step to use a TheButton subclass 
+    with TheBar.
+
 #### v26.3 RELEASE ############################################################
 
 2009-05-25 Jens Langner <Jens.Langner@light-speed.de>
