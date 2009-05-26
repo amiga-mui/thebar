@@ -430,11 +430,11 @@ TheBar.mcc/MUIA_TheBar_Buttons
          If you want to subclass TheButton.mcc to add drag'n'drop
          or what else, place the pointer to your class here: TheBar
          will know how to recreate your buttons correctly.
-		 Otherwise leave it NULL!
-		 VERY IMPORTANT!:
-	     TheBar will consider this pointer as a normal BOOPSI class
-		 pointer, so you have to place here a pointer to struct IClass,
-		 which is named mcc_Class into struct MUI_CustomClass, otherwise
+         Otherwise leave it NULL!
+         VERY IMPORTANT!:
+         TheBar will consider this pointer as a normal BOOPSI class
+         pointer, so you have to place here a pointer to struct IClass,
+         which is named mcc_Class into struct MUI_CustomClass, otherwise
          you will have a crash!
          
 
