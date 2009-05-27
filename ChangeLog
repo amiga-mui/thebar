@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-05-27 Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp/locale: renamed the "Bar spacer" checkbox label to "Force Bar spacer"
+    as that should make it more clear what the real purpose of this checkbox
+    is. In addition, the help text was slightly adapted to reflect the
+    real purpose of it.
+  
 2009-05-26 Matthias Rustler <mrustler@gmx.de>
 
   * Added a fix for the AROS metamakefiles which makes it possible
