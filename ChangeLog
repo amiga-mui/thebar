@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-06-02 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mccinit.c: updated the generic MCC library init header to the
+    very latest version available with additional fixes for AROS compilation.
+
 2009-05-27 Jens Langner <Jens.Langner@light-speed.de>
 
   * mcp/locale: renamed the "Bar spacer" checkbox label to "Force Bar spacer"
