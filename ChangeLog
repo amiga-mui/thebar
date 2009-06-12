@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-06-12  Gianfranco Gignina <sh1nkur0@libero.it>
+  * doc/MCC_TheBar.doc: values of MUIA_TheBar_RemoveSpacers were wrong, 
+    fixed.
+
 2009-06-02 Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mccinit.c: updated the generic MCC library init header to the
