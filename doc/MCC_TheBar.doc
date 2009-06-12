@@ -1306,16 +1306,16 @@ TheBar.mcc/MUIA_TheBar_RemoveSpacers
      The allowed values are the following and can be
      combined as binary flags:
 
-      MUIV_TheBar_Remove_BarSpacers
+      MUIV_TheBar_RemoveSpacers_Bar 
         Remove bar spacers
 
-      MUIV_TheBar_Remove_ButtonSpacers
+      MUIV_TheBar_RemoveSpacers_Button
         Remove buttons spacers
 
-      MUIV_TheBar_Remove_ImageSpacers
+      MUIV_TheBar_RemoveSpacers_Image
         Remove image spacers
 
-      MUIV_TheBar_Remove_All
+      MUIV_TheBar_RemoveSpacers_All
         Remove all spacers
 
 
