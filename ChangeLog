@@ -5,8 +5,14 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-08-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * Makefiles: added "-g" to the debug flags. It seems the OS3 GCC 2.95.3 cross
+    compiler needs this to generate debug infos at all.
+
 2009-06-12  Gianfranco Gignina <sh1nkur0@libero.it>
-  * doc/MCC_TheBar.doc: values of MUIA_TheBar_RemoveSpacers were wrong, 
+
+  * doc/MCC_TheBar.doc: values of MUIA_TheBar_RemoveSpacers were wrong,
     fixed.
 
 2009-06-02 Jens Langner <Jens.Langner@light-speed.de>
@@ -20,7 +26,7 @@ $URL$
     as that should make it more clear what the real purpose of this checkbox
     is. In addition, the help text was slightly adapted to reflect the
     real purpose of it.
-  
+
 2009-05-26 Matthias Rustler <mrustler@gmx.de>
 
   * Added a fix for the AROS metamakefiles which makes it possible
@@ -28,17 +34,17 @@ $URL$
 
 2009-05-26  Gianfranco Gignina <sh1nkur0@libero.it>
 
-  * mcc/class.c: When TheButton class is subclassed and pointer to this 
-    subclass is added to struct MUIS_TheBar_Button like documentation said, 
-    this subclass is not used for image spaces. More precisely, If it's used 
-    as space MUIV_TheBar_ImageSpacer value, you should obtain setting 
+  * mcc/class.c: When TheButton class is subclassed and pointer to this
+    subclass is added to struct MUIS_TheBar_Button like documentation said,
+    this subclass is not used for image spaces. More precisely, If it's used
+    as space MUIV_TheBar_ImageSpacer value, you should obtain setting
     MUIA_TheBar_SpacerIndex to a right image number a TheButton object
-    which has same features of your TheButton subclass, and this 
-    didn't happen. This fix solve this problem without damage normal behaviour 
+    which has same features of your TheButton subclass, and this
+    didn't happen. This fix solve this problem without damage normal behaviour
     of TheBar. This fix permit to have a d&d space in case of
-    MUIV_TheBar_ImageSpacer and MUIA_TheBar_SpacerIndex right setted. 
+    MUIV_TheBar_ImageSpacer and MUIA_TheBar_SpacerIndex right setted.
     Now it's possible to sort, remove and add an (image) space button.
-  * doc/MCC_TheBar.doc: Specified an important step to use a TheButton subclass 
+  * doc/MCC_TheBar.doc: Specified an important step to use a TheButton subclass
     with TheBar.
 
 #### v26.3 RELEASE ############################################################
@@ -79,7 +85,7 @@ $URL$
     *)&((struct JumpVec *)UtilityBase + 4294967264u)->vec' from incompatible
     pointer type
     (Under AROS the argument of NextItem() is a "const struct TagItem **")
-  * Don't use #pragma packed on AROS-PPC. 
+  * Don't use #pragma packed on AROS-PPC.
   * Get rid of all warnings for format strings (e.g. %ld requires long int
     but LONG given)
 
