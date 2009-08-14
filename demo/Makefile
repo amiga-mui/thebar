@@ -175,7 +175,7 @@ DEMO10TARGET = $(BINDIR)/demo10
 WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
-DEBUGSYM = -gstabs
+DEBUGSYM = -g -gstabs
 CFLAGS   = -I. -I../include $(CPU) $(WARN) $(OPTFLAGS) \
            $(DEBUG) $(DEBUGSYM) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM)
