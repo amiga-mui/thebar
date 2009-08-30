@@ -83,9 +83,8 @@ TheBar.mcc/TheBar.mcc
     $Id$
     $URL$
 
-    Copyright (c) 2003-2008 by Alfonso Ranieri
-
-    TheBar is developed by TheBar.mcc Open Source Team
+    Copyright (C) 2003-2005 Alfonso Ranieri
+    Copyright (C) 2005-2009 TheBar Open Source Team
 
     TheBar.mcc is a MUI custom class which provides facilities to
     generate a dynamic graphical toolbar for MUI applications. Beside
