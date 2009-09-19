@@ -82,6 +82,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
     if ((lib_pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
                                                      ASOPOOL_Puddle, 2048,
                                                      ASOPOOL_Threshold, 1024,
+                                                     ASOPOOL_Name, "TheButton.mcc pool",
                                                      TAG_DONE)) != NULL)
     #else
     if ((lib_pool = CreatePool(MEMF_ANY, 2048, 1024)))
