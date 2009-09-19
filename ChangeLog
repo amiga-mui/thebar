@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-09-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: added a name to all memory pools for OS4.
+
 #### v26.4 RELEASE ############################################################
 
 2009-08-30 Jens Langner <Jens.Langner@light-speed.de>
