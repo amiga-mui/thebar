@@ -242,8 +242,54 @@ struct TextFont *openFont(STRPTR name)
 }
 
 /***********************************************************************/
+static APTR pool;
+#if !defined(__amigaos4__) && !defined(__MORPHOS__)
+struct SignalSemaphore poolSema;
+#endif
 
-APTR allocVecPooled(APTR pool, ULONG size)
+BOOL myCreatePool(void)
+{
+  BOOL success = FALSE;
+
+  ENTER();
+
+  #if defined(__amigaos4__)
+  pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                          ASOPOOL_Puddle, 2048,
+                                          ASOPOOL_Threshold, 1024,
+                                          ASOPOOL_Name, "TheButton.mcc pool",
+                                          TAG_DONE);
+  #elif defined(__MORPHOS__)
+  pool = CreatePool(MEMF_SEM_PROTECTED, 2048, 1024);
+  #else
+  pool = CreatePool(MEMF_ANY, 2048, 1024);
+  InitSemaphore(&poolSema);
+  #endif
+
+  if(pool != NULL)
+    success = TRUE;
+
+  RETURN(success);
+  return(success);
+}
+
+void myDeletePool(void)
+{
+  ENTER();
+
+  if(pool != NULL)
+  {
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_MEMPOOL, pool);
+    #else
+    DeletePool(pool);
+    #endif
+
+    pool = NULL;
+  }
+}
+
+APTR allocVecPooled(ULONG size)
 {
 #if defined(__amigaos4__) || defined(__MORPHOS__)
   return AllocVecPooled(pool, size);
@@ -254,8 +300,12 @@ APTR allocVecPooled(APTR pool, ULONG size)
 
   size += sizeof(ULONG);
 
+  ObtainSemaphore(&poolSema);
+
   if((mem = AllocPooled(pool, size)) != NULL)
       *mem++ = size;
+
+  ReleaseSemaphore(&poolSema);
 
   RETURN(mem);
   return mem;
@@ -264,46 +314,21 @@ APTR allocVecPooled(APTR pool, ULONG size)
 
 /****************************************************************************/
 
-void freeVecPooled(APTR pool, APTR mem)
+void freeVecPooled(APTR mem)
 {
 #if defined(__amigaos4__) || defined(__MORPHOS__)
   FreeVecPooled(pool, mem);
 #else
   ENTER();
 
+  ObtainSemaphore(&poolSema);
+
   FreePooled(pool, (LONG *)mem-1, *((LONG *)mem-1));
+
+  ReleaseSemaphore(&poolSema);
 
   LEAVE();
 #endif
-}
-
-/***********************************************************************/
-
-APTR gmalloc(ULONG size)
-{
-  APTR mem;
-
-  ENTER();
-
-  ObtainSemaphore(&lib_poolSem);
-  mem = allocVecPooled(lib_pool,size);
-  ReleaseSemaphore(&lib_poolSem);
-
-  RETURN(mem);
-  return mem;
-}
-
-/***********************************************************************/
-
-void gfree(APTR mem)
-{
-  ENTER();
-
-  ObtainSemaphore(&lib_poolSem);
-  freeVecPooled(lib_pool,mem);
-  ReleaseSemaphore(&lib_poolSem);
-
-  LEAVE();
 }
 
 /***********************************************************************/

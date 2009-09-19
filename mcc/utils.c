@@ -50,9 +50,57 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 #endif
 
 /***********************************************************************/
+static APTR pool;
+#if !defined(__amigaos4__) && !defined(__MORPHOS__)
+static struct SignalSemaphore poolSema;
+#endif
 
-APTR
-allocVecPooled(APTR pool,ULONG size)
+BOOL myCreatePool(void)
+{
+  BOOL success = FALSE;
+
+  ENTER();
+
+  #if defined(__amigaos4__)
+  pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                          ASOPOOL_Puddle, 2048,
+                                          ASOPOOL_Threshold, 1024,
+                                          #if defined(VIRTUAL)
+                                          ASOPOOL_Name, "TheBarVirt.mcc pool",
+                                          #else
+                                          ASOPOOL_Name, "TheBar.mcc pool",
+                                          #endif
+                                          TAG_DONE);
+  #elif defined(__MORPHOS__)
+  pool = CreatePool(MEMF_SEM_PROTECTED, 2048, 1024);
+  #else
+  pool = CreatePool(MEMF_ANY, 2048, 1024);
+  InitSemaphore(&poolSema);
+  #endif
+
+  if(pool != NULL)
+    success = TRUE;
+
+  RETURN(success);
+  return(success);
+}
+
+void myDeletePool(void)
+{
+  ENTER();
+
+  if(pool != NULL)
+  {
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_MEMPOOL, pool);
+    #else
+    DeletePool(pool);
+    #endif
+
+    pool = NULL;
+  }
+}
+APTR allocVecPooled(ULONG size)
 {
   ULONG *mem;
 
@@ -60,8 +108,16 @@ allocVecPooled(APTR pool,ULONG size)
 
   size += sizeof(ULONG);
 
+  #if !defined(__amigaos4__) && !defined(__MORPHOS__)
+  ObtainSemaphore(&poolSema);
+  #endif
+
   if((mem = AllocPooled(pool, size)) != NULL)
     *mem++ = size;
+
+  #if !defined(__amigaos4__) && !defined(__MORPHOS__)
+  ReleaseSemaphore(&poolSema);
+  #endif
 
   RETURN(mem);
   return mem;
@@ -69,8 +125,7 @@ allocVecPooled(APTR pool,ULONG size)
 
 /****************************************************************************/
 
-void
-freeVecPooled(APTR pool, APTR mem)
+void freeVecPooled(APTR mem)
 {
   ENTER();
 
@@ -78,7 +133,15 @@ freeVecPooled(APTR pool, APTR mem)
   {
     ULONG *_mem = (ULONG *)mem;
 
+    #if !defined(__amigaos4__) && !defined(__MORPHOS__)
+    ObtainSemaphore(&poolSema);
+    #endif
+
     FreePooled(pool, &_mem[-1], _mem[-1]);
+
+    #if !defined(__amigaos4__) && !defined(__MORPHOS__)
+    ReleaseSemaphore(&poolSema);
+    #endif
   }
 
   LEAVE();
@@ -86,8 +149,7 @@ freeVecPooled(APTR pool, APTR mem)
 
 /****************************************************************************/
 
-APTR
-reallocVecPooledNC(APTR pool, APTR mem, ULONG size)
+APTR reallocVecPooledNC(APTR mem, ULONG size)
 {
   APTR newmem = NULL;
 
@@ -109,12 +171,12 @@ reallocVecPooledNC(APTR pool, APTR mem, ULONG size)
       else
       {
         // free the old block...
-        freeVecPooled(pool, mem);
+        freeVecPooled(mem);
       }
     }
 
     // ...and allocate a new one
-    newmem = allocVecPooled(pool, size);
+    newmem = allocVecPooled(size);
   }
 
   RETURN(newmem);

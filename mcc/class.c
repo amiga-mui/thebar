@@ -386,7 +386,7 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
     if (data->db) n++;
 
     if (n>STATICSORTSIZE)
-        smsg = allocVecPooled(data->pool,sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
+        smsg = allocVecPooled(sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
     else
         smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
 
@@ -416,7 +416,7 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
     DoSuperMethodA(cl,obj,(Msg)smsg);
 
     if (n>STATICSORTSIZE)
-        freeVecPooled(data->pool,smsg);
+        freeVecPooled(smsg);
 
     RETURN(TRUE);
     return TRUE;
@@ -1148,7 +1148,7 @@ MakeStaticHook(LayoutHook, LayoutFunc);
 /***********************************************************************/
 
 static ULONG
-loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
+loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
 {
     Object *dto;
     ULONG  res = FALSE;
@@ -1189,7 +1189,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                 }
             }
 
-            if((chunky = allocVecPooled(pool,size+csize)))
+            if((chunky = allocVecPooled(size+csize)))
             {
                 ULONG line8 = 0;
 
@@ -1323,7 +1323,8 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                         }
                     }
                 }
-                else freeVecPooled(pool,chunky);
+                else
+                    freeVecPooled(chunky);
             }
         }
 
@@ -1364,9 +1365,6 @@ findButton(struct InstData *data, ULONG ID)
 static void
 removeButton(struct IClass *cl, Object *obj, struct Button *button)
 {
-  struct InstData *data = INST_DATA(cl,obj);
-  APTR pool = data->pool;
-
   ENTER();
 
   D(DBF_STARTUP, "freeing button %d: %08lx", button->ID, button);
@@ -1401,7 +1399,7 @@ removeButton(struct IClass *cl, Object *obj, struct Button *button)
 
       // remove from list and free
       Remove((struct Node *)notify);
-      freeVecPooled(pool, notify);
+      freeVecPooled(notify);
     }
   }
 
@@ -1409,7 +1407,7 @@ removeButton(struct IClass *cl, Object *obj, struct Button *button)
   Remove((struct Node *)button);
 
   // free the buttons' occupied memory
-  FreePooled(pool, button, sizeof(struct Button));
+  freeVecPooled(button);
 
   LEAVE();
 }
@@ -1662,7 +1660,6 @@ ULONG ptable[] =
 
 static BOOL
 makePicsFun(struct pack *pt,
-            APTR pool,
             BOOL dostrip,
             struct MUIS_TheBar_Brush *sb,
             struct MUIS_TheBar_Brush *ssb,
@@ -1705,10 +1702,10 @@ makePicsFun(struct pack *pt,
             }
             else
             {
-                if (loadDTBrush(pool,sb,pt->strip))
+                if (loadDTBrush(sb,pt->strip))
                 {
-                    if (pt->sstrip) loadDTBrush(pool,ssb,pt->sstrip);
-                    if (pt->dstrip) loadDTBrush(pool,dsb,pt->dstrip);
+                    if (pt->sstrip) loadDTBrush(ssb,pt->sstrip);
+                    if (pt->dstrip) loadDTBrush(dsb,pt->dstrip);
                 }
             }
 
@@ -1716,13 +1713,13 @@ makePicsFun(struct pack *pt,
             {
                 if (ssb->data && (sb->dataWidth!=ssb->dataWidth || sb->dataHeight!=ssb->dataHeight))
                 {
-                    freeVecPooled(pool,ssb->data);
+                    freeVecPooled(ssb->data);
                     ssb->data = NULL;
                 }
 
                 if (dsb->data && (sb->dataWidth!=dsb->dataWidth || sb->dataHeight!=dsb->dataHeight))
                 {
-                    freeVecPooled(pool,dsb->data);
+                    freeVecPooled(dsb->data);
                     dsb->data = NULL;
                 }
 
@@ -1748,7 +1745,7 @@ makePicsFun(struct pack *pt,
                 if (dsb->data)
                     totsize += brpsize+brsize;
 
-                if ((pt->brushes = allocVecPooled(pool,totsize)))
+                if ((pt->brushes = allocVecPooled(totsize)))
                 {
                     ULONG rows, cols, horizSpace, vertSpace;
                     int   w, h;
@@ -1833,7 +1830,7 @@ makePicsFun(struct pack *pt,
                 {
                     if (pt->brushes)
                     {
-                        freeVecPooled(pool,pt->brushes);
+                        freeVecPooled(pt->brushes);
 
                         pt->brushes = NULL;
                         if (pt->sbrushes) pt->sbrushes = NULL;
@@ -1877,7 +1874,7 @@ makePicsFun(struct pack *pt,
                     if (pt->spics) totsize += brpsize+brsize;
                     if (pt->dpics) totsize += brpsize+brsize;
 
-                    if ((pt->brushes = allocVecPooled(pool,totsize)))
+                    if ((pt->brushes = allocVecPooled(totsize)))
                     {
                         struct MUIS_TheBar_Brush *brush, *sbrush = NULL, *dbrush = NULL;
                         int                      i;
@@ -1904,14 +1901,14 @@ makePicsFun(struct pack *pt,
 
                         for (i = 0; *p; i++, p++)
                         {
-                            if (!loadDTBrush(pool,pt->brushes[i] = brush+i,*p))
+                            if (!loadDTBrush(pt->brushes[i] = brush+i,*p))
                                 break;
 
                             if (pt->sbrushes)
                             {
                                 if (*sp!=MUIV_TheBar_SkipPic)
                                 {
-                                    if (!loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp))
+                                    if (!loadDTBrush(pt->sbrushes[i] = sbrush+i,*sp))
                                         pt->sbrushes[i] = NULL;
                                 }
                                 sp++;
@@ -1921,7 +1918,7 @@ makePicsFun(struct pack *pt,
                             {
                                 if (*dp!=MUIV_TheBar_SkipPic)
                                 {
-                                    if (!loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp))
+                                    if (!loadDTBrush(pt->dbrushes[i] = dbrush+i,*dp))
                                         pt->dbrushes[i] = NULL;
                                 }
                                 dp++;
@@ -1930,7 +1927,7 @@ makePicsFun(struct pack *pt,
 
                         if (*p)
                         {
-                            freeVecPooled(pool,pt->brushes);
+                            freeVecPooled(pt->brushes);
 
                             pt->brushes = NULL;
                             if (pt->sbrushes) pt->sbrushes = NULL;
@@ -1968,7 +1965,6 @@ makePicsFun(struct pack *pt,
 
 static BOOL
 makePics(struct pack *pt,
-         APTR pool,
          struct MUIS_TheBar_Brush *sb,
          struct MUIS_TheBar_Brush *ssb,
          struct MUIS_TheBar_Brush *dsb,
@@ -1978,9 +1974,9 @@ makePics(struct pack *pt,
 
     ENTER();
 
-    pics = makePicsFun(pt,pool,FALSE,sb,ssb,dsb,nbrPtr);
+    pics = makePicsFun(pt,FALSE,sb,ssb,dsb,nbrPtr);
     if (pics == FALSE && pt->stripBrush)
-        pics = makePicsFun(pt,pool,TRUE,sb,ssb,dsb,nbrPtr);
+        pics = makePicsFun(pt,TRUE,sb,ssb,dsb,nbrPtr);
 
     if (pics == FALSE && pt->brushes)
     {
@@ -2003,7 +1999,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct pack               pt;
     struct MUIS_TheBar_Button *buttons;
-    APTR                      pool;
     struct TagItem            *attrs = msg->ops_AttrList;
     struct MUIS_TheBar_Brush  sb, ssb, dsb;
     BOOL                      pics;
@@ -2012,25 +2007,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     ENTER();
 
     if(GetTagData(MUIA_TheBar_MinVer, 0 ,attrs) > LIB_VERSION)
-    {
-      RETURN(0);
-      return 0;
-    }
-
-    #if defined(__amigaos4__)
-    pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
-                                                            ASOPOOL_Puddle, 2048,
-                                                            ASOPOOL_Threshold, 1024,
-                                                            #if defined(VIRTUAL)
-                                                            ASOPOOL_Name, "TheBarVirt.mcc pool",
-                                                            #else
-                                                            ASOPOOL_Name, "TheBar.mcc pool",
-                                                            #endif
-                                                            TAG_DONE);
-    #else
-    pool = CreatePool(MEMF_ANY,2048,1024);
-    #endif
-    if(pool == NULL)
     {
       RETURN(0);
       return 0;
@@ -2058,7 +2034,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if (isFlagSet(pt.pflags, PFLG_FreeVertExists) ? isFlagSet(pt.flags, PFLG_FreeVert) : isFlagSet(pt.flags, FLG_Horiz) == 0)
         setFlag(pt.flags, FLG_FreeVert);
 
-    pics = makePics(&pt,pool,&sb,&ssb,&dsb,&nbr);
+    pics = makePics(&pt,&sb,&ssb,&dsb,&nbr);
 
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_Group_LayoutHook,   (IPTR)&LayoutHook,
@@ -2076,7 +2052,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->flags     = pt.flags | (pics ? 0 : FLG_TextOnly);
         data->flags2    = pt.flags2;
         data->id        = pt.id;
-        data->pool      = pool;
         data->nbr       = nbr;
         data->labelPos  = pt.labelPos;
         data->barPos    = pt.barPos;
@@ -2294,14 +2269,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
           data->allowAlphaChannel = TRUE;
         #endif
     }
-    else
-    {
-      #if defined(__amigaos4__)
-      FreeSysObject(ASOT_MEMPOOL, pool);
-      #else
-        DeletePool(pool);
-        #endif
-    }
 
     RETURN((IPTR)obj);
     return (IPTR)obj;
@@ -2314,7 +2281,6 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
   struct MinNode *node;
-  APTR pool = data->pool;
   IPTR res;
 
   ENTER();
@@ -2333,16 +2299,6 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
 
   // call the super method to let MUI clear everything else
   res = DoSuperMethodA(cl, obj, msg);
-
-  // delete our previously allocated memory pool
-  if(pool != NULL)
-  {
-    #if defined(__amigaos4__)
-    FreeSysObject(ASOT_MEMPOOL, pool);
-    #else
-    DeletePool(pool);
-    #endif
-  }
 
   RETURN(res);
   return res;
@@ -3757,7 +3713,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         size = sizeof(struct ButtonNotify)+sizeof(IPTR)*notify->msg.FollowParams;
 
         // clone
-        if((clone = allocVecPooled(data->pool, size)))
+        if((clone = allocVecPooled(size)))
         {
           // copy the data of the notify
           memcpy(clone, notify, size);
@@ -3823,7 +3779,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         Remove((struct Node *)notify);
 
         // free the clone notify
-        freeVecPooled(data->pool, notify);
+        freeVecPooled(notify);
       }
 
       if(isFlagSet(data->flags, FLG_Setup) && isFlagSet(data->flags, FLG_FreeStrip))
@@ -3855,7 +3811,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
   {
     // lets allocate a temporary buffer for sending
     // the notify method to the button correctly.
-    if((notify = reallocVecPooledNC(data->pool, notify, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
+    if((notify = reallocVecPooledNC(notify, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
     {
       // now we fill the notify structure
       notify->MethodID      = MUIM_Notify;
@@ -3872,7 +3828,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
   }
 
   if(notify != NULL)
-    freeVecPooled(data->pool, notify);
+    freeVecPooled(notify);
 
   RETURN(result);
   return result;
@@ -3912,7 +3868,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 
     ENTER();
 
-    if((button = AllocPooled(data->pool, sizeof(struct Button))))
+    if((button = allocVecPooled(sizeof(struct Button))))
     {
         button->img     = msg->button->img;
         button->ID      = msg->button->ID;
@@ -3978,7 +3934,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
         }
         else
         {
-            FreePooled(data->pool,button,sizeof(struct Button));
+            freeVecPooled(button);
             button = NULL;
         }
     }
@@ -4151,7 +4107,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
           size = sizeof(struct ButtonNotify)+sizeof(ULONG)*notify->msg.FollowParams;
 
           // clone
-          if((clone = allocVecPooled(data->pool, size)))
+          if((clone = allocVecPooled(size)))
           {
             // copy the data of the notify
             memcpy(clone, notify, size);
@@ -4234,7 +4190,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
             Remove((struct Node *)notify);
 
             // free the clone notify
-            freeVecPooled(data->pool, notify);
+            freeVecPooled(notify);
           }
 
           // remove the sleep flag
@@ -4450,7 +4406,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 
     /* Alloc sort msg */
     if (n>STATICSORTSIZE)
-        smsg = allocVecPooled(data->pool,sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
+        smsg = allocVecPooled(sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
     else
         smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
     if (!smsg)
@@ -4479,7 +4435,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
         if (!(button = findButton(data,*id)))
         {
             if(n>STATICSORTSIZE)
-              freeVecPooled(data->pool,smsg);
+              freeVecPooled(smsg);
 
             RETURN(FALSE);
             return FALSE;
@@ -4519,7 +4475,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
         DoMethod(obj,MUIM_Group_ExitChange);
 
     if (n>STATICSORTSIZE)
-        freeVecPooled(data->pool,smsg);
+        freeVecPooled(smsg);
 
     RETURN(TRUE);
     return TRUE;
