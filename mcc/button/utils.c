@@ -258,6 +258,7 @@ BOOL myCreatePool(void)
                                           ASOPOOL_Puddle, 2048,
                                           ASOPOOL_Threshold, 1024,
                                           ASOPOOL_Name, "TheButton.mcc pool",
+                                          ASOPOOL_Protected, TRUE,
                                           TAG_DONE);
   #elif defined(__MORPHOS__)
   pool = CreatePool(MEMF_SEM_PROTECTED, 2048, 1024);

@@ -70,6 +70,7 @@ BOOL myCreatePool(void)
                                           #else
                                           ASOPOOL_Name, "TheBar.mcc pool",
                                           #endif
+                                          ASOPOOL_Protected, TRUE,
                                           TAG_DONE);
   #elif defined(__MORPHOS__)
   pool = CreatePool(MEMF_SEM_PROTECTED, 2048, 1024);

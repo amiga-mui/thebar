@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-09-20 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/utils.c, mcc/button/utils.c: added the missing semaphore protection
+    for the OS4 build.
+
 2009-09-19 Thore Böckelmann <tboeckel@gmx.de>
 
   * misc: replaced the per-instance memory pool by a global and semaphore
