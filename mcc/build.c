@@ -366,7 +366,7 @@ static UBYTE * LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
 /***********************************************************************/
 
-static UBYTE * RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
+static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy)
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size, maskDone = FALSE;
@@ -955,7 +955,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         copy.flags = make->flags;
 
         if (isFlagSet(data->image.flags, BRFLG_ARGB))
-            make->chunky = RGBToRGB(&data->image,&copy);
+            make->chunky = RGBToRGB(data, &data->image,&copy);
         else
             make->chunky = LUT8ToRGB(&data->image,&copy);
 
@@ -976,7 +976,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             if((data->simage.data = getSource(&data->simage)))
             {
                 if (isFlagSet(data->simage.flags, BRFLG_ARGB))
-                    make->schunky = RGBToRGB(&data->simage,&copy);
+                    make->schunky = RGBToRGB(data, &data->simage,&copy);
                 else
                     make->schunky = LUT8ToRGB(&data->simage,&copy);
 
@@ -997,7 +997,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             if((data->dimage.data = getSource(&data->dimage)))
             {
                 if (isFlagSet(data->dimage.flags, BRFLG_ARGB))
-                    make->dchunky = RGBToRGB(&data->dimage,&copy);
+                    make->dchunky = RGBToRGB(data, &data->dimage,&copy);
                 else
                     make->dchunky = LUT8ToRGB(&data->dimage,&copy);
 

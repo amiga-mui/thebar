@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-09-21 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c: readded the instance data for the RGBtoRGB call. The OS3 build
+    needs this.
+
 2009-09-20 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/utils.c, mcc/button/utils.c: added the missing semaphore protection
