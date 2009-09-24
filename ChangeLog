@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-09-24 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/misc: renamed all pool functions to "*Shared*" as this describes what
+    they really do.
+
 2009-09-21 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/build.c: readded the instance data for the RGBtoRGB call. The OS3 build
