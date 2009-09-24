@@ -82,7 +82,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
         if ((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
             GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
         {
-            if(myCreatePool() == TRUE)
+            if(CreateSharedPool() == TRUE)
             {
                 // we open the cybgraphics.library but without failing if
                 // it doesn't exist
@@ -121,7 +121,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
 {
     ENTER();
 
-    myDeletePool();
+    DeleteSharedPool();
 
     if (PictureDTBase)
     {

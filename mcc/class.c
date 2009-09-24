@@ -43,7 +43,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
 
     ENTER();
 
-    if (button->img==MUIV_TheBar_BarSpacer)
+    if(button->img==MUIV_TheBar_BarSpacer)
     {
         Object *spacer;
 
@@ -386,7 +386,7 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
     if (data->db) n++;
 
     if (n>STATICSORTSIZE)
-        smsg = allocVecPooled(sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
+        smsg = SharedAlloc(sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
     else
         smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
 
@@ -416,7 +416,7 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
     DoSuperMethodA(cl,obj,(Msg)smsg);
 
     if (n>STATICSORTSIZE)
-        freeVecPooled(smsg);
+        SharedFree(smsg);
 
     RETURN(TRUE);
     return TRUE;
@@ -1189,7 +1189,7 @@ loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                 }
             }
 
-            if((chunky = allocVecPooled(size+csize)))
+            if((chunky = SharedAlloc(size+csize)))
             {
                 ULONG line8 = 0;
 
@@ -1324,7 +1324,7 @@ loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                     }
                 }
                 else
-                    freeVecPooled(chunky);
+                    SharedFree(chunky);
             }
         }
 
@@ -1399,7 +1399,7 @@ removeButton(struct IClass *cl, Object *obj, struct Button *button)
 
       // remove from list and free
       Remove((struct Node *)notify);
-      freeVecPooled(notify);
+      SharedFree(notify);
     }
   }
 
@@ -1407,7 +1407,7 @@ removeButton(struct IClass *cl, Object *obj, struct Button *button)
   Remove((struct Node *)button);
 
   // free the buttons' occupied memory
-  freeVecPooled(button);
+  SharedFree(button);
 
   LEAVE();
 }
@@ -1713,13 +1713,13 @@ makePicsFun(struct pack *pt,
             {
                 if (ssb->data && (sb->dataWidth!=ssb->dataWidth || sb->dataHeight!=ssb->dataHeight))
                 {
-                    freeVecPooled(ssb->data);
+                    SharedFree(ssb->data);
                     ssb->data = NULL;
                 }
 
                 if (dsb->data && (sb->dataWidth!=dsb->dataWidth || sb->dataHeight!=dsb->dataHeight))
                 {
-                    freeVecPooled(dsb->data);
+                    SharedFree(dsb->data);
                     dsb->data = NULL;
                 }
 
@@ -1745,7 +1745,7 @@ makePicsFun(struct pack *pt,
                 if (dsb->data)
                     totsize += brpsize+brsize;
 
-                if ((pt->brushes = allocVecPooled(totsize)))
+                if ((pt->brushes = SharedAlloc(totsize)))
                 {
                     ULONG rows, cols, horizSpace, vertSpace;
                     int   w, h;
@@ -1830,7 +1830,7 @@ makePicsFun(struct pack *pt,
                 {
                     if (pt->brushes)
                     {
-                        freeVecPooled(pt->brushes);
+                        SharedFree(pt->brushes);
 
                         pt->brushes = NULL;
                         if (pt->sbrushes) pt->sbrushes = NULL;
@@ -1874,7 +1874,7 @@ makePicsFun(struct pack *pt,
                     if (pt->spics) totsize += brpsize+brsize;
                     if (pt->dpics) totsize += brpsize+brsize;
 
-                    if ((pt->brushes = allocVecPooled(totsize)))
+                    if ((pt->brushes = SharedAlloc(totsize)))
                     {
                         struct MUIS_TheBar_Brush *brush, *sbrush = NULL, *dbrush = NULL;
                         int                      i;
@@ -1927,7 +1927,7 @@ makePicsFun(struct pack *pt,
 
                         if (*p)
                         {
-                            freeVecPooled(pt->brushes);
+                            SharedFree(pt->brushes);
 
                             pt->brushes = NULL;
                             if (pt->sbrushes) pt->sbrushes = NULL;
@@ -3713,7 +3713,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         size = sizeof(struct ButtonNotify)+sizeof(IPTR)*notify->msg.FollowParams;
 
         // clone
-        if((clone = allocVecPooled(size)))
+        if((clone = SharedAlloc(size)))
         {
           // copy the data of the notify
           memcpy(clone, notify, size);
@@ -3779,7 +3779,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         Remove((struct Node *)notify);
 
         // free the clone notify
-        freeVecPooled(notify);
+        SharedFree(notify);
       }
 
       if(isFlagSet(data->flags, FLG_Setup) && isFlagSet(data->flags, FLG_FreeStrip))
@@ -3811,7 +3811,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
   {
     // lets allocate a temporary buffer for sending
     // the notify method to the button correctly.
-    if((notify = reallocVecPooledNC(notify, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
+    if((notify = SharedRealloc(notify, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
     {
       // now we fill the notify structure
       notify->MethodID      = MUIM_Notify;
@@ -3828,7 +3828,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
   }
 
   if(notify != NULL)
-    freeVecPooled(notify);
+    SharedFree(notify);
 
   RETURN(result);
   return result;
@@ -3868,7 +3868,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 
     ENTER();
 
-    if((button = allocVecPooled(sizeof(struct Button))))
+    if((button = SharedAlloc(sizeof(struct Button))))
     {
         button->img     = msg->button->img;
         button->ID      = msg->button->ID;
@@ -3934,7 +3934,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
         }
         else
         {
-            freeVecPooled(button);
+            SharedFree(button);
             button = NULL;
         }
     }
@@ -4107,7 +4107,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
           size = sizeof(struct ButtonNotify)+sizeof(ULONG)*notify->msg.FollowParams;
 
           // clone
-          if((clone = allocVecPooled(size)))
+          if((clone = SharedAlloc(size)))
           {
             // copy the data of the notify
             memcpy(clone, notify, size);
@@ -4190,7 +4190,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
             Remove((struct Node *)notify);
 
             // free the clone notify
-            freeVecPooled(notify);
+            SharedFree(notify);
           }
 
           // remove the sleep flag
@@ -4406,7 +4406,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 
     /* Alloc sort msg */
     if (n>STATICSORTSIZE)
-        smsg = allocVecPooled(sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
+        smsg = SharedAlloc(sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
     else
         smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
     if (!smsg)
@@ -4435,7 +4435,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
         if (!(button = findButton(data,*id)))
         {
             if(n>STATICSORTSIZE)
-              freeVecPooled(smsg);
+              SharedFree(smsg);
 
             RETURN(FALSE);
             return FALSE;
@@ -4475,7 +4475,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
         DoMethod(obj,MUIM_Group_ExitChange);
 
     if (n>STATICSORTSIZE)
-        freeVecPooled(smsg);
+        SharedFree(smsg);
 
     RETURN(TRUE);
     return TRUE;

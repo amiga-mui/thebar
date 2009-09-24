@@ -50,58 +50,58 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 #endif
 
 /***********************************************************************/
-static APTR pool;
+static APTR sharedPool;
 #if !defined(__amigaos4__) && !defined(__MORPHOS__)
-static struct SignalSemaphore poolSema;
+static struct SignalSemaphore sharedPoolSema;
 #endif
 
-BOOL myCreatePool(void)
+BOOL CreateSharedPool(void)
 {
   BOOL success = FALSE;
 
   ENTER();
 
   #if defined(__amigaos4__)
-  pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
-                                          ASOPOOL_Puddle, 2048,
-                                          ASOPOOL_Threshold, 1024,
-                                          #if defined(VIRTUAL)
-                                          ASOPOOL_Name, "TheBarVirt.mcc pool",
-                                          #else
-                                          ASOPOOL_Name, "TheBar.mcc pool",
-                                          #endif
-                                          ASOPOOL_Protected, TRUE,
-                                          TAG_DONE);
+  sharedPool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                                ASOPOOL_Puddle, 2048,
+                                                ASOPOOL_Threshold, 1024,
+                                                #if defined(VIRTUAL)
+                                                ASOPOOL_Name, "TheBarVirt.mcc shared pool",
+                                                #else
+                                                ASOPOOL_Name, "TheBar.mcc shared pool",
+                                                #endif
+                                                ASOPOOL_Protected, TRUE,
+                                                TAG_DONE);
   #elif defined(__MORPHOS__)
-  pool = CreatePool(MEMF_SEM_PROTECTED, 2048, 1024);
+  sharedPool = CreatePool(MEMF_SEM_PROTECTED, 2048, 1024);
   #else
-  pool = CreatePool(MEMF_ANY, 2048, 1024);
-  InitSemaphore(&poolSema);
+  sharedPool = CreatePool(MEMF_ANY, 2048, 1024);
+  InitSemaphore(&sharedPoolSema);
   #endif
 
-  if(pool != NULL)
+  if(sharedPool != NULL)
     success = TRUE;
 
   RETURN(success);
   return(success);
 }
 
-void myDeletePool(void)
+void DeleteSharedPool(void)
 {
   ENTER();
 
-  if(pool != NULL)
+  if(sharedPool != NULL)
   {
     #if defined(__amigaos4__)
-    FreeSysObject(ASOT_MEMPOOL, pool);
+    FreeSysObject(ASOT_MEMPOOL, sharedPool);
     #else
-    DeletePool(pool);
+    DeletePool(sharedPool);
     #endif
 
-    pool = NULL;
+    sharedPool = NULL;
   }
 }
-APTR allocVecPooled(ULONG size)
+APTR SharedAlloc(ULONG size)
 {
   ULONG *mem;
 
@@ -110,14 +110,14 @@ APTR allocVecPooled(ULONG size)
   size += sizeof(ULONG);
 
   #if !defined(__amigaos4__) && !defined(__MORPHOS__)
-  ObtainSemaphore(&poolSema);
+  ObtainSemaphore(&sharedPoolSema);
   #endif
 
-  if((mem = AllocPooled(pool, size)) != NULL)
+  if((mem = AllocPooled(sharedPool, size)) != NULL)
     *mem++ = size;
 
   #if !defined(__amigaos4__) && !defined(__MORPHOS__)
-  ReleaseSemaphore(&poolSema);
+  ReleaseSemaphore(&sharedPoolSema);
   #endif
 
   RETURN(mem);
@@ -126,7 +126,7 @@ APTR allocVecPooled(ULONG size)
 
 /****************************************************************************/
 
-void freeVecPooled(APTR mem)
+void SharedFree(APTR mem)
 {
   ENTER();
 
@@ -135,13 +135,13 @@ void freeVecPooled(APTR mem)
     ULONG *_mem = (ULONG *)mem;
 
     #if !defined(__amigaos4__) && !defined(__MORPHOS__)
-    ObtainSemaphore(&poolSema);
+    ObtainSemaphore(&sharedPoolSema);
     #endif
 
-    FreePooled(pool, &_mem[-1], _mem[-1]);
+    FreePooled(sharedPool, &_mem[-1], _mem[-1]);
 
     #if !defined(__amigaos4__) && !defined(__MORPHOS__)
-    ReleaseSemaphore(&poolSema);
+    ReleaseSemaphore(&sharedPoolSema);
     #endif
   }
 
@@ -150,13 +150,13 @@ void freeVecPooled(APTR mem)
 
 /****************************************************************************/
 
-APTR reallocVecPooledNC(APTR mem, ULONG size)
+APTR SharedRealloc(APTR mem, ULONG size)
 {
   APTR newmem = NULL;
 
   ENTER();
 
-  if(pool != NULL && size != 0)
+  if(sharedPool != NULL && size != 0)
   {
     if(mem != NULL)
     {
@@ -172,12 +172,12 @@ APTR reallocVecPooledNC(APTR mem, ULONG size)
       else
       {
         // free the old block...
-        freeVecPooled(mem);
+        SharedFree(mem);
       }
     }
 
     // ...and allocate a new one
-    newmem = allocVecPooled(size);
+    newmem = SharedAlloc(size);
   }
 
   RETURN(newmem);

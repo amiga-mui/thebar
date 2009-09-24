@@ -394,7 +394,7 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
     Remove((struct Node *)notify);
 
     // Free everything of the node
-    freeVecPooled(notify);
+    SharedFree(notify);
   }
 
   // call the super method
@@ -2245,7 +2245,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
 
     // now we allocate a new ButtonNotify and add
     // it to the notify list of the button
-    if((notify = allocVecPooled(size)))
+    if((notify = SharedAlloc(size)))
     {
       // now we fill the notify structure
       memcpy(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
@@ -2266,7 +2266,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
       if(result == 0)
       {
         Remove((struct Node *)notify);
-        freeVecPooled(notify);
+        SharedFree(notify);
       }
     }
   }
@@ -2303,7 +2303,7 @@ mKillNotify(struct IClass *cl, Object *obj, struct MUIP_KillNotify *msg)
       Remove((struct Node *)notify);
 
       // Free everything of the node
-      freeVecPooled(notify);
+      SharedFree(notify);
 
       // we walk on as there might be more than
       // one notify on an attribute.
@@ -2345,7 +2345,7 @@ mKillNotifyObj(struct IClass *cl, Object *obj, struct MUIP_KillNotifyObj *msg)
       Remove((struct Node *)notify);
 
       // Free everything of the node
-      freeVecPooled(notify);
+      SharedFree(notify);
 
       // we walk on as there might be more than
       // one notify on an attribute.
@@ -2387,7 +2387,7 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
         // now we create a full temporary clone of the notify
         // message which we can modify before we send it to
         // the destination
-        if((destMessage = allocVecPooled(sizeof(ULONG)*(notify->msg.FollowParams))))
+        if((destMessage = SharedAlloc(sizeof(ULONG)*(notify->msg.FollowParams))))
         {
           ULONG i;
           Object *destObj = NULL;
@@ -2446,7 +2446,7 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
           }
 
           // cleanup the temporary clone.
-          freeVecPooled(destMessage);
+          SharedFree(destMessage);
         }
 
         // break out

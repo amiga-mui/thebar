@@ -29,8 +29,8 @@
 #define ALLOCRASTER(w,h)        AllocVec(RAWIDTH(w)*((UWORD)(h)),MEMF_CHIP|MEMF_CLEAR)
 #define FREERASTER(ra)          FreeVec(ra)
 
-#define ALLOCRASTERCG(w,h)      allocVecPooled(RAWIDTH(w)*((UWORD)(h)))
-#define FREERASTERCG(ra)        freeVecPooled(ra)
+#define ALLOCRASTERCG(w,h)      SharedAlloc(RAWIDTH(w)*((UWORD)(h)))
+#define FREERASTERCG(ra)        SharedFree(ra)
 
 struct palette
 {
@@ -103,14 +103,14 @@ static UBYTE * LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = allocVecPooled(size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = allocVecPooled(size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -245,14 +245,14 @@ static UBYTE * LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = allocVecPooled(size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = allocVecPooled(size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -385,14 +385,14 @@ static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *i
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = allocVecPooled(size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = allocVecPooled(size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -694,14 +694,14 @@ static UBYTE * RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = allocVecPooled(size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = allocVecPooled(size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -799,7 +799,7 @@ static UBYTE * getSource(struct MUIS_TheBar_Brush *image)
     {
         ULONG size = image->dataWidth*image->dataHeight;
 
-        if(!(src = allocVecPooled(size)))
+        if(!(src = SharedAlloc(size)))
         {
           RETURN(NULL);
           return NULL;
@@ -807,7 +807,7 @@ static UBYTE * getSource(struct MUIS_TheBar_Brush *image)
 
         if (BRCUnpack(image->data, (signed char*)src,image->compressedSize,size))
         {
-            freeVecPooled(src);
+            SharedFree(src);
 
             RETURN(NULL);
             return NULL;
@@ -827,7 +827,7 @@ static void freeSource(struct MUIS_TheBar_Brush *image,UBYTE *back)
 
     if (image->data && image->data!=back)
     {
-        freeVecPooled(image->data);
+        SharedFree(image->data);
         image->data = back;
     }
 
@@ -1057,7 +1057,7 @@ buildBitMapsCyber(struct InstData *data)
 
     ENTER();
 
-    if(!(make = allocVecPooled(sizeof(struct make))))
+    if(!(make = SharedAlloc(sizeof(struct make))))
     {
       LEAVE();
       return;
@@ -1074,7 +1074,7 @@ buildBitMapsCyber(struct InstData *data)
 
     if (!makeSourcesRGB(data,make))
     {
-        freeVecPooled(make);
+        SharedFree(make);
 
         LEAVE();
         return;
@@ -1148,14 +1148,14 @@ buildBitMapsCyber(struct InstData *data)
     {
         // free unused chunky blocks
         if (make->chunky)
-            freeVecPooled(make->chunky);
+            SharedFree(make->chunky);
         if (make->schunky)
-            freeVecPooled(make->schunky);
+            SharedFree(make->schunky);
         if (make->dchunky)
-            freeVecPooled(make->dchunky);
+            SharedFree(make->dchunky);
     }
 
-    freeVecPooled(make);
+    SharedFree(make);
 
     LEAVE();
 }
@@ -1308,7 +1308,7 @@ buildBitMaps(struct InstData *data)
 
     ENTER();
 
-    if (!(make = allocVecPooled(sizeof(struct make))))
+    if (!(make = SharedAlloc(sizeof(struct make))))
     {
       LEAVE();
       return;
@@ -1327,7 +1327,7 @@ buildBitMaps(struct InstData *data)
 
     if (!makeSources(data,make))
     {
-        freeVecPooled(make);
+        SharedFree(make);
 
         LEAVE();
         return;
@@ -1393,13 +1393,13 @@ buildBitMaps(struct InstData *data)
     }
 
     if (make->chunky)
-        freeVecPooled(make->chunky);
+        SharedFree(make->chunky);
     if (make->schunky)
-        freeVecPooled(make->schunky);
+        SharedFree(make->schunky);
     if (make->dchunky)
-        freeVecPooled(make->dchunky);
+        SharedFree(make->dchunky);
 
-    freeVecPooled(make);
+    SharedFree(make);
 
     LEAVE();
 }
@@ -1435,13 +1435,13 @@ freeBitMaps(struct InstData *data)
     #endif
     {
         if (data->strip.nchunky)
-            freeVecPooled(data->strip.nchunky);
+            SharedFree(data->strip.nchunky);
 
         if (data->strip.snchunky)
-            freeVecPooled(data->strip.snchunky);
+            SharedFree(data->strip.snchunky);
 
         if (data->strip.dnchunky)
-            freeVecPooled(data->strip.dnchunky);
+            SharedFree(data->strip.dnchunky);
     }
 
     if(strip->normalBM)
