@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-10-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: implemented MUIM_TheBar_NoNotifySetAttr to set attributes of
+    single buttons without triggering any notifications.
+
 2009-09-24 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/misc: renamed all pool functions to "*Shared*" as this describes what

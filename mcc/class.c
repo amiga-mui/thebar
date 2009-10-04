@@ -4208,57 +4208,115 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
 
 /***********************************************************************/
 
-static IPTR
-mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
+static IPTR privateSetAttr(Object *obj, struct Button *button, IPTR attr, IPTR value, BOOL noNotify)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    struct Button *bt;
-    IPTR         res = FALSE;
+  IPTR res = FALSE;
 
-    ENTER();
+  ENTER();
 
-    if((bt = findButton(data,msg->ID)))
+  switch(attr)
+  {
+    case MUIA_TheBar_Attr_Disabled:
     {
-        IPTR value = msg->value;
+      if(button->obj != NULL)
+        SetAttrs(button->obj, MUIA_NoNotify, noNotify, MUIA_Disabled, value, TAG_DONE);
 
-        switch (msg->attr)
-        {
-            case MUIA_TheBar_Attr_Hide:
-                res = hideButton(cl,obj,data,bt,value);
-                break;
-
-            case MUIA_TheBar_Attr_Sleep:
-                res = sleepButton(cl,obj,data,bt,value);
-                break;
-
-            case MUIA_TheBar_Attr_Disabled:
-                if (bt->obj)
-                    set(bt->obj,MUIA_Disabled,value);
-
-                if (value)
-                    setFlag(bt->flags, BFLG_Disabled);
-                else
-                    clearFlag(bt->flags, BFLG_Disabled);
-                res = TRUE;
-                break;
-
-            case MUIA_TheBar_Attr_Selected:
-                if (bt->exclude)
-                    set(obj,MUIA_TheBar_Active,bt->ID);
-                else if (bt->obj)
-                    set(bt->obj,MUIA_Selected,value);
-
-                if (value)
-                    setFlag(bt->flags, BFLG_Selected);
-                else
-                    clearFlag(bt->flags, BFLG_Selected);
-                res = TRUE;
-                break;
-        }
+      if(value != 0)
+        setFlag(button->flags, BFLG_Disabled);
+      else
+        clearFlag(button->flags, BFLG_Disabled);
+      res = TRUE;
     }
+    break;
 
-    RETURN(res);
-    return res;
+    case MUIA_TheBar_Attr_Selected:
+    {
+      if(button->exclude)
+        SetAttrs(obj, MUIA_NoNotify, noNotify, MUIA_TheBar_Active, button->ID, TAG_DONE);
+      else if(button->obj != NULL)
+        SetAttrs(button->obj, MUIA_NoNotify, noNotify, MUIA_Selected, value, TAG_DONE);
+
+      if(value != 0)
+        setFlag(button->flags, BFLG_Selected);
+      else
+        clearFlag(button->flags, BFLG_Selected);
+      res = TRUE;
+    }
+    break;
+  }
+
+  RETURN(res);
+  return res;
+}
+
+/***********************************************************************/
+
+static IPTR mNoNotifySetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
+{
+  struct InstData *data = INST_DATA(cl, obj);
+  struct Button *bt;
+  IPTR res = FALSE;
+
+  ENTER();
+
+  if((bt = findButton(data, msg->ID)) != NULL)
+  {
+    IPTR value = msg->value;
+
+    switch(msg->attr)
+    {
+      case MUIA_TheBar_Attr_Hide:
+        res = hideButton(cl, obj, data, bt, value);
+      break;
+
+      case MUIA_TheBar_Attr_Sleep:
+        res = sleepButton(cl, obj, data, bt, value);
+      break;
+
+      case MUIA_TheBar_Attr_Disabled:
+      case MUIA_TheBar_Attr_Selected:
+        res = privateSetAttr(obj, bt, msg->attr, value, TRUE);
+      break;
+    }
+  }
+
+  RETURN(res);
+  return res;
+}
+
+/***********************************************************************/
+
+static IPTR mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
+{
+  struct InstData *data = INST_DATA(cl, obj);
+  struct Button *bt;
+  IPTR res = FALSE;
+
+  ENTER();
+
+  if((bt = findButton(data, msg->ID)) != NULL)
+  {
+    IPTR value = msg->value;
+
+    switch(msg->attr)
+    {
+      case MUIA_TheBar_Attr_Hide:
+        res = hideButton(cl, obj, data, bt, value);
+      break;
+
+      case MUIA_TheBar_Attr_Sleep:
+        res = sleepButton(cl, obj, data, bt, value);
+      break;
+
+      case MUIA_TheBar_Attr_Disabled:
+      case MUIA_TheBar_Attr_Selected:
+        res = privateSetAttr(obj, bt, msg->attr, value, FALSE);
+      break;
+    }
+  }
+
+  RETURN(res);
+  return res;
 }
 
 /***********************************************************************/
@@ -4587,6 +4645,7 @@ DISPATCHER(_Dispatcher)
     case MUIM_TheBar_AddButton:         return mAddButton(cl,obj,(APTR)msg);
     case MUIM_TheBar_GetAttr:           return mGetAttr(cl,obj,(APTR)msg);
     case MUIM_TheBar_SetAttr:           return mSetAttr(cl,obj,(APTR)msg);
+    case MUIM_TheBar_NoNotifySetAttr:   return mNoNotifySetAttr(cl,obj,(APTR)msg);
     case MUIM_TheBar_Remove:            return mRemove(cl,obj,(APTR)msg);
     case MUIM_TheBar_GetObject:         return mGetObject(cl,obj,(APTR)msg);
     case MUIM_TheBar_DoOnButton:        return mDoOnButton(cl,obj,(APTR)msg);
