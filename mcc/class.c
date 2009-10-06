@@ -2043,7 +2043,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             isFlagSet(lib_flags, BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, TRUE,
             TAG_MORE,(IPTR)attrs)))
     {
-        struct InstData *data = INST_DATA(cl,obj);
+        struct InstData *data = INST_DATA(cl, obj);
 
         data->brushes   = pt.brushes;
         data->sbrushes  = pt.sbrushes;
@@ -2279,7 +2279,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static IPTR
 mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct MinNode *node;
   IPTR res;
 
@@ -2309,7 +2309,7 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
 static IPTR
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   BOOL result = FALSE;
 
   ENTER();
@@ -2422,7 +2422,7 @@ enum
 static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     struct TagItem *tag;
     const struct TagItem *tstate;
     ULONG flags = 0, res;
@@ -2958,7 +2958,7 @@ static struct MUIS_TheBar_Appearance staticAp = { MUIDEF_TheBar_Appearance_ViewM
 static IPTR
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     #if !defined(VIRTUAL)
     Object               *parent;
     #endif
@@ -2975,15 +2975,15 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         if (!getconfigitem(cl,obj,MUICFG_TheBar_Appearance,&ap))
             ap = &staticAp;
 
-        SetAttrs(obj,MUIA_TheBar_ViewMode,     ap->viewMode,
-                     MUIA_TheBar_LabelPos,     ap->labelPos,
-                     MUIA_TheBar_Borderless,   (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Borderless),
-                     MUIA_TheBar_Raised,       (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Raised),
-                     MUIA_TheBar_Sunny,        (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Sunny),
-                     MUIA_TheBar_Scaled,       (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Scaled),
-                     MUIA_TheBar_BarSpacer,    (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_BarSpacer),
-                     MUIA_TheBar_EnableKeys,   (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_EnableKeys),
-                     TAG_DONE);
+        SetAttrs(obj, MUIA_TheBar_ViewMode,     ap->viewMode,
+                      MUIA_TheBar_LabelPos,     ap->labelPos,
+                      MUIA_TheBar_Borderless,   (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Borderless),
+                      MUIA_TheBar_Raised,       (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Raised),
+                      MUIA_TheBar_Sunny,        (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Sunny),
+                      MUIA_TheBar_Scaled,       (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Scaled),
+                      MUIA_TheBar_BarSpacer,    (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_BarSpacer),
+                      MUIA_TheBar_EnableKeys,   (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_EnableKeys),
+                      TAG_DONE);
     }
 
     if (isFlagClear(data->flags, FLG_Background))
@@ -3205,7 +3205,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     IPTR result = 0;
 
     ENTER();
@@ -3251,7 +3251,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 
     if (isFlagClear(lib_flags,BASEFLG_MUI4))
     {
-        struct InstData *data = INST_DATA(cl,obj);
+        struct InstData *data = INST_DATA(cl, obj);
 
         msg->MinMaxInfo->MinWidth  = _subwidth(obj)+data->objWidth;
         msg->MinMaxInfo->DefWidth  = _subwidth(obj)+data->objWidth;
@@ -3275,7 +3275,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 static IPTR
 mShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
 
     ENTER();
 
@@ -3514,7 +3514,7 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mHide(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     IPTR result = 0;
 
     if (data->gradbm)
@@ -3535,7 +3535,7 @@ mHide(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
 
     ENTER();
 
@@ -3571,7 +3571,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 static IPTR
 mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   IPTR result = 0;
 
   ENTER();
@@ -3593,7 +3593,7 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 static IPTR
 mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
 
     ENTER();
 
@@ -3608,7 +3608,7 @@ mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 static IPTR
 mDeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     IPTR result;
 
     ENTER();
@@ -3626,7 +3626,7 @@ mDeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 static IPTR
 mInitChange(struct IClass *cl,Object *obj,Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   IPTR result;
 
   ENTER();
@@ -3642,7 +3642,7 @@ mInitChange(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mExitChange(struct IClass *cl,Object *obj,Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   IPTR result;
 
   ENTER();
@@ -3658,7 +3658,7 @@ mExitChange(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct MinNode *node;
 
   ENTER();
@@ -3796,11 +3796,9 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-static IPTR
-mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
+static IPTR mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
-  struct MUIP_Notify *notify = NULL;
+  struct InstData *data = INST_DATA(cl, obj);
   BOOL result = FALSE;
   struct Button *button;
 
@@ -3809,9 +3807,11 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
   // now we first find the button object with its ID
   if((button = findButton(data, msg->ID)) != NULL)
   {
+    struct MUIP_Notify *notify;
+
     // lets allocate a temporary buffer for sending
     // the notify method to the button correctly.
-    if((notify = SharedRealloc(notify, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
+    if((notify = SharedAlloc(sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))) != NULL)
     {
       // now we fill the notify structure
       notify->MethodID      = MUIM_Notify;
@@ -3820,15 +3820,14 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
       notify->DestObj       = msg->dest;
 
       // fill the rest with memcpy
-      memcpy(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
+      memcpy(&notify->FollowParams, &msg->followParams, sizeof(msg->followParams)+sizeof(IPTR)*msg->followParams);
 
       // now we set the notify as we have identifed the button
       result = DoMethodA(button->obj, (Msg)notify);
+
+      SharedFree(notify);
     }
   }
-
-  if(notify != NULL)
-    SharedFree(notify);
 
   RETURN(result);
   return result;
@@ -3836,10 +3835,9 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
 
 /***********************************************************************/
 
-static IPTR
-mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
+static IPTR mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *button;
   BOOL result = FALSE;
 
@@ -3863,7 +3861,7 @@ mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
 static IPTR
 mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     struct Button *button;
 
     ENTER();
@@ -3948,7 +3946,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 static IPTR
 mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *bt;
   BOOL result = FALSE;
 
@@ -4254,28 +4252,27 @@ static IPTR privateSetAttr(Object *obj, struct Button *button, IPTR attr, IPTR v
 static IPTR mNoNotifySetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 {
   struct InstData *data = INST_DATA(cl, obj);
-  struct Button *bt;
+  struct Button *button;
   IPTR res = FALSE;
 
   ENTER();
 
-  if((bt = findButton(data, msg->ID)) != NULL)
+  D(DBF_ALWAYS, "nnset attr %08lx of button %2d to value %08lx", msg->attr, msg->ID, msg->value);
+  if((button = findButton(data, msg->ID)) != NULL)
   {
-    IPTR value = msg->value;
-
     switch(msg->attr)
     {
       case MUIA_TheBar_Attr_Hide:
-        res = hideButton(cl, obj, data, bt, value);
+        res = hideButton(cl, obj, data, button, msg->value);
       break;
 
       case MUIA_TheBar_Attr_Sleep:
-        res = sleepButton(cl, obj, data, bt, value);
+        res = sleepButton(cl, obj, data, button, msg->value);
       break;
 
       case MUIA_TheBar_Attr_Disabled:
       case MUIA_TheBar_Attr_Selected:
-        res = privateSetAttr(obj, bt, msg->attr, value, TRUE);
+        res = privateSetAttr(obj, button, msg->attr, msg->value, TRUE);
       break;
     }
   }
@@ -4289,28 +4286,27 @@ static IPTR mNoNotifySetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_Se
 static IPTR mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 {
   struct InstData *data = INST_DATA(cl, obj);
-  struct Button *bt;
+  struct Button *button;
   IPTR res = FALSE;
 
   ENTER();
 
-  if((bt = findButton(data, msg->ID)) != NULL)
+  D(DBF_ALWAYS, "set attr %08lx of button %2d to value %08lx", msg->attr, msg->ID, msg->value);
+  if((button = findButton(data, msg->ID)) != NULL)
   {
-    IPTR value = msg->value;
-
     switch(msg->attr)
     {
       case MUIA_TheBar_Attr_Hide:
-        res = hideButton(cl, obj, data, bt, value);
+        res = hideButton(cl, obj, data, button, msg->value);
       break;
 
       case MUIA_TheBar_Attr_Sleep:
-        res = sleepButton(cl, obj, data, bt, value);
+        res = sleepButton(cl, obj, data, button, msg->value);
       break;
 
       case MUIA_TheBar_Attr_Disabled:
       case MUIA_TheBar_Attr_Selected:
-        res = privateSetAttr(obj, bt, msg->attr, value, FALSE);
+        res = privateSetAttr(obj, button, msg->attr, msg->value, FALSE);
       break;
     }
   }
@@ -4324,7 +4320,7 @@ static IPTR mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *m
 static IPTR
 mRemove(struct IClass *cl, Object *obj, struct MUIP_TheBar_Remove *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *button;
   BOOL result = FALSE;
 
@@ -4357,7 +4353,7 @@ mRemove(struct IClass *cl, Object *obj, struct MUIP_TheBar_Remove *msg)
 static IPTR
 mGetObject(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetObject *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *button;
   Object *result;
 
@@ -4374,7 +4370,7 @@ mGetObject(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetObject *msg)
 static IPTR
 mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *button;
   IPTR result;
 
@@ -4391,7 +4387,7 @@ mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 static IPTR
 mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct MinNode *node;
 
   ENTER();
@@ -4422,7 +4418,7 @@ mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 static IPTR
 mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     struct Button *button, *succ;
 
     ENTER();
@@ -4444,7 +4440,7 @@ mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 static IPTR
 mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     struct MinList                  temp;
     struct MUIP_Group_Sort *smsg;
     struct Button          *button, *succ;
@@ -4544,7 +4540,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 static IPTR
 mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     IPTR result = 0;
 
     ENTER();
@@ -4584,7 +4580,7 @@ mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg
 {
     if (isFlagClear(lib_flags,BASEFLG_MUI20))
     {
-        struct InstData *data = INST_DATA(cl,obj);
+        struct InstData *data = INST_DATA(cl, obj);
         struct Button *button, *succ;
 
         ENTER();
