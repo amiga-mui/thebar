@@ -101,24 +101,25 @@ void DeleteSharedPool(void)
     sharedPool = NULL;
   }
 }
+
 APTR SharedAlloc(ULONG size)
 {
   ULONG *mem;
 
   ENTER();
 
+  #if defined(__amigaos4__) || defined(__MORPHOS__)
+  mem = AllocVecPooled(sharedPool, size);
+  #else // __amigaos4__ || __MORPHOS__
   size += sizeof(ULONG);
 
-  #if !defined(__amigaos4__) && !defined(__MORPHOS__)
   ObtainSemaphore(&sharedPoolSema);
-  #endif
 
   if((mem = AllocPooled(sharedPool, size)) != NULL)
     *mem++ = size;
 
-  #if !defined(__amigaos4__) && !defined(__MORPHOS__)
   ReleaseSemaphore(&sharedPoolSema);
-  #endif
+  #endif // __amigaos4__ || __MORPHOS__
 
   RETURN(mem);
   return mem;
@@ -132,56 +133,20 @@ void SharedFree(APTR mem)
 
   if(mem != NULL)
   {
+    #if defined(__amigaos4__) || defined(__MORPHOS__)
+    FreeVecPooled(sharedPool, mem);
+    #else // __amigaos4__ || __MORPHOS__
     ULONG *_mem = (ULONG *)mem;
 
-    #if !defined(__amigaos4__) && !defined(__MORPHOS__)
     ObtainSemaphore(&sharedPoolSema);
-    #endif
 
     FreePooled(sharedPool, &_mem[-1], _mem[-1]);
 
-    #if !defined(__amigaos4__) && !defined(__MORPHOS__)
     ReleaseSemaphore(&sharedPoolSema);
-    #endif
+    #endif // __amigaos4__ || __MORPHOS__
   }
 
   LEAVE();
-}
-
-/****************************************************************************/
-
-APTR SharedRealloc(APTR mem, ULONG size)
-{
-  APTR newmem = NULL;
-
-  ENTER();
-
-  if(sharedPool != NULL && size != 0)
-  {
-    if(mem != NULL)
-    {
-      ULONG *_mem = (ULONG *)mem;
-
-      if(_mem[-1] - sizeof(ULONG) >= size)
-      {
-        // the previous allocation has at least the size of the
-        // new required space, so we just return the old memory block
-        RETURN(mem);
-        return(mem);
-      }
-      else
-      {
-        // free the old block...
-        SharedFree(mem);
-      }
-    }
-
-    // ...and allocate a new one
-    newmem = SharedAlloc(size);
-  }
-
-  RETURN(newmem);
-  return newmem;
 }
 
 /****************************************************************************/
