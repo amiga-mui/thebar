@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-10-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: did some minor code cleanup and replaced a somewhat obscure
+    reallocation by a simple allocation.
+
 2009-10-04 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: implemented MUIM_TheBar_NoNotifySetAttr to set attributes of
