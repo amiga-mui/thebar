@@ -32,7 +32,6 @@ BOOL CreateSharedPool(void);
 void DeleteSharedPool(void);
 APTR SharedAlloc(ULONG size);
 void SharedFree(APTR mem);
-APTR SharedRealloc(APTR mem, ULONG size);
 
 /* brc1.c */
 int BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0);
