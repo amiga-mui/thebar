@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2009-10-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: added a missing ENTER() statement.
+
 2009-10-06 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/utils.c: dropped the no longer needed reallocation code completely.

@@ -3226,29 +3226,29 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl, obj);
-    IPTR result = 0;
+  struct InstData *data = INST_DATA(cl, obj);
+  IPTR result = 0;
 
-    ENTER();
+  ENTER();
 
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-    if (isFlagSet(data->flags, FLG_Framed))
-        freeFramePens(obj,data);
-    #endif
+  #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+  if (isFlagSet(data->flags, FLG_Framed))
+      freeFramePens(obj,data);
+  #endif
 
-    if (isFlagClear(lib_flags,BASEFLG_MUI20))
-        DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
+  if (isFlagClear(lib_flags,BASEFLG_MUI20))
+    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
 
-    if (isFlagSet(data->flags, FLG_FreeStrip))
-        freeBitMaps(data);
+  if (isFlagSet(data->flags, FLG_FreeStrip))
+    freeBitMaps(data);
 
-    clearFlag(data->flags, FLG_Setup|FLG_CyberMap|FLG_CyberDeep|FLG_IsInVirtgroup);
-    clearFlag(data->flags2, FLG2_Gradient);
+  clearFlag(data->flags, FLG_Setup|FLG_CyberMap|FLG_CyberDeep|FLG_IsInVirtgroup);
+  clearFlag(data->flags2, FLG2_Gradient);
 
-    result = DoSuperMethodA(cl,obj,msg);
+  result = DoSuperMethodA(cl,obj,msg);
 
-    RETURN(result);
-    return result;
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -3535,19 +3535,21 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mHide(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl, obj);
-    IPTR result = 0;
+  struct InstData *data = INST_DATA(cl, obj);
+  IPTR result = 0;
 
-    if (data->gradbm)
-    {
-        FreeBitMap(data->gradbm);
-        data->gradbm = NULL;
-    }
+  ENTER();
 
-    result = DoSuperMethodA(cl,obj,msg);
+  if (data->gradbm)
+  {
+    FreeBitMap(data->gradbm);
+    data->gradbm = NULL;
+  }
 
-    RETURN(result);
-    return result;
+  result = DoSuperMethodA(cl,obj,msg);
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -3556,34 +3558,34 @@ mHide(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-    struct InstData *data = INST_DATA(cl, obj);
+  struct InstData *data = INST_DATA(cl, obj);
 
-    ENTER();
+  ENTER();
 
-    DoSuperMethodA(cl,obj,(Msg)msg);
+  DoSuperMethodA(cl,obj,(Msg)msg);
 
-    #if defined(VIRTUAL)
-    if (isFlagSet(data->flags, FLG_Framed))
-    #else
-    if (isFlagSet(data->flags, FLG_Framed) && (isFlagSet(msg->flags, MADF_DRAWUPDATE) || isFlagSet(msg->flags, MADF_DRAWOBJECT)))
-    #endif
-    {
-        struct RastPort rp;
+  #if defined(VIRTUAL)
+  if (isFlagSet(data->flags, FLG_Framed))
+  #else
+  if (isFlagSet(data->flags, FLG_Framed) && (isFlagSet(msg->flags, MADF_DRAWUPDATE) || isFlagSet(msg->flags, MADF_DRAWOBJECT)))
+  #endif
+  {
+    struct RastPort rp;
 
-        memcpy(&rp,_rp(obj),sizeof(rp));
+    memcpy(&rp,_rp(obj),sizeof(rp));
 
-        SetAPen(&rp,MUIPEN(data->barFrameShinePen));
-        Move(&rp,_left(obj),_bottom(obj));
-        Draw(&rp,_left(obj),_top(obj));
-        Draw(&rp,_right(obj),_top(obj));
+    SetAPen(&rp,MUIPEN(data->barFrameShinePen));
+    Move(&rp,_left(obj),_bottom(obj));
+    Draw(&rp,_left(obj),_top(obj));
+    Draw(&rp,_right(obj),_top(obj));
 
-        SetAPen(&rp,MUIPEN(data->barFrameShadowPen));
-        Draw(&rp,_right(obj),_bottom(obj));
-        Draw(&rp,_left(obj)+1,_bottom(obj));
-    }
+    SetAPen(&rp,MUIPEN(data->barFrameShadowPen));
+    Draw(&rp,_right(obj),_bottom(obj));
+    Draw(&rp,_left(obj)+1,_bottom(obj));
+  }
 
-    RETURN(0);
-    return 0;
+  RETURN(0);
+  return 0;
 }
 #endif
 
@@ -3614,14 +3616,14 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 static IPTR
 mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 {
-    struct InstData *data = INST_DATA(cl, obj);
+  struct InstData *data = INST_DATA(cl, obj);
 
-    ENTER();
+  ENTER();
 
-    data->dm = (struct MUI_DragImage *)DoSuperMethodA(cl,obj,(Msg)msg);
+  data->dm = (struct MUI_DragImage *)DoSuperMethodA(cl,obj,(Msg)msg);
 
-    RETURN((IPTR)data->dm);
-    return (IPTR)data->dm;
+  RETURN((IPTR)data->dm);
+  return (IPTR)data->dm;
 }
 
 /***********************************************************************/
@@ -3629,17 +3631,17 @@ mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 static IPTR
 mDeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 {
-    struct InstData *data = INST_DATA(cl, obj);
-    IPTR result;
+  struct InstData *data = INST_DATA(cl, obj);
+  IPTR result;
 
-    ENTER();
+  ENTER();
 
-    data->dm = NULL;
+  data->dm = NULL;
 
-    result = DoSuperMethodA(cl,obj,(Msg)msg);
+  result = DoSuperMethodA(cl,obj,(Msg)msg);
 
-    RETURN(result);
-    return result;
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
