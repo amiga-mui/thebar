@@ -1147,11 +1147,11 @@ MakeStaticHook(LayoutHook, LayoutFunc);
 
 /***********************************************************************/
 
-static ULONG
+static BOOL
 loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
 {
     Object *dto;
-    ULONG  res = FALSE;
+    BOOL res = FALSE;
 
     ENTER();
 
@@ -1169,37 +1169,39 @@ loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
         if (GetDTAttrs(dto,PDTA_CRegs,(IPTR)&colors,PDTA_NumColors,(IPTR)&numColors,PDTA_BitMapHeader,(IPTR)&bmh,TAG_DONE)==3)
         {
             UBYTE *chunky;
-            ULONG width, height, cdepth, tw, size, csize;
+            ULONG width, height, tw, size, csize;
+            BOOL trueColor;
 
             width  = bmh->bmh_Width;
             height = bmh->bmh_Height;
-            cdepth = bmh->bmh_Depth>8;
+            trueColor = bmh->bmh_Depth>8;
 
             tw    = ((width+15)>>4)<<4;
             size  = tw*height;
             csize = 0;
 
-            if (cdepth) size += size+size+size;
+            if (trueColor)
+                size *= 4;
             else
             {
                 if (colors && numColors)
                 {
-                    csize  = numColors*sizeof(ULONG);
-                    csize += csize+csize;
+                    csize = numColors*sizeof(ULONG)*3;
                 }
             }
 
             if((chunky = SharedAlloc(size+csize)))
             {
-                ULONG line8 = 0;
+                BOOL line8 = FALSE;
 
-                if (cdepth)
+                if (trueColor)
                 {
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
 
                   #if !defined(__amigaos4__) && !defined(__AROS__)
                   // ignore the return code for mos broken pdt
-                  if (isFlagSet(lib_flags,BASEFLG_BROKENMOSPDT)) res = TRUE;
+                  if (isFlagSet(lib_flags,BASEFLG_BROKENMOSPDT))
+                    res = TRUE;
                   #endif
 
                   #ifdef __AROS__
@@ -1245,12 +1247,14 @@ loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                                 WaitBlit();
                                 FreeBitMap(trp.BitMap);
 
-                                res = line8 = TRUE;
+                                res = TRUE;
+                                line8 = TRUE;
                             }
                         }
                     }
                 }
-                else line8 = FALSE;
+                else
+                    line8 = FALSE;
 
                 if (res)
                 {
@@ -1263,16 +1267,18 @@ loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                     {
                         brush->dataTotalWidth = tw;
 
-                        if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                        if (colors && numColors)
+                            memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                         brush->numColors = numColors;
 
-                        if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
+                        if (bmh->bmh_Masking==mskHasTransparentColor)
+                            brush->trColor = bmh->bmh_Transparent;
                     }
                     else
                     {
                         brush->dataTotalWidth = width;
 
-                        if (cdepth)
+                        if (trueColor)
                         {
                             brush->flags = BRFLG_ARGB;
                             brush->dataTotalWidth *= 4;
@@ -1316,10 +1322,12 @@ loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                         }
                         else
                         {
-                            if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                            if (colors && numColors)
+                                memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                             brush->numColors = numColors;
 
-                            if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
+                            if (bmh->bmh_Masking==mskHasTransparentColor)
+                                brush->trColor = bmh->bmh_Transparent;
                         }
                     }
                 }
@@ -1687,7 +1695,8 @@ makePicsFun(struct pack *pt,
 
         if (pt->idrawer && (idrawer = Lock(pt->idrawer,SHARED_LOCK)))
             odir = CurrentDir(idrawer);
-        else idrawer = (BPTR)NULL;
+        else
+            idrawer = (BPTR)NULL;
 
         if (dostrip == TRUE || pt->strip)
         {
@@ -1697,15 +1706,22 @@ makePicsFun(struct pack *pt,
             if (dostrip == TRUE)
             {
                 memcpy(sb,pt->stripBrush,sizeof(*sb));
-                if (pt->sstripBrush) memcpy(ssb,pt->sstripBrush,sizeof(*ssb));
-                if (pt->dstripBrush) memcpy(dsb,pt->dstripBrush,sizeof(*dsb));
+
+                if (pt->sstripBrush)
+                    memcpy(ssb,pt->sstripBrush,sizeof(*ssb));
+
+                if (pt->dstripBrush)
+                    memcpy(dsb,pt->dstripBrush,sizeof(*dsb));
             }
             else
             {
                 if (loadDTBrush(sb,pt->strip))
                 {
-                    if (pt->sstrip) loadDTBrush(ssb,pt->sstrip);
-                    if (pt->dstrip) loadDTBrush(dsb,pt->dstrip);
+                    if (pt->sstrip)
+                        loadDTBrush(ssb,pt->sstrip);
+
+                    if (pt->dstrip)
+                        loadDTBrush(dsb,pt->dstrip);
                 }
             }
 
@@ -1726,9 +1742,13 @@ makePicsFun(struct pack *pt,
                 if ((b = pt->buttons))
                 {
                     for (nbr = 0; b->img!=MUIV_TheBar_End; b++)
-                        if (b->img!=MUIV_TheBar_BarSpacer) nbr++;
+                    {
+                        if (b->img!=MUIV_TheBar_BarSpacer)
+                            nbr++;
+                    }
                 }
-                else nbr = 0;
+                else
+                    nbr = 0;
 
                 if (pt->stripCols<=0)  pt->stripCols   = nbr ? nbr : 1;
                 if (pt->stripRows<=0)  pt->stripRows   = 1;
@@ -1825,7 +1845,8 @@ makePicsFun(struct pack *pt,
                     }
                 }
 
-                if (pics) setFlag(pt->flags, FLG_FreeStrip);
+                if (pics)
+                    setFlag(pt->flags, FLG_FreeStrip);
                 else
                 {
                     if (pt->brushes)
