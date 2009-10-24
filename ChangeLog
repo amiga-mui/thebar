@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v26.5 RELEASE ############################################################
+
+2009-10-24 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final release preparations
+
 2009-10-14 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: added a missing ENTER() statement.
