@@ -1471,9 +1471,9 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 UWORD         x = 0, y = 0;
                 UBYTE           *chunky = NULL;
                 #if defined(WITH_ALPHA)
-                ULONG           useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
+                BOOL            useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
                 #else
-                ULONG           useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
+                BOOL            useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
                 #endif
 
                 if ((disMode==MUIV_TheButton_DisMode_Blend) || (disMode==MUIV_TheButton_DisMode_BlendGrey))

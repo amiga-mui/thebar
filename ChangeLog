@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-01-05 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c, mcc/button/build.c: changed some ULONG variables to BOOL as
+    this is what they really are.
+
 2009-10-26  Pär Boberg <pbobbenb@spray.se>
 
   * mcp/locale/swedish.ct: Updated according to changes.
