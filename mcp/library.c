@@ -93,11 +93,14 @@ static BOOL ClassExpunge(UNUSED struct Library *base);
     MUIA_Bodychunk_Masking,     IMAGE_MASKING,\
     MUIA_Bitmap_SourceColors,   (ULONG *)image_palette,\
     MUIA_Bitmap_Transparent,    0,\
+    MUIA_Bitmap_RawData,        icon32,\
+    MUIA_Bitmap_RawDataFormat,  MUIV_Bitmap_RawDataFormat_ARGB32,\
   End
 
 /******************************************************************************/
 
 #include "icon.bh"
+#include "icon32.h"
 #include <mccinit.c>
 
 /******************************************************************************/
@@ -163,7 +166,7 @@ ClassInit(UNUSED struct Library *base)
             return(TRUE);
         }
     }
-  
+
     ClassExpunge(base);
 
     RETURN(FALSE);
