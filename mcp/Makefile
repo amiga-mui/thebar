@@ -178,7 +178,7 @@ MCPOBJS = library.o \
           class.o \
           debug.o \
           vastubs.o \
-          icon32.o
+          icon.o
 
 EXTRAOBJS = coloradjust.o \
             backgroundadjust.o \
