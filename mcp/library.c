@@ -82,6 +82,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base);
 #define USE_ICON8_BODY
 
 #include "icon.h"
+#include <mui/Rawimage_mcc.h>
 
 #define ICON8OBJECT \
   BodychunkObject,\
@@ -97,18 +98,22 @@ static BOOL ClassExpunge(UNUSED struct Library *base);
     MUIA_Bitmap_Transparent,    0,\
   End
 
-static APTR get_prefs_image(void)
+static Object *get_prefs_image(void)
 {
-  APTR obj = NULL;
+  Object *obj;
 
-  #if defined(MUIA_Bitmap_RawData)
-  obj = BitmapObject,
-    MUIA_FixWidth,              ICON32_WIDTH,
-    MUIA_FixHeight,             ICON32_HEIGHT,
-    MUIA_Bitmap_Width,          ICON32_WIDTH ,
-    MUIA_Bitmap_Height,         ICON32_HEIGHT,
-    MUIA_Bitmap_RawData,        icon32,\
-    MUIA_Bitmap_RawDataFormat,  MUIV_Bitmap_RawDataFormat_ARGB32,
+  #if defined(__MORPHOS__)
+  obj = RawimageObject,
+    MUIA_Rawimage_Data, icon32,
+  End;
+  #else
+  obj = RawimageObject,
+    MUIA_FixWidth,            ICON32_WIDTH,
+    MUIA_FixHeight,           ICON32_HEIGHT,
+    MUIA_Rawimage_Data,       icon32,
+    MUIA_Rawimage_DataFormat, MUIV_Rawimage_DataFormat_ARGB32,
+    MUIA_Rawimage_Width,      ICON32_WIDTH,
+    MUIA_Rawimage_Height,     ICON32_HEIGHT,
   End;
   #endif
 
