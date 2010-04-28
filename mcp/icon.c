@@ -45,3 +45,4 @@ const unsigned long icon32[] = {
 };
 #else // !__MORPHOS__
 #endif // !__MORPHOS__
+
