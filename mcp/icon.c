@@ -1,7 +1,26 @@
-/*
- * $Id$
- */
+/***************************************************************************
 
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
+
+***************************************************************************/
+
+#if !defined(__MORPHOS__)
 const unsigned long icon32[] = {
 	0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff,
 	0x00ff00ff, 0x00ff00ff, 0x0b000000, 0xc7fffeff, 0xc8fbfafb, 0xc8f8f7f8, 0xc8f4f3f4, 0xc8f1f0f1, 0xc8eeedee, 0xc8ebeaeb, 0xc8e7e6e7, 0xc8e5e4e5, 0xc8e6e5e6, 0xc8eae9ea, 0xc8edeced, 0xc8f1f0f1, 0xc8f4f3f4, 0xc8f7f6f7, 0xc8f9f8f9, 0xc8fdfcfd, 0xc7ffffff, 0x0b000000, 0x00ff00ff, 0x00ff00ff,
@@ -24,3 +43,5 @@ const unsigned long icon32[] = {
 	0x00ff00ff, 0x00ff00ff, 0x16000000, 0xd0d1d0d1, 0xc8c3c3c3, 0xc7bfbfbf, 0xc7bbbbbb, 0xc7b8b8b8, 0xc7b4b4b4, 0xc7b1b1b1, 0xc7aeaeae, 0xc7acacac, 0xc7b0b0b0, 0xc7b4b4b4, 0xc7b6b6b6, 0xc7bababa, 0xc7bdbdbd, 0xc7c1c1c1, 0xc7c4c4c4, 0xc9cac9ca, 0xd0d3d2d3, 0x16000000, 0x00ff00ff, 0x00ff00ff,
 	0x00ff00ff, 0x00ff00ff, 0x0b000000, 0x16000000, 0x22000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x21000000, 0x22000000, 0x16000000, 0x0b000000, 0x00ff00ff, 0x00ff00ff,
 };
+#else // !__MORPHOS__
+#endif // !__MORPHOS__
