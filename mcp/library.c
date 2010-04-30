@@ -72,6 +72,10 @@ struct MUI_CustomClass *lib_popbackground = NULL;
 struct Catalog *lib_cat = NULL;
 ULONG lib_flags = 0;
 
+#if !defined(__MORPHOS__)
+static BOOL nbitmapCanHandleRawData;
+#endif
+
 /******************************************************************************/
 
 static BOOL ClassInit(UNUSED struct Library *base);
@@ -94,14 +98,21 @@ static Object *get_prefs_image(void)
   Object *obj;
 
   #if !defined(__MORPHOS__)
-  obj = NBitmapObject,
-    MUIA_FixWidth,       ICON32_WIDTH,
-    MUIA_FixHeight,      ICON32_HEIGHT,
-    MUIA_NBitmap_Type,   MUIV_NBitmap_Type_ARGB32,
-    MUIA_NBitmap_Normal, icon32,
-    MUIA_NBitmap_Width,  ICON32_WIDTH,
-    MUIA_NBitmap_Height, ICON32_HEIGHT,
-  End;
+  if(nbitmapCanHandleRawData == TRUE)
+  {
+    obj = NBitmapObject,
+      MUIA_FixWidth,       ICON32_WIDTH,
+      MUIA_FixHeight,      ICON32_HEIGHT,
+      MUIA_NBitmap_Type,   MUIV_NBitmap_Type_ARGB32,
+      MUIA_NBitmap_Normal, icon32,
+      MUIA_NBitmap_Width,  ICON32_WIDTH,
+      MUIA_NBitmap_Height, ICON32_HEIGHT,
+    End;
+  }
+  else
+  {
+    obj = NULL;
+  }
   #else
   /*
   no truecolor image data for MorphOS yet
@@ -139,72 +150,95 @@ static Object *get_prefs_image(void)
 
 /******************************************************************************/
 
-static BOOL
-ClassInit(UNUSED struct Library *base)
+static BOOL ClassInit(UNUSED struct Library *base)
 {
-    ENTER();
+  ENTER();
 
-    if ((DataTypesBase = OpenLibrary("datatypes.library",37)) &&
-        GETINTERFACE(IDataTypes,struct DataTypesIFace *,DataTypesBase) &&
-        (IFFParseBase = OpenLibrary("iffparse.library",37)) &&
-        GETINTERFACE(IIFFParse,struct IFFParseIFace *,IFFParseBase) &&
-        (LocaleBase = (APTR)OpenLibrary("locale.library",36)) &&
-        GETINTERFACE(ILocale,struct LocaleIFace *,LocaleBase))
+  if((DataTypesBase = OpenLibrary("datatypes.library",37)) &&
+     GETINTERFACE(IDataTypes,struct DataTypesIFace *,DataTypesBase) &&
+     (IFFParseBase = OpenLibrary("iffparse.library",37)) &&
+     GETINTERFACE(IIFFParse,struct IFFParseIFace *,IFFParseBase) &&
+     (LocaleBase = (APTR)OpenLibrary("locale.library",36)) &&
+     GETINTERFACE(ILocale,struct LocaleIFace *,LocaleBase))
+  {
+    BOOL success = TRUE;
+
+    // check for MUI 3.9+
+    if(MUIMasterBase->lib_Version >= 20)
     {
-    	ULONG success = TRUE;
+      lib_flags |= BASEFLG_MUI20;
 
-        // check for MUI 3.9+
-        if (MUIMasterBase->lib_Version>=20)
-        {
-        	lib_flags |= BASEFLG_MUI20;
-
-            // check for MUI 4.0+
-            if (MUIMasterBase->lib_Version>20 || MUIMasterBase->lib_Revision>=5341)
-            	lib_flags |= BASEFLG_MUI4;
-        }
-
-        // on MUI 3.1 system's we do have to
-        // initialize our subclasses as well
-        #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-        if (!(lib_flags & BASEFLG_MUI20))
-        {
-        	if (!initColoradjust() ||
-            	!initPenadjust() ||
-              !initBackgroundadjust() ||
-              !initPoppen() ||
-              !initPopbackground())
-            {
-            	success = FALSE;
-            }
-        }
-        #endif
-
-        if (success)
-        {
-            initStrings();
-
-            // we open the cybgraphics.library but without failing if
-            // it doesn't exist
-            CyberGfxBase = OpenLibrary("cybergraphics.library",41);
-            #ifdef __amigaos4__
-            if (!GETINTERFACE(ICyberGfx,struct CyberGfxIFace *,CyberGfxBase))
-            {
-              CloseLibrary(CyberGfxBase);
-              CyberGfxBase = NULL;
-            }
-            #endif
-
-            lib_flags |= BASEFLG_Init;
-
-            RETURN(TRUE);
-            return(TRUE);
-        }
+      #if defined(__MORPHOS__)
+      // check for MUI 4.0+, MorphOS only
+      if(MUIMasterBase->lib_Version > 20 || MUIMasterBase->lib_Revision >= 5341)
+        lib_flags |= BASEFLG_MUI4;
+      #endif
     }
 
-    ClassExpunge(base);
+    // on MUI 3.1 system's we do have to
+    // initialize our subclasses as well
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+    if(!(lib_flags & BASEFLG_MUI20))
+    {
+      if(!initColoradjust() ||
+         !initPenadjust() ||
+         !initBackgroundadjust() ||
+         !initPoppen() ||
+         !initPopbackground())
+      {
+        success = FALSE;
+      }
+    }
+    #endif
 
-    RETURN(FALSE);
-    return(FALSE);
+    if(success == TRUE)
+    {
+      initStrings();
+
+      // we open the cybgraphics.library but without failing if
+      // it doesn't exist
+      CyberGfxBase = OpenLibrary("cybergraphics.library", 41);
+      #if defined(__amigaos4__)
+      if(!GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
+      {
+        CloseLibrary(CyberGfxBase);
+        CyberGfxBase = NULL;
+      }
+      #endif
+
+      #if !defined(__MORPHOS__)
+      {
+        struct Library *nbitmapMcc;
+
+        nbitmapCanHandleRawData = FALSE;
+
+        // we need at least NBitmap.mcc V15.8 to be able to let it handle raw image data
+        if((nbitmapMcc = OpenLibrary("NBitmap.mcc", 0)) != NULL)
+        {
+          SHOWVALUE(DBF_ALWAYS, nbitmapMcc->lib_Version);
+          SHOWVALUE(DBF_ALWAYS, nbitmapMcc->lib_Revision);
+
+          if(nbitmapMcc->lib_Version > 15 || (nbitmapMcc->lib_Version == 15 && nbitmapMcc->lib_Revision >= 8))
+            nbitmapCanHandleRawData = TRUE;
+
+          CloseLibrary(nbitmapMcc);
+        }
+
+        SHOWVALUE(DBF_ALWAYS, nbitmapCanHandleRawData);
+      }
+      #endif
+
+      lib_flags |= BASEFLG_Init;
+
+      RETURN(TRUE);
+      return TRUE;
+    }
+  }
+
+  ClassExpunge(base);
+
+  RETURN(FALSE);
+  return FALSE;
 }
 
 /******************************************************************************/
@@ -212,52 +246,56 @@ ClassInit(UNUSED struct Library *base)
 static BOOL
 ClassExpunge(UNUSED struct Library *base)
 {
-    ENTER();
+  ENTER();
 
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-    if (!(lib_flags & BASEFLG_MUI20))
+  #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+  if(!(lib_flags & BASEFLG_MUI20))
+  {
+    freePopbackground();
+    freePoppen();
+    freeBackgroundadjust();
+    freePenadjust();
+    freeColoradjust();
+  }
+  #endif
+
+  if(CyberGfxBase != NULL)
+  {
+    DROPINTERFACE(ICyberGfx);
+    CloseLibrary(CyberGfxBase);
+    CyberGfxBase = NULL;
+  }
+
+  if(LocaleBase != NULL)
+  {
+    if(lib_cat != NULL)
     {
-        freePopbackground();
-        freePoppen();
-        freeBackgroundadjust();
-        freePenadjust();
-        freeColoradjust();
+      CloseCatalog(lib_cat);
+      lib_cat = NULL;
     }
-    #endif
+    DROPINTERFACE(ILocale);
+    CloseLibrary((struct Library *)LocaleBase);
+    LocaleBase = NULL;
+  }
 
-    if (CyberGfxBase)
-    {
-        DROPINTERFACE(ICyberGfx);
-        CloseLibrary(CyberGfxBase);
-        CyberGfxBase = NULL;
-    }
+  if(IFFParseBase != NULL)
+  {
+    DROPINTERFACE(IIFFParse);
+    CloseLibrary(IFFParseBase);
+    IFFParseBase = NULL;
+  }
 
-    if (LocaleBase)
-    {
-        if (lib_cat) CloseCatalog(lib_cat);
-        DROPINTERFACE(ILocale);
-        CloseLibrary((struct Library *)LocaleBase);
-        LocaleBase = NULL;
-    }
+  if(DataTypesBase != NULL)
+  {
+    DROPINTERFACE(IDataTypes);
+    CloseLibrary(DataTypesBase);
+    DataTypesBase = NULL;
+  }
 
-    if (IFFParseBase)
-    {
-        DROPINTERFACE(IIFFParse);
-        CloseLibrary(IFFParseBase);
-        IFFParseBase = NULL;
-    }
+  lib_flags &= ~(BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
 
-    if (DataTypesBase)
-    {
-        DROPINTERFACE(IDataTypes);
-        CloseLibrary(DataTypesBase);
-        DataTypesBase = NULL;
-    }
-
-    lib_flags &= ~(BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
-
-    RETURN(TRUE);
-    return(TRUE);
+  RETURN(TRUE);
+  return TRUE;
 }
 
 /******************************************************************************/
