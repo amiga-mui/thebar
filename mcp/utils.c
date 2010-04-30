@@ -71,11 +71,11 @@ stch_l(const char *chr_ptr,long *u_ptr)
 
             val <<= 4;
             val += c;
-        
+
             str++;
         }
     }
-    
+
     *u_ptr = (long)val;
 
     return str-chr_ptr;
@@ -274,9 +274,8 @@ opopframe(ULONG key,ULONG title,ULONG help)
 
 /***********************************************************************/
 
-#if !defined(__MORPHOS__) || !defined(__AROS__)
-void
-drawGradient(Object *obj,struct MUIS_TheBar_Gradient *grad)
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad)
 {
     struct RastPort *rp;
     ULONG           rs, gs, bs, horiz, from, to;

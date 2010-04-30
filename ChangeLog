@@ -9,6 +9,8 @@ $URL$
 
   * mcp/library.c: added version check for NBitmap.mcc. Only version V15.8+ can
     handle raw image data.
+  * mcp/library.c: removed dependency from cybergraphics.library for OS4,
+    because OS4's MUI 3.9 can handle gradients natively.
 
 2010-04-27 Thore Böckelmann <tboeckel@gmx.de>
 

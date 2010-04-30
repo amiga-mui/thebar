@@ -45,8 +45,10 @@
 /******************************************************************************/
 
 struct Library *DataTypesBase = NULL;
-struct Library *CyberGfxBase = NULL;
 struct Library *IFFParseBase = NULL;
+#if !defined(__amigaos4__)
+struct Library *CyberGfxBase = NULL;
+#endif
 
 #if !defined(__amigaos4__) && !defined(__MORPHOS__)
 struct LocaleBase *LocaleBase = NULL;
@@ -56,7 +58,7 @@ struct Library *LocaleBase = NULL;
 
 #if defined(__amigaos4__)
 struct DataTypesIFace *IDataTypes = NULL;
-struct CyberGfxIFace *ICyberGfx = NULL;
+//struct CyberGfxIFace *ICyberGfx = NULL;
 struct IFFParseIFace *IIFFParse = NULL;
 struct LocaleIFace *ILocale = NULL;
 #endif
@@ -197,13 +199,15 @@ static BOOL ClassInit(UNUSED struct Library *base)
 
       // we open the cybgraphics.library but without failing if
       // it doesn't exist
+      #if !defined(__amigaos4__)
       CyberGfxBase = OpenLibrary("cybergraphics.library", 41);
-      #if defined(__amigaos4__)
+/*
       if(!GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
       {
         CloseLibrary(CyberGfxBase);
         CyberGfxBase = NULL;
       }
+*/
       #endif
 
       #if !defined(__MORPHOS__)
@@ -259,12 +263,14 @@ ClassExpunge(UNUSED struct Library *base)
   }
   #endif
 
+  #if !defined(__amigaos4__)
   if(CyberGfxBase != NULL)
   {
     DROPINTERFACE(ICyberGfx);
     CloseLibrary(CyberGfxBase);
     CyberGfxBase = NULL;
   }
+  #endif
 
   if(LocaleBase != NULL)
   {
