@@ -38,7 +38,9 @@ Object *opoppen(ULONG key,ULONG title,ULONG help);
 Object *opopfri(ULONG key,ULONG title,ULONG help);
 Object *opopback(ULONG gradient,ULONG key,ULONG title,ULONG help);
 Object *opopframe(ULONG key,ULONG title,ULONG help);
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
 void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
+#endif
 
 /* loc.c */
 struct Catalog *openCatalogVR(CONST_STRPTR name,ULONG minVer,ULONG minRev);
@@ -46,7 +48,7 @@ void initStrings(void);
 STRPTR tr(ULONG id);
 ULONG getKeyChar(STRPTR string);
 
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
 /* coloradjust.c */
 void freeColoradjust ( void );
 ULONG initColoradjust ( void );
