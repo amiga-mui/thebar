@@ -49,8 +49,7 @@ make -C mcc/button release
 make -C mcp release
 make -C demo release
 
-#for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
-for os in os3 os4 mos; do
+for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
 	case $os in
 	    os3)         fullsys="AmigaOS3";;
 	    os4)         fullsys="AmigaOS4";;
@@ -60,42 +59,42 @@ for os in os3 os4 mos; do
 	    aros-x86_64) fullsys="AROS-x86_64";;
 	esac
 	mkdir -p "release/MCC_TheBar/Libs/MUI/$fullsys"
-	cp demo/bin_$os/demo1 "release/MCC_TheBar/Demos/demo1-$fullsys"
-	cp demo/bin_$os/demo2 "release/MCC_TheBar/Demos/demo2-$fullsys"
-	cp demo/bin_$os/demo3 "release/MCC_TheBar/Demos/demo3-$fullsys"
-	cp demo/bin_$os/demo4 "release/MCC_TheBar/Demos/demo4-$fullsys"
-	cp demo/bin_$os/demo5 "release/MCC_TheBar/Demos/demo5-$fullsys"
-	cp demo/bin_$os/demo6 "release/MCC_TheBar/Demos/demo6-$fullsys"
-	cp demo/bin_$os/demo7 "release/MCC_TheBar/Demos/demo7-$fullsys"
-	cp demo/bin_$os/demo8 "release/MCC_TheBar/Demos/demo8-$fullsys"
-	cp demo/bin_$os/demo9 "release/MCC_TheBar/Demos/demo9-$fullsys"
-	cp demo/bin_$os/demo10 "release/MCC_TheBar/Demos/demo10-$fullsys"
-	cp mcc/bin_$os/TheBar.mcc "release/MCC_TheBar/Libs/MUI/$fullsys/"
-	cp mcc/bin_$os/TheBarVirt.mcc "release/MCC_TheBar/Libs/MUI/$fullsys/"
-	cp mcc/button/bin_$os/TheButton.mcc "release/MCC_TheBar/Libs/MUI/$fullsys/"
-	cp mcp/bin_$os/TheBar.mcp "release/MCC_TheBar/Libs/MUI/$fullsys/"
+	cp -a demo/bin_$os/demo1 "release/MCC_TheBar/Demos/demo1-$fullsys"
+	cp -a demo/bin_$os/demo2 "release/MCC_TheBar/Demos/demo2-$fullsys"
+	cp -a demo/bin_$os/demo3 "release/MCC_TheBar/Demos/demo3-$fullsys"
+	cp -a demo/bin_$os/demo4 "release/MCC_TheBar/Demos/demo4-$fullsys"
+	cp -a demo/bin_$os/demo5 "release/MCC_TheBar/Demos/demo5-$fullsys"
+	cp -a demo/bin_$os/demo6 "release/MCC_TheBar/Demos/demo6-$fullsys"
+	cp -a demo/bin_$os/demo7 "release/MCC_TheBar/Demos/demo7-$fullsys"
+	cp -a demo/bin_$os/demo8 "release/MCC_TheBar/Demos/demo8-$fullsys"
+	cp -a demo/bin_$os/demo9 "release/MCC_TheBar/Demos/demo9-$fullsys"
+	cp -a demo/bin_$os/demo10 "release/MCC_TheBar/Demos/demo10-$fullsys"
+	cp -a mcc/bin_$os/TheBar.mcc "release/MCC_TheBar/Libs/MUI/$fullsys/"
+	cp -a mcc/bin_$os/TheBarVirt.mcc "release/MCC_TheBar/Libs/MUI/$fullsys/"
+	cp -a mcc/button/bin_$os/TheButton.mcc "release/MCC_TheBar/Libs/MUI/$fullsys/"
+	cp -a mcp/bin_$os/TheBar.mcp -a "release/MCC_TheBar/Libs/MUI/$fullsys/"
 done
 
 make -C mcp catalogs
 for language in czech french german italian swedish; do
 	mkdir -p "release/MCC_TheBar/Locale/Catalogs/$language"
-	cp mcp/locale/$language.catalog "release/MCC_TheBar/Locale/Catalogs/$language/TheBar_mcp.catalog"
+	cp -a mcp/locale/$language.catalog "release/MCC_TheBar/Locale/Catalogs/$language/TheBar_mcp.catalog"
 done
 
-cp -R dist/* "release/"
-cp AUTHORS ChangeLog COPYING "release/MCC_TheBar/"
-cp doc/MCC_TheBar.readme "release/MCC_TheBar/ReadMe"
-cp demo/pics/* "release/MCC_TheBar/Demos/pics/"
-cp doc/MCC_TheBar.readme "release/MCC_TheBar/Docs/"
-cp doc/b2chunky.doc "release/MCC_TheBar/Docs/"
-cp doc/fkeys.doc "release/MCC_TheBar/Docs/"
-cp doc/MCC_TheBar.doc "release/MCC_TheBar/Developer/Autodocs/"
-cp demo/*.c "release/MCC_TheBar/Developer/C/Examples/"
-cp demo/*.h "release/MCC_TheBar/Developer/C/Examples/"
-cp demo/Makefile "release/MCC_TheBar/Developer/C/Examples/"
-cp demo/b2chunky/* "release/MCC_TheBar/Developer/C/Examples/b2chunky/"
-cp include/mui/TheBar_mcc.h "release/MCC_TheBar/Developer/C/include/mui/"
-cp mcp/locale/TheBar_mcp.cd "release/MCC_TheBar/Locale/"
+cp -a -R dist/* "release/"
+cp -a AUTHORS ChangeLog COPYING "release/MCC_TheBar/"
+cp -a doc/MCC_TheBar.readme "release/MCC_TheBar/ReadMe"
+cp -a demo/pics/* "release/MCC_TheBar/Demos/pics/"
+cp -a doc/MCC_TheBar.readme "release/MCC_TheBar/Docs/"
+cp -a doc/b2chunky.doc "release/MCC_TheBar/Docs/"
+cp -a doc/fkeys.doc "release/MCC_TheBar/Docs/"
+cp -a doc/MCC_TheBar.doc "release/MCC_TheBar/Developer/Autodocs/"
+cp -a demo/*.c "release/MCC_TheBar/Developer/C/Examples/"
+cp -a demo/*.h "release/MCC_TheBar/Developer/C/Examples/"
+cp -a demo/Makefile "release/MCC_TheBar/Developer/C/Examples/"
+cp -a demo/b2chunky/* "release/MCC_TheBar/Developer/C/Examples/b2chunky/"
+cp -a include/mui/TheBar_mcc.h "release/MCC_TheBar/Developer/C/include/mui/"
+cp -a mcp/locale/TheBar_mcp.cd "release/MCC_TheBar/Locale/"
 
 releasever=`grep "#define LIB_VERSION" mcc/version.h | awk '{ print $3 }'`
 releaserev=`grep "#define LIB_REVISION" mcc/version.h | awk '{ print $3 }'`
@@ -103,5 +102,5 @@ releaserev=`grep "#define LIB_REVISION" mcc/version.h | awk '{ print $3 }'`
 echo "  MK MCC_TheBar-$releasever.$releaserev.lha"
 find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
 pushd release >/dev/null
-lha -aq2 ../MCC_TheBar-$releasever.$releaserev.lha *
+lha -aq ../MCC_TheBar-$releasever.$releaserev.lha *
 popd >/dev/null
