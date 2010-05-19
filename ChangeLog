@@ -8,6 +8,7 @@ $URL$
 2010-05-19 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/TheBar_mcp.cd: renamed file to follow the common naming rules.
+  * added stuff for automated build of release archives.
 
 2010-04-30 Thore Böckelmann <tboeckel@gmx.de>
 
