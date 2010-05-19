@@ -343,6 +343,27 @@ all: depend
 	@make --no-print-directory all
 endif
 
+# for making a release we compile ALL target with no debug
+release:
+	@echo "  CC $<"
+	make OS=os4 clean
+	make OS=os4 DEBUG=
+	@echo "  CC $<"
+	make OS=os3 clean
+	make OS=os3 DEBUG=
+	@echo "  CC $<"
+	make OS=mos clean
+	make OS=mos DEBUG=
+	@echo "  CC $<"
+	make OS=aros-i386 clean
+	make OS=aros-i386 DEBUG=
+	@echo "  CC $<"
+	make OS=aros-ppc clean
+	make OS=aros-ppc DEBUG=
+	@echo "  CC $<"
+	make OS=aros-x86_64 clean
+	make OS=aros-x86_64 DEBUG=
+
 # make the object directories
 $(OBJDIR):
 	@echo "  MK $@"
@@ -364,7 +385,7 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 	@echo "  MK $@"
-	@$(FC) $(LOCALE)/TheBar.cd $< CATALOG $@
+	@$(FC) $(LOCALE)/TheBar_mcp.cd $< CATALOG $@
 
 # for linking the target
 $(TARGET): $(M68KSTUBS) $(OBJS)
@@ -383,15 +404,15 @@ $(TESTTARGET): $(TESTOBJS)
 $(OBJDIR)/library.o: library.c ../include/mccinit.c \
   ../include/mui/TheBar_mcc.h private.h version.h
 
-locale.h: $(LOCALE)/TheBar.cd locale_h.sd
+locale.h: $(LOCALE)/TheBar_mcp.cd locale_h.sd
 	@echo "  MK $@"
-	@$(FC) $(LOCALE)/TheBar.cd locale.h=locale_h.sd
+	@$(FC) $(LOCALE)/TheBar_mcp.cd locale.h=locale_h.sd
 
 ## CATALOG GENERATION #################
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 	@echo "  MK $@"
-	@$(FC) $(LOCALE)/TheBar.cd $< CATALOG $@
+	@$(FC) $(LOCALE)/TheBar_mcp.cd $< CATALOG $@
 
 .IGNORE: $(CATALOGS)
 
