@@ -5,7 +5,7 @@
 #
 
 if [ "$1" = "all" ]; then
-   find . -maxdepth 2 -name "version.h" -exec $0 {} \;
+   find . -maxdepth 3 -name "version.h" -exec $0 {} \;
 else
    if [ -e $1 ]; then
       foundrev=`grep "#define LIB_REVISION   " $1`
