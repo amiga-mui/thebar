@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-05-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/TheBar_mcp.cd: renamed file to follow the common naming rules.
+
 2010-04-30 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/library.c: added version check for NBitmap.mcc. Only version V15.8+ can
