@@ -182,8 +182,7 @@ COBJS = utils.o \
         scale.o \
         build.o \
         class.o \
-        debug.o \
-        vastubs.o
+        debug.o
 
 TOBJS = TheBar-Test.o
 
@@ -233,6 +232,9 @@ ifeq ($(OS), os3)
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
+
+  # additional object files required
+  COBJS += vastubs.o
 
 else
 ifeq ($(OS), mos)

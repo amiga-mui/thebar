@@ -178,8 +178,7 @@ MCCOBJS = library.o \
           scale.o \
           build.o \
           class.o \
-          debug.o \
-          vastubs.o
+          debug.o
 
 OBJS = $(addprefix $(OBJDIR)/,$(MCCOBJS))
 
@@ -225,6 +224,9 @@ ifeq ($(OS), os3)
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
+
+  # additional object files required
+  MCCOBJS += vastubs.o
 
 else
 ifeq ($(OS), mos)
