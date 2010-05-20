@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-05-20 Thore Böckelmann <tboeckel@gmx.de>
+
+  * Makefiles: add varargs stubs only for those systems which really need it.
+
 2010-05-19 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/TheBar_mcp.cd: renamed file to follow the common naming rules.
