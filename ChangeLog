@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-05-25 Matthias Rustler <mrustler@gmx.de>
+
+  * mccinit.c: updated for AROS V1 API
+  * french.ct: there was a more recent version in AROS
+
 2010-05-20 Thore Böckelmann <tboeckel@gmx.de>
 
   * Makefiles: add varargs stubs only for those systems which really need it.
