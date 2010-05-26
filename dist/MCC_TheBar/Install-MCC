@@ -1,5 +1,5 @@
 ;
-; $VER: Install-MCC 1.1 (26.05.2010)
+; $VER: Install-MCC 1.2 (26.05.2010)
 ;
 ; $Id$
 ;
@@ -7,6 +7,8 @@
 ;
 ;   1.0   25.5.2010: initial release
 ;   1.1   26.5.2010: easier definition of supported languages
+;   1.2   26.5.2010: added support for multiple catalog files per language
+;                    and added british english as supported language
 
 
 ;----------------------------------------------------------------------------
@@ -27,6 +29,7 @@
 (set #lang_turkish             13)
 (set #lang_russian             14)
 (set #lang_czech               15)
+(set #lang_english_british     16)
 ; ///
 
 ;----------------------------------------------------------------------------
@@ -152,6 +155,7 @@
         (set #cat_name_turkish               "turkish")
         (set #cat_name_russian               "russian")
         (set #cat_name_czech                 "czech")
+        (set #cat_name_english_british       "english-british")
     )
     ; all other systems use localized locale names
     (
@@ -171,6 +175,7 @@
         (set #cat_name_turkish               "türkçe")
         (set #cat_name_russian               "russian")
         (set #cat_name_czech                 "czech")
+        (set #cat_name_english_british       "english-british")
     )
 )
 
@@ -285,6 +290,10 @@
                 (cat #prop "Czech")
                 ("")
             )
+            (if (and (in #MCP_languages #lang_english_british) (= #detectedSystem "os4"))
+                (cat #prop "English (british)")
+                ("")
+            )
         )
         (default #language_default)
     )
@@ -310,11 +319,13 @@
 ; check if there were any catalogs selected at all
 (if (<> 0 catalog_lang)
     (
-        ; copy the .cd file for people wanting to translate
-        (copyfiles
-            (source (tackon "Locale" (cat #MCC_name "_mcp.cd")))
-            (dest "LOCALE:Catalogs")
-            (help @copyfiles-help)
+        ; copy the .cd files for people wanting to translate
+        (foreach "Locale" "#?_mcp.cd"
+            (copyfiles
+                (source (tackon "Locale" @each-name))
+                (dest "LOCALE:Catalogs")
+                (help @copyfiles-help)
+            )
         )
 
         ; german catalog file
@@ -322,10 +333,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_german))
 
-                (copyfiles
-                     (source "Locale/Catalogs/german")
-                     (choices (cat #MCC_name "_mcp.catalog"))
-                     (dest (tackon "LOCALE:Catalogs" #cat_name_german))
+                (foreach "Locale/Catalogs/german" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/german" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_german))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -335,10 +348,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_french))
 
-                (copyfiles
-                    (source "Locale/Catalogs/french")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_french))
+                (foreach "Locale/Catalogs/french" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/french" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_french))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -348,10 +363,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_spanish))
 
-                (copyfiles
-                    (source "Locale/Catalogs/spanish")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_spanish))
+                (foreach "Locale/Catalogs/spanish" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/spanish" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_spanish))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -361,10 +378,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_danish))
 
-                (copyfiles
-                    (source "Locale/Catalogs/danish")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_danish))
+                (foreach "Locale/Catalogs/danish" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/danish" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_danish))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -374,10 +393,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_italian))
 
-                (copyfiles
-                    (source "Locale/Catalogs/italian")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_italian))
+                (foreach "Locale/Catalogs/italian" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/italian" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_italian))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -387,10 +408,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_dutch))
 
-                (copyfiles
-                    (source "Locale/Catalogs/dutch")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_dutch))
+                (foreach "Locale/Catalogs/dutch" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/dutch" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_dutch))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -400,10 +423,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_norwegian))
 
-                (copyfiles
-                    (source "Locale/Catalogs/norwegian")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_norwegian))
+                (foreach "Locale/Catalogs/norwegian" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/norwegian" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_norwegian))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -413,10 +438,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_swedish))
 
-                (copyfiles
-                    (source "Locale/Catalogs/swedish")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_swedish))
+                (foreach "Locale/Catalogs/swedish" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/swedish" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_swedish))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -426,10 +453,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_polish))
 
-                (copyfiles
-                    (source "Locale/Catalogs/polish")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_polish))
+                (foreach "Locale/Catalogs/polish" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/polish" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_polish))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -439,10 +468,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_finnish))
 
-                (copyfiles
-                    (source "Locale/Catalogs/finnish")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_finnish))
+                (foreach "Locale/Catalogs/finnish" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/finnish" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_finnish))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -452,10 +483,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_hungarian))
 
-                (copyfiles
-                    (source "Locale/Catalogs/hungarian")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_hungarian))
+                (foreach "Locale/Catalogs/hungarian" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/hungarian" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_hungarian))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -465,10 +498,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_greek))
 
-                (copyfiles
-                    (source "Locale/Catalogs/greek")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_greek))
+                (foreach "Locale/Catalogs/greek" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/greek" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_greek))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -478,10 +513,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_turkish))
 
-                (copyfiles
-                    (source "Locale/Catalogs/turkish")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_turkish))
+                (foreach "Locale/Catalogs/turkish" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/turkish" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_turkish))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -491,10 +528,12 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_russian))
 
-                (copyfiles
-                    (source "Locale/Catalogs/russian")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_russian))
+                (foreach "Locale/Catalogs/russian" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/russian" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_russian))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
@@ -504,10 +543,27 @@
             (
                 (makedir (tackon "LOCALE:Catalogs" #cat_name_czech))
 
-                (copyfiles
-                    (source "Locale/Catalogs/czech")
-                    (choices (cat #MCC_name "_mcp.catalog"))
-                    (dest (tackon "LOCALE:Catalogs" #cat_name_czech))
+                (foreach "Locale/Catalogs/czech" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/czech" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_czech))
+                        (help @copyfiles-help)
+                    )
+                )
+            )
+        )
+
+        ; english-british catalog file, only AmigaOS4.x can handle this
+        (if (and (in catalog_lang #lang_english_british) (= #detectedSystem "os4"))
+            (
+                (makedir (tackon "LOCALE:Catalogs" #cat_name_english_british))
+
+                (foreach "Locale/Catalogs/english-british" "#?_mcp.catalog"
+                    (copyfiles
+                        (source (tackon "Locale/Catalogs/english-british" @each-name))
+                        (dest (tackon "LOCALE:Catalogs" #cat_name_english_british))
+                        (help @copyfiles-help)
+                    )
                 )
             )
         )
