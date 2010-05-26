@@ -185,7 +185,8 @@ CATALOGS = $(LOCALE)/german.catalog \
            $(LOCALE)/italian.catalog \
            $(LOCALE)/czech.catalog \
            $(LOCALE)/french.catalog \
-           $(LOCALE)/swedish.catalog
+           $(LOCALE)/swedish.catalog \
+           $(LOCALE)/polish.catalog
 
 # different options per target OS
 ifeq ($(OS), os4)

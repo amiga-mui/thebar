@@ -35,7 +35,8 @@ contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/czech/TheBar.catalog \
     $(TARGETDIR)/svenska/TheBar.catalog \
     $(TARGETDIR)/italiano/TheBar.catalog \
-    $(TARGETDIR)/français/TheBar.catalog
+    $(TARGETDIR)/français/TheBar.catalog \
+    $(TARGETDIR)/polski/TheBar.catalog
 
 locale.h: locale/TheBar.cd locale_h.sd
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd locale.h=$(SRCDIR)/$(CURDIR)/locale_h.sd
@@ -58,4 +59,8 @@ $(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
 
 $(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
 	@$(MKDIR) $(TARGETDIR)/italiano
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+
+$(TARGETDIR)/polski/TheBar.catalog: locale/polish.ct
+	@$(MKDIR) $(TARGETDIR)/polski
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
