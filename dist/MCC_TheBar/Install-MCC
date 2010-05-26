@@ -41,6 +41,7 @@
                            (shiftleft 1 #lang_italian)
                            (shiftleft 1 #lang_swedish)
                            (shiftleft 1 #lang_czech)
+                           (shiftleft 1 #lang_polish)
 ))
 
 ;----------------------------------------------------------------------------

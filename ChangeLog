@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-05-26 Mariusz Danilewicz <mandi@interia.pl>
+
+  * mcp\locale\polish.ct: added Polish translation
+  * tools\mkrelease.sh: added generating Polish catalog to release
+  * mcp\makefile and mmakefile.src: added generating Polish catalog
+  * dist/Install-MCC: added support to Polish catalog
+
 2010-05-26 Thore Böckelmann <tboeckel@gmx.de>
 
   * dist/Install-MCC: added the first version of a generic MCC Installer script.
