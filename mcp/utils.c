@@ -89,8 +89,8 @@ obutton(ULONG text,ULONG help)
 {
     Object *obj;
 
-    if((obj = MUI_MakeObject(MUIO_Button,(ULONG)tr(text))))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)tr(help),TAG_DONE);
+    if((obj = MUI_MakeObject(MUIO_Button,(IPTR)tr(text))))
+        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(IPTR)tr(help),TAG_DONE);
 
     return obj;
 }
@@ -102,8 +102,8 @@ ocycle(STRPTR *array,ULONG key,ULONG help)
 {
     Object *obj;
 
-    if((obj = MUI_MakeObject(MUIO_Cycle,(ULONG)tr(key),(ULONG)array)))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)tr(help),TAG_DONE);
+    if((obj = MUI_MakeObject(MUIO_Cycle,(IPTR)tr(key),(IPTR)array)))
+        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(IPTR)tr(help),TAG_DONE);
 
     return obj;
 }
@@ -115,8 +115,8 @@ ocheck(ULONG key,ULONG help)
 {
     Object *obj;
 
-    if((obj = MUI_MakeObject(MUIO_Checkmark,(ULONG)tr(key))))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)tr(help),TAG_DONE);
+    if((obj = MUI_MakeObject(MUIO_Checkmark,(IPTR)tr(key))))
+        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(IPTR)tr(help),TAG_DONE);
 
     return obj;
 }
@@ -128,8 +128,8 @@ oslider(ULONG key,ULONG help,LONG min,LONG max)
 {
     Object *obj;
 
-    if((obj = MUI_MakeObject(MUIO_Slider,(ULONG)tr(key),min,max)))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)tr(help),TAG_DONE);
+    if((obj = MUI_MakeObject(MUIO_Slider,(IPTR)tr(key),min,max)))
+        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(IPTR)tr(help),TAG_DONE);
 
     return obj;
 }
@@ -167,11 +167,11 @@ opoppen(ULONG key,ULONG title,ULONG help)
 {
     #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return PoppenObject,
-        MUIA_Window_Title, (ULONG)tr(title),
+        MUIA_Window_Title, (IPTR)tr(title),
         MUIA_ControlChar,  (ULONG)getKeyChar(tr(key)),
         MUIA_Draggable,    TRUE,
         MUIA_CycleChain,   TRUE,
-        MUIA_ShortHelp,    (ULONG)tr(help),
+        MUIA_ShortHelp,    (IPTR)tr(help),
     End;
     #else
     if (lib_flags & BASEFLG_MUI20)
@@ -203,10 +203,10 @@ Object *
 opopfri(ULONG key,ULONG title,ULONG help)
 {
     return MUI_NewObject("Popfrimage.mui",
-        MUIA_Window_Title,     (ULONG)tr(title),
+        MUIA_Window_Title,     (IPTR)tr(title),
         MUIA_ControlChar,      (ULONG)getKeyChar(tr(key)),
         MUIA_CycleChain,       TRUE,
-        MUIA_ShortHelp,        (ULONG)tr(help),
+        MUIA_ShortHelp,        (IPTR)tr(help),
         0x80421794, 0,
         0x8042a547, 0,
         0x80426a55, 1,
@@ -222,11 +222,11 @@ opopback(UNUSED ULONG gradient,ULONG key,ULONG title,ULONG help)
     #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return MUI_NewObject(MUIC_Popimage,
         MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
-        MUIA_Window_Title,     (ULONG)tr(title),
+        MUIA_Window_Title,     (IPTR)tr(title),
         MUIA_ControlChar,      (ULONG)getKeyChar(tr(key)),
         MUIA_Draggable,        TRUE,
         MUIA_CycleChain,       TRUE,
-        MUIA_ShortHelp,        (ULONG)tr(help),
+        MUIA_ShortHelp,        (IPTR)tr(help),
     TAG_DONE);
     #else
     if (lib_flags & BASEFLG_MUI20)
@@ -264,10 +264,10 @@ Object *
 opopframe(ULONG key,ULONG title,ULONG help)
 {
     return PopframeObject,
-        MUIA_Window_Title, (ULONG)tr(title),
+        MUIA_Window_Title, (IPTR)tr(title),
         MUIA_Draggable,    TRUE,
         MUIA_CycleChain,   1,
-        MUIA_ShortHelp,    (ULONG)tr(help),
+        MUIA_ShortHelp,    (IPTR)tr(help),
         MUIA_ControlChar,  (ULONG)getKeyChar(tr(key)),
     End;
 }

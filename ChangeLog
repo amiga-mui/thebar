@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-06-03 Matthias Rustler <mrustler@gmx.de>
+
+  * fixes for 64-bit AROS. Some warnings removed.
+    Storage variable for GetAttr, GetDTAttr... must be able to keep a 64-bit value!
+
 2010-05-27 Thore Böckelmann <tboeckel@gmx.de>
 
   * dist/Install-MCC: the supported languages are now collected dynamically

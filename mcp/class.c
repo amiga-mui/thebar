@@ -509,7 +509,9 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
     if (data->menu && !(data->flags & FLG_MenuCheck))
     {
-        get(_app(obj),MUIA_Application_Base,&data->base);
+        IPTR storage;
+        get(_app(obj),MUIA_Application_Base,&storage);
+        data->base = storage;
         if (!stricmp(data->base,"MUI"))
         {
             Object *o;
@@ -1010,9 +1012,9 @@ loadPrefs(Object *obj, const char *fileName)
 
                             if (ReadChunkBytes(iffh,&prhd,cn->cn_Size)==cn->cn_Size &&
                                 !ParseIFF(iffh,IFFPARSE_SCAN) &&
-                                !DoMethod(cfg,MUIM_Dataspace_ReadIFF,(ULONG)iffh))
+                                !DoMethod(cfg,MUIM_Dataspace_ReadIFF,(IPTR)iffh))
                             {
-                                DoMethod(obj,MUIM_Settingsgroup_ConfigToGadgets,(ULONG)cfg);
+                                DoMethod(obj,MUIM_Settingsgroup_ConfigToGadgets,(IPTR)cfg);
                                 res = TRUE;
                             }
                         }
