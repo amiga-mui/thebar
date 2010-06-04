@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-06-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: fixed a warning due to the latest changes.
+
 2010-06-03 Matthias Rustler <mrustler@gmx.de>
 
   * fixes for 64-bit AROS. Some warnings removed.
