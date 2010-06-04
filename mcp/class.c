@@ -510,9 +510,10 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     if (data->menu && !(data->flags & FLG_MenuCheck))
     {
         IPTR storage;
+
         get(_app(obj),MUIA_Application_Base,&storage);
-        data->base = storage;
-        if (!stricmp(data->base,"MUI"))
+        data->base = (STRPTR)storage;
+        if(stricmp(data->base, "MUI") == 0)
         {
             Object *o;
 
