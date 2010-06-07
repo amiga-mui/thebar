@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-06-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/backgroundadjust.c: fixed a warning due to the latest changes.
+
 2010-06-06 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/SDI_compiler.h: updated to latest version.
