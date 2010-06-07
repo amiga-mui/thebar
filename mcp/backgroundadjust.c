@@ -402,8 +402,10 @@ build(UNUSED struct IClass *cl,Object *obj,struct dtpicData *data)
                         if (data->bitmap)
                         {
                             IPTR storage;
+
                             GetDTAttrs(data->dto,PDTA_MaskPlane,&storage,TAG_DONE);
-                            data->plane = storage;
+                            data->plane = (APTR)storage;
+
                             return TRUE;
                         }
                     }
