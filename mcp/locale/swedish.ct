@@ -1,6 +1,7 @@
 ## chunk AUTH Pär Boberg
 ## language svenska
 ## version $VER: TheBar.ct 26.4 (26.10.09)
+## codeset 0
 Msg_Reg_Colors
 Färger
 ;#DEF Colors
@@ -659,7 +660,7 @@ För senaste versioner och uppdateringar:\nhttp://www.sourceforge.net/projects/th
 ;#SET (//)
 Msg_Info_Translator
 Svenska av: Pär Boberg
-;#DEF 
+;#DEF
 ;#SET (//)
 Msg_Item_Globals
 Återställ till globala
