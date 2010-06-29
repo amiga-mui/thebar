@@ -387,7 +387,7 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
-$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct $(LOCALE)/TheBar_mcp.cd
 	@echo "  MK $@"
 	@$(FC) $(LOCALE)/TheBar_mcp.cd $< CATALOG $@
 
