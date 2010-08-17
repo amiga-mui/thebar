@@ -40,6 +40,7 @@
 
 #define CLASSINIT
 #define CLASSEXPUNGE
+
 #define MIN_STACKSIZE 8192
 
 /******************************************************************************/
