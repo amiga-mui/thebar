@@ -44,9 +44,6 @@
 
 #define MIN_STACKSIZE 8192
 
-#define USEDCLASSESP  used_classesP
-static const char * const used_classesP[] = { "TheBar.mcp", NULL };
-
 #define CLASSINIT
 static BOOL ClassInit(UNUSED struct Library *base);
 
