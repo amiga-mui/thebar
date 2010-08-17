@@ -40,6 +40,12 @@
 #define CLASSINIT
 #define CLASSEXPUNGE
 
+#define USEDCLASSES used_mccs
+static const char *used_mccs[] = { "TheBar.mcc", "TheBarVirt.mcc", NULL };
+
+#define USEDCLASSESP used_mcps
+static const char *used_mcps[] = { "TheBar.mcp", NULL };
+
 #define MIN_STACKSIZE 8192
 
 /******************************************************************************/
