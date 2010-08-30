@@ -21,12 +21,13 @@
 ***************************************************************************/
 
 /* utils.c */
-#ifdef __MORPHOS__
-#elif defined(__AROS__)
-IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+#if !defined(__MORPHOS__)
+#if defined(__AROS__)
+IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 int stch_l(const char *chr_ptr, long *u_ptr);
+#endif
 #endif
 
 Object *obutton(ULONG text,ULONG help);
