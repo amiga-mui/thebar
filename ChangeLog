@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-08-30 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mccinit.c: updated to latest fixed version
+  * misc: unified all DoSuperNew() functions and used VA_LIST rather than the
+    SLOWSTACK stuff on AROS.
+
 2010-08-17 Thore Böckelmann <tboeckel@gmx.de>
 
   * mccinit.c, SDI_compiler.h: updated to latest versions.
