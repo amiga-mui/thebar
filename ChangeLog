@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v26.6 RELEASE ############################################################
+
+2010-09-01 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.6 release preparations
+
 2010-08-30 Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mccinit.c: updated to latest fixed version

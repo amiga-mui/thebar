@@ -101,6 +101,6 @@ releaserev=`grep "#define LIB_REVISION" mcc/version.h | awk '{ print $3 }'`
 
 echo "  MK MCC_TheBar-$releasever.$releaserev.lha"
 find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
-pushd release >/dev/null
+cd release
+rm -f ../MCC_TheBar-$releasever.$releaserev.lha
 lha -aq ../MCC_TheBar-$releasever.$releaserev.lha *
-popd >/dev/null
