@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-11-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c, mcc/class.c, mcc/button/build.c: implemented very simple
+    replacements for WriteChunkyPixels() and ReadPixelLine8() in the OS3 build.
+    This fixes the graphic corruption on pure classic machines running OS3.1.
+    This closes #2849043.
+
 2010-10-05 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/mccinit.c: make sure that removing the library during LibClose()
