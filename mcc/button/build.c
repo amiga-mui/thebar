@@ -1423,7 +1423,7 @@ LUT8ToBitMap(struct InstData *data,
         if (isFlagSet(data->flags, FLG_CyberMap))
             WritePixelArray(src,0,0,width,&rport,0,0,width,height,RECTFMT_LUT8);
         else
-            _WriteChunkyPixels(&rport,0,0,width-1,height-1,src,width);
+            WCP(&rport,0,0,width-1,height-1,src,width);
     }
 
     RETURN(dest);
