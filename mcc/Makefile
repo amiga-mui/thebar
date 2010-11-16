@@ -234,7 +234,8 @@ ifeq ($(OS), os3)
   LDLIBS  += -ldebug -lmui
 
   # additional object files required
-  COBJS += vastubs.o
+  COBJS += SetPatch.o \
+           vastubs.o
 
 else
 ifeq ($(OS), mos)

@@ -22,6 +22,7 @@
 
 #include "class.h"
 #include "private.h"
+#include "SetPatch.h"
 #include <clib/macros.h>
 
 /***********************************************************************/
@@ -1188,7 +1189,7 @@ static void _WriteChunkyPixels(struct RastPort *rp, UWORD xstart, UWORD ystart, 
 
 #define WCP(rp, xstart, ystart, xstop, ystop, array, bpr) \
 { \
-  if(GfxBase->LibNode.lib_Version > 40) \
+  if(setPatchVersion >= ((43UL << 16) | 0UL)) \
     WriteChunkyPixels(rp, xstart, ystart, xstop, ystop, array, bpr); \
   else \
     _WriteChunkyPixels(rp, xstart, ystart, xstop, ystop, array, bpr); \
@@ -1210,11 +1211,11 @@ LUT8ToBitMap(struct InstData *data,
 
     ENTER();
 
-    flags = BMF_CLEAR|BMF_MINPLANES;
+    flags = BMF_CLEAR;
     friend = NULL;
     if(isFlagSet(data->flags, FLG_CyberMap))
     {
-      //setFlag(flags, BMF_MINPLANES);
+      setFlag(flags, BMF_MINPLANES);
       friend = data->screen->RastPort.BitMap;
     }
 

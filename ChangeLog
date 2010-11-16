@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-11-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * build.c, SetPatch.c: replaced the version check of graphics.library by a
+    more appropriate check of the installed SetPatch command.
+
 2010-11-15 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/build.c, mcc/class.c, mcc/button/build.c: implemented very simple
