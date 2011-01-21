@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2011-01-21 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/turkish.ct: added turkish translation kindly provided by Alper
+    Sönmez.
+
 2010-11-16 Thore Böckelmann <tboeckel@gmx.de>
 
   * build.c, SetPatch.c: replaced the version check of graphics.library by a
