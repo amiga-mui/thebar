@@ -181,12 +181,13 @@ MCPOBJS = library.o \
 
 EXTRAOBJS =
 
-CATALOGS = $(LOCALE)/german.catalog \
-           $(LOCALE)/italian.catalog \
-           $(LOCALE)/czech.catalog \
+CATALOGS = $(LOCALE)/czech.catalog \
            $(LOCALE)/french.catalog \
+           $(LOCALE)/german.catalog \
+           $(LOCALE)/italian.catalog \
+           $(LOCALE)/polish.catalog \
            $(LOCALE)/swedish.catalog \
-           $(LOCALE)/polish.catalog
+           $(LOCALE)/turkish.catalog
 
 # different options per target OS
 ifeq ($(OS), os4)
