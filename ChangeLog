@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2011-01-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * all/Makefile: fixed the dependency generation to respect the system specific
+    object file path.
+
 2011-01-21 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/turkish.ct: added turkish translation kindly provided by Alper
