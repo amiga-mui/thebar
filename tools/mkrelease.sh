@@ -103,4 +103,4 @@ echo "  MK MCC_TheBar-$releasever.$releaserev.lha"
 find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
 cd release
 rm -f ../MCC_TheBar-$releasever.$releaserev.lha
-lha -aq ../MCC_TheBar-$releasever.$releaserev.lha *
+lha -ao5q ../MCC_TheBar-$releasever.$releaserev.lha *
