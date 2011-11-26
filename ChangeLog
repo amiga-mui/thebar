@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v26.8 RELEASE ############################################################
+
+2011-11-26 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.8 release preparations
+
 2011-01-04 Thore Böckelmann <tboeckel@gmx.de>
 
   * all/Makefile: fixed the dependency generation to respect the system specific
