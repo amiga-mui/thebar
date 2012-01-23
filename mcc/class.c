@@ -1551,9 +1551,7 @@ struct pack
     ULONG                       scale;
     ULONG                       disMode;
     ULONG                       spacersSize;
-    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     ULONG                       userFrame;
-    #endif
 };
 
 enum
@@ -1671,11 +1669,9 @@ ULONG ptable[] =
     PACK_NEWOFFSET(MUIA_Background),
     PACK_LONGBIT(MUIA_Background,MUIA_Background,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Background),
 
-    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     PACK_NEWOFFSET(MUIA_Frame),
     PACK_LONGBIT(MUIA_Frame,MUIA_Frame,pack,userFlags2,PKCTRL_BIT|PKCTRL_PACKONLY|PSTF_EXISTS,UFLG2_UserFrame),
     PACK_ENTRY(MUIA_Frame,MUIA_Frame,pack,userFrame,PKCTRL_LONG|PKCTRL_PACKONLY),
-    #endif
 
     /* Alien: group */
     PACK_NEWOFFSET(MUIA_Group_Horiz),
