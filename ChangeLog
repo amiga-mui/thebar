@@ -8,6 +8,7 @@ $URL$
 2012-01-23 Thore Böckelmann <tboeckel@gmx.de>
 
   * all/Makefile: added __amigaos3__ symbol for the OS3 build.
+  * button/class.c: fixed dynamic frames in borderless mode.
 
 #### v26.8 RELEASE ############################################################
 
