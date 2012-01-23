@@ -122,7 +122,7 @@ struct InstData
     char                           frameSpec[256];
     ULONG                          userFrame;
 
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+    #if defined(__amigaos3__)
     BOOL                           allowAlphaChannel;
     #endif
 
