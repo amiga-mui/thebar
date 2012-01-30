@@ -16,14 +16,14 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
+ $Id: class_protos.h 37252 2011-02-28 05:55:15Z jmcmullan $
 
 ***************************************************************************/
 
 /* utils.c */
 #if !defined(__MORPHOS__)
 #if defined(__AROS__)
-IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
+Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif

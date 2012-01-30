@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2010-06-03 Matthias Rustler <mrustler@gmx.de>
+
+  * misc: Backport of some AROS fixes.
+  * SDI headers updated.
+
 2012-01-23 Thore Böckelmann <tboeckel@gmx.de>
 
   * all/Makefile: added __amigaos3__ symbol for the OS3 build.

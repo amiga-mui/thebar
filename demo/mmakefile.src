@@ -19,8 +19,9 @@ FILES := demo1 \
 	 demo9 \
 	 demo10
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
+USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_progs mmake=contrib-zune-classes-thebar-demos files=$(FILES) \
     targetdir=$(TARGETDIR) \

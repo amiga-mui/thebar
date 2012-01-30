@@ -236,7 +236,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             isFlagSet(pack.flags, FLG_NoClick) ? TAG_IGNORE : MUIA_CycleChain, TRUE,
             isFlagSet(pack.flags, FLG_NoClick) ? TAG_IGNORE : MUIA_InputMode,  imode,
             MUIA_Font, (pack.vMode==MUIV_TheButton_ViewMode_Text) ? MUIV_Font_Button : MUIV_Font_Tiny,
-            /*isFlagSet(pack.flags, FLG_Borderless) ? TAG_IGNORE :*/ MUIA_Frame, MUIV_Frame_Button,
+            isFlagSet(pack.flags, FLG_Borderless) ? TAG_IGNORE : MUIA_Frame, MUIV_Frame_Button,
             isFlagSet(pack.flags, FLG_Borderless) ? TAG_IGNORE : MUIA_Background, MUII_ButtonBack,
             isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameDynamic : TAG_IGNORE, TRUE,
             isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameVisible : TAG_IGNORE, FALSE,
@@ -521,7 +521,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     struct TagItem  *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
-    const struct TagItem *tstate;
+    struct TagItem *tstate;
     BOOL redraw, setidcmp, back, sel, pressed, over;
     IPTR res;
 
@@ -548,18 +548,15 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                         setFlag(data->flags,FLG_MouseOver);
                         over = TRUE;
                     }
-                    else
-                    	clearFlag(data->flags,FLG_MouseOver);
+                    else clearFlag(data->flags,FLG_MouseOver);
 
                     back = TRUE;
                 }
                 break;
 
             case MUIA_Group_Horiz:
-                if (tidata)
-                	setFlag(data->flags, FLG_Horiz);
-                else
-                	clearFlag(data->flags, FLG_Horiz);
+                if (tidata) setFlag(data->flags, FLG_Horiz);
+                else clearFlag(data->flags, FLG_Horiz);
                 break;
 
             case MUIA_TheButton_Sunny:
@@ -570,10 +567,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 else
                 {
-                    if (tidata)
-                    	setFlag(data->flags,FLG_Sunny);
-                    else
-                    	clearFlag(data->flags,FLG_Sunny);
+                    if (tidata) setFlag(data->flags,FLG_Sunny);
+                    else clearFlag(data->flags,FLG_Sunny);
                 }
                 break;
 
@@ -584,10 +579,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 else
                 {
-                    if (tidata)
-                    	setFlag(data->flags,FLG_Selected);
-                    else
-                    	clearFlag(data->flags,FLG_Selected);
+                    if (tidata) setFlag(data->flags,FLG_Selected);
+                    else clearFlag(data->flags,FLG_Selected);
 
                     sel = TRUE;
                     setidcmp = TRUE;
@@ -597,8 +590,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                         tag->ti_Tag = TAG_IGNORE;
 
                         SetSuperAttrs(cl,obj,MUIA_Selected,     tidata ? TRUE : FALSE,
-                                          // MUIA_FrameDynamic, tidata  ? FALSE : isFlagSet(data->flags, FLG_Raised),
-                                          // MUIA_FrameVisible, !tidata ? FALSE : isFlagClear(data->userFlags, UFLG_NtRaiseActive),
+                                             MUIA_FrameDynamic, tidata  ? FALSE : isFlagSet(data->flags, FLG_Raised),
+                                             MUIA_FrameVisible, !tidata ? FALSE : isFlagClear(data->userFlags, UFLG_NtRaiseActive),
                                              MUIA_ShowSelState, isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : tidata,
                                              MUIA_NoNotify,     GetTagData(MUIA_NoNotify,FALSE,msg->ops_AttrList),
                                              TAG_DONE);
@@ -613,10 +606,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 else
                 {
-                    if (tidata)
-                    	setFlag(data->flags,FLG_Disabled);
-                    else
-                    	clearFlag(data->flags,FLG_Disabled);
+                    if (tidata) setFlag(data->flags,FLG_Disabled);
+                    else clearFlag(data->flags,FLG_Disabled);
 
                     setidcmp = back = TRUE;
                 }
@@ -629,10 +620,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 else
                 {
-                    if (tidata)
-                    	setFlag(data->flags,FLG_ShowMe);
-                    else
-                    	clearFlag(data->flags,FLG_ShowMe);
+                    if (tidata) setFlag(data->flags,FLG_ShowMe);
+                    else clearFlag(data->flags,FLG_ShowMe);
                 }
                 break;
 
@@ -641,10 +630,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 break;
 
             case MUIA_TheButton_Quiet:
-                if (tidata)
-                	setFlag(data->flags,FLG_NoNotify);
-                else
-                	clearFlag(data->flags,FLG_NoNotify);
+                if (tidata) setFlag(data->flags,FLG_NoNotify);
+                else clearFlag(data->flags,FLG_NoNotify);
                 break;
 
             case MUIA_TheButton_Raised:
@@ -667,8 +654,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     vmt = tag;
                     tag->ti_Tag = TAG_IGNORE;
                 }
-                else
-                	data->vMode = tidata;
+                else data->vMode = tidata;
                 break;
 
             case MUIA_TheButton_Scaled:
@@ -679,10 +665,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 else
                 {
-                    if (tidata)
-                    	setFlag(data->flags,FLG_Scaled);
-                    else
-                    	clearFlag(data->flags,FLG_Scaled);
+                    if (tidata) setFlag(data->flags,FLG_Scaled);
+                    else clearFlag(data->flags,FLG_Scaled);
                 }
                 break;
 
@@ -692,8 +676,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     lpt = tag;
                     tag->ti_Tag = TAG_IGNORE;
                 }
-                else
-                	data->lPos = tidata;
+                else data->lPos = tidata;
                 break;
 
             case MUIA_TheButton_EnableKey:
@@ -707,8 +690,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     if (tidata)
                     {
                         setFlag(data->flags, FLG_EnableKey);
-                        if (data->cchar)
-                        	superset(cl,obj,MUIA_ControlChar,ToLower(data->cchar));
+                        if (data->cchar) superset(cl,obj,MUIA_ControlChar,ToLower(data->cchar));
                     }
                     else
                     {
@@ -724,8 +706,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     setFlag(data->flags2,FLG2_Limbo|FLG2_Special);
                     addRemEventHandler(cl,obj,data);
                 }
-                else
-                	clearFlag(data->flags2,FLG2_Limbo);
+                else clearFlag(data->flags2,FLG2_Limbo);
                 break;
 
             case MUIA_TheButton_NtRaiseActive:
@@ -736,10 +717,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 else
                 {
-                    if (tidata)
-                    	setFlag(data->userFlags,UFLG_NtRaiseActive);
-                    else
-                    	clearFlag(data->userFlags,UFLG_NtRaiseActive);
+                    if (tidata) setFlag(data->userFlags,UFLG_NtRaiseActive);
+                    else clearFlag(data->userFlags,UFLG_NtRaiseActive);
                     setidcmp = TRUE;
                 }
                 break;
@@ -876,7 +855,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             {
                 if(isFlagSet(data->flags, FLG_Selected))
                     fv = TRUE;
-                else if(isFlagClear(data->flags, FLG_Raised))
+                else if(isFlagSet(data->flags, FLG_Raised))
                     fd = TRUE;
             }
             else
@@ -2198,7 +2177,6 @@ static IPTR
 mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  ULONG result;
 
   ENTER();
 
@@ -2237,10 +2215,8 @@ mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
     }
   }
 
-  result = DoSuperMethodA(cl, obj, (APTR)msg);
-
-  RETURN(result);
-  return result;
+  RETURN(0);
+  return 0;
 }
 
 /***********************************************************************/
