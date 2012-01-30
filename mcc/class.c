@@ -1551,7 +1551,9 @@ struct pack
     ULONG                       scale;
     ULONG                       disMode;
     ULONG                       spacersSize;
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     ULONG                       userFrame;
+    #endif
 };
 
 enum
@@ -1669,9 +1671,11 @@ ULONG ptable[] =
     PACK_NEWOFFSET(MUIA_Background),
     PACK_LONGBIT(MUIA_Background,MUIA_Background,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Background),
 
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     PACK_NEWOFFSET(MUIA_Frame),
     PACK_LONGBIT(MUIA_Frame,MUIA_Frame,pack,userFlags2,PKCTRL_BIT|PKCTRL_PACKONLY|PSTF_EXISTS,UFLG2_UserFrame),
     PACK_ENTRY(MUIA_Frame,MUIA_Frame,pack,userFrame,PKCTRL_LONG|PKCTRL_PACKONLY),
+    #endif
 
     /* Alien: group */
     PACK_NEWOFFSET(MUIA_Group_Horiz),
@@ -2468,7 +2472,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl, obj);
     struct TagItem *tag;
-    const struct TagItem *tstate;
+    struct TagItem *tstate;
     ULONG flags = 0, res;
 
     ENTER();
@@ -3067,7 +3071,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         if (!done)
         {
             DoSuperMethod(cl,obj,OM_GET,MUIA_Parent,(IPTR)&ptr);
-            SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,ptr ? (IPTR)_backspec(ptr) : MUII_WindowBack,TAG_DONE);
+            SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,(IPTR)(ptr ? _backspec(ptr) : MUII_WindowBack),TAG_DONE);
         }
     }
 
