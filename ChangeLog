@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-03-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: use the MUI4+ attribute MUIA_KnowsDisabled to indicate
+    that TheButton.mcc has its own method to indicate disabled objects. For
+    MUI3 the well known disable pattern will be drawn.
+
 2010-06-03 Matthias Rustler <mrustler@gmx.de>
 
   * misc: Backport of some AROS fixes.

@@ -241,6 +241,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameDynamic : TAG_IGNORE, TRUE,
             isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameVisible : TAG_IGNORE, FALSE,
             isFlagSet(lib_flags, BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, isFlagSet(pack.flags, FLG_Borderless),
+            MUIA_KnowsDisabled, TRUE,
             TAG_MORE,(IPTR)attrs)))
     {
         struct InstData *data = INST_DATA(cl,obj);
