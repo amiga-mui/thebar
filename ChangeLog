@@ -10,6 +10,8 @@ $URL$
   * mcc/button/class.c: use the MUI4+ attribute MUIA_KnowsDisabled to indicate
     that TheButton.mcc has its own method to indicate disabled objects. For
     MUI3 the well known disable pattern will be drawn.
+  * mcc/button/class.c: restored some former code to correctly reenable
+    borderless buttons. This was accidentally removed by mrustlers last commit.
 
 2010-06-03 Matthias Rustler <mrustler@gmx.de>
 
