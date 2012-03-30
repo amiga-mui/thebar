@@ -207,3 +207,8 @@ void build(struct InstData *data);
 
 /***********************************************************************/
 
+// new attribute of MUI 4.0 to indicate that a class knows a custom way to indicate disabled objects
+#ifndef MUIA_KnowsDisabled
+#define MUIA_KnowsDisabled                 0x8042deef /* V20 isg BOOL              */
+#endif
+
