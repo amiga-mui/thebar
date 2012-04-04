@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-04-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: made the borderless mode working again with MUI 3.x.
+
 2012-03-30 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/class.c: use the MUI4+ attribute MUIA_KnowsDisabled to indicate
