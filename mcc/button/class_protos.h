@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: class_protos.h 37252 2011-02-28 05:55:15Z jmcmullan $
+ $Id$
 
 ***************************************************************************/
 

@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: debug.h 36659 2011-01-18 13:26:51Z neil $
+ $Id$
 
 ***************************************************************************/
 
