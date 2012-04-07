@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-04-07 Jens Langner <Jens.Langner@light-speed.de>
+
+  * Makefile: removed -funroll-loops as this is potentially dangerous.
+
 2012-04-04 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/class.c: made the borderless mode working again with MUI 3.x.
