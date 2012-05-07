@@ -3577,40 +3577,37 @@ mHide(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-static IPTR
-mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+static IPTR mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
   struct InstData *data = INST_DATA(cl, obj);
+  IPTR rc;
 
   ENTER();
 
-  DoSuperMethodA(cl,obj,(Msg)msg);
+  rc = DoSuperMethodA(cl,obj,(Msg)msg);
 
-  #if defined(VIRTUAL)
-  if (isFlagSet(data->flags, FLG_Framed))
-  #else
-  if (isFlagSet(data->flags, FLG_Framed) && (isFlagSet(msg->flags, MADF_DRAWUPDATE) || isFlagSet(msg->flags, MADF_DRAWOBJECT)))
-  #endif
+  if (isFlagClear(lib_flags,BASEFLG_MUI4))
   {
-    struct RastPort rp;
+    #if defined(VIRTUAL)
+    if (isFlagSet(data->flags, FLG_Framed))
+    #else
+    if (isFlagSet(data->flags, FLG_Framed) && (isFlagSet(msg->flags, MADF_DRAWUPDATE) || isFlagSet(msg->flags, MADF_DRAWOBJECT)))
+    #endif
+    {
+      SetAPen(_rp(obj),MUIPEN(data->barFrameShinePen));
+      Move(_rp(obj),_left(obj),_bottom(obj));
+      Draw(_rp(obj),_left(obj),_top(obj));
+      Draw(_rp(obj),_right(obj),_top(obj));
 
-    memcpy(&rp,_rp(obj),sizeof(rp));
-
-    SetAPen(&rp,MUIPEN(data->barFrameShinePen));
-    Move(&rp,_left(obj),_bottom(obj));
-    Draw(&rp,_left(obj),_top(obj));
-    Draw(&rp,_right(obj),_top(obj));
-
-    SetAPen(&rp,MUIPEN(data->barFrameShadowPen));
-    Draw(&rp,_right(obj),_bottom(obj));
-    Draw(&rp,_left(obj)+1,_bottom(obj));
+      SetAPen(_rp(obj),MUIPEN(data->barFrameShadowPen));
+      Draw(_rp(obj),_right(obj),_bottom(obj));
+      Draw(_rp(obj),_left(obj)+1,_bottom(obj));
+    }
   }
 
-  RETURN(0);
-  return 0;
+  RETURN(rc);
+  return rc;
 }
-#endif
 
 /***********************************************************************/
 
@@ -4668,9 +4665,7 @@ DISPATCHER(_Dispatcher)
 
     case MUIM_Show:                     return mShow(cl,obj,(APTR)msg);
     case MUIM_Hide:                     return mHide(cl,obj,(APTR)msg);
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     case MUIM_Draw:                     return mDraw(cl,obj,(APTR)msg);
-    #endif
     case MUIM_Backfill:                 return mBackfill(cl,obj,(APTR)msg);
 
     #ifdef VIRTUAL
