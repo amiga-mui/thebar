@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-05-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: enabled the special handling within MUIM_Draw for all supported
+    platforms, although this only applies for pre-MUI4 systems.
+
 2012-04-07 Jens Langner <Jens.Langner@light-speed.de>
 
   * Makefile: removed -funroll-loops as this is potentially dangerous.
