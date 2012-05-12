@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v26.9 RELEASE ############################################################
+
+2012-05-12 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.9 release preparations
+
 2012-05-07 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: enabled the special handling within MUIM_Draw for all supported
