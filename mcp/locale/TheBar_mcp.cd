@@ -431,7 +431,7 @@ Msg_SpecialSelect (//)
 Special select
 ;
 Msg_SpecialSelect_Help (//)
-If selected, buttons contents is moved\n\
+If selected, button contents are moved\n\
 when they are selected or active.
 ;
 Msg_TextOverUseShine (//)

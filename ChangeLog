@@ -8,6 +8,7 @@ $URL$
 2012-05-14 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/Makefile: removed .catalog files in clean target.
+  * mcp/locale/TheBar_mcp.cd: replaced non-ASCII character 0xa0 by space.
 
 #### v26.9 RELEASE ############################################################
 
