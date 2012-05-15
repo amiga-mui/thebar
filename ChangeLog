@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-05-16 Pär Boberg <pbobbenb@spray.se>
+
+  * mcp/locale/swedish.ct: minor changes.
+
 2012-05-15 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c, mcc/button/class.c: changed a lot of non-AmigaOS3 code to
