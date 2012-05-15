@@ -23,7 +23,7 @@
 #ifndef SETPATCH_H
 #define SETPATCH_H 1
 
-#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+#if defined(__amigaos3__)
 extern ULONG setPatchVersion;
 
 void GetSetPatchVersion(void);

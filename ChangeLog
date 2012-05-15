@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-05-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c, mcc/button/class.c: changed a lot of non-AmigaOS3 code to
+    dynamically depend on the availibility of MUI4 for better flexibility.
+
 2012-05-14 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/Makefile: removed .catalog files in clean target.

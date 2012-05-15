@@ -20,7 +20,7 @@
 
 ***************************************************************************/
 
-#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+#if defined(__amigaos3__)
 #include <proto/exec.h>
 #include <exec/types.h>
 #include <exec/lists.h>

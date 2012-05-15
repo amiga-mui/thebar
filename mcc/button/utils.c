@@ -59,7 +59,7 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 // own strlcpy/strlcat are only required for classic OS3 compiles and also
 // only when libnix is used. clib2 and the newer libnix of MorphOS already
 // has those functions.
-#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__) && defined(__libnix__)
+#if defined(__amigaos3__) && defined(__libnix__)
 
 size_t
 strlcpy(char *dst, const char *src, size_t siz)
