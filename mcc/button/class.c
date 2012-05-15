@@ -360,7 +360,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         // cleanup the notifyList
         NewList((struct List *)&data->notifyList);
 
-        #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+        #if defined(__amigaos3__)
         // cgx/WritePixelArrayAlpha is available in AfA only
         if(CyberGfxBase != NULL && CyberGfxBase->lib_Version >= 45 &&
            PictureDTBase != NULL && PictureDTBase->lib_Version >= 46)
