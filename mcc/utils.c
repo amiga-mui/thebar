@@ -74,6 +74,7 @@ BOOL CreateSharedPool(void)
                                                 ASOPOOL_Name, "TheBar.mcc shared pool",
                                                 #endif
                                                 ASOPOOL_Protected, TRUE,
+                                                ASOPOOL_LockMem, FALSE,
                                                 TAG_DONE);
   #elif defined(__MORPHOS__)
   sharedPool = CreatePool(MEMF_SEM_PROTECTED, 2048, 1024);
