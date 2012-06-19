@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-06-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/utils.c, mcc/button/utils.c: don't allocate locked memory.
+
 2012-05-16 Pär Boberg <pbobbenb@spray.se>
 
   * mcp/locale/swedish.ct: minor changes.

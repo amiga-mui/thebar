@@ -262,6 +262,7 @@ BOOL CreateSharedPool(void)
                                                 ASOPOOL_Threshold, 1024,
                                                 ASOPOOL_Name, "TheButton.mcc shared pool",
                                                 ASOPOOL_Protected, TRUE,
+                                                ASOPOOL_LockMem, FALSE,
                                                 TAG_DONE);
   #elif defined(__MORPHOS__)
   sharedPool = CreatePool(MEMF_SEM_PROTECTED, 2048, 1024);
