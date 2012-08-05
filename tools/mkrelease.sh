@@ -104,3 +104,4 @@ find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
 cd release
 rm -f ../MCC_TheBar-$releasever.$releaserev.lha
 lha -ao5q ../MCC_TheBar-$releasever.$releaserev.lha *
+cp MCC_TheBar/ReadMe ../MCC_TheBar-$releasever.$releaserev.readme
