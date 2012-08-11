@@ -1323,13 +1323,19 @@ drawText(struct InstData *data,struct RastPort *rp)
 
         if (data->end && isFlagSet(data->flags, FLG_EnableKey))
         {
-            WORD x, y, ux, uy;
-
-            x = rp->cp_x;
-            y = rp->cp_y;
+            LONG x = rp->cp_x;
+            LONG y = rp->cp_y;
+            LONG ux;
+            LONG uy;
 
             ux = x-data->eInfo.te_Width;
-            uy = y+1;
+            uy = y;
+			switch (rp->TxHeight - rp->TxBaseline)
+			{
+				case 1 : break;
+				case 2 : uy += 1; break;
+				default: uy += 2; break;
+			}
 
             Move(rp,ux,uy);
             Draw(rp,ux+data->ccInfo.te_Extent.MaxX,uy);
