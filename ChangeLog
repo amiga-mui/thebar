@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-08-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: changed the way the control character is drawn to match
+    MUI's approach.
+
 #### v26.10 RELEASE ###########################################################
 
 2012-08-05 Jens Langner <Jens.Langner@light-speed.de>
