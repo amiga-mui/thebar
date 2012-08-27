@@ -33,6 +33,12 @@
 #define ALLOCRASTERCG(w,h)      SharedAlloc(RAWIDTH(w)*((UWORD)(h)))
 #define FREERASTERCG(ra)        SharedFree(ra)
 
+/***********************************************************************/
+
+#define DONT_SKIP_PIC(p)   (((void *)(p)) != NULL && ((void *)(p)) != MUIV_TheBar_SkipPic)
+
+/***********************************************************************/
+
 struct palette
 {
     ULONG colors[256];
@@ -798,25 +804,23 @@ static UBYTE * getSource(struct MUIS_TheBar_Brush *image)
 
     ENTER();
 
-    if (image->compressedSize)
+    if (image->compressedSize != 0)
     {
         ULONG size = image->dataWidth*image->dataHeight;
 
-        if(!(src = SharedAlloc(size)))
+        if((src = SharedAlloc(size)) != NULL)
         {
-          RETURN(NULL);
-          return NULL;
-        }
-
-        if (BRCUnpack(image->data, (signed char*)src,image->compressedSize,size))
-        {
-            SharedFree(src);
-
-            RETURN(NULL);
-            return NULL;
+            if (BRCUnpack(image->data, (signed char*)src,image->compressedSize,size) != 0)
+            {
+                SharedFree(src);
+                src = NULL;
+            }
         }
     }
-    else src = image->data;
+    else
+    {
+        src = image->data;
+    }
 
     RETURN(src);
     return src;
@@ -879,7 +883,7 @@ static ULONG makeSources(struct InstData *data,struct make *make)
         make->mask    = copy.mask;
         make->gchunky = copy.grey;
 
-        if (isFlagClear(data->userFlags, UFLG_IgnoreSelImages) && data->simage.data)
+        if (isFlagClear(data->userFlags, UFLG_IgnoreSelImages) && DONT_SKIP_PIC(data->simage.data) == TRUE)
         {
             back = data->simage.data;
 
@@ -903,7 +907,7 @@ static ULONG makeSources(struct InstData *data,struct make *make)
                 data->simage.data = back;
         }
 
-        if (isFlagClear(data->userFlags, UFLG_IgnoreDisImages) && data->dimage.data)
+        if (isFlagClear(data->userFlags, UFLG_IgnoreDisImages) && DONT_SKIP_PIC(data->dimage.data) == TRUE)
         {
             back = data->dimage.data;
 
@@ -942,7 +946,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
 {
     ENTER();
 
-    if (data->image.data)
+	if (data->image.data)
     {
         struct copy    copy;
         UBYTE *back = data->image.data;
@@ -953,7 +957,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             return FALSE;
         }
 
-        copy.dw    = make->dw;
+	    copy.dw    = make->dw;
         copy.dh    = make->dh;
         copy.flags = make->flags;
 
@@ -972,7 +976,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         make->mask    = copy.mask;
         make->gchunky = copy.grey;
 
-        if (isFlagClear(data->userFlags, UFLG_IgnoreSelImages) && data->simage.data)
+        if (isFlagClear(data->userFlags, UFLG_IgnoreSelImages) && DONT_SKIP_PIC(data->simage.data) == TRUE)
         {
             back = data->simage.data;
 
@@ -993,7 +997,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
                 data->simage.data = back;
         }
 
-        if (isFlagClear(data->userFlags, UFLG_IgnoreDisImages) && data->dimage.data)
+        if (isFlagClear(data->userFlags, UFLG_IgnoreDisImages) && DONT_SKIP_PIC(data->dimage.data) == TRUE)
         {
             back = data->dimage.data;
 
