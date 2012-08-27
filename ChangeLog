@@ -9,6 +9,9 @@ $URL$
 
   * mcc/build.c, mcc/button/build.c: correctly respect MUIV_TheBar_SkipPic as raw
     image data pointer. Thanks to Andreas Falkenhahn for the hint.
+  * doc/TheBar.doc: added some "SEE ALSO" passages for attributes which might get
+    overridden by the configured default settings if MUIA_TheBar_IgnoreAppearance
+    is not set to FALSE.
 
 2012-08-11 Thore Böckelmann <tboeckel@gmx.de>
 
