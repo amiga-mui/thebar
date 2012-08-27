@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-08-27 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c, mcc/button/build.c: correctly respect MUIV_TheBar_SkipPic as raw
+    image data pointer. Thanks to Andreas Falkenhahn for the hint.
+
 2012-08-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/class.c: changed the way the control character is drawn to match
