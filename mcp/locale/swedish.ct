@@ -1,4 +1,4 @@
-## version $VER: TheBar.ct 26.5 (16.05.2012)
+## version $VER: TheBar.ct 26.6 (28.8.2012)
 ## language svenska
 ## codeset 0
 ;
@@ -734,27 +734,9 @@ Två punkter
 ; Two points
 ;
 ;
-Msg_Info_First
-%s\n\
-Kopieringsrätt (c) 2003-2008 Alfonso Ranieri\n\
-och TheBar Open Source Team
-; %s\n\
-; Copyright (c) 2003-2008 Alfonso Ranieri\n\
-; and TheBar Open Source Team
-;
-Msg_Info_Reserved
-Distribuerad under termerna av LGPL2.
-; Distributed under the terms of the LGPL2.
-;
-Msg_Info_Rest
-För senaste versioner och uppdateringar:\n\
-http://www.sourceforge.net/projects/thebar
-; For recent versions and updates visit:\n\
-; http://www.sourceforge.net/projects/thebar
-;
 Msg_Info_Translator
 Svenska av: Pär Boberg
-; 
+;
 ;
 Msg_Item_Globals
 Återställ till globala
