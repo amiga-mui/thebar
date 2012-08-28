@@ -1,5 +1,5 @@
 ## chunk AUTH Jens Langner, Hans-Jörg Ottinger
-## version $VER: TheBar.catalog 21.2 (06.03.2007)
+## version $VER: TheBar.catalog 21.3 (28.8.2012)
 ## codeset 0
 ## language deutsch
 ;
@@ -653,18 +653,6 @@ ein Pixel
 Msg_SpacersSize_TwoPoint
 zwei Pixer
 ;
-;
-Msg_Info_First
-%s\n\
-Copyright (c) 2003-2008 Alfonso Ranieri\n\
-and TheBar Open Source Team
-;
-Msg_Info_Reserved
-Distributed under the terms of the LGPL2.
-;
-Msg_Info_Rest
-For recent versions and updates visit:\n\
-http://www.sourceforge.net/projects/thebar
 ;
 Msg_Info_Translator
 Deutsch : Jens Langner, Hans-Jörg Ottinger

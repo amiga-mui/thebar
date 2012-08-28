@@ -46,11 +46,15 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     {
         struct InstData *data = INST_DATA(cl,obj);
         Object          *prefs, *trans;
-        char            buf[256];
         const char      *t;
-
-        snprintf(buf, sizeof(buf), "\033bTheBar " LIB_REV_STRING "\033n [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ")\n"
-                                   "Copyright (C) 2003-2005 Alfonso Ranieri\n" LIB_COPYRIGHT "\n");
+        static const char infotext1[] = "\033bTheBar " LIB_REV_STRING "\033n [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ")\n"
+                                        "Copyright (C) 2003-2005 Alfonso Ranieri\n"
+                                        LIB_COPYRIGHT;
+        static const char infotext2[] = "Distributed under the terms of the LGPL2.\n"
+                                        "\n"
+                                        "For recent versions and updates visit:\n"
+                                        "http://www.sourceforge.net/projects/thebar/\n"
+                                        "\n";
 
         if((t = tr(Msg_Info_Translator)) && *t)
         {
@@ -351,28 +355,21 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             End, // <Register
 
             Child, CrawlingObject, // >Crawling
-                MUIA_FixHeightTxt, (IPTR)"\n\n",
+                MUIA_FixHeightTxt, (IPTR)infotext1,
                 TextFrame,
                 MUIA_Background, (IPTR)"m1",
 
                 Child, TextObject,
-                    MUIA_Text_Copy,     TRUE,
+                    MUIA_Text_Copy,     FALSE,
                     MUIA_Text_PreParse, (IPTR)"\033c",
-                    MUIA_Text_Contents, (IPTR)buf,
+                    MUIA_Text_Contents, (IPTR)infotext1,
 
                 End,
 
                 Child, TextObject,
+                    MUIA_Text_Copy,     FALSE,
                     MUIA_Text_PreParse, (IPTR)"\033c",
-                    MUIA_Text_Contents, (IPTR)tr(Msg_Info_Reserved),
-                End,
-
-                Child, ofhspace((IPTR)"a"),
-
-                Child, TextObject,
-                    MUIA_Text_Copy,     TRUE,
-                    MUIA_Text_PreParse, (IPTR)"\033c",
-                    MUIA_Text_Contents, (IPTR)tr(Msg_Info_Rest),
+                    MUIA_Text_Contents, (IPTR)infotext2,
                 End,
 
                 Child, ofhspace((IPTR)"a"),
@@ -380,8 +377,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 trans ? Child : TAG_IGNORE, trans,
 
                 Child, TextObject,
+                    MUIA_Text_Copy,     FALSE,
                     MUIA_Text_PreParse, (IPTR)"\033c",
-                    MUIA_Text_Contents, (IPTR)buf,
+                    MUIA_Text_Contents, (IPTR)infotext1,
                 End,
 
             End, // <Crawling
