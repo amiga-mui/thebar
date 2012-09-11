@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-09-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: rearranged the pages to be displayable on small screens aswell.
+
 2012-08-28 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/class.c: adjusted the crawling text to better match the capabilities of
