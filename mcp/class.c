@@ -47,10 +47,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         struct InstData *data = INST_DATA(cl,obj);
         Object          *prefs, *trans;
         const char      *t;
-        static const char infotext1[] = "\033bTheBar " LIB_REV_STRING "\033n [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ")\n"
+        static const char infotext1[] = "\033bTheBar.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
                                         "Copyright (C) 2003-2005 Alfonso Ranieri\n"
                                         LIB_COPYRIGHT;
-        static const char infotext2[] = "Distributed under the terms of the LGPL2.\n"
+        static const char infotext2[] = "\n"
+                                        "Distributed under the terms of the LGPL2.\n"
                                         "\n"
                                         "For recent versions and updates visit:\n"
                                         "http://www.sourceforge.net/projects/thebar/\n"
@@ -80,7 +81,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 MUIA_CycleChain, TRUE,
 
                 Child, VGroup,
-                    MUIA_Group_Columns, 2,
+                //    MUIA_Group_Columns, 2,
 
                     // >BarFrame
                     (lib_flags & BASEFLG_MUI4) ? TAG_IGNORE : Child,
@@ -215,7 +216,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                     Child, RectangleObject, MUIA_Rectangle_HBar, TRUE, MUIA_Weight, 0, End,
 
-                    Child, HGroup, // >View modes, label pos
+                    Child, ColGroup(2), // >View modes, label pos
                         Child, (IPTR)olabel2(Msg_ViewMode),
                         Child, (IPTR)(data->viewMode = ocycle(viewModes,Msg_ViewMode,Msg_ViewMode_Help)),
                         Child, (IPTR)olabel2(Msg_LabelPos),
@@ -224,24 +225,30 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                     Child, VGroup, // >Options
                       MUIA_Frame, MUIV_Frame_Virtual,
-                      Child, ColGroup(5),
+                      Child, ColGroup(3),
                         Child, (IPTR)(data->borderless = ocheck(Msg_Borderless,Msg_Borderless_Help)),
                         Child, (IPTR)ollabel1(Msg_Borderless),
-                        Child, (IPTR)HVSpace,
+                        Child, (IPTR)HSpace(0),
+
                         Child, (IPTR)(data->raised = ocheck(Msg_Raised,Msg_Raised_Help)),
                         Child, (IPTR)ollabel1(Msg_Raised),
+                        Child, (IPTR)HSpace(0),
 
                         Child, (IPTR)(data->sunny = ocheck(Msg_Sunny,Msg_Sunny_Help)),
                         Child, (IPTR)ollabel1(Msg_Sunny),
-                        Child, (IPTR)HVSpace,
+                        Child, (IPTR)HSpace(0),
+
                         Child, (IPTR)(data->scaled = ocheck(Msg_Scaled,Msg_Scaled_Help)),
                         Child, (IPTR)ollabel1(Msg_Scaled),
+                        Child, (IPTR)HSpace(0),
 
                         Child, (IPTR)(data->barSpacer = ocheck(Msg_BarSpacer,Msg_BarSpacer_Help)),
                         Child, (IPTR)ollabel1(Msg_BarSpacer),
-                        Child, (IPTR)HVSpace,
+                        Child, (IPTR)HSpace(0),
+
                         Child, (IPTR)(data->enableKeys = ocheck(Msg_EnableKeys,Msg_EnableKeys_Help)),
                         Child, (IPTR)ollabel1(Msg_EnableKeys),
+                        Child, (IPTR)HSpace(0),
                       End,
                       Child, (IPTR)HVSpace,
                     End, // <Options
@@ -249,76 +256,74 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 End, // <Appearance
 
                 Child, VGroup,  // >Spacing
-                    Child, ColGroup(2),
-                        Child, VGroup, // >Group spacing
-                            GroupFrameT(tr(Msg_Title_GroupSpacing)),
-                            //Child, owspace(1),
-                            Child, ColGroup(2),
-                                Child, (IPTR)olabel2(Msg_HorizGroupSpacing),
-                                Child, HGroup,
-                                    Child, (IPTR)(data->horizSpacing = oslider(Msg_HorizGroupSpacing,Msg_HorizGroupSpacing_Help,0,16)),
-                                    Child, (IPTR)olabel2(Msg_VertGroupSpacing),
-                                    Child, (IPTR)(data->vertSpacing = oslider(Msg_VertGroupSpacing,Msg_VertGroupSpacing_Help,0,16)),
-                                End,
-                                Child, (IPTR)olabel2(Msg_BarSpacerSpacing),
-                                Child, (IPTR)(data->barSpacerSpacing = oslider(Msg_BarSpacerSpacing,Msg_BarSpacerSpacing_Help,0,16)),
+                    Child, VGroup, // >Group spacing
+                        GroupFrameT(tr(Msg_Title_GroupSpacing)),
+                        //Child, owspace(1),
+                        Child, ColGroup(2),
+                            Child, (IPTR)olabel2(Msg_HorizGroupSpacing),
+                            Child, HGroup,
+                                Child, (IPTR)(data->horizSpacing = oslider(Msg_HorizGroupSpacing,Msg_HorizGroupSpacing_Help,0,16)),
+                                Child, (IPTR)olabel2(Msg_VertGroupSpacing),
+                                Child, (IPTR)(data->vertSpacing = oslider(Msg_VertGroupSpacing,Msg_VertGroupSpacing_Help,0,16)),
                             End,
-                            //Child, owspace(1),
-                        End, // <Group spacing
+                            Child, (IPTR)olabel2(Msg_BarSpacerSpacing),
+                            Child, (IPTR)(data->barSpacerSpacing = oslider(Msg_BarSpacerSpacing,Msg_BarSpacerSpacing_Help,0,16)),
+                        End,
+                        //Child, owspace(1),
+                    End, // <Group spacing
 
-                        // >Inner spacing
-                        (lib_flags & BASEFLG_MUI4) ? TAG_IGNORE : Child,
-                        (lib_flags & BASEFLG_MUI4) ? 0 : (VGroup,
-                            GroupFrameT(tr(Msg_Title_InnerSpacing)),
-                            //Child, owspace(1),
-                            Child, ColGroup(2),
-                                Child, (IPTR)olabel2(Msg_HorizInnerSpacing),
-                                Child, (IPTR)(data->horizInnerSpacing = oslider(Msg_HorizInnerSpacing,Msg_HorizInnerSpacing_Help,1,16)),
-                                Child, (IPTR)olabel2(Msg_TopInnerSpacing),
-                                Child, HGroup,
-                                    Child, (IPTR)(data->topInnerSpacing = oslider(Msg_TopInnerSpacing,Msg_TopInnerSpacing_Help,0,16)),
-                                    Child, (IPTR)olabel2(Msg_BottomInnerSpacing),
-                                    Child, (IPTR)(data->bottomInnerSpacing = oslider(Msg_BottomInnerSpacing,Msg_BottomInnerSpacing_Help,0,16)),
-                                End,
+                    // >Inner spacing
+                    (lib_flags & BASEFLG_MUI4) ? TAG_IGNORE : Child,
+                    (lib_flags & BASEFLG_MUI4) ? 0 : (VGroup,
+                        GroupFrameT(tr(Msg_Title_InnerSpacing)),
+                        //Child, owspace(1),
+                        Child, ColGroup(2),
+                            Child, (IPTR)olabel2(Msg_HorizInnerSpacing),
+                            Child, (IPTR)(data->horizInnerSpacing = oslider(Msg_HorizInnerSpacing,Msg_HorizInnerSpacing_Help,1,16)),
+                            Child, (IPTR)olabel2(Msg_TopInnerSpacing),
+                            Child, HGroup,
+                                Child, (IPTR)(data->topInnerSpacing = oslider(Msg_TopInnerSpacing,Msg_TopInnerSpacing_Help,0,16)),
+                                Child, (IPTR)olabel2(Msg_BottomInnerSpacing),
+                                Child, (IPTR)(data->bottomInnerSpacing = oslider(Msg_BottomInnerSpacing,Msg_BottomInnerSpacing_Help,0,16)),
                             End,
-                            //Child, owspace(1),
-                        End), // <Inner spacing
+                        End,
+                        //Child, owspace(1),
+                    End), // <Inner spacing
 
-                        // >BarFrame spacing
-                        (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : Child,
-                        (lib_flags & BASEFLG_MUI20) ? 0 : (VGroup,
-                            GroupFrameT(tr(Msg_Title_BarFrameSpacing)),
-                            //Child, owspace(1),
-                            Child, ColGroup(4),
-                                Child, (IPTR)olabel2(Msg_LeftBarFrameSpacing),
-                                Child, (IPTR)(data->leftBarFrameSpacing = oslider(Msg_LeftBarFrameSpacing,Msg_LeftBarFrameSpacing_Help,1,16)),
-                                Child, (IPTR)olabel2(Msg_RightBarFrameSpacing),
-                                Child, (IPTR)(data->rightBarFrameSpacing = oslider(Msg_RightBarFrameSpacing,Msg_RightBarFrameSpacing_Help,1,16)),
-                                Child, (IPTR)olabel2(Msg_TopBarFrameSpacing),
-                                Child, (IPTR)(data->topBarFrameSpacing = oslider(Msg_TopBarFrameSpacing,Msg_TopBarFrameSpacing_Help,1,16)),
-                                Child, (IPTR)olabel2(Msg_BottomBarFrameSpacing),
-                                Child, (IPTR)(data->bottomBarFrameSpacing = oslider(Msg_BottomBarFrameSpacing,Msg_BottomBarFrameSpacing_Help,1,16)),
-                            End,
-                            //Child, owspace(1),
-                        End), // <BarFrame spacing
+                    // >BarFrame spacing
+                    (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : Child,
+                    (lib_flags & BASEFLG_MUI20) ? 0 : (VGroup,
+                        GroupFrameT(tr(Msg_Title_BarFrameSpacing)),
+                        //Child, owspace(1),
+                        Child, ColGroup(4),
+                            Child, (IPTR)olabel2(Msg_LeftBarFrameSpacing),
+                            Child, (IPTR)(data->leftBarFrameSpacing = oslider(Msg_LeftBarFrameSpacing,Msg_LeftBarFrameSpacing_Help,1,16)),
+                            Child, (IPTR)olabel2(Msg_RightBarFrameSpacing),
+                            Child, (IPTR)(data->rightBarFrameSpacing = oslider(Msg_RightBarFrameSpacing,Msg_RightBarFrameSpacing_Help,1,16)),
+                            Child, (IPTR)olabel2(Msg_TopBarFrameSpacing),
+                            Child, (IPTR)(data->topBarFrameSpacing = oslider(Msg_TopBarFrameSpacing,Msg_TopBarFrameSpacing_Help,1,16)),
+                            Child, (IPTR)olabel2(Msg_BottomBarFrameSpacing),
+                            Child, (IPTR)(data->bottomBarFrameSpacing = oslider(Msg_BottomBarFrameSpacing,Msg_BottomBarFrameSpacing_Help,1,16)),
+                        End,
+                        //Child, owspace(1),
+                    End), // <BarFrame spacing
 
-                        Child, VGroup, // >Text/Gfx spacing
-                            GroupFrameT(tr(Msg_Title_TextGfxSpacing)),
-                            //Child, owspace(1),
-                            Child, ColGroup(2),
-                                Child, (IPTR)olabel2(Msg_HorizTextGfxSpacing),
-                                Child, (IPTR)(data->horizTexGfxSpacing = oslider(Msg_HorizTextGfxSpacing,Msg_HorizTextGfxSpacing_Help,1,16)),
-                                Child, (IPTR)olabel2(Msg_VertTextGfxSpacing),
-                                Child, (IPTR)(data->vertTexGfxSpacing = oslider(Msg_VertTextGfxSpacing,Msg_VertTextGfxSpacing_Help,1,16)),
-                            End,
-                            //Child, owspace(1),
-                        End, // <Text/Gfx spacing
-                    End,
+                    Child, VGroup, // >Text/Gfx spacing
+                        GroupFrameT(tr(Msg_Title_TextGfxSpacing)),
+                        //Child, owspace(1),
+                        Child, ColGroup(2),
+                            Child, (IPTR)olabel2(Msg_HorizTextGfxSpacing),
+                            Child, (IPTR)(data->horizTexGfxSpacing = oslider(Msg_HorizTextGfxSpacing,Msg_HorizTextGfxSpacing_Help,1,16)),
+                            Child, (IPTR)olabel2(Msg_VertTextGfxSpacing),
+                            Child, (IPTR)(data->vertTexGfxSpacing = oslider(Msg_VertTextGfxSpacing,Msg_VertTextGfxSpacing_Help,1,16)),
+                        End,
+                        //Child, owspace(1),
+                    End, // <Text/Gfx spacing
                     Child, (IPTR)VSpace(0),
                 End, // <Spacing
 
                 Child, VGroup, // >Settings
-                    Child, ColGroup(4),
+                    Child, ColGroup(2),
                         Child, (IPTR)olabel2(Msg_Precision),
                         Child, (IPTR)(data->precision = ocycle(precisions,Msg_Precision,Msg_Precision_Help)),
                         Child, (IPTR)olabel2(Msg_DisMode),
@@ -329,24 +334,30 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                     Child, VGroup,
                         MUIA_Frame, MUIV_Frame_Virtual,
-                        Child, ColGroup(5),
+                        Child, ColGroup(3),
                             Child, (IPTR)(data->specialSelect = ocheck(Msg_SpecialSelect,Msg_SpecialSelect_Help)),
                             Child, (IPTR)ollabel1(Msg_SpecialSelect),
-                            Child, (IPTR)HVSpace,
+                            Child, (IPTR)HSpace(0),
+
                             Child, (IPTR)(data->textOverUseShine = ocheck(Msg_TextOverUseShine,Msg_TextOverUseShine_Help)),
                             Child, (IPTR)ollabel1(Msg_TextOverUseShine),
+                            Child, (IPTR)HSpace(0),
 
                             Child, (IPTR)(data->dontMove = ocheck(Msg_DontMove,Msg_DontMove_Help)),
                             Child, (IPTR)ollabel1(Msg_DontMove),
-                            Child, (IPTR)HVSpace,
+                            Child, (IPTR)HSpace(0),
+
                             Child, (IPTR)(data->ignoreSel = ocheck(Msg_IgnoreSelImages,Msg_IgnoreSelImages_Help)),
                             Child, (IPTR)ollabel1(Msg_IgnoreSelImages),
+                            Child, (IPTR)HSpace(0),
 
                             Child, (IPTR)(data->ignoreDis = ocheck(Msg_IgnoreDisImages,Msg_IgnoreDisImages_Help)),
                             Child, (IPTR)ollabel1(Msg_IgnoreDisImages),
-                            Child, (IPTR)HVSpace,
+                            Child, (IPTR)HSpace(0),
+
                             Child, (IPTR)(data->ntRaiseActive = ocheck(Msg_NtRaiseActive,Msg_NtRaiseActive_Help)),
                             Child, (IPTR)ollabel1(Msg_NtRaiseActive),
+                            Child, (IPTR)HSpace(0),
                         End,
                         Child, (IPTR)HVSpace,
                     End,
