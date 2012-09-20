@@ -26,8 +26,11 @@
 IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
-int stch_l(const char *chr_ptr, long *u_ptr);
 #endif
+#endif
+
+#if !defined(__MORPHOS__) && !defined(__AROS__)
+int stch_l(const char *chr_ptr, long *u_ptr);
 #endif
 
 Object *obutton(ULONG text,ULONG help);

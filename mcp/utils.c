@@ -56,35 +56,13 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 /***********************************************************************/
 
 #if !defined(__MORPHOS__) && !defined(__AROS__)
-int
-stch_l(const char *chr_ptr,long *u_ptr)
+int stch_l(const char *chr_ptr,long *u_ptr)
 {
-    const char *str = chr_ptr;
-    ULONG      val = 0;
+	char *end_ptr;
 
-    if (str)
-    {
-        for (;;)
-        {
-            unsigned char c = (unsigned char)*str;
+	*u_ptr = strtoul(chr_ptr, &end_ptr, 16);
 
-            if (!c) break;
-
-            if (c>='0' && c<='9') c -= '0';
-            else if (c>='a' && c<='f') c -= 'a'-10;
-                 else if (c>='A' && c<='F') c -= 'A'-10;
-                      else break;
-
-            val <<= 4;
-            val += c;
-
-            str++;
-        }
-    }
-
-    *u_ptr = (long)val;
-
-    return str-chr_ptr;
+	return end_ptr - chr_ptr;
 }
 #endif
 
