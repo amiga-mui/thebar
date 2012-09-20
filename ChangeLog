@@ -8,6 +8,7 @@ $URL$
 2012-09-20 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/utils.c: replaced the inner workings of stch_l() by strtoul().
+  * mcp/class.c: don't trigger notifications in MUIM_Mccprefs_ConfigToGadgets.
 
 2012-09-11 Thore Böckelmann <tboeckel@gmx.de>
 
