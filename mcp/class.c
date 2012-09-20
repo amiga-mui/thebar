@@ -565,24 +565,24 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     {
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_GroupBack)))
             ptr = MUIDEF_TheBar_GroupBack;
-        set(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
+        nnset(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
     }
     else
     {
         if (!(lib_flags & BASEFLG_MUI20) && (ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Gradient)))
         {
-            set(data->groupBack,MUIA_Popbackground_Grad,ptr);
+            nnset(data->groupBack,MUIA_Popbackground_Grad,ptr);
         }
         else
         {
             if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_GroupBack)))
                 ptr = MUIDEF_TheBar_GroupBack;
-            set(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
+            nnset(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
         }
 
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseGroupBack)) ?
             *val : MUIDEF_TheBar_UseGroupBack;
-        set(data->useGroupBack,MUIA_Selected,v);
+        nnset(data->useGroupBack,MUIA_Selected,v);
     }
 
     /* Group frame */
@@ -591,45 +591,47 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Frame)))
             ptr = MUIDEF_TheBar_Frame;
 
-        if (lib_flags & BASEFLG_MUI4) set(data->groupBack,MUIA_Framedisplay_Spec,ptr);
-        else set(data->frame,MUIA_Framedisplay_Spec,ptr);
+        if (lib_flags & BASEFLG_MUI4)
+		    nnset(data->groupBack,MUIA_Framedisplay_Spec,ptr);
+        else
+		    nnset(data->frame,MUIA_Framedisplay_Spec,ptr);
     }
     else
     {
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BarFrameShinePen)))
             ptr = MUIDEF_TheBar_BarFrameShinePen;
-        set(data->barFrameShinePen,MUIA_Pendisplay_Spec,ptr);
+        nnset(data->barFrameShinePen,MUIA_Pendisplay_Spec,ptr);
 
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BarFrameShadowPen)))
             ptr = MUIDEF_TheBar_BarFrameShadowPen;
-        set(data->barFrameShadowPen,MUIA_Pendisplay_Spec,ptr);
+        nnset(data->barFrameShadowPen,MUIA_Pendisplay_Spec,ptr);
 
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_LeftBarFrameSpacing)) ?
             *val : MUIDEF_TheBar_LeftBarFrameSpacing;
-        set(data->leftBarFrameSpacing,MUIA_Numeric_Value,v);
+        nnset(data->leftBarFrameSpacing,MUIA_Numeric_Value,v);
 
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_RightBarFrameSpacing)) ?
             *val : MUIDEF_TheBar_RightBarFrameSpacing;
-        set(data->rightBarFrameSpacing,MUIA_Numeric_Value,v);
+        nnset(data->rightBarFrameSpacing,MUIA_Numeric_Value,v);
 
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_TopBarFrameSpacing)) ?
             *val : MUIDEF_TheBar_TopBarFrameSpacing;
-        set(data->topBarFrameSpacing,MUIA_Numeric_Value,v);
+        nnset(data->topBarFrameSpacing,MUIA_Numeric_Value,v);
 
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BottomBarFrameSpacing)) ?
             *val : MUIDEF_TheBar_BottomBarFrameSpacing;
-        set(data->bottomBarFrameSpacing,MUIA_Numeric_Value,v);
+        nnset(data->bottomBarFrameSpacing,MUIA_Numeric_Value,v);
     }
 
     /* Button back */
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_ButtonBack)))
         ptr = MUIDEF_TheBar_ButtonBack;
-    set(data->buttonBack,MUIA_Imagedisplay_Spec,ptr);
+    nnset(data->buttonBack,MUIA_Imagedisplay_Spec,ptr);
     if (!(lib_flags & BASEFLG_MUI4))
     {
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseButtonBack)) ?
             *val : MUIDEF_TheBar_UseButtonBack;
-        set(data->useButtonBack,MUIA_Selected,v);
+        nnset(data->useButtonBack,MUIA_Selected,v);
     }
 
     /* Button frame */
@@ -637,21 +639,21 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     {
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_ButtonFrame)))
             ptr = MUIDEF_TheBar_ButtonFrame;
-        set(data->buttonBack,MUIA_Framedisplay_Spec,ptr);
+        nnset(data->buttonBack,MUIA_Framedisplay_Spec,ptr);
     }
     else
     {
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_FrameShinePen)))
             ptr = MUIDEF_TheBar_FrameShinePen;
-        set(data->frameShinePen,MUIA_Pendisplay_Spec,ptr);
+        nnset(data->frameShinePen,MUIA_Pendisplay_Spec,ptr);
 
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_FrameShadowPen)))
             ptr = MUIDEF_TheBar_FrameShadowPen;
-        set(data->frameShadowPen,MUIA_Pendisplay_Spec,ptr);
+        nnset(data->frameShadowPen,MUIA_Pendisplay_Spec,ptr);
 
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_FrameStyle)) ?
             *val : MUIDEF_TheBar_FrameStyle;
-        set(data->frameStyle,MUIA_Cycle_Active,v);
+        nnset(data->frameStyle,MUIA_Cycle_Active,v);
     }
 
     /* Buttons inner spacing */
@@ -659,130 +661,130 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     {
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_HorizInnerSpacing)) ?
             *val : MUIDEF_TheBar_HorizInnerSpacing;
-        set(data->horizInnerSpacing,MUIA_Numeric_Value,v);
+        nnset(data->horizInnerSpacing,MUIA_Numeric_Value,v);
 
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_TopInnerSpacing)) ?
             *val : MUIDEF_TheBar_TopInnerSpacing;
-        set(data->topInnerSpacing,MUIA_Numeric_Value,v);
+        nnset(data->topInnerSpacing,MUIA_Numeric_Value,v);
 
         v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BottomInnerSpacing)) ?
             *val : MUIDEF_TheBar_BottomInnerSpacing;
-        set(data->bottomInnerSpacing,MUIA_Numeric_Value,v);
+        nnset(data->bottomInnerSpacing,MUIA_Numeric_Value,v);
     }
 
     /* Rest is MUI version indipendent */
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_DisBodyPen)))
         ptr = MUIDEF_TheBar_DisBodyPen;
-    set(data->disBodyPen,MUIA_Pendisplay_Spec,ptr);
+    nnset(data->disBodyPen,MUIA_Pendisplay_Spec,ptr);
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_DisShadowPen)))
         ptr = MUIDEF_TheBar_DisShadowPen;
-    set(data->disShadowPen,MUIA_Pendisplay_Spec,ptr);
+    nnset(data->disShadowPen,MUIA_Pendisplay_Spec,ptr);
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BarSpacerShinePen)))
         ptr = MUIDEF_TheBar_BarSpacerShinePen;
-    set(data->barSpacerShinePen,MUIA_Pendisplay_Spec,ptr);
+    nnset(data->barSpacerShinePen,MUIA_Pendisplay_Spec,ptr);
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BarSpacerShadowPen)))
         ptr = MUIDEF_TheBar_BarSpacerShadowPen;
-    set(data->barSpacerShadowPen,MUIA_Pendisplay_Spec,ptr);
+    nnset(data->barSpacerShadowPen,MUIA_Pendisplay_Spec,ptr);
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_DragBarShinePen)))
         ptr = MUIDEF_TheBar_DragBarShinePen;
-    set(data->dragBarShinePen,MUIA_Pendisplay_Spec,ptr);
+    nnset(data->dragBarShinePen,MUIA_Pendisplay_Spec,ptr);
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_DragBarShadowPen)))
         ptr = MUIDEF_TheBar_DragBarShadowPen;
-    set(data->dragBarShadowPen,MUIA_Pendisplay_Spec,ptr);
+    nnset(data->dragBarShadowPen,MUIA_Pendisplay_Spec,ptr);
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_DragBarFillPen)))
         ptr = MUIDEF_TheBar_DragBarFillPen;
-    set(data->dragBarFillPen,MUIA_Pendisplay_Spec,ptr);
+    nnset(data->dragBarFillPen,MUIA_Pendisplay_Spec,ptr);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseDragBarFillPen)) ?
         *val : MUIDEF_TheBar_UseDragBarFillPen;
-    set(data->useDragBarFillPen,MUIA_Selected,v);
+    nnset(data->useDragBarFillPen,MUIA_Selected,v);
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_TextFont)))
         ptr = MUIDEF_TheBar_TextFont;
-    set(data->textFont,MUIA_String_Contents,ptr);
+    nnset(data->textFont,MUIA_String_Contents,ptr);
 
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_TextGfxFont)))
         ptr = MUIDEF_TheBar_TextGfxFont;
-    set(data->textGfxFont,MUIA_String_Contents,ptr);
+    nnset(data->textGfxFont,MUIA_String_Contents,ptr);
 
     if (!(ap = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Appearance)))
         ap = &staticAp;
 
-    set(data->viewMode,MUIA_Cycle_Active,ap->viewMode);
-    set(data->labelPos,MUIA_Cycle_Active,ap->labelPos);
-    set(data->borderless,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Borderless);
-    set(data->raised,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Raised);
-    set(data->sunny,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Sunny);
-    set(data->scaled,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Scaled);
-    set(data->barSpacer,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_BarSpacer);
-    set(data->enableKeys,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_EnableKeys);
+    nnset(data->viewMode,MUIA_Cycle_Active,ap->viewMode);
+    nnset(data->labelPos,MUIA_Cycle_Active,ap->labelPos);
+    nnset(data->borderless,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Borderless);
+    nnset(data->raised,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Raised);
+    nnset(data->sunny,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Sunny);
+    nnset(data->scaled,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_Scaled);
+    nnset(data->barSpacer,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_BarSpacer);
+    nnset(data->enableKeys,MUIA_Selected,ap->flags & MUIV_TheBar_Appearance_EnableKeys);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_HorizSpacing)) ?
         *val : MUIDEF_TheBar_HorizSpacing;
-    set(data->horizSpacing,MUIA_Numeric_Value,v);
+    nnset(data->horizSpacing,MUIA_Numeric_Value,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_VertSpacing)) ?
         *val : MUIDEF_TheBar_VertSpacing;
-    set(data->vertSpacing,MUIA_Numeric_Value,v);
+    nnset(data->vertSpacing,MUIA_Numeric_Value,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_BarSpacerSpacing)) ?
         *val : MUIDEF_TheBar_BarSpacerSpacing;
-    set(data->barSpacerSpacing,MUIA_Numeric_Value,v);
+    nnset(data->barSpacerSpacing,MUIA_Numeric_Value,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_HorizTextGfxSpacing)) ?
         *val : MUIDEF_TheBar_HorizTextGfxSpacing;
-    set(data->horizTexGfxSpacing,MUIA_Numeric_Value,v);
+    nnset(data->horizTexGfxSpacing,MUIA_Numeric_Value,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_VertTextGfxSpacing)) ?
         *val : MUIDEF_TheBar_VertTextGfxSpacing;
-    set(data->vertTexGfxSpacing,MUIA_Numeric_Value,v);
+    nnset(data->vertTexGfxSpacing,MUIA_Numeric_Value,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Precision)) ?
         *val : MUIDEF_TheBar_Precision;
-    set(data->precision,MUIA_Cycle_Active,v);
+    nnset(data->precision,MUIA_Cycle_Active,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_DisMode)) ?
         *val : MUIDEF_TheBar_DisMode;
-    set(data->disMode,MUIA_Cycle_Active,v);
+    nnset(data->disMode,MUIA_Cycle_Active,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Scale)) ?
         *val : MUIDEF_TheBar_Scale;
-    set(data->scale,MUIA_Numeric_Value,v);
+    nnset(data->scale,MUIA_Numeric_Value,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_SpecialSelect)) ?
         *val : MUIDEF_TheBar_SpecialSelect;
-    set(data->specialSelect,MUIA_Selected,v);
+    nnset(data->specialSelect,MUIA_Selected,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_TextOverUseShine)) ?
         *val : MUIDEF_TheBar_TextOverUseShine;
-    set(data->textOverUseShine,MUIA_Selected,v);
+    nnset(data->textOverUseShine,MUIA_Selected,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_IgnoreSelImages)) ?
         *val : MUIDEF_TheBar_IgnoreSelImages;
-    set(data->ignoreSel,MUIA_Selected,v);
+    nnset(data->ignoreSel,MUIA_Selected,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_IgnoreDisImages)) ?
         *val : MUIDEF_TheBar_IgnoreDisImages;
-    set(data->ignoreDis,MUIA_Selected,v);
+    nnset(data->ignoreDis,MUIA_Selected,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_DontMove)) ?
         *val : MUIDEF_TheBar_DontMove;
-    set(data->dontMove,MUIA_Selected,v);
+    nnset(data->dontMove,MUIA_Selected,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_NtRaiseActive)) ?
         *val : MUIDEF_TheBar_NtRaiseActive;
-    set(data->ntRaiseActive,MUIA_Selected,v);
+    nnset(data->ntRaiseActive,MUIA_Selected,v);
 
     v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_SpacersSize)) ?
         *val : MUIDEF_TheBar_SpacersSize;
-    set(data->spacersSize,MUIA_Cycle_Active,v);
+    nnset(data->spacersSize,MUIA_Cycle_Active,v);
 
     return 0;
 }
