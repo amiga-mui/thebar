@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-10-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/utils.c, mcc/button/utils.c: reverted the AROS specific modification of
+    DoSuperNew() to the previous state. The last change done by Matthias Rustler
+    crashes AROS distributions like Icaros so badly that even VirtualBox shuts
+    down the virtual machine.
+
 2012-09-20 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/utils.c: replaced the inner workings of stch_l() by strtoul().
