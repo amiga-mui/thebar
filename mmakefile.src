@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-zune-classes : contrib-zune-classes-thebar
+#MM- contrib : contrib-zune-classes-thebar
 
 #MM- contrib-zune-classes-thebar :  \
 #MM  contrib-zune-classes-thebar-mcc contrib-zune-classes-thebar-mccv \
@@ -13,9 +13,13 @@ include $(TOP)/config/make.cfg
 CPYFILES  := COPYING README README.aros
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar
 
+#MM
+contrib-zune-classes-thebar-doc :
 %copy_dir_recursive mmake=contrib-zune-classes-thebar-doc src=doc dst=$(TARGETDIR)/Doc
 
-%copy_files_q mmake=contrib-zune-classes-thebar-copy files=$(CPYFILES) dst=$(TARGETDIR)
+#MM
+contrib-zune-classes-thebar-copy :
+%copy_files_q files=$(CPYFILES) dst=$(TARGETDIR) maketarget=contrib-zune-classes-thebar-copy
 
 #MM
 contrib-zune-classes-thebar-clean :
