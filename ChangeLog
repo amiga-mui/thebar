@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2012-10-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: revert some of Matthias Rustler's AROS specific changes to make
+    everything run again without crashes.
+
 2012-10-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/utils.c, mcc/button/utils.c: reverted the AROS specific modification of

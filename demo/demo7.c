@@ -53,23 +53,18 @@ struct Library *MUIMasterBase;
 
 /***********************************************************************/
 
-#if defined(__AROS__)
-Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
-{
-  AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
-  retval = (Object *)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
-  AROS_SLOWSTACKTAGS_POST
-}
-#elif defined(__MORPHOS__)
-
-#else
+#if !defined(__MORPHOS__)
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
   VA_LIST args;
 
   VA_START(args, obj);
+  #if defined(__AROS__)
+  rc = (Object *)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
+  #else
   rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  #endif
   VA_END(args);
 
   return rc;
