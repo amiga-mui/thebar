@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v26.11 RELEASE ###########################################################
+
+2012-12-20 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.11 release preparations
+
 2012-10-15 Thore Böckelmann <tboeckel@gmx.de>
 
   * misc: revert some of Matthias Rustler's AROS specific changes to make
