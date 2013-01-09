@@ -154,7 +154,7 @@ localizeArray(STRPTR *strings, const ULONG *ids)
 void
 initStrings(void)
 {
-    if (openCatalogVR((CONST_STRPTR)"TheBar.catalog",0,0))
+    if (openCatalogVR((CONST_STRPTR)"TheBar_mcp.catalog",0,0))
     {
         struct CatCompArrayType *cca;
         int                     cnt;
