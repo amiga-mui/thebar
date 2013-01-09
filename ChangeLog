@@ -8,6 +8,7 @@ $URL$
 2013-01-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/german.ct: fixed a completely wrong translation.
+  * mcp/locale.c: fixed the wrong catalog name to be opened.
 
 #### v26.11 RELEASE ###########################################################
 
