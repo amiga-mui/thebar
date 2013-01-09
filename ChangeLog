@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-01-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/german.ct: fixed a completely wrong translation.
+
 #### v26.11 RELEASE ###########################################################
 
 2012-12-20 Jens Langner <Jens.Langner@light-speed.de>
