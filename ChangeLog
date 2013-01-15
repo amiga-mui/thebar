@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-01-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/utils.c: used a fixed height of 0 to enforce a suitable height of all
+    pen and frame buttons.
+
 2013-01-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/german.ct: fixed a completely wrong translation.

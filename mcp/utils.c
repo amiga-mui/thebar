@@ -24,6 +24,12 @@
 
 /***********************************************************************/
 
+#ifndef MUIA_Backgroundadjust_DoParent
+#define MUIA_Backgroundadjust_DoParent      0x80426a55 /* V20 i.. BOOL              */ /* private */
+#endif
+
+/***********************************************************************/
+
 // DoSuperNew()
 // Calls parent NEW method within a subclass
 #if !defined(__MORPHOS__)
@@ -156,6 +162,7 @@ opoppen(ULONG key,ULONG title,ULONG help)
         MUIA_Draggable,    TRUE,
         MUIA_CycleChain,   TRUE,
         MUIA_ShortHelp,    (IPTR)tr(help),
+        MUIA_FixHeight,    30,
     End;
     #else
     if (lib_flags & BASEFLG_MUI20)
@@ -166,6 +173,7 @@ opoppen(ULONG key,ULONG title,ULONG help)
             MUIA_Draggable,    TRUE,
             MUIA_CycleChain,   TRUE,
             MUIA_ShortHelp,    (ULONG)tr(help),
+            MUIA_FixHeight,    30,
         End;
     }
     else
@@ -176,6 +184,7 @@ opoppen(ULONG key,ULONG title,ULONG help)
             MUIA_Draggable,    TRUE,
             MUIA_CycleChain,   TRUE,
             MUIA_ShortHelp,    (ULONG)tr(help),
+            MUIA_FixHeight,    30,
         End;
     }
     #endif
@@ -187,14 +196,15 @@ Object *
 opopfri(ULONG key,ULONG title,ULONG help)
 {
     return MUI_NewObject("Popfrimage.mui",
-        MUIA_Window_Title,     (IPTR)tr(title),
-        MUIA_ControlChar,      (ULONG)getKeyChar(tr(key)),
-        MUIA_CycleChain,       TRUE,
-        MUIA_ShortHelp,        (IPTR)tr(help),
-        0x80421794, 0,
-        0x8042a547, 0,
-        0x80426a55, 1,
-        0x8042a92b, 0,
+        MUIA_Window_Title,      (IPTR)tr(title),
+        MUIA_ControlChar,       (ULONG)getKeyChar(tr(key)),
+        MUIA_CycleChain,        TRUE,
+        MUIA_ShortHelp,         (IPTR)tr(help),
+        MUIA_FixHeight,         30,
+        MUIA_Framedisplay_Spec, NULL,
+        MUIA_Imagedisplay_Spec, NULL,
+        MUIA_Backgroundadjust_DoParent, TRUE,
+        MUIA_FixHeight,         0,
     TAG_DONE);
 }
 
@@ -211,6 +221,7 @@ opopback(UNUSED ULONG gradient,ULONG key,ULONG title,ULONG help)
         MUIA_Draggable,        TRUE,
         MUIA_CycleChain,       TRUE,
         MUIA_ShortHelp,        (IPTR)tr(help),
+        MUIA_FixHeight,        0,
     TAG_DONE);
     #else
     if (lib_flags & BASEFLG_MUI20)
@@ -222,6 +233,7 @@ opopback(UNUSED ULONG gradient,ULONG key,ULONG title,ULONG help)
             MUIA_Draggable,        TRUE,
             MUIA_CycleChain,       TRUE,
             MUIA_ShortHelp,        (ULONG)tr(help),
+            MUIA_FixHeight,        0,
         TAG_DONE);
     }
     else
@@ -233,6 +245,7 @@ opopback(UNUSED ULONG gradient,ULONG key,ULONG title,ULONG help)
             MUIA_CycleChain,             TRUE,
             MUIA_ShortHelp,              (ULONG)tr(help),
             MUIA_Popbackground_Gradient, gradient,
+            MUIA_FixHeight,              0,
         End;
     }
     #endif
@@ -253,6 +266,7 @@ opopframe(ULONG key,ULONG title,ULONG help)
         MUIA_CycleChain,   1,
         MUIA_ShortHelp,    (IPTR)tr(help),
         MUIA_ControlChar,  (ULONG)getKeyChar(tr(key)),
+        MUIA_FixHeight,    0,
     End;
 }
 
