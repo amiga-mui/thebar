@@ -892,35 +892,29 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
 
         /* Active background */
-        /*if (!getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr))
-            ptr = MUIDEF_TheBar_ButtonBack;
-        data->activeBack = ptr;*/
-        if(isFlagSet(lib_flags, BASEFLG_MUI4))
+        if((getconfigitem(cl,obj,MUICFG_TheBar_UseButtonBack,&val) ? *val : MUIDEF_TheBar_UseButtonBack) &&
+           getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr))
         {
-            getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr);
-            data->activeBack = ptr;
+          data->activeBack = ptr;
         }
         else
+          data->activeBack = NULL;
+
+        if(isFlagClear(lib_flags, BASEFLG_MUI4))
         {
-            if((getconfigitem(cl,obj,MUICFG_TheBar_UseButtonBack,&val) ? *val : MUIDEF_TheBar_UseButtonBack) &&
-               getconfigitem(cl,obj,MUICFG_TheBar_ButtonBack,&ptr))
-                data->activeBack = ptr;
-            else
-                data->activeBack = NULL;
+          // Frame shine
+          if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShinePen,&ptr))
+              ptr = MUIDEF_TheBar_FrameShinePen;
+          data->shine = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
 
-            // Frame shine
-            if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShinePen,&ptr))
-                ptr = MUIDEF_TheBar_FrameShinePen;
-            data->shine = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
+          // Frame shadow
+          if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShadowPen,&ptr))
+              ptr = MUIDEF_TheBar_FrameShadowPen;
+          data->shadow = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
 
-            // Frame shadow
-            if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShadowPen,&ptr))
-                ptr = MUIDEF_TheBar_FrameShadowPen;
-            data->shadow = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
-
-            //Frame style
-            data->fStyle = getconfigitem(cl,obj,MUICFG_TheBar_FrameStyle,&val) ?
-                *val : MUIDEF_TheBar_FrameStyle;
+          //Frame style
+          data->fStyle = getconfigitem(cl,obj,MUICFG_TheBar_FrameStyle,&val) ?
+              *val : MUIDEF_TheBar_FrameStyle;
         }
 
         /* Disabled body */
