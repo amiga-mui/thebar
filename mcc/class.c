@@ -2993,34 +2993,24 @@ static IPTR mSetup(struct IClass *cl,Object *obj,Msg msg)
     {
         ULONG done = FALSE;
 
-        if (isFlagSet(lib_flags, BASEFLG_MUI4))
+        if(getconfigitem(cl,obj,MUICFG_TheBar_UseGroupBack,&val) ? *val : MUIDEF_TheBar_UseGroupBack)
         {
-            if (getconfigitem(cl,obj,MUICFG_TheBar_GroupBack,&ptr))
+          if(isFlagClear(lib_flags, BASEFLG_MUI4) && isFlagClear(lib_flags, BASEFLG_MUI20) &&
+             getconfigitem(cl,obj,MUICFG_TheBar_Gradient,&ptr))
+          {
+            memcpy(&data->grad,ptr,sizeof(data->grad));
+            SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,NULL,TAG_DONE);
+            setFlag(data->flags2, FLG2_Gradient);
+            done = TRUE;
+          }
+          else
+          {
+            if(getconfigitem(cl,obj,MUICFG_TheBar_GroupBack,&ptr))
             {
-                SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,(IPTR)ptr,TAG_DONE);
-                done = TRUE;
+              SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,(IPTR)ptr,TAG_DONE);
+              done = TRUE;
             }
-        }
-        else
-        {
-            if (getconfigitem(cl,obj,MUICFG_TheBar_UseGroupBack,&val) ? *val : MUIDEF_TheBar_UseGroupBack)
-            {
-                if (isFlagClear(lib_flags, BASEFLG_MUI20) && getconfigitem(cl,obj,MUICFG_TheBar_Gradient,&ptr))
-                {
-                    memcpy(&data->grad,ptr,sizeof(data->grad));
-                    SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,NULL,TAG_DONE);
-                    setFlag(data->flags2, FLG2_Gradient);
-                    done = TRUE;
-                }
-                else
-                {
-                    if (getconfigitem(cl,obj,MUICFG_TheBar_GroupBack,&ptr))
-                    {
-                        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,(IPTR)ptr,TAG_DONE);
-                        done = TRUE;
-                    }
-                }
-            }
+          }
         }
 
         if (!done)
