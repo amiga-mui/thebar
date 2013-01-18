@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-01-19 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mui/TheBar_mcp.h: changed some default values for the image precision
+    and the default spacer size.
+
 2013-01-15 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/utils.c: used a fixed height of 0 to enforce a suitable height of all
