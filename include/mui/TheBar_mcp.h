@@ -169,7 +169,7 @@ enum
 
 #define MUIDEF_TheBar_Appearance_ViewMode   MUIV_TheBar_ViewMode_TextGfx
 #define MUIDEF_TheBar_Appearance_LabelPos   MUIV_TheBar_LabelPos_Bottom
-#define MUIDEF_TheBar_Appearance_Flags      MUIV_TheBar_Appearance_EnableKeys
+#define MUIDEF_TheBar_Appearance_Flags      (MUIV_TheBar_Appearance_EnableKeys|MUIV_TheBar_Appearance_Borderless)
 
 /***********************************************************************/
 
