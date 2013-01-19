@@ -104,15 +104,15 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                              End),
                     End), // <BarFrame
 
-                    Child, ColGroup((lib_flags & BASEFLG_MUI4) ? 2 : 3), // >Backrounds
+                    Child, ColGroup(3), // >Backrounds
                         GroupFrameT(tr(Msg_Title_Backgrounds)),
 
                         Child, (IPTR)oflabel(Msg_GroupBackground),
                         Child, data->groupBack = (lib_flags & BASEFLG_MUI4) ? opopfri(Msg_GroupBackground,Msg_GroupBackground_Title,Msg_GroupBackground_Help) :
                                                                               opopback(TRUE,Msg_GroupBackground,Msg_GroupBackground_Title,Msg_GroupBackground_Help),
 
-                        (lib_flags & BASEFLG_MUI4) ? TAG_IGNORE : Child,
-                        (lib_flags & BASEFLG_MUI4) ? 0 : (VGroup,
+                        Child,
+                        (VGroup,
                             Child, (IPTR)VSpace(0),
                             Child, HGroup,
                                 Child, (IPTR)(data->useGroupBack = ocheck(Msg_UseGroupBackground, Msg_UseGroupBackground_Help)),
@@ -122,8 +122,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                         Child, (IPTR)oflabel(Msg_ButtonBackground),
                         Child, (IPTR)(data->buttonBack = (lib_flags & BASEFLG_MUI4) ? opopfri(Msg_ButtonBackground,Msg_ButtonBackground_Title,Msg_ButtonBackground_Help) :
                                                                                       opopback(FALSE,Msg_ButtonBackground,Msg_ButtonBackground_Title,Msg_ButtonBackground_Help)),
-                        (lib_flags & BASEFLG_MUI4) ? TAG_IGNORE : Child,
-                        (lib_flags & BASEFLG_MUI4) ? 0 : (VGroup,
+                        Child,
+                        (VGroup,
                             Child, (IPTR)VSpace(0),
                             Child, HGroup,
                                 Child, (IPTR)(data->useButtonBack = ocheck(Msg_UseButtonBackground ,Msg_UseButtonBackground_Help)),
@@ -561,29 +561,20 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     /* These are MUI version dependent */
 
     /* Group back */
-    if (lib_flags & BASEFLG_MUI4)
+    if(!(lib_flags & BASEFLG_MUI4) && !(lib_flags & BASEFLG_MUI20) && (ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Gradient)))
+    {
+        nnset(data->groupBack,MUIA_Popbackground_Grad,ptr);
+    }
+    else
     {
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_GroupBack)))
             ptr = MUIDEF_TheBar_GroupBack;
         nnset(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
     }
-    else
-    {
-        if (!(lib_flags & BASEFLG_MUI20) && (ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_Gradient)))
-        {
-            nnset(data->groupBack,MUIA_Popbackground_Grad,ptr);
-        }
-        else
-        {
-            if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_GroupBack)))
-                ptr = MUIDEF_TheBar_GroupBack;
-            nnset(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
-        }
 
-        v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseGroupBack)) ?
-            *val : MUIDEF_TheBar_UseGroupBack;
-        nnset(data->useGroupBack,MUIA_Selected,v);
-    }
+    v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseGroupBack)) ?
+        *val : MUIDEF_TheBar_UseGroupBack;
+    nnset(data->useGroupBack,MUIA_Selected,v);
 
     /* Group frame */
     if (lib_flags & BASEFLG_MUI20)
@@ -627,12 +618,10 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_ButtonBack)))
         ptr = MUIDEF_TheBar_ButtonBack;
     nnset(data->buttonBack,MUIA_Imagedisplay_Spec,ptr);
-    if (!(lib_flags & BASEFLG_MUI4))
-    {
-        v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseButtonBack)) ?
-            *val : MUIDEF_TheBar_UseButtonBack;
-        nnset(data->useButtonBack,MUIA_Selected,v);
-    }
+
+    v = (val = (ULONG *)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_UseButtonBack)) ?
+        *val : MUIDEF_TheBar_UseButtonBack;
+    nnset(data->useButtonBack,MUIA_Selected,v);
 
     /* Button frame */
     if (lib_flags & BASEFLG_MUI4)
@@ -822,11 +811,9 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
             addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_GroupBack);
         }
     }
-    if (!(lib_flags & BASEFLG_MUI4))
-    {
-        val = xget(data->useGroupBack, MUIA_Selected);
-        addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseGroupBack);
-    }
+
+    val = xget(data->useGroupBack, MUIA_Selected);
+    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseGroupBack);
 
     /* Group frame */
     if (lib_flags & BASEFLG_MUI20)
@@ -862,11 +849,9 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     /* Button back */
     get(data->buttonBack,MUIA_Imagedisplay_Spec,&ptr);
     addconfigitem(cfg,ptr,strlen((STRPTR)ptr)+1,MUICFG_TheBar_ButtonBack);
-    if (!(lib_flags & BASEFLG_MUI4))
-    {
-        val = xget(data->useButtonBack,MUIA_Selected);
-        addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseButtonBack);
-    }
+
+    val = xget(data->useButtonBack,MUIA_Selected);
+    addconfigitem(cfg,&val,sizeof(val),MUICFG_TheBar_UseButtonBack);
 
     /* Button frame */
     if (lib_flags & BASEFLG_MUI4)

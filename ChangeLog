@@ -7,6 +7,9 @@ $URL$
 
 2013-01-19 Jens Langner <Jens.Langner@light-speed.de>
 
+  * mcc/class.c, mcc/button/class.c: reenabled UseGroupBack and UseButtonBack
+    checkbox even for MOS MUI4. Also changed default appearance flags to include
+    borderless buttons.
   * mcc/class.c, mcc/button/class.c: MUICFG_TheBar_UseGroupBack and
     MUICFG_TheBar_UseButtonBack will also be queried on MUI4 installations as
     a user wants to be also able to define if the chosen color should be used
