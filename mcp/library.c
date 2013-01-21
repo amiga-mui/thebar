@@ -170,15 +170,13 @@ static BOOL ClassInit(UNUSED struct Library *base)
     BOOL success = TRUE;
 
     // check for MUI 3.9+
-    if(MUIMasterBase->lib_Version >= 20)
+    if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 0))
     {
       lib_flags |= BASEFLG_MUI20;
 
-      #if defined(__MORPHOS__)
-      // check for MUI 4.0+, MorphOS only
-      if(MUIMasterBase->lib_Version > 20 || MUIMasterBase->lib_Revision >= 5341)
+      // check for MUI 4.0+
+      if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 5500))
         lib_flags |= BASEFLG_MUI4;
-      #endif
     }
 
     // on MUI 3.1 system's we do have to
