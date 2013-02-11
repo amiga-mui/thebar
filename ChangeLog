@@ -5,6 +5,13 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-02-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/misc: revisited all demos to be self-consistent. That means that all
+    demos enforce the application controlled appearance instead of using the
+    global user prefs. This is necessary to ensure that the toolbar's look
+    always exactly matches like the settings buttons' state.
+
 2013-01-19 Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/class.c, mcc/button/class.c: reenabled UseGroupBack and UseButtonBack
