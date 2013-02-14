@@ -29,8 +29,8 @@ BOOL CreateSharedPool(void);
 void DeleteSharedPool(void);
 APTR SharedAlloc(ULONG size);
 void SharedFree(APTR mem);
-void stripUnderscore(STRPTR dest , STRPTR from, ULONG mode);
-struct TextFont *openFont(STRPTR name);
+void stripUnderscore(STRPTR dest, STRPTR from, ULONG mode);
+struct TextFont *openFont(const char *name);
 ULONG peekQualifier(void);
 
 /* brc1.c */
