@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-02-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/utils.c: removed some unneeded code and cleaned up the openFont()
+    function.
+
 2013-02-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * demo/misc: revisited all demos to be self-consistent. That means that all
