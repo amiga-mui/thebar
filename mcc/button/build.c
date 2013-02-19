@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -133,6 +133,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
     {
         UBYTE *alpha = NULL;
 
+/*
         if (isFlagClear(flags, MFLG_NtMask))
         {
             if (isFlagSet(flags, MFLG_Cyber))
@@ -148,6 +149,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
             else if((copy->mask = ALLOCRASTER(w,h)))
               alpha = copy->mask;
         }
+*/
 
         if (isFlagSet(flags, MFLG_Scaled))
         {
