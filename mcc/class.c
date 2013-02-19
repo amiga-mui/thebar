@@ -1681,7 +1681,7 @@ static void showDimensionMismatchReq(CONST_STRPTR file1, LONG w1, LONG h1, CONST
                              "A suitable image will now be generated\n"
                              "from the normal image.";
   es.es_GadgetFormat = (STRPTR)"Continue";
-  EasyRequest(NULL, &es, NULL, file, w1, h1, type, file2, w2, h2);
+  EasyRequest(NULL, &es, NULL, file1, w1, h1, type, file2, w2, h2);
 }
 
 /*
