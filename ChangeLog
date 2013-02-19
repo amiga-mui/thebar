@@ -5,6 +5,14 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-02-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: TheBar.mcc will now check the dimensions of separated selected
+    and disabled images against the dimension of the normal image. A warning
+    requester will be displayed in case the dimensions do not match to inform the
+    developer/user of this issue, because mismatching dimensions might cause
+    trashed memory under certain circumstances otherwise.
+
 2013-02-14 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/utils.c: removed some unneeded code and cleaned up the openFont()
