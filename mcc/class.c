@@ -1657,24 +1657,31 @@ static const ULONG ptable[] =
     PACK_ENDTABLE
 };
 
-static void showDimensionMismatchReq(CONST_STRPTR file, LONG w1, LONG h1, LONG w2, LONG h2)
+static void showDimensionMismatchReq(CONST_STRPTR file1, LONG w1, LONG h1, CONST_STRPTR type, CONST_STRPTR file2, LONG w2, LONG h2)
 {
   struct EasyStruct es;
 
   memset(&es, 0, sizeof(es));
   es.es_StructSize = sizeof(es);
+  #if defined(VIRTUAL)
+  es.es_Title = (STRPTR)"TheBarVirt.mcc image dimension mismatch";
+  #else
   es.es_Title = (STRPTR)"TheBar.mcc image dimension mismatch";
-  es.es_TextFormat = (STRPTR)"Image file '%s':\n"
-                             " - normal image has dimension %3ldx%3ld\n"
-                             " - this image has dimension %3ldx%3ld\n"
-                             "\n"
-                             "A suitable image will now be generated\n"
-                             "from the normal image.\n"
+  #endif
+  es.es_TextFormat = (STRPTR)"The normal image\n"
+                             "  '%s'\n"
+                             "has dimension %3ldx%3ld.\n"
+                             "The %s image\n"
+                             "  '%s'\n"
+                             "has dimension %3ldx%3ld.\n"
                              "\n"
                              "Please remove this image or replace\n"
-                             "it by one with matching dimensions.";
+                             "it by one with matching dimensions.\n"
+                             "\n"
+                             "A suitable image will now be generated\n"
+                             "from the normal image.";
   es.es_GadgetFormat = (STRPTR)"Continue";
-  EasyRequest(NULL, &es, NULL, file, w1, h1, w2, h2);
+  EasyRequest(NULL, &es, NULL, file, w1, h1, type, file2, w2, h2);
 }
 
 /*
@@ -1955,7 +1962,7 @@ static BOOL makePicsFun(struct pack *pt,
                                     else if(pt->sbrushes[i]->dataWidth != pt->brushes[i]->dataWidth || pt->sbrushes[i]->dataHeight != pt->brushes[i]->dataHeight)
                                     {
 										// the selected image's dimensions do not match the normal image's dimensions
-										showDimensionMismatchReq(*sp, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, pt->sbrushes[i]->dataWidth, pt->sbrushes[i]->dataHeight);
+										showDimensionMismatchReq(*p, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, "selected", *sp, pt->sbrushes[i]->dataWidth, pt->sbrushes[i]->dataHeight);
 										SharedFree(pt->sbrushes[i]->data);
 										pt->sbrushes[i] = NULL;
 									}
@@ -1974,7 +1981,7 @@ static BOOL makePicsFun(struct pack *pt,
                                     else if(pt->dbrushes[i]->dataWidth != pt->brushes[i]->dataWidth || pt->dbrushes[i]->dataHeight != pt->brushes[i]->dataHeight)
                                     {
 										// the disabled image's dimensions do not match the normal image's dimensions
-										showDimensionMismatchReq(*dp, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, pt->dbrushes[i]->dataWidth, pt->dbrushes[i]->dataHeight);
+										showDimensionMismatchReq(*p, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, "disabled", *dp, pt->dbrushes[i]->dataWidth, pt->dbrushes[i]->dataHeight);
 										SharedFree(pt->dbrushes[i]->data);
 										pt->dbrushes[i] = NULL;
 									}
