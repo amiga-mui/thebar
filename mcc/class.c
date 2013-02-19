@@ -1657,6 +1657,20 @@ static const ULONG ptable[] =
     PACK_ENDTABLE
 };
 
+static void showDimensionMismatchReq(CONST_STRPTR file, LONG w1, LONG h1, LONG w2, LONG h2)
+{
+  struct EasyStruct es;
+
+  memset(&es, 0, sizeof(es));
+  es.es_StructSize = sizeof(es);
+  es.es_Title = (STRPTR)"Image dimension mismatch";
+  es.es_TextFormat = (STRPTR)"Brush '%s'\n"
+                             "  normal image has dimension %3ldx%3ld\n"
+                             "  this image has dimension %3ldx%3ld";
+  es.es_GadgetFormat = (STRPTR)"Continue";
+  EasyRequest(NULL, &es, NULL, file, w1, h1, w2, h2);
+}
+
 /*
 ** This is needed to perform a new loading sequence:
 ** 1. single images on disk
@@ -1929,7 +1943,16 @@ static BOOL makePicsFun(struct pack *pt,
                                 if (*sp!=MUIV_TheBar_SkipPic)
                                 {
                                     if (!loadDTBrush(pt->sbrushes[i] = sbrush+i,*sp))
+                                    {
                                         pt->sbrushes[i] = NULL;
+                                    }
+                                    else if(pt->sbrushes[i]->dataWidth != pt->brushes[i]->dataWidth || pt->sbrushes[i]->dataHeight != pt->brushes[i]->dataHeight)
+                                    {
+										// the selected image's dimensions do not match the normal image's dimensions
+										showDimensionMismatchReq(*sp, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, pt->sbrushes[i]->dataWidth, pt->sbrushes[i]->dataHeight);
+										SharedFree(pt->sbrushes[i]->data);
+										pt->sbrushes[i] = NULL;
+									}
                                 }
                                 sp++;
                             }
@@ -1939,7 +1962,16 @@ static BOOL makePicsFun(struct pack *pt,
                                 if (*dp!=MUIV_TheBar_SkipPic)
                                 {
                                     if (!loadDTBrush(pt->dbrushes[i] = dbrush+i,*dp))
+                                    {
                                         pt->dbrushes[i] = NULL;
+                                    }
+                                    else if(pt->dbrushes[i]->dataWidth != pt->brushes[i]->dataWidth || pt->dbrushes[i]->dataHeight != pt->brushes[i]->dataHeight)
+                                    {
+										// the disabled image's dimensions do not match the normal image's dimensions
+										showDimensionMismatchReq(*dp, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, pt->dbrushes[i]->dataWidth, pt->dbrushes[i]->dataHeight);
+										SharedFree(pt->dbrushes[i]->data);
+										pt->dbrushes[i] = NULL;
+									}
                                 }
                                 dp++;
                             }
