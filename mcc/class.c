@@ -1657,7 +1657,7 @@ static const ULONG ptable[] =
     PACK_ENDTABLE
 };
 
-static void showDimensionMismatchReq(CONST_STRPTR file1, LONG w1, LONG h1, CONST_STRPTR type, CONST_STRPTR file2, LONG w2, LONG h2)
+static void showDimensionMismatchReq(CONST_STRPTR type, CONST_STRPTR file1, LONG w1, LONG h1, CONST_STRPTR file2, LONG w2, LONG h2)
 {
   struct EasyStruct es;
 
@@ -1678,10 +1678,10 @@ static void showDimensionMismatchReq(CONST_STRPTR file1, LONG w1, LONG h1, CONST
                              "Please remove this image or replace\n"
                              "it by one with matching dimensions.\n"
                              "\n"
-                             "A suitable image will now be generated\n"
+                             "A suitable %s image will now be generated\n"
                              "from the normal image.";
   es.es_GadgetFormat = (STRPTR)"Continue";
-  EasyRequest(NULL, &es, NULL, file1, w1, h1, type, file2, w2, h2);
+  EasyRequest(NULL, &es, NULL, file1, w1, h1, type, file2, w2, h2, type);
 }
 
 /*
@@ -1962,7 +1962,7 @@ static BOOL makePicsFun(struct pack *pt,
                                     else if(pt->sbrushes[i]->dataWidth != pt->brushes[i]->dataWidth || pt->sbrushes[i]->dataHeight != pt->brushes[i]->dataHeight)
                                     {
 										// the selected image's dimensions do not match the normal image's dimensions
-										showDimensionMismatchReq(*p, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, "selected", *sp, pt->sbrushes[i]->dataWidth, pt->sbrushes[i]->dataHeight);
+										showDimensionMismatchReq("selected", *p, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, *sp, pt->sbrushes[i]->dataWidth, pt->sbrushes[i]->dataHeight);
 										SharedFree(pt->sbrushes[i]->data);
 										pt->sbrushes[i] = NULL;
 									}
@@ -1981,7 +1981,7 @@ static BOOL makePicsFun(struct pack *pt,
                                     else if(pt->dbrushes[i]->dataWidth != pt->brushes[i]->dataWidth || pt->dbrushes[i]->dataHeight != pt->brushes[i]->dataHeight)
                                     {
 										// the disabled image's dimensions do not match the normal image's dimensions
-										showDimensionMismatchReq(*p, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, "disabled", *dp, pt->dbrushes[i]->dataWidth, pt->dbrushes[i]->dataHeight);
+										showDimensionMismatchReq("disabled", *p, pt->brushes[i]->dataWidth, pt->brushes[i]->dataHeight, *dp, pt->dbrushes[i]->dataWidth, pt->dbrushes[i]->dataHeight);
 										SharedFree(pt->dbrushes[i]->data);
 										pt->dbrushes[i] = NULL;
 									}
