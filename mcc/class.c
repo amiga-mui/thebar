@@ -1663,10 +1663,16 @@ static void showDimensionMismatchReq(CONST_STRPTR file, LONG w1, LONG h1, LONG w
 
   memset(&es, 0, sizeof(es));
   es.es_StructSize = sizeof(es);
-  es.es_Title = (STRPTR)"Image dimension mismatch";
-  es.es_TextFormat = (STRPTR)"Brush '%s'\n"
-                             "  normal image has dimension %3ldx%3ld\n"
-                             "  this image has dimension %3ldx%3ld";
+  es.es_Title = (STRPTR)"TheBar.mcc image dimension mismatch";
+  es.es_TextFormat = (STRPTR)"Image file '%s':\n"
+                             " - normal image has dimension %3ldx%3ld\n"
+                             " - this image has dimension %3ldx%3ld\n"
+                             "\n"
+                             "A suitable image will now be generated\n"
+                             "from the normal image.\n"
+                             "\n"
+                             "Please remove this image or replace\n"
+                             "it by one with matching dimensions.";
   es.es_GadgetFormat = (STRPTR)"Continue";
   EasyRequest(NULL, &es, NULL, file, w1, h1, w2, h2);
 }
