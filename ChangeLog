@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-03-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mccinit.c, include/shellstart.c: rearranged the code to ensure that
+    trying to start the final class from a shell does not crash.
+
 2013-02-19 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: TheBar.mcc will now check the dimensions of separated selected
