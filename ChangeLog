@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-04-24 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/greek.ct: updated greek translation kindly provided by Antonis
+    Iliakis.
+
 2013-03-06 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/mccinit.c, include/shellstart.c: rearranged the code to ensure that
