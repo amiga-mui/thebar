@@ -569,6 +569,7 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
     {
         if (!(ptr = (APTR)DoMethod(cfg,MUIM_Dataspace_Find,MUICFG_TheBar_GroupBack)))
             ptr = MUIDEF_TheBar_GroupBack;
+
         nnset(data->groupBack,MUIA_Imagedisplay_Spec,ptr);
     }
 
@@ -583,9 +584,9 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
             ptr = MUIDEF_TheBar_Frame;
 
         if (lib_flags & BASEFLG_MUI4)
-		    nnset(data->groupBack,MUIA_Framedisplay_Spec,ptr);
+		      nnset(data->groupBack,MUIA_Framedisplay_Spec,ptr);
         else
-		    nnset(data->frame,MUIA_Framedisplay_Spec,ptr);
+		      nnset(data->frame,MUIA_Framedisplay_Spec,ptr);
     }
     else
     {
