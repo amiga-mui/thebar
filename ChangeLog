@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v26.12 RELEASE ###########################################################
+
+2013-04-25 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.12 release preparations
+
 2013-04-24 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/greek.ct: updated greek translation kindly provided by Antonis
