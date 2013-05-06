@@ -50,6 +50,8 @@ static const char *used_mccs[] = { "TheBar.mcc", "TheBarVirt.mcc", "TheButton.mc
 
 #define MIN_STACKSIZE 8192
 
+#include "locale.h"
+
 /******************************************************************************/
 
 struct Library *DataTypesBase = NULL;
@@ -79,12 +81,86 @@ struct MUI_CustomClass *lib_backgroundadjust = NULL;
 struct MUI_CustomClass *lib_poppen = NULL;
 struct MUI_CustomClass *lib_popbackground = NULL;
 #endif
-struct Catalog *lib_cat = NULL;
 ULONG lib_flags = 0;
 
 #if !defined(__MORPHOS__)
 static BOOL nbitmapCanHandleRawData;
 #endif
+
+/******************************************************************************/
+
+#define IDSSIZE(ids) (sizeof(ids)/sizeof(ids[0]))
+
+static const void *regIDs[] =
+{
+    Msg_Reg_Colors,
+    Msg_Reg_Appearance,
+    Msg_Reg_Spacing,
+    Msg_Reg_Options,
+    NULL
+};
+STRPTR regs[IDSSIZE(regIDs)];
+
+static const void *frameIDs[] =
+{
+    Msg_FrameStyle_Recessed,
+    Msg_FrameStyle_Normal,
+    NULL
+};
+STRPTR frames[IDSSIZE(frameIDs)];
+
+static const void *precisionIDs[] =
+{
+    Msg_Precision_Gui,
+    Msg_Precision_Icon,
+    Msg_Precision_Image,
+    Msg_Precision_Exact,
+    NULL
+};
+STRPTR precisions[IDSSIZE(precisionIDs)];
+
+static const void *dismodeIDs[] =
+{
+    Msg_DisMode_Shape,
+    Msg_DisMode_Grid,
+    Msg_DisMode_FullGrid,
+    Msg_DisMode_Sunny,
+    Msg_DisMode_Blend,
+    Msg_DisMode_BlendGrey,
+    NULL
+};
+STRPTR dismodes[IDSSIZE(dismodeIDs)];
+
+static const void *spacersSizeIDs[] =
+{
+    Msg_SpacersSize_Quarter,
+    Msg_SpacersSize_Half,
+    Msg_SpacersSize_One,
+    Msg_SpacersSize_None,
+    Msg_SpacersSize_OnePoint,
+    Msg_SpacersSize_TwoPoint,
+    NULL
+};
+STRPTR spacersSizes[IDSSIZE(spacersSizeIDs)];
+
+static const void *viewModeIDs[] =
+{
+    Msg_TextGfx,
+    Msg_Gfx,
+    Msg_Text,
+    NULL
+};
+STRPTR viewModes[IDSSIZE(viewModeIDs)];
+
+static const void *labelPosIDs[] =
+{
+    Msg_LabelPos_Bottom,
+    Msg_LabelPos_Top,
+    Msg_LabelPos_Right,
+    Msg_LabelPos_Left,
+    NULL
+};
+STRPTR labelPoss[IDSSIZE(labelPosIDs)];
 
 /******************************************************************************/
 
@@ -201,7 +277,20 @@ static BOOL ClassInit(UNUSED struct Library *base)
 
     if(success == TRUE)
     {
-      initStrings();
+      // open the TheBar_mcp catalog
+      OpenCat();
+
+      LocalizeArray(regs,regIDs);
+      LocalizeArray(frames,frameIDs);
+      LocalizeArray(precisions,precisionIDs);
+      LocalizeArray(dismodes,dismodeIDs);
+      LocalizeArray(spacersSizes,spacersSizeIDs);
+      LocalizeArray(viewModes,viewModeIDs);
+      LocalizeArray(labelPoss,labelPosIDs);
+
+      #if defined(__amigaos3__)
+      dismodes[4] = NULL;
+      #endif
 
       // we open the cybgraphics.library but without failing if
       // it doesn't exist
@@ -278,13 +367,11 @@ ClassExpunge(UNUSED struct Library *base)
   }
   #endif
 
+  // close the catalog
+  CloseCat();
+
   if(LocaleBase != NULL)
   {
-    if(lib_cat != NULL)
-    {
-      CloseCatalog(lib_cat);
-      lib_cat = NULL;
-    }
     DROPINTERFACE(ILocale);
     CloseLibrary((struct Library *)LocaleBase);
     LocaleBase = NULL;

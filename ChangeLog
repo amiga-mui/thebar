@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-05-05 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp: completely reworked the locale support. The former version was overly
+    complicated and even worse did look up all strings twice without reusing the
+    results from the first scan.
+
 #### v26.12 RELEASE ###########################################################
 
 2013-04-25 Jens Langner <Jens.Langner@light-speed.de>
