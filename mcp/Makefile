@@ -411,14 +411,15 @@ $(TESTTARGET): $(TESTOBJS)
 $(OBJDIR)/library.o: library.c ../include/mccinit.c \
   ../include/mui/TheBar_mcc.h private.h version.h
 
-locale.h: $(LOCALE)/TheBar_mcp.cd locale_h.sd
-	@echo "  MK $@"
-	@$(FC) $(LOCALE)/TheBar_mcp.cd locale.h=locale_h.sd
+locale.h: locale.c
+locale.c: $(LOCALE)/TheBar_mcp.cd C_h.sd C_c.sd
+	@echo "  FC $@"
+	@$(FC) $(LOCALE)/TheBar_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
 
 ## CATALOG GENERATION #################
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
-	@echo "  MK $@"
+	@echo "  FC $@"
 	@$(FC) $(LOCALE)/TheBar_mcp.cd $< CATALOG $@
 
 .IGNORE: $(CATALOGS)

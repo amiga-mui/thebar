@@ -75,7 +75,7 @@ int stch_l(const char *chr_ptr,long *u_ptr)
 /***********************************************************************/
 
 Object *
-obutton(ULONG text,ULONG help)
+obutton(const void *text, const void *help)
 {
     Object *obj;
 
@@ -88,7 +88,7 @@ obutton(ULONG text,ULONG help)
 /***********************************************************************/
 
 Object *
-ocycle(STRPTR *array,ULONG key,ULONG help)
+ocycle(STRPTR *array, const void *key, const void *help)
 {
     Object *obj;
 
@@ -101,7 +101,7 @@ ocycle(STRPTR *array,ULONG key,ULONG help)
 /***********************************************************************/
 
 Object *
-ocheck(ULONG key,ULONG help)
+ocheck(const void *key, const void *help)
 {
     Object *obj;
 
@@ -114,7 +114,7 @@ ocheck(ULONG key,ULONG help)
 /***********************************************************************/
 
 Object *
-oslider(ULONG key,ULONG help,LONG min,LONG max)
+oslider(const void *key, const void *help, LONG min, LONG max)
 {
     Object *obj;
 
@@ -127,7 +127,7 @@ oslider(ULONG key,ULONG help,LONG min,LONG max)
 /***********************************************************************/
 
 Object *
-opop(ULONG type,ULONG key)
+opop(ULONG type, const void *key)
 {
     Object *obj;
 
@@ -153,7 +153,7 @@ opop(ULONG type,ULONG key)
 /***********************************************************************/
 
 Object *
-opoppen(ULONG key,ULONG title,ULONG help)
+opoppen(const void *key, const void *title, const void *help)
 {
     #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return PoppenObject,
@@ -193,7 +193,7 @@ opoppen(ULONG key,ULONG title,ULONG help)
 /***********************************************************************/
 
 Object *
-opopfri(ULONG key,ULONG title,ULONG help)
+opopfri(const void *key, const void *title, const void *help)
 {
     return MUI_NewObject("Popfrimage.mui",
         MUIA_Window_Title,      (IPTR)tr(title),
@@ -211,7 +211,7 @@ opopfri(ULONG key,ULONG title,ULONG help)
 /***********************************************************************/
 
 Object *
-opopback(UNUSED ULONG gradient,ULONG key,ULONG title,ULONG help)
+opopback(UNUSED ULONG gradient, const void *key, const void *title, const void *help)
 {
     #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return MUI_NewObject(MUIC_Popimage,
@@ -258,7 +258,7 @@ opopback(UNUSED ULONG gradient,ULONG key,ULONG title,ULONG help)
 #endif
 
 Object *
-opopframe(ULONG key,ULONG title,ULONG help)
+opopframe(const void *key, const void *title, const void *help)
 {
     return PopframeObject,
         MUIA_Window_Title, (IPTR)tr(title),
@@ -462,5 +462,21 @@ void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad)
     }
 }
 #endif
+
+/***********************************************************************/
+
+ULONG getKeyChar(const char *string)
+{
+    ULONG res = 0;
+
+    if (string)
+    {
+        for (; *string && *string!='_'; string++);
+        if (*string++)
+            res = ToLower(*string);
+    }
+
+    return res;
+}
 
 /***********************************************************************/
