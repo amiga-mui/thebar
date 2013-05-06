@@ -86,7 +86,7 @@ BOOL OpenCat(void)
 void LocalizeArray(STRPTR *strings, const void **ids)
 {
   while(*ids != NULL)
-    *strings++ = tr(*ids++);
+    *strings++ = (STRPTR)tr(*ids++);
 
   // make sure the translated string array is NULL terminated
   *strings = NULL;
