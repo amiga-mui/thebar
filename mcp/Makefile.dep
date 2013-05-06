@@ -30,14 +30,9 @@ $(OBJDIR)/library.o: library.c class.h ../include/proto/cybergraphics.h \
   ../include/SDI_compiler.h ../include/SDI_hook.h debug.h locale.h \
   class_protos.h private.h version.h ../include/mcc_common.h \
   ../include/SDI_hook.h ../include/SDI_lib.h ../include/SDI_stdarg.h \
-  icon.h ../include/mui/NBitmap_mcc.h ../include/mccinit.c
-$(OBJDIR)/locale.o: locale.c class.h ../include/proto/cybergraphics.h \
-  ../include/proto/muimaster.h ../include/libraries/mui.h \
-  ../include/interfaces/muimaster.h ../include/inline4/muimaster.h \
-  ../include/mui/TheBar_mcc.h ../include/mui/TheBar_mcp.h \
-  ../include/SDI_compiler.h ../include/SDI_stdarg.h \
-  ../include/SDI_compiler.h ../include/SDI_hook.h debug.h locale.h \
-  class_protos.h
+  ../include/shellstart.c icon.h ../include/mui/NBitmap_mcc.h \
+  ../include/mccinit.c
+$(OBJDIR)/locale.o: locale.c ../include/SDI_compiler.h Debug.h
 $(OBJDIR)/penadjust.o: penadjust.c class.h ../include/proto/cybergraphics.h \
   ../include/proto/muimaster.h ../include/libraries/mui.h \
   ../include/interfaces/muimaster.h ../include/inline4/muimaster.h \
