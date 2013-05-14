@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-05-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/Makefile: reworked the dependency generation to correctly respect the
+    different object directories for TheBar.mcc and TheBarVirt.mcc.
+
 2013-05-05 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp: completely reworked the locale support. The former version was overly
