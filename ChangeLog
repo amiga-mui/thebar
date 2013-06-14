@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2013-06-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: place the prefs group into a Scrollgroup object for MUI 3.x,
+    because the recent changes made the group too tall for low screen
+    resolutions. MUI 4.x does this itself already. This closes #22.
+
 2013-05-14 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/Makefile: reworked the dependency generation to correctly respect the

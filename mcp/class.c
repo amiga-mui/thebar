@@ -45,8 +45,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if((obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg)))
     {
         struct InstData *data = INST_DATA(cl,obj);
-        Object          *prefs, *trans;
-        const char      *t;
+        Object *container, *prefs, *trans;
+        const char *t;
         static const char infotext1[] = "\033bTheBar.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
                                         "Copyright (C) 2003-2005 Alfonso Ranieri\n"
                                         LIB_COPYRIGHT;
@@ -397,9 +397,27 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         End))
         {
-            set(data->scale,MUIA_Numeric_Format,"\33c%ld %%");
+            if(lib_flags & BASEFLG_MUI4)
+            {
+			  // MUI 4.x places all prefs objects into a Scrollgroup object already
+              DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)prefs);
+			}
+			else
+			{
+              // for MUI 3.x we have to do this ourselves, because otherwise we might
+              // be so tall that we don't fit on the screen otherwise and MUI would
+              // have to adjust the prefs to make us fully visible
+			  Object *container = ScrollgroupObject,
+			    MUIA_Scrollgroup_AutoBars, TRUE,
+			    MUIA_Scrollgroup_FreeHoriz, FALSE,
+			    MUIA_Scrollgroup_Contents, VGroupV,
+			      Child, prefs,
+			    End,
+			  End;
+              DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)container);
+			}
 
-            DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)prefs);
+            set(data->scale,MUIA_Numeric_Format,"\33c%ld %%");
 
             // check for MUI 3.9+
             if(lib_flags & BASEFLG_MUI20)
