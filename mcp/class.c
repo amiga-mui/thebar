@@ -45,7 +45,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if((obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg)))
     {
         struct InstData *data = INST_DATA(cl,obj);
-        Object *container, *prefs, *trans;
+        Object *prefs, *trans;
         const char *t;
         static const char infotext1[] = "\033bTheBar.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
                                         "Copyright (C) 2003-2005 Alfonso Ranieri\n"
