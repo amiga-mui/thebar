@@ -1,5 +1,5 @@
-## chunk AUTH Jens Langner, Thore Böckelmann, Hans-Jörg Ottinger
-## version $VER: TheBar.catalog 21.4 (9.1.2013)
+## chunk AUTH Jens Maus, Thore Böckelmann, Hans-Jörg Ottinger
+## version $VER: TheBar.catalog 21.5 (14.12.2013)
 ## codeset 0
 ## language deutsch
 ;
@@ -657,7 +657,7 @@ zwei Pixer
 ;
 ;
 Msg_Info_Translator
-Deutsch : Jens Langner, Hans-Jörg Ottinger
+Deutsch : Jens Maus, Thore Böckelmann, Hans-Jörg Ottinger
 ;
 ;
 Msg_Item_Globals
