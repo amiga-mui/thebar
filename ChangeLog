@@ -5,6 +5,14 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v26.14 RELEASE ###########################################################
+
+2013-12-17 Jens Maus <mail@jens-maus.de>
+
+  * misc: final 26.14 release preparations
+  * mcp/C_C.sd, mcp/Makefile.dep: fixed an incorrect include statement which
+    caused the whole mcp build to fail when cross-compiled on Linux.
+
 #### v26.13 RELEASE ###########################################################
 
 2013-12-14 Jens Maus <mail@jens-maus.de>
