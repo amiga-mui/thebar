@@ -182,14 +182,7 @@ MCPOBJS = library.o \
 
 EXTRAOBJS =
 
-CATALOGS = $(LOCALE)/czech.catalog \
-           $(LOCALE)/french.catalog \
-           $(LOCALE)/german.catalog \
-           $(LOCALE)/greek.catalog \
-           $(LOCALE)/italian.catalog \
-           $(LOCALE)/polish.catalog \
-           $(LOCALE)/swedish.catalog \
-           $(LOCALE)/turkish.catalog
+CATALOGS = $(patsubst %.po,%.catalog,$(wildcard $(LOCALE)/*.po))
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -412,15 +405,15 @@ $(OBJDIR)/library.o: library.c ../include/mccinit.c \
   ../include/mui/TheBar_mcc.h private.h version.h
 
 locale.h: locale.c
-locale.c: $(LOCALE)/TheBar_mcp.cd C_h.sd C_c.sd
+locale.c: $(LOCALE)/TheBar_mcp.pot C_h.sd C_c.sd
 	@echo "  FC $@"
-	@$(FC) $(LOCALE)/TheBar_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
+	@$(FC) $(LOCALE)/TheBar_mcp.pot locale.h=C_h.sd locale.c=C_c.sd
 
 ## CATALOG GENERATION #################
 
-$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+$(LOCALE)/%.catalog: $(LOCALE)/%.po
 	@echo "  FC $@"
-	@$(FC) $(LOCALE)/TheBar_mcp.cd $< CATALOG $@
+	@$(FC) POFILE $< CATALOG $@
 
 .IGNORE: $(CATALOGS)
 
