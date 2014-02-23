@@ -1,7 +1,7 @@
 ;
 ; CATCOMP TheBar.cd CTFILE TheBar.ct
 ;
-#version 26
+#version 21
 #language english
 ;
 MSG_Reg_Colors (1//)
