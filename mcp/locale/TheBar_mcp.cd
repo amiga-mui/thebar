@@ -1,658 +1,661 @@
 ;
 ; CATCOMP TheBar.cd CTFILE TheBar.ct
 ;
-Msg_Reg_Colors (1//)
+#version 26
+#language english
+;
+MSG_Reg_Colors (1//)
 Colors
 ;
-Msg_Reg_Appearance (//)
+MSG_Reg_Appearance (2//)
 Appearance
 ;
-Msg_Reg_Spacing (//)
+MSG_Reg_Spacing (3//)
 Spacing
 ;
-Msg_Reg_Options (//)
+MSG_Reg_Options (4//)
 Options
 ;
-Msg_Title_Backgrounds (100//)
+MSG_Title_Backgrounds (100//)
 Backgrounds
 ;
-Msg_GroupBackground (//)
+MSG_GroupBackground (101//)
 Bar
 ;
-Msg_GroupBackground_Help (//)
+MSG_GroupBackground_Help (102//)
 Bar background.
 ;
-Msg_GroupBackground_Title (//)
+MSG_GroupBackground_Title (103//)
 Bar background
 ;
-Msg_UseGroupBackground (//)
+MSG_UseGroupBackground (104//)
 Active
 ;
-Msg_UseGroupBackground_Help (//)
+MSG_UseGroupBackground_Help (105//)
 If selected, the bar gets\n\
 your preferred background,\n\
 otherwise it gets its\n\
 parent background.
 ;
-Msg_ButtonBackground (//)
+MSG_ButtonBackground (106//)
 Buttons
 ;
-Msg_ButtonBackground_Help (//)
+MSG_ButtonBackground_Help (107//)
 Active buttons background.
 ;
-Msg_ButtonBackground_Title (//)
+MSG_ButtonBackground_Title (108//)
 Active buttons background
 ;
-Msg_UseButtonBackground (//)
+MSG_UseButtonBackground (109//)
 Active
 ;
-Msg_UseButtonBackground_Help (//)
+MSG_UseButtonBackground_Help (110//)
 If selected, the buttons get\n\
 your preferred background,\n\
 otherwise they get their\n\
 parent background.
 ;
-Msg_Title_Frame (//)
+MSG_Title_Frame (111//)
 Buttons frame
 ;
-Msg_FrameShinePen (//)
+MSG_FrameShinePen (112//)
 Shine
 ;
-Msg_FrameShinePen_Help (//)
+MSG_FrameShinePen_Help (113//)
 Active buttons frame shine pen.
 ;
-Msg_FrameShinePen_Title (//)
+MSG_FrameShinePen_Title (114//)
 Frame shine pen
 ;
-Msg_FrameShadowPen (//)
+MSG_FrameShadowPen (115//)
 Shadow
 ;
-Msg_FrameShadowPen_Help (//)
+MSG_FrameShadowPen_Help (116//)
 Active buttons frame shadow pen.
 ;
-Msg_FrameShadowPen_Title (//)
+MSG_FrameShadowPen_Title (117//)
 Frame shadow pen
 ;
-Msg_FrameStyle_Recessed (//)
+MSG_FrameStyle_Recessed (118//)
 Recessed
 ;
-Msg_FrameStyle_Normal (//)
+MSG_FrameStyle_Normal (119//)
 Normal
 ;
-Msg_FrameStyle (//)
+MSG_FrameStyle (120//)
 Style
 ;
-Msg_FrameStyle_Help (//)
+MSG_FrameStyle_Help (121//)
 Active buttons frame style.
 ;
-Msg_Title_Disabled (//)
+MSG_Title_Disabled (122//)
 Disabled buttons
 ;
-Msg_DisabledBody (//)
+MSG_DisabledBody (123//)
 Body
 ;
-Msg_DisabledBody_Help (//)
+MSG_DisabledBody_Help (124//)
 Disabled buttons body pen. It is used as\n\
 main pen for disabled buttons in Shape\n\
 mode and as grid pen for disabled\n\
 buttons in Grid modes.
 ;
-Msg_DisabledBody_Title (//)
+MSG_DisabledBody_Title (125//)
 Body pen
 ;
-Msg_DisabledShadow (//)
+MSG_DisabledShadow (126//)
 Shadow
 ;
-Msg_DisabledShadow_Help (//)
+MSG_DisabledShadow_Help (127//)
 Disabled buttons shadow pen. It is used as\n\
 secondary pen for disabled buttons in Shape\n\
 mode and as text pen for disabled buttons\n\
 in Grid modes.
 ;
-Msg_DisabledShadow_Title (//)
+MSG_DisabledShadow_Title (128//)
 Shadow pen
 ;
-Msg_Title_BarSpacer (//)
+MSG_Title_BarSpacer (129//)
 Bar spacer
 ;
-Msg_BarSpacerShinePen (//)
+MSG_BarSpacerShinePen (130//)
 Shine
 ;
-Msg_BarSpacerShinePen_Help (//)
+MSG_BarSpacerShinePen_Help (131//)
 Bar spacer shine pen.
 ;
-Msg_BarSpacerShinePen_Title (//)
+MSG_BarSpacerShinePen_Title (132//)
 Spacer shine pen
 ;
-Msg_BarSpacerShadowPen (//)
+MSG_BarSpacerShadowPen (133//)
 Shadow
 ;
-Msg_BarSpacerShadowPen_Help (//)
+MSG_BarSpacerShadowPen_Help (134//)
 Bar spacer shadow pen.
 ;
-Msg_BarSpacerShadowPen_Title (//)
+MSG_BarSpacerShadowPen_Title (135//)
 Spacer shadow pen
 ;
-Msg_Title_BarFrame (//)
+MSG_Title_BarFrame (136//)
 Bar frame
 ;
-Msg_BarFrameShine (//)
+MSG_BarFrameShine (137//)
 Shine
 ;
-Msg_BarFrameShine_Help (//)
+MSG_BarFrameShine_Help (138//)
 Bar frame shine pen.
 ;
-Msg_BarFrameShine_Title (//)
+MSG_BarFrameShine_Title (139//)
 Frame shine pen
 ;
-Msg_BarFrameShadow (//)
+MSG_BarFrameShadow (140//)
 Shadow
 ;
-Msg_BarFrameShadow_Help (//)
+MSG_BarFrameShadow_Help (141//)
 Bar frame shadow pen.
 ;
-Msg_BarFrameShadow_Title (//)
+MSG_BarFrameShadow_Title (142//)
 Frame shadow pen
 ;
-Msg_Title_DragBar (//)
+MSG_Title_DragBar (143//)
 DragBar
 ;
-Msg_DragBarShine (//)
+MSG_DragBarShine (144//)
 Shine
 ;
-Msg_DragBarShine_Help (//)
+MSG_DragBarShine_Help (145//)
 DragBar shine pen.
 ;
-Msg_DragBarShine_Title (//)
+MSG_DragBarShine_Title (146//)
 DragBar shine pen
 ;
-Msg_DragBarShadow (//)
+MSG_DragBarShadow (147//)
 Shadow
 ;
-Msg_DragBarShadow_Help (//)
+MSG_DragBarShadow_Help (148//)
 DragBar shadow pen.
 ;
-Msg_DragBarShadow_Title (//)
+MSG_DragBarShadow_Title (149//)
 DragBar shadow pen
 ;
-Msg_DragBarFill (//)
+MSG_DragBarFill (150//)
 Fill
 ;
-Msg_DragBarFill_Help (//)
+MSG_DragBarFill_Help (151//)
 DragBar fill pen.
 ;
-Msg_DragBarFill_Title (//)
+MSG_DragBarFill_Title (152//)
 DragBar fill pen
 ;
-Msg_UseDragBarFill (//)
+MSG_UseDragBarFill (153//)
 Use
 ;
-Msg_UseDragBarFill_Help (//)
+MSG_UseDragBarFill_Help (154//)
 If selected, the dragbar fill\n\
 pen is used.
 ;
-Msg_Frame (//)
+MSG_Frame (155//)
 Frame
 ;
-Msg_Frame_Help (//)
+MSG_Frame_Help (156//)
 Bar frame
 ;
-Msg_Frame_Title (//)
+MSG_Frame_Title (157//)
 Bar frame
 ;
-Msg_TextFont (200//)
+MSG_TextFont (200//)
 Text
 ;
-Msg_TextFont_Help (//)
+MSG_TextFont_Help (201//)
 Text only buttons font.
 ;
-Msg_TextGfxFont (//)
+MSG_TextGfxFont (202//)
 TextGfx
 ;
-Msg_TextGfxFont_Help (//)
+MSG_TextGfxFont_Help (203//)
 Text and image buttons font.
 ;
-Msg_ViewMode (//)
+MSG_ViewMode (204//)
 View mode
 ;
-Msg_ViewMode_Help (//)
+MSG_ViewMode_Help (205//)
 Adjust the appearance of the buttons.
 ;
-Msg_Appearance_Text (//)
+MSG_Appearance_Text (206//)
 The options below are used by TheBar if and only if the\n\
 object requested for it at creation time. It means that\n\
 if the programmer didn't decide otherwise, they are simply\n\
 ignored.
 ;
-Msg_TextGfx (//)
+MSG_TextGfx (207//)
 Icons and text
 ;
-Msg_Gfx (//)
+MSG_Gfx (208//)
 Icons only
 ;
-Msg_Text (//)
+MSG_Text (209//)
 Text only
 ;
-Msg_Borderless (//)
+MSG_Borderless (210//)
 Borderless
 ;
-Msg_Borderless_Help (//)
+MSG_Borderless_Help (211//)
 If selected, buttons are borderless.
 ;
-Msg_Sunny (//)
+MSG_Sunny (212//)
 Highlight
 ;
-Msg_Sunny_Help (//)
+MSG_Sunny_Help (213//)
 If selected, buttons, normally in black\n\
 and white, are colored when the\n\
 mouse is over them.
 ;
-Msg_Raised (//)
+MSG_Raised (214//)
 Raised
 ;
-Msg_Raised_Help (//)
+MSG_Raised_Help (215//)
 If selected, buttons, normally frameless,\n\
 are framed when the mouse is over them.
 ;
-Msg_Scaled (//)
+MSG_Scaled (216//)
 Scaled
 ;
-Msg_Scaled_Help (//)
+MSG_Scaled_Help (217//)
 If selected, buttons are scaled.
 ;
-Msg_BarSpacer (//)
+MSG_BarSpacer (218//)
 Force Bar spacer
 ;
-Msg_BarSpacer_Help (//)
+MSG_BarSpacer_Help (219//)
 If selected, a bar spacer is used\n\
 for all kind of separators.
 ;
-Msg_EnableKeys (//)
+MSG_EnableKeys (220//)
 Enable keys
 ;
-Msg_EnableKeys_Help (//)
+MSG_EnableKeys_Help (221//)
 If selected, buttons short cuts\n\
 are active.
 ;
-Msg_LabelPos (//)
+MSG_LabelPos (222//)
 Labels at
 ;
-Msg_LabelPos_Help (//)
+MSG_LabelPos_Help (223//)
 Adjust the position of text in\n\
 Icons and text buttons.
 ;
-Msg_LabelPos_Bottom (//)
+MSG_LabelPos_Bottom (224//)
 Bottom
 ;
-Msg_LabelPos_Top (//)
+MSG_LabelPos_Top (225//)
 Top
 ;
-Msg_LabelPos_Right (//)
+MSG_LabelPos_Right (226//)
 Right
 ;
-Msg_LabelPos_Left (//)
+MSG_LabelPos_Left (227//)
 Left
 ;
-Msg_Title_GroupSpacing (300//)
+MSG_Title_GroupSpacing (300//)
 Bar
 ;
-Msg_HorizGroupSpacing (//)
+MSG_HorizGroupSpacing (301//)
 Horiz
 ;
-Msg_HorizGroupSpacing_Help (//)
+MSG_HorizGroupSpacing_Help (302//)
 Pixels between two buttons in a bar row.
 ;
-Msg_VertGroupSpacing (//)
+MSG_VertGroupSpacing (303//)
 Vert
 ;
-Msg_VertGroupSpacing_Help (//)
+MSG_VertGroupSpacing_Help (304//)
 Pixels between two bar rows.
 ;
-Msg_BarSpacerSpacing (//)
+MSG_BarSpacerSpacing (305//)
 Bar
 ;
-Msg_BarSpacerSpacing_Help (//)
+MSG_BarSpacerSpacing_Help (306//)
 Pixels between a Bar spacer\n\
 and the previous/next object.
 ;
-Msg_Title_InnerSpacing (//)
+MSG_Title_InnerSpacing (307//)
 Buttons
 ;
-Msg_HorizInnerSpacing (//)
+MSG_HorizInnerSpacing (308//)
 Horiz
 ;
-Msg_HorizInnerSpacing_Help (//)
+MSG_HorizInnerSpacing_Help (309//)
 Pixels between the left/right frame\n\
 border and the button contents.
 ;
-Msg_TopInnerSpacing (//)
+MSG_TopInnerSpacing (310//)
 Top
 ;
-Msg_TopInnerSpacing_Help (//)
+MSG_TopInnerSpacing_Help (311//)
 Pixels between the top frame border\n\
 and the button contents.
 ;
-Msg_BottomInnerSpacing (//)
+MSG_BottomInnerSpacing (312//)
 Bottom
 ;
-Msg_BottomInnerSpacing_Help (//)
+MSG_BottomInnerSpacing_Help (313//)
 Pixels between the bottom frame border\n\
 and the button contents.
 ;
-Msg_Title_BarFrameSpacing (//)
+MSG_Title_BarFrameSpacing (314//)
 Bar frame
 ;
-Msg_LeftBarFrameSpacing (//)
+MSG_LeftBarFrameSpacing (315//)
 Left
 ;
-Msg_LeftBarFrameSpacing_Help (//)
+MSG_LeftBarFrameSpacing_Help (316//)
 Pixels between the left frame border\n\
 and the bar contents.
 ;
-Msg_RightBarFrameSpacing (//)
+MSG_RightBarFrameSpacing (317//)
 Right
 ;
-Msg_RightBarFrameSpacing_Help (//)
+MSG_RightBarFrameSpacing_Help (318//)
 Pixels between the right frame border\n\
 and the bar contents.
 ;
-Msg_TopBarFrameSpacing (//)
+MSG_TopBarFrameSpacing (319//)
 Top
 ;
-Msg_TopBarFrameSpacing_Help (//)
+MSG_TopBarFrameSpacing_Help (320//)
 Pixels between the top frame border\n\
 and the bar contents.
 ;
-Msg_BottomBarFrameSpacing (//)
+MSG_BottomBarFrameSpacing (321//)
 Bottom
 ;
-Msg_BottomBarFrameSpacing_Help (//)
+MSG_BottomBarFrameSpacing_Help (322//)
 Pixels between the bottom frame border\n\
 and the bar contents.
 ;
-Msg_Title_TextGfxSpacing (//)
+MSG_Title_TextGfxSpacing (323//)
 Text/Gfx
 ;
-Msg_HorizTextGfxSpacing (//)
+MSG_HorizTextGfxSpacing (324//)
 Horiz
 ;
-Msg_HorizTextGfxSpacing_Help (//)
+MSG_HorizTextGfxSpacing_Help (325//)
 Pixels between an image and\n\
 its left/right placed label.
 ;
-Msg_VertTextGfxSpacing (//)
+MSG_VertTextGfxSpacing (326//)
 Vert
 ;
-Msg_VertTextGfxSpacing_Help (//)
+MSG_VertTextGfxSpacing_Help (327//)
 Pixels between an image and\n\
 its bottom/top placed label.
 ;
-Msg_Precision_Gui (400//)
+MSG_Precision_Gui (400//)
 Bad
 ;
-Msg_Precision_Icon (//)
+MSG_Precision_Icon (401//)
 Poor
 ;
-Msg_Precision_Image (//)
+MSG_Precision_Image (402//)
 Good
 ;
-Msg_Precision_Exact (//)
+MSG_Precision_Exact (403//)
 Best
 ;
-Msg_Precision (//)
+MSG_Precision (404//)
 Quality
 ;
-Msg_Precision_Help (//)
+MSG_Precision_Help (405//)
 Precision to use when obtaining pens.
 ;
-Msg_Event_IntuiTicks (//)
+MSG_Event_IntuiTicks (406//)
 IntuiTicks
 ;
-Msg_Event_MouseMove (//)
+MSG_Event_MouseMove (407//)
 MouseMove
 ;
-Msg_Event (//)
+MSG_Event (408//)
 Event
 ;
-Msg_Event_Help (//)
+MSG_Event_Help (409//)
 How to verify if the mouse is over a button:\n\
 - IntuiTicks: it is verified periodically\n\
 - MouseMove: it is verified at every mouse move\n\
 - MouseObject, it is verified at when the mouse\n\
 over a new object
 ;
-Msg_Scale (//)
+MSG_Scale (410//)
 Scale
 ;
-Msg_Scale_Help (//)
+MSG_Scale_Help (411//)
 Scale factor for scaled images.
 ;
-Msg_SpecialSelect (//)
+MSG_SpecialSelect (412//)
 Special select
 ;
-Msg_SpecialSelect_Help (//)
+MSG_SpecialSelect_Help (413//)
 If selected, button contents are moved\n\
 when they are selected or active.
 ;
-Msg_TextOverUseShine (//)
+MSG_TextOverUseShine (414//)
 Special text
 ;
-Msg_TextOverUseShine_Help (//)
+MSG_TextOverUseShine_Help (415//)
 If selected, active buttons labels\n\
 are drawn with the shine pen.
 ;
-Msg_IgnoreSelImages (//)
+MSG_IgnoreSelImages (416//)
 Ignore selected images
 ;
-Msg_IgnoreSelImages_Help (//)
+MSG_IgnoreSelImages_Help (417//)
 If selected, selected images\n\
 are ignored.
 ;
-Msg_IgnoreDisImages (//)
+MSG_IgnoreDisImages (418//)
 Ignore disabled images
 ;
-Msg_IgnoreDisImages_Help (//)
+MSG_IgnoreDisImages_Help (419//)
 If selected, disabled images\n\
 are ignored.
 ;
-Msg_DisMode_Shape (//)
+MSG_DisMode_Shape (420//)
 Shape
 ;
-Msg_DisMode_Grid (//)
+MSG_DisMode_Grid (421//)
 Grid
 ;
-Msg_DisMode_FullGrid (//)
+MSG_DisMode_FullGrid (422//)
 Full grid
 ;
-Msg_DisMode (//)
+MSG_DisMode (423//)
 Disable
 ;
-Msg_DisMode_Help (//)
+MSG_DisMode_Help (424//)
 How to render disabled buttons.
 ;
-Msg_DontMove (//)
+MSG_DontMove (425//)
 Don't move
 ;
-Msg_DontMove_Help (//)
+MSG_DontMove_Help (426//)
 If selected, the contents of the buttons\n\
 is not moved when they are active.
 ;
-Msg_DisMode_Sunny (//)
+MSG_DisMode_Sunny (427//)
 Grey
 ;
-Msg_NtRaiseActive (//)
+MSG_NtRaiseActive (428//)
 Don't raise active buttons
 ;
-Msg_NtRaiseActive_Help (//)
+MSG_NtRaiseActive_Help (429//)
 If selected, active buttons are not raised.
 ;
-Msg_SpacersSize (//)
+MSG_SpacersSize (430//)
 Spacers size
 ;
-Msg_SpacersSize_Help (//)
+MSG_SpacersSize_Help (431//)
 Size of spacers.
 ;
-Msg_SpacersSize_Quarter (//)
+MSG_SpacersSize_Quarter (432//)
 Quarter of a button
 ;
-Msg_SpacersSize_Half (//)
+MSG_SpacersSize_Half (433//)
 Half of a button
 ;
-Msg_SpacersSize_One (//)
+MSG_SpacersSize_One (434//)
 As a button
 ;
-Msg_Event_MouseObject (//)
+MSG_Event_MouseObject (435//)
 MouseObject
 ;
-Msg_DisMode_Blend (//)
+MSG_DisMode_Blend (436//)
 Blend
 ;
-Msg_DisMode_BlendGrey (//)
+MSG_DisMode_BlendGrey (437//)
 Blend grey
 ;
-Msg_Item_Defaults (500//)
+MSG_Item_Defaults (500//)
 Reset to defaults
 ;
-Msg_NoMUI20Event_Help (502//)
+MSG_NoMUI20Event_Help (502//)
 How to verify if the mouse is over a button:\n\
 - IntuiTicks: it is verified periodically\n\
 - MouseMove: it is verified at every mouse move
 ;
-Msg_SpacersSize_None (//)
+MSG_SpacersSize_None (503//)
 None
 ;
-Msg_SpacersSize_OnePoint (//)
+MSG_SpacersSize_OnePoint (504//)
 One point
 ;
-Msg_SpacersSize_TwoPoint (//)
+MSG_SpacersSize_TwoPoint (505//)
 Two points
 ;
 ;
-Msg_Info_Translator (603//)
+MSG_Info_Translator (603//)
 
 ;
-Msg_Item_Globals (//)
+MSG_Item_Globals (604//)
 Reset to global
 ;
-Msg_Item_LastSaved (//)
+MSG_Item_LastSaved (605//)
 Last saved
 ;
-Msg_Item_Restore (//)
+MSG_Item_Restore (606//)
 Restore
 ;
-Msg_Pop_OK (700//)
+MSG_Pop_OK (700//)
 OK
 ;
-Msg_Pop_OK_Help (//)
+MSG_Pop_OK_Help (701//)
 Accept changes.
 ;
-Msg_Pop_Cancel (//)
+MSG_Pop_Cancel (702//)
 Cancel
 ;
-Msg_Pop_Cancel_Help (//)
+MSG_Pop_Cancel_Help (703//)
 Exit without changing.
 ;
-Msg_Popback_Pattern (710//)
+MSG_Popback_Pattern (710//)
 Pattern
 ;
-Msg_Popback_Color (//)
+MSG_Popback_Color (711//)
 Color
 ;
-Msg_Popback_Bitmap (//)
+MSG_Popback_Bitmap (712//)
 Bitmap
 ;
-Msg_Popback_Gradient (//)
+MSG_Popback_Gradient (713//)
 Gradient
 ;
-Msg_Popback_HorizGradient (//)
+MSG_Popback_HorizGradient (714//)
 Horizontal
 ;
-Msg_Popback_HorizGradientHelp (//)
+MSG_Popback_HorizGradientHelp (715//)
 If selected, you get a\n\
 horizontal gradient.
 ;
-Msg_Popback_VertGradient (//)
+MSG_Popback_VertGradient (716//)
 Vertical
 ;
-Msg_Popback_VertGradientHelp (//)
+MSG_Popback_VertGradientHelp (717//)
 If selected, you get a\n\
 vertical gradient.
 ;
-Msg_Popback_From (//)
+MSG_Popback_From (718//)
 From color
 ;
-Msg_Popback_To (//)
+MSG_Popback_To (719//)
 To color
 ;
-Msg_Popback_Swap (//)
+MSG_Popback_Swap (720//)
 Swap
 ;
-Msg_Popback_SwapHelp (//)
+MSG_Popback_SwapHelp (721//)
 Swaps from/to colors.
 ;
-Msg_Poppen_MUI (800//)
+MSG_Poppen_MUI (800//)
 MUI
 ;
-Msg_Poppen_Colormap (//)
+MSG_Poppen_Colormap (801//)
 Colormap
 ;
-Msg_Poppen_RGB (//)
+MSG_Poppen_RGB (802//)
 RGB
 ;
-Msg_Poppen_Shine (//)
+MSG_Poppen_Shine (803//)
 Shine
 ;
-Msg_Poppen_Halfshine (//)
+MSG_Poppen_Halfshine (804//)
 Halfshine
 ;
-Msg_Poppen_Background (//)
+MSG_Poppen_Background (805//)
 Background
 ;
-Msg_Poppen_Halfshadow (//)
+MSG_Poppen_Halfshadow (806//)
 Halfshadow
 ;
-Msg_Poppen_Shadow (//)
+MSG_Poppen_Shadow (807//)
 Shadow
 ;
-Msg_Poppen_Text (//)
+MSG_Poppen_Text (808//)
 Text
 ;
-Msg_Poppen_Fill (//)
+MSG_Poppen_Fill (809//)
 Fill
 ;
-Msg_Poppen_Mark (//)
+MSG_Poppen_Mark (810//)
 Mark
 ;
-Msg_Poppen_ColorMapHelp (//)
+MSG_Poppen_ColorMapHelp (811//)
 Select a screen color entry.
 ;
-Msg_ColoradjustRed (900//)
+MSG_ColoradjustRed (900//)
 Red
 ;
-Msg_Coloradjust_RedHelp (//)
+MSG_Coloradjust_RedHelp (901//)
 The red component of the color.
 ;
-Msg_ColoradjustGreen (//)
+MSG_ColoradjustGreen (902//)
 Green
 ;
-Msg_Coloradjust_GreenHelp (//)
+MSG_Coloradjust_GreenHelp (903//)
 The green component of the color.
 ;
-Msg_ColoradjustBlue (//)
+MSG_ColoradjustBlue (904//)
 Blue
 ;
-Msg_Coloradjust_BlueHelp (//)
+MSG_Coloradjust_BlueHelp (905//)
 The blue component of the color.
 ;
-Msg_Coloradjust_WheelAbbr (//)
+MSG_Coloradjust_WheelAbbr (906//)
 GCBMRY
 ;
-Msg_Coloradjust_WheelHelp (//)
+MSG_Coloradjust_WheelHelp (907//)
 Move the mouse to select a color.
 ;
-Msg_Coloradjust_GradientHelp (//)
+MSG_Coloradjust_GradientHelp (908//)
 The brightness of the color.
 ;
-Msg_PrefsShortHelp (1000//)
+MSG_PrefsShortHelp (1000//)
 Next generation tool bar class.
 ;
