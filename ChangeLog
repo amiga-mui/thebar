@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2014-02-23 Jens Maus <mail@jens-maus.de>
+
+  * mcp/locale: all catalog translations have now been moved to use the free
+    services of transifex (http://www.transifex.com/projects/p/thebar/)
+
 #### v26.14 RELEASE ###########################################################
 
 2013-12-17 Jens Maus <mail@jens-maus.de>
