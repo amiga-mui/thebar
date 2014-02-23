@@ -6,821 +6,821 @@
 ; CATCOMP TheBar.cd CFILE loc.h
 ; CATCOMP TheBar.cd CTFILE TheBar.ct
 ;
-Msg_Reg_Colors
+MSG_Reg_Colors
 Farben
 ; Colors
 ;
-Msg_Reg_Appearance
+MSG_Reg_Appearance
 Darstellung
 ; Appearance
 ;
-Msg_Reg_Spacing
+MSG_Reg_Spacing
 Zwischenräume
 ; Spacing
 ;
-Msg_Reg_Options
+MSG_Reg_Options
 Optionen
 ; Options
 ;
-Msg_Title_Backgrounds
+MSG_Title_Backgrounds
 Hintergründe
 ; Backgrounds
 ;
-Msg_GroupBackground
+MSG_GroupBackground
 Leiste
 ; Bar
 ;
-Msg_GroupBackground_Help
+MSG_GroupBackground_Help
 Leistenhintergrund.
 ; Bar background.
 ;
-Msg_GroupBackground_Title
+MSG_GroupBackground_Title
 Leistenhintergrund
 ; Bar background
 ;
-Msg_UseGroupBackground
+MSG_UseGroupBackground
 Aktiv
 ; Active
 ;
-Msg_UseGroupBackground_Help
+MSG_UseGroupBackground_Help
 Wenn gewählt, bekommt die\nLeiste den bevorzugten\nHintergrund, andernfalls den\nÜbergeordneten Hintergrund.
 ; If selected, the bar gets\nyour preferred background,\notherwise it gets its\nparent background.
 ;
-Msg_ButtonBackground
+MSG_ButtonBackground
 Knöpfe
 ; Buttons
 ;
-Msg_ButtonBackground_Help
+MSG_ButtonBackground_Help
 Hintergrund des aktiven Knopfs.
 ; Active buttons background.
 ;
-Msg_ButtonBackground_Title
+MSG_ButtonBackground_Title
 Hintergrund des aktiven Knopfs
 ; Active buttons background
 ;
-Msg_UseButtonBackground
+MSG_UseButtonBackground
 Aktiv
 ; Active
 ;
-Msg_UseButtonBackground_Help
+MSG_UseButtonBackground_Help
 Wenn gewählt, bekommen die\nKnöpfe den bevorzugten\nHintergrund, andernfalls den\nÜbergeordneten Hintergrund.
 ; If selected, the buttons get\nyour preferred background,\notherwise they get their\nparent background.
 ;
-Msg_Title_Frame
+MSG_Title_Frame
 Knopfrahmen
 ; Buttons frame
 ;
-Msg_FrameShinePen
+MSG_FrameShinePen
 Hell
 ; Shine
 ;
-Msg_FrameShinePen_Help
+MSG_FrameShinePen_Help
 Helle Rahmenfarbe aktiver Knöpfe.
 ; Active buttons frame shine pen.
 ;
-Msg_FrameShinePen_Title
+MSG_FrameShinePen_Title
 Helle Rahmenfarbe
 ; Frame shine pen
 ;
-Msg_FrameShadowPen
+MSG_FrameShadowPen
 Schatten
 ; Shadow
 ;
-Msg_FrameShadowPen_Help
+MSG_FrameShadowPen_Help
 Rahmenfarbe für Schatten bei aktiven Knöpfen.
 ; Active buttons frame shadow pen.
 ;
-Msg_FrameShadowPen_Title
+MSG_FrameShadowPen_Title
 Rahmenfarbe für Schatten
 ; Frame shadow pen
 ;
-Msg_FrameStyle_Recessed
+MSG_FrameStyle_Recessed
 Vertieft
 ; Recessed
 ;
-Msg_FrameStyle_Normal
+MSG_FrameStyle_Normal
 Normal
 ; Normal
 ;
-Msg_FrameStyle
+MSG_FrameStyle
 Stil
 ; Style
 ;
-Msg_FrameStyle_Help
+MSG_FrameStyle_Help
 Rahmenstil aktiver Knöpfe.
 ; Active buttons frame style.
 ;
-Msg_Title_Disabled
+MSG_Title_Disabled
 Deaktiverte Knöpfe
 ; Disabled buttons
 ;
-Msg_DisabledBody
+MSG_DisabledBody
 Innen
 ; Body
 ;
-Msg_DisabledBody_Help
+MSG_DisabledBody_Help
 Knopffarbe für deaktivierte Knöpfe. Wird\n\
 als Hauptfarbe im Umrissmodus für deaktivierte\n\
 Knöpfe benutzt, und als Gitterfarbe für\n\
 Knöpfe im Gittermodus.
 ; Disabled buttons body pen. It is used as\nmain pen for disabled buttons in Shape\nmode and as grid pen for disabled\nbuttons in Grid modes.
 ;
-Msg_DisabledBody_Title
+MSG_DisabledBody_Title
 Innenfarbe
 ; Body pen
 ;
-Msg_DisabledShadow
+MSG_DisabledShadow
 Schatten
 ; Shadow
 ;
-Msg_DisabledShadow_Help
+MSG_DisabledShadow_Help
 Schattenfarbe für deaktivierte Knöpfe. Wird\n\
 als zweite Farbe für deaktivierte Knöpfe im\n\
 Umrissmodus benutzt, und als Textfarbe für\n\
 Knöpfe im Gittermodus.
 ; Disabled buttons shadow pen. It is used as\nsecondary pen for disabled buttons in Shape\nmode and as text pen for disabled buttons\nin Grid modes.
 ;
-Msg_DisabledShadow_Title
+MSG_DisabledShadow_Title
 Schattenfarbe
 ; Shadow pen
 ;
-Msg_Title_BarSpacer
+MSG_Title_BarSpacer
 Leistentrenner
 ; Bar spacer
 ;
-Msg_BarSpacerShinePen
+MSG_BarSpacerShinePen
 Hell
 ; Shine
 ;
-Msg_BarSpacerShinePen_Help
+MSG_BarSpacerShinePen_Help
 Helle Leistentrennerfarbe.
 ; Bar spacer shine pen.
 ;
-Msg_BarSpacerShinePen_Title
+MSG_BarSpacerShinePen_Title
 Helle Leistentrennerfarbe
 ; Spacer shine pen
 ;
-Msg_BarSpacerShadowPen
+MSG_BarSpacerShadowPen
 Schatten
 ; Shadow
 ;
-Msg_BarSpacerShadowPen_Help
+MSG_BarSpacerShadowPen_Help
 Schattenfarbe des Leistentrenner.
 ; Bar spacer shadow pen.
 ;
-Msg_BarSpacerShadowPen_Title
+MSG_BarSpacerShadowPen_Title
 Schattenfarbe des Leistentrenner
 ; Spacer shadow pen
 ;
-Msg_Title_BarFrame
+MSG_Title_BarFrame
 Leistenrahmen
 ; Bar frame
 ;
-Msg_BarFrameShine
+MSG_BarFrameShine
 Hell
 ; Shine
 ;
-Msg_BarFrameShine_Help
+MSG_BarFrameShine_Help
 Helle Rahmenfarbe.
 ; Bar frame shine pen.
 ;
-Msg_BarFrameShine_Title
+MSG_BarFrameShine_Title
 Helle Rahmenfarbe
 ; Frame shine pen
 ;
-Msg_BarFrameShadow
+MSG_BarFrameShadow
 Schatten
 ; Shadow
 ;
-Msg_BarFrameShadow_Help
+MSG_BarFrameShadow_Help
 Schattenfarbe für Leistenrahmen.
 ; Bar frame shadow pen.
 ;
-Msg_BarFrameShadow_Title
+MSG_BarFrameShadow_Title
 Schattenfarbe für Leistenrahmen
 ; Frame shadow pen
 ;
-Msg_Title_DragBar
+MSG_Title_DragBar
 Ziehleiste
 ; DragBar
 ;
-Msg_DragBarShine
+MSG_DragBarShine
 Hell
 ; Shine
 ;
-Msg_DragBarShine_Help
+MSG_DragBarShine_Help
 Helle Farbe der Ziehleiste.
 ; DragBar shine pen.
 ;
-Msg_DragBarShine_Title
+MSG_DragBarShine_Title
 Helle Ziehleistenfarbe
 ; DragBar shine pen
 ;
-Msg_DragBarShadow
+MSG_DragBarShadow
 Schatten
 ; Shadow
 ;
-Msg_DragBarShadow_Help
+MSG_DragBarShadow_Help
 Schattenfarbe der Ziehleiste.
 ; DragBar shadow pen.
 ;
-Msg_DragBarShadow_Title
+MSG_DragBarShadow_Title
 Schattenfarbe der Ziehleiste
 ; DragBar shadow pen
 ;
-Msg_DragBarFill
+MSG_DragBarFill
 Füllung
 ; Fill
 ;
-Msg_DragBarFill_Help
+MSG_DragBarFill_Help
 Ziehleistenfüllfarbe.
 ; DragBar fill pen.
 ;
-Msg_DragBarFill_Title
+MSG_DragBarFill_Title
 Ziehleistenfüllfarbe
 ; DragBar fill pen
 ;
-Msg_UseDragBarFill
+MSG_UseDragBarFill
 Benutzen
 ; Use
 ;
-Msg_UseDragBarFill_Help
+MSG_UseDragBarFill_Help
 Wenn gewählt, wird die Ziehleistenfarbe genutzt.
 ; If selected, the dragbar fill\npen is used.
 ;
-Msg_Frame
+MSG_Frame
 Rahmen
 ; Frame
 ;
-Msg_Frame_Help
+MSG_Frame_Help
 Leistenrahmen
 ; Bar frame
 ;
-Msg_Frame_Title
+MSG_Frame_Title
 Leistemrahmen
 ; Bar frame
 ;
-Msg_TextFont
+MSG_TextFont
 Text
 ; Text
 ;
-Msg_TextFont_Help
+MSG_TextFont_Help
 Schrift für reine Textknöpfe.
 ; Text only buttons font.
 ;
-Msg_TextGfxFont
+MSG_TextGfxFont
 TextGfx
 ; TextGfx
 ;
-Msg_TextGfxFont_Help
+MSG_TextGfxFont_Help
 Schrift für Text- und Bilderknöpfe.
 ; Text and image buttons font.
 ;
-Msg_ViewMode
+MSG_ViewMode
 Darstellungsart
 ; View mode
 ;
-Msg_ViewMode_Help
+MSG_ViewMode_Help
 Die Darstellung der Knöpfe einstellen.
 ; Adjust the appearance of the buttons.
 ;
-Msg_Appearance_Text
+MSG_Appearance_Text
 Die Optionen unten werden von TheBar genutzt, und zwar ausschließlich während der Erstellungszeit. D.h., wenn der Programmierer das nicht anders geregelt hat, dann werden sie einfach ignoriert.
 ; The options below are used by TheBar if and only if the\nobject requested for it at creation time. It means that\nif the programmer didn't decide otherwise, they are simply\nignored.
 ;
-Msg_TextGfx
+MSG_TextGfx
 Symbole und Text
 ; Icons and text
 ;
-Msg_Gfx
+MSG_Gfx
 Nur Symbole
 ; Icons only
 ;
-Msg_Text
+MSG_Text
 Nur Text
 ; Text only
 ;
-Msg_Borderless
+MSG_Borderless
 Rahmenlos
 ; Borderless
 ;
-Msg_Borderless_Help
+MSG_Borderless_Help
 Wenn Gewählt, sind die Knöpfe rahmenlos.
 ; If selected, buttons are borderless.
 ;
-Msg_Sunny
+MSG_Sunny
 Markiert
 ; Highlight
 ;
-Msg_Sunny_Help
+MSG_Sunny_Help
 Wenn Gewählt, werden S/W Knöpfe\nfarbig dargestellt, wenn\ndie Maus darüber ist.
 ; If selected, buttons, normally in black\nand white, are colored when the\nmouse is over them.
 ;
-Msg_Raised
+MSG_Raised
 Angehoben
 ; Raised
 ;
-Msg_Raised_Help
+MSG_Raised_Help
 Wenn Gewählt, werden rahmenlose Knöpfe\nmit Rahmen versehen, wenn\ndie Maus darüber ist.
 ; If selected, buttons, normally frameless,\nare framed when the mouse is over them.
 ;
-Msg_Scaled
+MSG_Scaled
 Skaliert
 ; Scaled
 ;
-Msg_Scaled_Help
+MSG_Scaled_Help
 Wenn gewählt, werden die Knöpfe skaliert dargestellt.
 ; If selected, buttons are scaled.
 ;
-Msg_BarSpacer
+MSG_BarSpacer
 Leistentrenner erzwingen
 ; Force Bar spacer
 ;
-Msg_BarSpacer_Help
+MSG_BarSpacer_Help
 Wenn gewählt, wird ein Leistentrenner für alle\n\
 Arten von Zwischenräumen benutzt.
 ; If selected, a bar spacer is used\n\
 ; for all kind of separators.
 ;
-Msg_EnableKeys
+MSG_EnableKeys
 Aktiviere Tastenkürzel
 ; Enable keys
 ;
-Msg_EnableKeys_Help
+MSG_EnableKeys_Help
 Wenn gewählt, werden die Tastenkürzel aktiviert.
 ; If selected, buttons short cuts\nare active.
 ;
-Msg_LabelPos
+MSG_LabelPos
 Beschriftung
 ; Labels at
 ;
-Msg_LabelPos_Help
+MSG_LabelPos_Help
 Stellt die Position des Textes\nSymbole und Textknöpfe ein.
 ; Adjust the position of text in\nIcons and text buttons.
 ;
-Msg_LabelPos_Bottom
+MSG_LabelPos_Bottom
 Unten
 ; Bottom
 ;
-Msg_LabelPos_Top
+MSG_LabelPos_Top
 Oben
 ; Top
 ;
-Msg_LabelPos_Right
+MSG_LabelPos_Right
 Rechts
 ; Right
 ;
-Msg_LabelPos_Left
+MSG_LabelPos_Left
 Links
 ; Left
 ;
-Msg_Title_GroupSpacing
+MSG_Title_GroupSpacing
 Leiste
 ; Bar
 ;
-Msg_HorizGroupSpacing
+MSG_HorizGroupSpacing
 Horizontal
 ; Horiz
 ;
-Msg_HorizGroupSpacing_Help
+MSG_HorizGroupSpacing_Help
 Pixel zwischen zwei Knöpfen in einer Reihe.
 ; Pixels between two buttons in a bar row.
 ;
-Msg_VertGroupSpacing
+MSG_VertGroupSpacing
 Vertikal
 ; Vert
 ;
-Msg_VertGroupSpacing_Help
+MSG_VertGroupSpacing_Help
 Pixel zwischen zwei Knopfreihen.
 ; Pixels between two bar rows.
 ;
-Msg_BarSpacerSpacing
+MSG_BarSpacerSpacing
 Leiste
 ; Bar
 ;
-Msg_BarSpacerSpacing_Help
+MSG_BarSpacerSpacing_Help
 Pixel zwischen einem Leisten-\ntrenner und dem nächsten Objekt.
 ; Pixels between a Bar spacer\nand the previous/next object.
 ;
-Msg_Title_InnerSpacing
+MSG_Title_InnerSpacing
 Knöpfe
 ; Buttons
 ;
-Msg_HorizInnerSpacing
+MSG_HorizInnerSpacing
 Horizontal
 ; Horiz
 ;
-Msg_HorizInnerSpacing_Help
+MSG_HorizInnerSpacing_Help
 Pixel zwischen dem linken/rechten Rahmenrand und dem Knopfinhalt.
 ; Pixels between the left/right frame\nborder and the button contents.
 ;
-Msg_TopInnerSpacing
+MSG_TopInnerSpacing
 Oben
 ; Top
 ;
-Msg_TopInnerSpacing_Help
+MSG_TopInnerSpacing_Help
 Pixel zwischen dem oberen\nRahmenrand und dem Knopfinhalt.
 ; Pixels between the top frame border\nand the button contents.
 ;
-Msg_BottomInnerSpacing
+MSG_BottomInnerSpacing
 Unten
 ; Bottom
 ;
-Msg_BottomInnerSpacing_Help
+MSG_BottomInnerSpacing_Help
 Pixel zwischen dem unteren\nRahmenrand und dem Knopfinhalt.
 ; Pixels between the bottom frame border\nand the button contents.
 ;
-Msg_Title_BarFrameSpacing
+MSG_Title_BarFrameSpacing
 Leistenrahmen
 ; Bar frame
 ;
-Msg_LeftBarFrameSpacing
+MSG_LeftBarFrameSpacing
 Links
 ; Left
 ;
-Msg_LeftBarFrameSpacing_Help
+MSG_LeftBarFrameSpacing_Help
 Pixel zwischen dem linken Rahmenrand und dem Leisteninhalt.
 ; Pixels between the left frame border\nand the bar contents.
 ;
-Msg_RightBarFrameSpacing
+MSG_RightBarFrameSpacing
 Rechts
 ; Right
 ;
-Msg_RightBarFrameSpacing_Help
+MSG_RightBarFrameSpacing_Help
 Pixel zwischen dem rechten\nRahmenrand und dem Leisteninhalt.
 ; Pixels between the right frame border\nand the bar contents.
 ;
-Msg_TopBarFrameSpacing
+MSG_TopBarFrameSpacing
 Oben
 ; Top
 ;
-Msg_TopBarFrameSpacing_Help
+MSG_TopBarFrameSpacing_Help
 Pixel zwischen dem oberen Rahmenrand und dem Leisteninhalt.
 ; Pixels between the top frame border\nand the bar contents.
 ;
-Msg_BottomBarFrameSpacing
+MSG_BottomBarFrameSpacing
 Unten
 ; Bottom
 ;
-Msg_BottomBarFrameSpacing_Help
+MSG_BottomBarFrameSpacing_Help
 Pixel zwischen dem unteren Rahmenrand und dem Leisteninhalt.
 ; Pixels between the bottom frame border\nand the bar contents.
 ;
-Msg_Title_TextGfxSpacing
+MSG_Title_TextGfxSpacing
 Text/Gfx
 ; Text/Gfx
 ;
-Msg_HorizTextGfxSpacing
+MSG_HorizTextGfxSpacing
 Horizontal
 ; Horiz
 ;
-Msg_HorizTextGfxSpacing_Help
+MSG_HorizTextGfxSpacing_Help
 Pixel zwischen einem Bild und der rechten/linken Beschriftung.
 ; Pixels between an image and\nits left/right placed label.
 ;
-Msg_VertTextGfxSpacing
+MSG_VertTextGfxSpacing
 Vertikal
 ; Vert
 ;
-Msg_VertTextGfxSpacing_Help
+MSG_VertTextGfxSpacing_Help
 Pixel zwischen einem Bild und\nder oberen/unteren Beschriftung.
 ; Pixels between an image and\nits bottom/top placed label.
 ;
-Msg_Precision_Gui
+MSG_Precision_Gui
 Schlecht
 ; Bad
 ;
-Msg_Precision_Icon
+MSG_Precision_Icon
 Mittel
 ; Poor
 ;
-Msg_Precision_Image
+MSG_Precision_Image
 Gut
 ; Good
 ;
-Msg_Precision_Exact
+MSG_Precision_Exact
 Beste
 ; Best
 ;
-Msg_Precision
+MSG_Precision
 Qualität
 ; Quality
 ;
-Msg_Precision_Help
+MSG_Precision_Help
 Genauigkeit der darzustellenden Farben.
 ; Precision to use when obtaining pens.
 ;
-Msg_Event_IntuiTicks
+MSG_Event_IntuiTicks
 IntuiTicks
 ; IntuiTicks
 ;
-Msg_Event_MouseMove
+MSG_Event_MouseMove
 Mausbewegung
 ; MouseMove
 ;
-Msg_Event
+MSG_Event
 Ereignis
 ; Event
 ;
-Msg_Event_Help
+MSG_Event_Help
 Wie die Maus über einem Knopf abgefragt werden soll:\n- IntuiTicks: Es wird periodisch abgefragt\n- Mausbewegung: jede Mausbewegung wird abgefragt\n- MausObjekt, wird abgefragt, wenn die\nMaus über \
 einem neuen Objekt ist.
 ; How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move\n- MouseObject, it is verified at when the mouse\nover a new object.
 ;
-Msg_Scale
+MSG_Scale
 Skalierung
 ; Scale
 ;
-Msg_Scale_Help
+MSG_Scale_Help
 Skalierfaktor für Skalierte Bilder.
 ; Scale factor for scaled images.
 ;
-Msg_SpecialSelect
+MSG_SpecialSelect
 Spezielle Auswahl
 ; Special select
 ;
-Msg_SpecialSelect_Help
+MSG_SpecialSelect_Help
 Wenn gewählt, wird der Knopfinhalt bewegt,\nwenn er gewählt oder aktiv ist.
 ; If selected, buttons contents is moved\nwhen they are selected or active.
 ;
-Msg_TextOverUseShine
+MSG_TextOverUseShine
 Spezieller Text
 ; Special text
 ;
-Msg_TextOverUseShine_Help
+MSG_TextOverUseShine_Help
 Wenn gewählt, wird die Knopfbe-\nschriftung in heller Farbe erstellt.
 ; If selected, active buttons labels\nare drawn with the shine pen.
 ;
-Msg_IgnoreSelImages
+MSG_IgnoreSelImages
 Gewählte Bilder ignorieren
 ; Ignore selected images
 ;
-Msg_IgnoreSelImages_Help
+MSG_IgnoreSelImages_Help
 Wenn gewählt, werden gewählte Bilder ignoriert.
 ; If selected, selected images\nare ignored.
 ;
-Msg_IgnoreDisImages
+MSG_IgnoreDisImages
 Bilder für deaktivierten Modus ignorieren
 ; Ignore disabled images
 ;
-Msg_IgnoreDisImages_Help
+MSG_IgnoreDisImages_Help
 Wenn gewählt, werden die Bilder für den\n\
 deaktivierten Modus ignoriert.
 ; If selected, disabled images\nare ignored.
 ;
-Msg_DisMode_Shape
+MSG_DisMode_Shape
 Umriss
 ; Shape
 ;
-Msg_DisMode_Grid
+MSG_DisMode_Grid
 Gitter
 ; Grid
 ;
-Msg_DisMode_FullGrid
+MSG_DisMode_FullGrid
 volles Gitter
 ; Full grid
 ;
-Msg_DisMode
+MSG_DisMode
 Deaktiviert
 ; Disable
 ;
-Msg_DisMode_Help
+MSG_DisMode_Help
 Wie deaktivierte Knöpfe dargestellt werden sollen.
 ; How to render disabled buttons.
 ;
-Msg_DontMove
+MSG_DontMove
 Nicht bewegen
 ; Don't move
 ;
-Msg_DontMove_Help
+MSG_DontMove_Help
 Wenn gewählt, wird der Knopfinhalt\nnicht bewegt, wenn sie aktiv sind.
 ; If selected, the contents of the buttons\nis not moved when they are active.
 ;
-Msg_DisMode_Sunny
+MSG_DisMode_Sunny
 Grau
 ; Grey
 ;
-Msg_NtRaiseActive
+MSG_NtRaiseActive
 Aktive Knöpfe werden nicht angehoben
 ; Don't raise active buttons
 ;
-Msg_NtRaiseActive_Help
+MSG_NtRaiseActive_Help
 Wenn gewählt, werden aktive Knöpfe nicht angehoben.
 ; If selected, active buttons are not raised.
 ;
-Msg_SpacersSize
+MSG_SpacersSize
 Zwischenraumgröße
 ; Spacers size
 ;
-Msg_SpacersSize_Help
+MSG_SpacersSize_Help
 Größe der Zwischenräume.
 ; Size of spacers.
 ;
-Msg_SpacersSize_Quarter
+MSG_SpacersSize_Quarter
 Viertel eines Knopfes
 ; Quarter of a button
 ;
-Msg_SpacersSize_Half
+MSG_SpacersSize_Half
 Hälfte eines Knopfes
 ; Half of a button
 ;
-Msg_SpacersSize_One
+MSG_SpacersSize_One
 Wie Knopf
 ; As a button
 ;
-Msg_Event_MouseObject
+MSG_Event_MouseObject
 Mausobjekt
 ; MouseObject
 ;
-Msg_DisMode_Blend
+MSG_DisMode_Blend
 Angleichen
 ;
-Msg_DisMode_BlendGrey
+MSG_DisMode_BlendGrey
 Angleichen/Grau
 ;
-Msg_Item_Defaults
+MSG_Item_Defaults
 Grundeinstellungen
 ; Reset to defaults
 ;
-Msg_NoMUI20Event_Help
+MSG_NoMUI20Event_Help
 Wie die Maus über einem Knopf abgefragt wird:\n- IntuiTicks: Es wird periodisch abgefragt\n- Mausbewegung: jede Mausbewegung wird abgefragt
 ; How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move
 ;
-Msg_SpacersSize_None
+MSG_SpacersSize_None
 keiner
 ;
-Msg_SpacersSize_OnePoint
+MSG_SpacersSize_OnePoint
 ein Pixel
 ;
-Msg_SpacersSize_TwoPoint
+MSG_SpacersSize_TwoPoint
 zwei Pixer
 ;
 ;
-Msg_Info_Translator
+MSG_Info_Translator
 Deutsch : Jens Maus, Thore Böckelmann, Hans-Jörg Ottinger
 ;
 ;
-Msg_Item_Globals
+MSG_Item_Globals
 Zurücksetzen
 ; Reset to global
 ;
-Msg_Item_LastSaved
+MSG_Item_LastSaved
 Zuletzt gesichertes
 ; Last saved
 ;
-Msg_Item_Restore
+MSG_Item_Restore
 Wiederherstellen
 ; Restore
 ;
-Msg_Pop_OK
+MSG_Pop_OK
 Ok
 ; OK
 ;
-Msg_Pop_OK_Help
+MSG_Pop_OK_Help
 Änderungen annehmen.
 ; Accept changes.
 ;
-Msg_Pop_Cancel
+MSG_Pop_Cancel
 Abbrechen
 ; Cancel
 ;
-Msg_Pop_Cancel_Help
+MSG_Pop_Cancel_Help
 Ohne Änderungen Verlassen.
 ; Exit without changing.
 ;
-Msg_Popback_Pattern
+MSG_Popback_Pattern
 Muster
 ; Pattern
 ;
-Msg_Popback_Color
+MSG_Popback_Color
 Farbe
 ; Color
 ;
-Msg_Popback_Bitmap
+MSG_Popback_Bitmap
 Bitmap
 ; Bitmap
 ;
-Msg_Popback_Gradient
+MSG_Popback_Gradient
 Gradient
 ; Gradient
 ;
-Msg_Popback_HorizGradient
+MSG_Popback_HorizGradient
 Horizontal
 ; Horizontal
 ;
-Msg_Popback_HorizGradientHelp
+MSG_Popback_HorizGradientHelp
 Wenn gewählt, wird ein\nhorizontaler Gradient erstellt.
 ; If selected, you get a\nhorizontal gradient.
 ;
-Msg_Popback_VertGradient
+MSG_Popback_VertGradient
 Vertikal
 ; Vertical
 ;
-Msg_Popback_VertGradientHelp
+MSG_Popback_VertGradientHelp
 Wenn gewählt, wird ein\nvertikaler Gradient erstellt.
 ; If selected, you get a\nvertical gradient.
 ;
-Msg_Popback_From
+MSG_Popback_From
 von Farbe
 ; From color
 ;
-Msg_Popback_To
+MSG_Popback_To
 zu Farbe
 ; To color
 ;
-Msg_Popback_Swap
+MSG_Popback_Swap
 Wechseln
 ; Swap
 ;
-Msg_Popback_SwapHelp
+MSG_Popback_SwapHelp
 Wechselt von/zu Farben.
 ; Swaps from/to colors.
 ;
-Msg_Poppen_MUI
+MSG_Poppen_MUI
 MUI
 ; MUI
 ;
-Msg_Poppen_Colormap
+MSG_Poppen_Colormap
 Farbrad
 ; Colormap
 ;
-Msg_Poppen_RGB
+MSG_Poppen_RGB
 RGB
 ; RGB
 ;
-Msg_Poppen_Shine
+MSG_Poppen_Shine
 Hell
 ; Shine
 ;
-Msg_Poppen_Halfshine
+MSG_Poppen_Halfshine
 Mittelhell
 ; Halfshine
 ;
-Msg_Poppen_Background
+MSG_Poppen_Background
 Hintergrund
 ; Background
 ;
-Msg_Poppen_Halfshadow
+MSG_Poppen_Halfshadow
 Halbschatten
 ; Halfshadow
 ;
-Msg_Poppen_Shadow
+MSG_Poppen_Shadow
 Schatten
 ; Shadow
 ;
-Msg_Poppen_Text
+MSG_Poppen_Text
 Text
 ; Text
 ;
-Msg_Poppen_Fill
+MSG_Poppen_Fill
 Füllen
 ; Fill
 ;
-Msg_Poppen_Mark
+MSG_Poppen_Mark
 Markieren
 ; Mark
 ;
-Msg_Poppen_ColorMapHelp
+MSG_Poppen_ColorMapHelp
 Eine Schirmfarbe wählen.
 ; Select a screen color entry.
 ;
-Msg_ColoradjustRed
+MSG_ColoradjustRed
 Rot
 ; Red
 ;
-Msg_Coloradjust_RedHelp
+MSG_Coloradjust_RedHelp
 Die rote Komponente der Farbe.
 ; The red component of the color.
 ;
-Msg_ColoradjustGreen
+MSG_ColoradjustGreen
 Grün
 ; Green
 ;
-Msg_Coloradjust_GreenHelp
+MSG_Coloradjust_GreenHelp
 Die grüne Komponente der Farbe.
 ; The green component of the color.
 ;
-Msg_ColoradjustBlue
+MSG_ColoradjustBlue
 Blau
 ; Blue
 ;
-Msg_Coloradjust_BlueHelp
+MSG_Coloradjust_BlueHelp
 Die blaue Komponente der Farbe.
 ; The blue component of the color.
 ;
-Msg_Coloradjust_WheelAbbr
+MSG_Coloradjust_WheelAbbr
 GCBMRY
 ; GCBMRY
 ;
-Msg_Coloradjust_WheelHelp
+MSG_Coloradjust_WheelHelp
 Maus bewegen um Farbe zu wählen.
 ; Move the mouse to select a color.
 ;
-Msg_Coloradjust_GradientHelp
+MSG_Coloradjust_GradientHelp
 Die Helligkeit der Farbe.
 ; The brightness of the color.
 ;
-Msg_PrefsShortHelp
+MSG_PrefsShortHelp
 Werkzeugleisten-Klasse der nächsten Generation.
 ; Next generation tool bar class.
 ;

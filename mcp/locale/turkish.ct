@@ -5,43 +5,43 @@
 ;
 ; CATCOMP TheBar.cd CTFILE TheBar.ct
 ;
-Msg_Reg_Colors
+MSG_Reg_Colors
 Renkler
 ; Colors
 ;
-Msg_Reg_Appearance
+MSG_Reg_Appearance
 Görünüm
 ; Appearance
 ;
-Msg_Reg_Spacing
+MSG_Reg_Spacing
 Boþluklar
 ; Spacing
 ;
-Msg_Reg_Options
+MSG_Reg_Options
 Seçenekler
 ; Options
 ;
-Msg_Title_Backgrounds
+MSG_Title_Backgrounds
 Art alanlar
 ; Backgrounds
 ;
-Msg_GroupBackground
+MSG_GroupBackground
 Çubuk
 ; Bar
 ;
-Msg_GroupBackground_Help
+MSG_GroupBackground_Help
 Çubuk art alaný.
 ; Bar background.
 ;
-Msg_GroupBackground_Title
+MSG_GroupBackground_Title
 Çubuk art alaný
 ; Bar background
 ;
-Msg_UseGroupBackground
+MSG_UseGroupBackground
 Etkin
 ; Active
 ;
-Msg_UseGroupBackground_Help
+MSG_UseGroupBackground_Help
 Etkinleþtirildiðinde, çubuk sizin\n\
 tercih ettiðiniz art alana sahip\n\
 olur.\n\
@@ -51,23 +51,23 @@ Aksi durumda alt art alan devralýnýr.
 ; otherwise it gets its\n\
 ; parent background.
 ;
-Msg_ButtonBackground
+MSG_ButtonBackground
 Düðmeler
 ; Buttons
 ;
-Msg_ButtonBackground_Help
+MSG_ButtonBackground_Help
 Etkin düðmenin art alaný.
 ; Active buttons background.
 ;
-Msg_ButtonBackground_Title
+MSG_ButtonBackground_Title
 Etkin düðmenin art alaný
 ; Active buttons background
 ;
-Msg_UseButtonBackground
+MSG_UseButtonBackground
 Etkin
 ; Active
 ;
-Msg_UseButtonBackground_Help
+MSG_UseButtonBackground_Help
 Etkinleþtirildiðinde, düðmeler sizin\n\
 tercih ettiðiniz art alana sahip\n\
 olur.\n\
@@ -77,59 +77,59 @@ Aksi durumda alt art alan devralýnýr.
 ; otherwise they get their\n\
 ; parent background.
 ;
-Msg_Title_Frame
+MSG_Title_Frame
 Düðme çerçevesi
 ; Buttons frame
 ;
-Msg_FrameShinePen
+MSG_FrameShinePen
 Parlayan
 ; Shine
 ;
-Msg_FrameShinePen_Help
+MSG_FrameShinePen_Help
 Etkin düðme çerçevesinin parlayan rengi.
 ; Active buttons frame shine pen.
 ;
-Msg_FrameShinePen_Title
+MSG_FrameShinePen_Title
 Çerçeve parlayan kalemi
 ; Frame shine pen
 ;
-Msg_FrameShadowPen
+MSG_FrameShadowPen
 Gölge
 ; Shadow
 ;
-Msg_FrameShadowPen_Help
+MSG_FrameShadowPen_Help
 Etkin düðme çerçevesinin gölge rengi.
 ; Active buttons frame shadow pen.
 ;
-Msg_FrameShadowPen_Title
+MSG_FrameShadowPen_Title
 Çerçeve gölge kalemi
 ; Frame shadow pen
 ;
-Msg_FrameStyle_Recessed
+MSG_FrameStyle_Recessed
 Girinti
 ; Recessed
 ;
-Msg_FrameStyle_Normal
+MSG_FrameStyle_Normal
 Normal
 ; Normal
 ;
-Msg_FrameStyle
+MSG_FrameStyle
 Þekil
 ; Style
 ;
-Msg_FrameStyle_Help
+MSG_FrameStyle_Help
 Etkin düðmenin çerçeve þekli.
 ; Active buttons frame style.
 ;
-Msg_Title_Disabled
+MSG_Title_Disabled
 Devre dýþý düðmeler
 ; Disabled buttons
 ;
-Msg_DisabledBody
+MSG_DisabledBody
 Gövde
 ; Body
 ;
-Msg_DisabledBody_Help
+MSG_DisabledBody_Help
 Devre dýþý düðmenin gövde kalemi. 'Þekil' kipinde\n\
 devre dýþý düðmenin ana kalemi olarak, 'Kýlavuz'\n\
 kiplerinde ise kýlavuz çizgisi kalemi olarak kullanýlýr.
@@ -138,15 +138,15 @@ kiplerinde ise kýlavuz çizgisi kalemi olarak kullanýlýr.
 ; mode and as grid pen for disabled\n\
 ; buttons in Grid modes.
 ;
-Msg_DisabledBody_Title
+MSG_DisabledBody_Title
 Gövde kalemi
 ; Body pen
 ;
-Msg_DisabledShadow
+MSG_DisabledShadow
 Gölge
 ; Shadow
 ;
-Msg_DisabledShadow_Help
+MSG_DisabledShadow_Help
 Devre dýþý düðmenin gölge kalemi. 'Þekil' kipinde\n\
 devre dýþý düðmenin ikincil kalemi olarak, 'Kýlavuz'\n\
 kiplerinde ise metin kalemi olarak kullanýlýr.
@@ -155,153 +155,153 @@ kiplerinde ise metin kalemi olarak kullanýlýr.
 ; mode and as text pen for disabled buttons\n\
 ; in Grid modes.
 ;
-Msg_DisabledShadow_Title
+MSG_DisabledShadow_Title
 Gölge kalemi
 ; Shadow pen
 ;
-Msg_Title_BarSpacer
+MSG_Title_BarSpacer
 Çubuk ayýracý
 ; Bar spacer
 ;
-Msg_BarSpacerShinePen
+MSG_BarSpacerShinePen
 Parlayan
 ; Shine
 ;
-Msg_BarSpacerShinePen_Help
+MSG_BarSpacerShinePen_Help
 Çubuk ayýracý parlayan rengi.
 ; Bar spacer shine pen.
 ;
-Msg_BarSpacerShinePen_Title
+MSG_BarSpacerShinePen_Title
 Ayýraç parlayan kalemi
 ; Spacer shine pen
 ;
-Msg_BarSpacerShadowPen
+MSG_BarSpacerShadowPen
 Gölge
 ; Shadow
 ;
-Msg_BarSpacerShadowPen_Help
+MSG_BarSpacerShadowPen_Help
 Çubuk ayýracý gölge rengi.
 ; Bar spacer shadow pen.
 ;
-Msg_BarSpacerShadowPen_Title
+MSG_BarSpacerShadowPen_Title
 Ayýraç gölge kalemi
 ; Spacer shadow pen
 ;
-Msg_Title_BarFrame
+MSG_Title_BarFrame
 Çubuk çerçevesi
 ; Bar frame
 ;
-Msg_BarFrameShine
+MSG_BarFrameShine
 Parlayan
 ; Shine
 ;
-Msg_BarFrameShine_Help
+MSG_BarFrameShine_Help
 Çubuk çerçevesi parlayan rengi.
 ; Bar frame shine pen.
 ;
-Msg_BarFrameShine_Title
+MSG_BarFrameShine_Title
 Çerçeve parlayan kalemi
 ; Frame shine pen
 ;
-Msg_BarFrameShadow
+MSG_BarFrameShadow
 Gölge
 ; Shadow
 ;
-Msg_BarFrameShadow_Help
+MSG_BarFrameShadow_Help
 Çubuk çerçevesi gölge rengi.
 ; Bar frame shadow pen.
 ;
-Msg_BarFrameShadow_Title
+MSG_BarFrameShadow_Title
 Çerçeve gölge kalemi
 ; Frame shadow pen
 ;
-Msg_Title_DragBar
+MSG_Title_DragBar
 Sürükleme çubuðu
 ; DragBar
 ;
-Msg_DragBarShine
+MSG_DragBarShine
 Parlayan
 ; Shine
 ;
-Msg_DragBarShine_Help
+MSG_DragBarShine_Help
 Sürükleme çubuðu parlayan rengi.
 ; DragBar shine pen.
 ;
-Msg_DragBarShine_Title
+MSG_DragBarShine_Title
 Sürükleme çubuðu parlayan kalemi
 ; DragBar shine pen
 ;
-Msg_DragBarShadow
+MSG_DragBarShadow
 Gölge
 ; Shadow
 ;
-Msg_DragBarShadow_Help
+MSG_DragBarShadow_Help
 Sürükleme çubuðu gölge rengi.
 ; DragBar shadow pen.
 ;
-Msg_DragBarShadow_Title
+MSG_DragBarShadow_Title
 Sürükleme çubuðu gölge kalemi
 ; DragBar shadow pen
 ;
-Msg_DragBarFill
+MSG_DragBarFill
 Dolgu
 ; Fill
 ;
-Msg_DragBarFill_Help
+MSG_DragBarFill_Help
 Sürükleme çubuðu dolgu rengi.
 ; DragBar fill pen.
 ;
-Msg_DragBarFill_Title
+MSG_DragBarFill_Title
 Sürükleme çubuðu dolgu kalemi
 ; DragBar fill pen
 ;
-Msg_UseDragBarFill
+MSG_UseDragBarFill
 Kullan
 ; Use
 ;
-Msg_UseDragBarFill_Help
+MSG_UseDragBarFill_Help
 Etkinleþtirildiðinde, sürükleme\n\
 çubuðu dolgu kalemi kullanýlýr.
 ; If selected, the dragbar fill\n\
 ; pen is used.
 ;
-Msg_Frame
+MSG_Frame
 Çerçeve
 ; Frame
 ;
-Msg_Frame_Help
+MSG_Frame_Help
 Çubuk çerçevesi
 ; Bar frame
 ;
-Msg_Frame_Title
+MSG_Frame_Title
 Çubuk çerçevesi
 ; Bar frame
 ;
-Msg_TextFont
+MSG_TextFont
 Metin
 ; Text
 ;
-Msg_TextFont_Help
+MSG_TextFont_Help
 Salt metin düðmelerin yazýtipi.
 ; Text only buttons font.
 ;
-Msg_TextGfxFont
+MSG_TextGfxFont
 Metin&Grafik
 ; TextGfx
 ;
-Msg_TextGfxFont_Help
+MSG_TextGfxFont_Help
 Metin ve simge düðmelerin yazýtipi.
 ; Text and image buttons font.
 ;
-Msg_ViewMode
+MSG_ViewMode
 Gösterim kipi
 ; View mode
 ;
-Msg_ViewMode_Help
+MSG_ViewMode_Help
 Düðmelerin görünümünü ayarlayýnýz.
 ; Adjust the appearance of the buttons.
 ;
-Msg_Appearance_Text
+MSG_Appearance_Text
 TheBar aþaðýdaki ayarlarý ancak ve ancak, nesne\n\
 oluþturulurken özel olarak baþvurursa kullanýr.\n\
 Yani, eðer programcý aksine karar vermediyse\n\
@@ -311,31 +311,31 @@ yoksayýlýrlar.
 ; if the programmer didn't decide otherwise, they are simply\n\
 ; ignored.
 ;
-Msg_TextGfx
+MSG_TextGfx
 Simgeler ve metin
 ; Icons and text
 ;
-Msg_Gfx
+MSG_Gfx
 Yalnýca simgeler
 ; Icons only
 ;
-Msg_Text
+MSG_Text
 Yalnýzca metin
 ; Text only
 ;
-Msg_Borderless
+MSG_Borderless
 Kenarlýksýz
 ; Borderless
 ;
-Msg_Borderless_Help
+MSG_Borderless_Help
 Eðer etkinleþtirilirse, düðmeler kenarlýksýz çizilir.
 ; If selected, buttons are borderless.
 ;
-Msg_Sunny
+MSG_Sunny
 Iþýldat
 ; Highlight
 ;
-Msg_Sunny_Help
+MSG_Sunny_Help
 Eðer etkinleþtirlirse, düðmeler normal\n\
 durumda siyah beyaz olur ve fare\n\
 üzerlerine geldiðinde renklenir.
@@ -343,240 +343,240 @@ durumda siyah beyaz olur ve fare\n\
 ; and white, are colored when the\n\
 ; mouse is over them.
 ;
-Msg_Raised
+MSG_Raised
 Kabart
 ; Raised
 ;
-Msg_Raised_Help
+MSG_Raised_Help
 Eðer etkinleþtirilirse, düðmeler çerçevesiz çizilir\n\
 ve sadece fare üzerine geldiðinde çerçevelenir.
 ; If selected, buttons, normally frameless,\n\
 ; are framed when the mouse is over them.
 ;
-Msg_Scaled
+MSG_Scaled
 Ölçekle
 ; Scaled
 ;
-Msg_Scaled_Help
+MSG_Scaled_Help
 Etkinleþtirilirse, düðmeler ölçeklendirilir.
 ; If selected, buttons are scaled.
 ;
-Msg_BarSpacer
+MSG_BarSpacer
 Çubuk ayýraca zorla
 ; Force Bar spacer
 ;
-Msg_BarSpacer_Help
+MSG_BarSpacer_Help
 Etkinleþitirirse, her çeþit ayýracýn\n\
 yerine çubuk ayýraç kullanýlýr.
 ; If selected, a bar spacer is used\n\
 ; for all kind of separators.
 ;
-Msg_EnableKeys
+MSG_EnableKeys
 Tuþlarý etkinleþtir
 ; Enable keys
 ;
-Msg_EnableKeys_Help
+MSG_EnableKeys_Help
 Onaylanýrsa, düðme kýsayol tuþlarý etkinleþir.
 ; If selected, buttons short cuts\n\
 ; are active.
 ;
-Msg_LabelPos
+MSG_LabelPos
 Etiket konumu
 ; Labels at
 ;
-Msg_LabelPos_Help
+MSG_LabelPos_Help
 Ýmge ve metin düðmeleri için\n\
 metin konumunu ayarlayýn.
 ; Adjust the position of text in\n\
 ; Icons and text buttons.
 ;
-Msg_LabelPos_Bottom
+MSG_LabelPos_Bottom
 Aþaðýda
 ; Bottom
 ;
-Msg_LabelPos_Top
+MSG_LabelPos_Top
 Yukarýda
 ; Top
 ;
-Msg_LabelPos_Right
+MSG_LabelPos_Right
 Saðda
 ; Right
 ;
-Msg_LabelPos_Left
+MSG_LabelPos_Left
 Solda
 ; Left
 ;
-Msg_Title_GroupSpacing
+MSG_Title_GroupSpacing
 Çubuk
 ; Bar
 ;
-Msg_HorizGroupSpacing
+MSG_HorizGroupSpacing
 Yatay
 ; Horiz
 ;
-Msg_HorizGroupSpacing_Help
+MSG_HorizGroupSpacing_Help
 Ayný sýradaki düðmeler arasýnda\n\
 boþluk býrakýlacak piksel sayýsý.
 ; Pixels between two buttons in a bar row.
 ;
-Msg_VertGroupSpacing
+MSG_VertGroupSpacing
 Düþey
 ; Vert
 ;
-Msg_VertGroupSpacing_Help
+MSG_VertGroupSpacing_Help
 Ýki düðme sýrasý arasýnda boþluk\n\
 olarak býrakýlacak piksel sayýsý.
 ; Pixels between two bar rows.
 ;
-Msg_BarSpacerSpacing
+MSG_BarSpacerSpacing
 Çubuk
 ; Bar
 ;
-Msg_BarSpacerSpacing_Help
+MSG_BarSpacerSpacing_Help
 Bir çubuk ayýracýnýn öncesinde ve sonrasýndaki\n\
 düðmeler ile arasýnda boþluk býrakýlacak piksel sayýsý.
 ; Pixels between a Bar spacer\n\
 ; and the previous/next object.
 ;
-Msg_Title_InnerSpacing
+MSG_Title_InnerSpacing
 Düðmeler
 ; Buttons
 ;
-Msg_HorizInnerSpacing
+MSG_HorizInnerSpacing
 Yatay
 ; Horiz
 ;
-Msg_HorizInnerSpacing_Help
+MSG_HorizInnerSpacing_Help
 Sol/sað çerçeve kenarlýklarý ile düðmeler\n\
 arasýnda boþluk býrakýlacak piksel sayýsý.
 ; Pixels between the left/right frame\n\
 ; border and the button contents.
 ;
-Msg_TopInnerSpacing
+MSG_TopInnerSpacing
 Üst
 ; Top
 ;
-Msg_TopInnerSpacing_Help
+MSG_TopInnerSpacing_Help
 Üst çerceve kenarý ile düðmeler arasýnda\n\
 boþluk býrakýlacak piksel sayýsý.
 ; Pixels between the top frame border\n\
 ; and the button contents.
 ;
-Msg_BottomInnerSpacing
+MSG_BottomInnerSpacing
 Alt
 ; Bottom
 ;
-Msg_BottomInnerSpacing_Help
+MSG_BottomInnerSpacing_Help
 Alt çerceve kenarý ile düðmeler arasýnda\n\
 boþluk býrakýlacak piksel sayýsý.
 ; Pixels between the bottom frame border\n\
 ; and the button contents.
 ;
-Msg_Title_BarFrameSpacing
+MSG_Title_BarFrameSpacing
 Çubuk çerçevesi
 ; Bar frame
 ;
-Msg_LeftBarFrameSpacing
+MSG_LeftBarFrameSpacing
 Sol
 ; Left
 ;
-Msg_LeftBarFrameSpacing_Help
+MSG_LeftBarFrameSpacing_Help
 Sol çerçeve kenarý ile çubuk içeriði arasýnda\n\
 boþluk býrakýlacak piksel sayýsý.
 ; Pixels between the left frame border\n\
 ; and the bar contents.
 ;
-Msg_RightBarFrameSpacing
+MSG_RightBarFrameSpacing
 Sað
 ; Right
 ;
-Msg_RightBarFrameSpacing_Help
+MSG_RightBarFrameSpacing_Help
 Sað çerçeve kenarý ile çubuk içeriði arasýnda\n\
 boþluk býrakýlacak piksel sayýsý.
 ; Pixels between the right frame border\n\
 ; and the bar contents.
 ;
-Msg_TopBarFrameSpacing
+MSG_TopBarFrameSpacing
 Üst
 ; Top
 ;
-Msg_TopBarFrameSpacing_Help
+MSG_TopBarFrameSpacing_Help
 Üst çerçeve kenarý ile çubuk içeriði arasýnda\n\
 boþluk býrakýlacak piksel sayýsý.
 ; Pixels between the top frame border\n\
 ; and the bar contents.
 ;
-Msg_BottomBarFrameSpacing
+MSG_BottomBarFrameSpacing
 Alt
 ; Bottom
 ;
-Msg_BottomBarFrameSpacing_Help
+MSG_BottomBarFrameSpacing_Help
 Alt çerçeve kenarý ile çubuk içeriði arasýnda\n\
 boþluk býrakýlacak piksel sayýsý.
 ; Pixels between the bottom frame border\n\
 ; and the bar contents.
 ;
-Msg_Title_TextGfxSpacing
+MSG_Title_TextGfxSpacing
 Metin/Ýmge
 ; Text/Gfx
 ;
-Msg_HorizTextGfxSpacing
+MSG_HorizTextGfxSpacing
 Yatay
 ; Horiz
 ;
-Msg_HorizTextGfxSpacing_Help
+MSG_HorizTextGfxSpacing_Help
 Bir simge ile sað/soluna yerleþtirilecek etiket\n\
 arasýnda boþluk býrakýlacak piksel sayýsý.
 ; Pixels between an image and\n\
 ; its left/right placed label.
 ;
-Msg_VertTextGfxSpacing
+MSG_VertTextGfxSpacing
 Dikey
 ; Vert
 ;
-Msg_VertTextGfxSpacing_Help
+MSG_VertTextGfxSpacing_Help
 Bir simge ile alt/üstüne yerleþtirilecek etiket\n\
 arasýnda boþluk býrakýlacak piksel sayýsý.
 ; Pixels between an image and\n\
 ; its bottom/top placed label.
 ;
-Msg_Precision_Gui
+MSG_Precision_Gui
 Kötü
 ; Bad
 ;
-Msg_Precision_Icon
+MSG_Precision_Icon
 Zayýf
 ; Poor
 ;
-Msg_Precision_Image
+MSG_Precision_Image
 Ýyi
 ; Good
 ;
-Msg_Precision_Exact
+MSG_Precision_Exact
 En iyi
 ; Best
 ;
-Msg_Precision
+MSG_Precision
 Kalite
 ; Quality
 ;
-Msg_Precision_Help
+MSG_Precision_Help
 Kalem renkleri seçilirken kullanýlacak hassasiyet.
 ; Precision to use when obtaining pens.
 ;
-Msg_Event_IntuiTicks
+MSG_Event_IntuiTicks
 IntuiTicks
 ; IntuiTicks
 ;
-Msg_Event_MouseMove
+MSG_Event_MouseMove
 Fare hareketi
 ; MouseMove
 ;
-Msg_Event
+MSG_Event
 Olay
 ; Event
 ;
-Msg_Event_Help
+MSG_Event_Help
 Farenin bir düðme üzerinde olduðu nasýl doðrulansýn:\n\
 - IntuiTicks: belli aralýklarla doðrulanýr\n\
 - Fare hareketi: her fare hareketinde doðrulanýr\n\
@@ -588,133 +588,133 @@ geldiðinde onaylanýr.
 ; - MouseObject, it is verified at when the mouse\n\
 ; over a new object
 ;
-Msg_Scale
+MSG_Scale
 Ölçek
 ; Scale
 ;
-Msg_Scale_Help
+MSG_Scale_Help
 Ölçeklendirilmiþ simgeler için ölçek deðeri.
 ; Scale factor for scaled images.
 ;
-Msg_SpecialSelect
+MSG_SpecialSelect
 Özel seçim
 ; Special select
 ;
-Msg_SpecialSelect_Help
+MSG_SpecialSelect_Help
 Onaylanýrsa, düðmeler seçili veya etkin\n\
 olduklarýnda içerikleri hareket ettirilir.
 ; If selected, buttons contents is moved\n\
 ; when they are selected or active.
 ;
-Msg_TextOverUseShine
+MSG_TextOverUseShine
 Özel metin
 ; Special text
 ;
-Msg_TextOverUseShine_Help
+MSG_TextOverUseShine_Help
 Onaylanýrsa, etkin düðme etiketleri\n\
 parlayan kalem ile yazýlýr.
 ; If selected, active buttons labels\n\
 ; are drawn with the shine pen.
 ;
-Msg_IgnoreSelImages
+MSG_IgnoreSelImages
 Seçilmiþ simgelerini yoksay
 ; Ignore selected images
 ;
-Msg_IgnoreSelImages_Help
+MSG_IgnoreSelImages_Help
 Onaylanýrsa, etkin/seçilmiþ\n\
 durum simgeleri yok sayýlýr.
 ; If selected, selected images\n\
 ; are ignored.
 ;
-Msg_IgnoreDisImages
+MSG_IgnoreDisImages
 Devre dýþý simgelerini yoksay
 ; Ignore disabled images
 ;
-Msg_IgnoreDisImages_Help
+MSG_IgnoreDisImages_Help
 Onaylanýrsa, devre dýþý\n\
 simgeleri yok sayýlýr.
 ; If selected, disabled images\n\
 ; are ignored.
 ;
-Msg_DisMode_Shape
+MSG_DisMode_Shape
 Þekil
 ; Shape
 ;
-Msg_DisMode_Grid
+MSG_DisMode_Grid
 Klavuz çizgisi
 ; Grid
 ;
-Msg_DisMode_FullGrid
+MSG_DisMode_FullGrid
 Tam klavuz çizgisi
 ; Full grid
 ;
-Msg_DisMode
+MSG_DisMode
 Devre dýþý
 ; Disable
 ;
-Msg_DisMode_Help
+MSG_DisMode_Help
 Devre dýþý düðmelerin çizilme yöntemi.
 ; How to render disabled buttons.
 ;
-Msg_DontMove
+MSG_DontMove
 Hareketsiz
 ; Don't move
 ;
-Msg_DontMove_Help
+MSG_DontMove_Help
 Onaylanýrsa, düðmelerin içerikleri etkin\n\
 olduklarýnda hareket ettirilmez.
 ; If selected, the contents of the buttons\n\
 ; is not moved when they are active.
 ;
-Msg_DisMode_Sunny
+MSG_DisMode_Sunny
 Gri
 ; Grey
 ;
-Msg_NtRaiseActive
+MSG_NtRaiseActive
 Etkin düðmeleri kabartma
 ; Don't raise active buttons
 ;
-Msg_NtRaiseActive_Help
+MSG_NtRaiseActive_Help
 Onaylandýðýnda, etkin düðmeler kabartýlmaz.
 ; If selected, active buttons are not raised.
 ;
-Msg_SpacersSize
+MSG_SpacersSize
 Ayýracýn büyüklüðü
 ; Spacers size
 ;
-Msg_SpacersSize_Help
+MSG_SpacersSize_Help
 Ayýraçlarýn büyüklüðü.
 ; Size of spacers.
 ;
-Msg_SpacersSize_Quarter
+MSG_SpacersSize_Quarter
 Düðmenin dörtte biri kadar
 ; Quarter of a button
 ;
-Msg_SpacersSize_Half
+MSG_SpacersSize_Half
 Düðmenin yarýsý kadar
 ; Half of a button
 ;
-Msg_SpacersSize_One
+MSG_SpacersSize_One
 Düðme kadar
 ; As a button
 ;
-Msg_Event_MouseObject
+MSG_Event_MouseObject
 Fare Nesne
 ; MouseObject
 ;
-Msg_DisMode_Blend
+MSG_DisMode_Blend
 Karýþtýr
 ; Blend
 ;
-Msg_DisMode_BlendGrey
+MSG_DisMode_BlendGrey
 Gri karýþtýr
 ; Blend grey
 ;
-Msg_Item_Defaults
+MSG_Item_Defaults
 Varsayýlanlara döndür
 ; Reset to defaults
 ;
-Msg_NoMUI20Event_Help
+MSG_NoMUI20Event_Help
 Farenin bir düðme üzerinde olduðu nasýl doðrulansýn:\n\
 - IntuiTicks: belli aralýklarla doðrulanýr\n\
 - Fare hareketi: her fare hareketinde doðrulanýr
@@ -722,189 +722,189 @@ Farenin bir düðme üzerinde olduðu nasýl doðrulansýn:\n\
 ; - IntuiTicks: it is verified periodically\n\
 ; - MouseMove: it is verified at every mouse move
 ;
-Msg_SpacersSize_None
+MSG_SpacersSize_None
 Yok
 ; None
 ;
-Msg_SpacersSize_OnePoint
+MSG_SpacersSize_OnePoint
 Bir piksel
 ; One point
 ;
-Msg_SpacersSize_TwoPoint
+MSG_SpacersSize_TwoPoint
 Ýki piksel
 ; Two points
 ;
 ;
-Msg_Info_Translator
+MSG_Info_Translator
 Türkçe Çeviri : Alper Sönmez
 ;
 ;
-Msg_Item_Globals
+MSG_Item_Globals
 Genele sýfýrla
 ; Reset to global
 ;
-Msg_Item_LastSaved
+MSG_Item_LastSaved
 Son kaydedilmiþ
 ; Last saved
 ;
-Msg_Item_Restore
+MSG_Item_Restore
 Geri al
 ; Restore
 ;
-Msg_Pop_OK
+MSG_Pop_OK
 Tamam
 ; OK
 ;
-Msg_Pop_OK_Help
+MSG_Pop_OK_Help
 Deðiþiklikleri kabul et
 ; Accept changes.
 ;
-Msg_Pop_Cancel
+MSG_Pop_Cancel
 Ýptal
 ; Cancel
 ;
-Msg_Pop_Cancel_Help
+MSG_Pop_Cancel_Help
 Deðiþiklikleri yoksay ve çýk.
 ; Exit without changing.
 ;
-Msg_Popback_Pattern
+MSG_Popback_Pattern
 Desen
 ; Pattern
 ;
-Msg_Popback_Color
+MSG_Popback_Color
 Renk
 ; Color
 ;
-Msg_Popback_Bitmap
+MSG_Popback_Bitmap
 Bitmap
 ; Bitmap
 ;
-Msg_Popback_Gradient
+MSG_Popback_Gradient
 Renk geçiþi
 ; Gradient
 ;
-Msg_Popback_HorizGradient
+MSG_Popback_HorizGradient
 Yatay
 ; Horizontal
 ;
-Msg_Popback_HorizGradientHelp
+MSG_Popback_HorizGradientHelp
 Etkinleþtirilirse, yatay bir\n\
 renk geçiþi elde edersiniz.
 ; If selected, you get a\n\
 ; horizontal gradient.
 ;
-Msg_Popback_VertGradient
+MSG_Popback_VertGradient
 Yatay
 ; Vertical
 ;
-Msg_Popback_VertGradientHelp
+MSG_Popback_VertGradientHelp
 Etkinleþtirilirse, dikey bir\n\
 renk geçiþi elde edersiniz.
 ; If selected, you get a\n\
 ; vertical gradient.
 ;
-Msg_Popback_From
+MSG_Popback_From
 Baþlangýç rengi
 ; From color
 ;
-Msg_Popback_To
+MSG_Popback_To
 Bitiþ rengi
 ; To color
 ;
-Msg_Popback_Swap
+MSG_Popback_Swap
 Deðiþtir
 ; Swap
 ;
-Msg_Popback_SwapHelp
+MSG_Popback_SwapHelp
 Baþlangýç ile bitiþ\n\
 rengini deðiþtirir.
 ; Swaps from/to colors.
 ;
-Msg_Poppen_MUI
+MSG_Poppen_MUI
 MUI
 ; MUI
 ;
-Msg_Poppen_Colormap
+MSG_Poppen_Colormap
 Renk haritasý
 ; Colormap
 ;
-Msg_Poppen_RGB
+MSG_Poppen_RGB
 RGB
 ; RGB
 ;
-Msg_Poppen_Shine
+MSG_Poppen_Shine
 Parlayan
 ; Shine
 ;
-Msg_Poppen_Halfshine
+MSG_Poppen_Halfshine
 Yarý parlak
 ; Halfshine
 ;
-Msg_Poppen_Background
+MSG_Poppen_Background
 Art alan
 ; Background
 ;
-Msg_Poppen_Halfshadow
+MSG_Poppen_Halfshadow
 Yarý gölge
 ; Halfshadow
 ;
-Msg_Poppen_Shadow
+MSG_Poppen_Shadow
 Gölge
 ; Shadow
 ;
-Msg_Poppen_Text
+MSG_Poppen_Text
 Metin
 ; Text
 ;
-Msg_Poppen_Fill
+MSG_Poppen_Fill
 Dolgu
 ; Fill
 ;
-Msg_Poppen_Mark
+MSG_Poppen_Mark
 Ýþaret
 ; Mark
 ;
-Msg_Poppen_ColorMapHelp
+MSG_Poppen_ColorMapHelp
 Bir ekran renk girdisi seçiniz.
 ; Select a screen color entry.
 ;
-Msg_ColoradjustRed
+MSG_ColoradjustRed
 Kýrmýzý
 ; Red
 ;
-Msg_Coloradjust_RedHelp
+MSG_Coloradjust_RedHelp
 Rengin kýrmýzý bileþeni.
 ; The red component of the color.
 ;
-Msg_ColoradjustGreen
+MSG_ColoradjustGreen
 Yeþil
 ; Green
 ;
-Msg_Coloradjust_GreenHelp
+MSG_Coloradjust_GreenHelp
 Rengin yeþil bileþeni.
 ; The green component of the color.
 ;
-Msg_ColoradjustBlue
+MSG_ColoradjustBlue
 Mavi
 ; Blue
 ;
-Msg_Coloradjust_BlueHelp
+MSG_Coloradjust_BlueHelp
 Rengin mavi bileþeni.
 ; The blue component of the color.
 ;
-Msg_Coloradjust_WheelAbbr
+MSG_Coloradjust_WheelAbbr
 GCBMRY
 ; GCBMRY
 ;
-Msg_Coloradjust_WheelHelp
+MSG_Coloradjust_WheelHelp
 Fareyi kullanarak bir renk seçin.
 ; Move the mouse to select a color.
 ;
-Msg_Coloradjust_GradientHelp
+MSG_Coloradjust_GradientHelp
 Rengin parlaklýðý.
 ; The brightness of the color.
 ;
-Msg_PrefsShortHelp
+MSG_PrefsShortHelp
 Yeni nesil araç çubuðu sýnýfý.
 ; Next generation tool bar class.
 ;
