@@ -9,6 +9,8 @@ $URL$
 
   * mcp/locale: added a new header line to the .po files to specify a correct
     name for the generated .catalog file.
+  * mcp/misc: fixed case of catalog identifiers due to the recent change in
+    FlexCat.
 
 2014-02-23 Jens Maus <mail@jens-maus.de>
 

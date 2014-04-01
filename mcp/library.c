@@ -93,71 +93,71 @@ static BOOL nbitmapCanHandleRawData;
 
 static const void *regIDs[] =
 {
-    Msg_Reg_Colors,
-    Msg_Reg_Appearance,
-    Msg_Reg_Spacing,
-    Msg_Reg_Options,
+    MSG_Reg_Colors,
+    MSG_Reg_Appearance,
+    MSG_Reg_Spacing,
+    MSG_Reg_Options,
     NULL
 };
 STRPTR regs[IDSSIZE(regIDs)];
 
 static const void *frameIDs[] =
 {
-    Msg_FrameStyle_Recessed,
-    Msg_FrameStyle_Normal,
+    MSG_FrameStyle_Recessed,
+    MSG_FrameStyle_Normal,
     NULL
 };
 STRPTR frames[IDSSIZE(frameIDs)];
 
 static const void *precisionIDs[] =
 {
-    Msg_Precision_Gui,
-    Msg_Precision_Icon,
-    Msg_Precision_Image,
-    Msg_Precision_Exact,
+    MSG_Precision_Gui,
+    MSG_Precision_Icon,
+    MSG_Precision_Image,
+    MSG_Precision_Exact,
     NULL
 };
 STRPTR precisions[IDSSIZE(precisionIDs)];
 
 static const void *dismodeIDs[] =
 {
-    Msg_DisMode_Shape,
-    Msg_DisMode_Grid,
-    Msg_DisMode_FullGrid,
-    Msg_DisMode_Sunny,
-    Msg_DisMode_Blend,
-    Msg_DisMode_BlendGrey,
+    MSG_DisMode_Shape,
+    MSG_DisMode_Grid,
+    MSG_DisMode_FullGrid,
+    MSG_DisMode_Sunny,
+    MSG_DisMode_Blend,
+    MSG_DisMode_BlendGrey,
     NULL
 };
 STRPTR dismodes[IDSSIZE(dismodeIDs)];
 
 static const void *spacersSizeIDs[] =
 {
-    Msg_SpacersSize_Quarter,
-    Msg_SpacersSize_Half,
-    Msg_SpacersSize_One,
-    Msg_SpacersSize_None,
-    Msg_SpacersSize_OnePoint,
-    Msg_SpacersSize_TwoPoint,
+    MSG_SpacersSize_Quarter,
+    MSG_SpacersSize_Half,
+    MSG_SpacersSize_One,
+    MSG_SpacersSize_None,
+    MSG_SpacersSize_OnePoint,
+    MSG_SpacersSize_TwoPoint,
     NULL
 };
 STRPTR spacersSizes[IDSSIZE(spacersSizeIDs)];
 
 static const void *viewModeIDs[] =
 {
-    Msg_TextGfx,
-    Msg_Gfx,
-    Msg_Text,
+    MSG_TextGfx,
+    MSG_Gfx,
+    MSG_Text,
     NULL
 };
 STRPTR viewModes[IDSSIZE(viewModeIDs)];
 
 static const void *labelPosIDs[] =
 {
-    Msg_LabelPos_Bottom,
-    Msg_LabelPos_Top,
-    Msg_LabelPos_Right,
-    Msg_LabelPos_Left,
+    MSG_LabelPos_Bottom,
+    MSG_LabelPos_Top,
+    MSG_LabelPos_Right,
+    MSG_LabelPos_Left,
     NULL
 };
 STRPTR labelPoss[IDSSIZE(labelPosIDs)];
