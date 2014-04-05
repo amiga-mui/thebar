@@ -54,6 +54,10 @@
 #include <SDI_stdarg.h>
 #include <SDI_hook.h>
 
+#if defined(__amigaos4__)
+#include <hardware/blit.h>
+#endif
+
 #include "debug.h"
 
 /****************************************************************************/
