@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2014-06-10 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: enabled native borderless mode for MUI 3.9.
+
 #### v26.15 RELEASE ###########################################################
 
 2014-04-05 Jens Maus <mail@jens-maus.de>

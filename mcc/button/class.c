@@ -236,10 +236,10 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             isFlagSet(pack.flags, FLG_NoClick) ? TAG_IGNORE : MUIA_CycleChain, TRUE,
             isFlagSet(pack.flags, FLG_NoClick) ? TAG_IGNORE : MUIA_InputMode,  imode,
             MUIA_Font, (pack.vMode==MUIV_TheButton_ViewMode_Text) ? MUIV_Font_Button : MUIV_Font_Tiny,
-            MUIA_Frame, isFlagClear(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIV_Frame_None : MUIV_Frame_Button,
+            MUIA_Frame, isFlagClear(lib_flags, BASEFLG_MUI20) && isFlagSet(pack.flags, FLG_Borderless) ? MUIV_Frame_None : MUIV_Frame_Button,
             isFlagSet(pack.flags, FLG_Borderless) ? TAG_IGNORE : MUIA_Background, MUII_ButtonBack,
-            isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameDynamic : TAG_IGNORE, TRUE,
-            isFlagSet(lib_flags, BASEFLG_MUI4) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameVisible : TAG_IGNORE, FALSE,
+            isFlagSet(lib_flags, BASEFLG_MUI20) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameDynamic : TAG_IGNORE, TRUE,
+            isFlagSet(lib_flags, BASEFLG_MUI20) && isFlagSet(pack.flags, FLG_Borderless) ? MUIA_FrameVisible : TAG_IGNORE, FALSE,
             isFlagSet(lib_flags, BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, isFlagSet(pack.flags, FLG_Borderless),
             MUIA_KnowsDisabled, TRUE,
             TAG_MORE,(IPTR)attrs)))
@@ -593,7 +593,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     sel = TRUE;
                     setidcmp = TRUE;
 
-                    if (isFlagSet(lib_flags,BASEFLG_MUI4) && isFlagSet(data->flags,FLG_Borderless))
+                    if (isFlagSet(lib_flags,BASEFLG_MUI20) && isFlagSet(data->flags,FLG_Borderless))
                     {
                         tag->ti_Tag = TAG_IGNORE;
 
@@ -1068,7 +1068,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         data->eh.ehn_Flags  = MUI_EHF_GUIMODE;
 
         /* Compute frame size */
-        if(isFlagClear(lib_flags, BASEFLG_MUI4) || isFlagClear(data->flags, FLG_Borderless))
+        if(isFlagClear(lib_flags, BASEFLG_MUI20) || isFlagClear(data->flags, FLG_Borderless))
             data->fSize = isFlagSet(_riflags(obj), MUIMRI_THINFRAMES) ? 1 : 2;
         else
             data->fSize = 0;
