@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2014-08-27 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale: added dutch, spanish and russian translations and updated all
+    other translations.
+
 2014-06-10 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/class.c: enabled native borderless mode for MUI 3.9.
