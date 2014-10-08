@@ -3,13 +3,14 @@
 # 
 # version 26
 # Translators:
+# Samir Hawamdeh <s.hawamdeh@teletu.it>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC TheBar\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/thebar-mcc/\n"
 "POT-Creation-Date: 2014-02-23 14:21+0100\n"
-"PO-Revision-Date: 2014-02-23 13:32+0000\n"
-"Last-Translator: damato <mail@jens-maus.de>\n"
+"PO-Revision-Date: 2014-10-08 06:22+0000\n"
+"Last-Translator: Samir Hawamdeh <s.hawamdeh@teletu.it>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/thebar/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -735,7 +736,7 @@ msgstr "Due punti"
 
 msgctxt "MSG_Info_Translator (603//)"
 msgid "<EMPTY>"
-msgstr ""
+msgstr "<VUOTO>"
 
 msgctxt "MSG_Item_Globals (604//)"
 msgid "Reset to global"
