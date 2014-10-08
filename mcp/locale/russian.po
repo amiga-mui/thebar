@@ -3,13 +3,14 @@
 # 
 # version 26
 # Translators:
+# Michael Malyshev, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC TheBar\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/thebar-mcc/\n"
 "POT-Creation-Date: 2014-02-23 14:21+0100\n"
-"PO-Revision-Date: 2014-08-20 08:36+0000\n"
-"Last-Translator: Jens Maus <mail@jens-maus.de>\n"
+"PO-Revision-Date: 2014-08-27 17:28+0000\n"
+"Last-Translator: Michael Malyshev\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/thebar/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,23 +21,23 @@ msgstr ""
 
 msgctxt "MSG_Reg_Colors (1//)"
 msgid "Colors"
-msgstr ""
+msgstr "Цвета"
 
 msgctxt "MSG_Reg_Appearance (2//)"
 msgid "Appearance"
-msgstr ""
+msgstr "Вид"
 
 msgctxt "MSG_Reg_Spacing (3//)"
 msgid "Spacing"
-msgstr ""
+msgstr "Интервал"
 
 msgctxt "MSG_Reg_Options (4//)"
 msgid "Options"
-msgstr ""
+msgstr "Опции"
 
 msgctxt "MSG_Title_Backgrounds (100//)"
 msgid "Backgrounds"
-msgstr ""
+msgstr "Фоны"
 
 msgctxt "MSG_GroupBackground (101//)"
 msgid "Bar"
@@ -52,7 +53,7 @@ msgstr ""
 
 msgctxt "MSG_UseGroupBackground (104//)"
 msgid "Active"
-msgstr ""
+msgstr "Активный"
 
 msgctxt "MSG_UseGroupBackground_Help (105//)"
 msgid ""
@@ -64,7 +65,7 @@ msgstr ""
 
 msgctxt "MSG_ButtonBackground (106//)"
 msgid "Buttons"
-msgstr ""
+msgstr "Кнопки"
 
 msgctxt "MSG_ButtonBackground_Help (107//)"
 msgid "Active buttons background."
@@ -76,7 +77,7 @@ msgstr ""
 
 msgctxt "MSG_UseButtonBackground (109//)"
 msgid "Active"
-msgstr ""
+msgstr "Активный"
 
 msgctxt "MSG_UseButtonBackground_Help (110//)"
 msgid ""
@@ -88,11 +89,11 @@ msgstr ""
 
 msgctxt "MSG_Title_Frame (111//)"
 msgid "Buttons frame"
-msgstr ""
+msgstr "Рамка кнопок"
 
 msgctxt "MSG_FrameShinePen (112//)"
 msgid "Shine"
-msgstr ""
+msgstr "Подсветка"
 
 msgctxt "MSG_FrameShinePen_Help (113//)"
 msgid "Active buttons frame shine pen."
@@ -104,7 +105,7 @@ msgstr ""
 
 msgctxt "MSG_FrameShadowPen (115//)"
 msgid "Shadow"
-msgstr ""
+msgstr "Тень"
 
 msgctxt "MSG_FrameShadowPen_Help (116//)"
 msgid "Active buttons frame shadow pen."
@@ -120,11 +121,11 @@ msgstr ""
 
 msgctxt "MSG_FrameStyle_Normal (119//)"
 msgid "Normal"
-msgstr ""
+msgstr "Обычный"
 
 msgctxt "MSG_FrameStyle (120//)"
 msgid "Style"
-msgstr ""
+msgstr "Стиль"
 
 msgctxt "MSG_FrameStyle_Help (121//)"
 msgid "Active buttons frame style."
@@ -152,7 +153,7 @@ msgstr ""
 
 msgctxt "MSG_DisabledShadow (126//)"
 msgid "Shadow"
-msgstr ""
+msgstr "Тень"
 
 msgctxt "MSG_DisabledShadow_Help (127//)"
 msgid ""
@@ -172,7 +173,7 @@ msgstr ""
 
 msgctxt "MSG_BarSpacerShinePen (130//)"
 msgid "Shine"
-msgstr ""
+msgstr "Подсветка"
 
 msgctxt "MSG_BarSpacerShinePen_Help (131//)"
 msgid "Bar spacer shine pen."
@@ -184,7 +185,7 @@ msgstr ""
 
 msgctxt "MSG_BarSpacerShadowPen (133//)"
 msgid "Shadow"
-msgstr ""
+msgstr "Тень"
 
 msgctxt "MSG_BarSpacerShadowPen_Help (134//)"
 msgid "Bar spacer shadow pen."
@@ -200,7 +201,7 @@ msgstr ""
 
 msgctxt "MSG_BarFrameShine (137//)"
 msgid "Shine"
-msgstr ""
+msgstr "Подсветка"
 
 msgctxt "MSG_BarFrameShine_Help (138//)"
 msgid "Bar frame shine pen."
@@ -212,7 +213,7 @@ msgstr ""
 
 msgctxt "MSG_BarFrameShadow (140//)"
 msgid "Shadow"
-msgstr ""
+msgstr "Тень"
 
 msgctxt "MSG_BarFrameShadow_Help (141//)"
 msgid "Bar frame shadow pen."
@@ -228,7 +229,7 @@ msgstr ""
 
 msgctxt "MSG_DragBarShine (144//)"
 msgid "Shine"
-msgstr ""
+msgstr "Подсветка"
 
 msgctxt "MSG_DragBarShine_Help (145//)"
 msgid "DragBar shine pen."
@@ -240,7 +241,7 @@ msgstr ""
 
 msgctxt "MSG_DragBarShadow (147//)"
 msgid "Shadow"
-msgstr ""
+msgstr "Тень"
 
 msgctxt "MSG_DragBarShadow_Help (148//)"
 msgid "DragBar shadow pen."
@@ -252,7 +253,7 @@ msgstr ""
 
 msgctxt "MSG_DragBarFill (150//)"
 msgid "Fill"
-msgstr ""
+msgstr "Заполнение"
 
 msgctxt "MSG_DragBarFill_Help (151//)"
 msgid "DragBar fill pen."
@@ -264,7 +265,7 @@ msgstr ""
 
 msgctxt "MSG_UseDragBarFill (153//)"
 msgid "Use"
-msgstr ""
+msgstr "Принять"
 
 msgctxt "MSG_UseDragBarFill_Help (154//)"
 msgid ""
@@ -274,7 +275,7 @@ msgstr ""
 
 msgctxt "MSG_Frame (155//)"
 msgid "Frame"
-msgstr ""
+msgstr "Рамка"
 
 msgctxt "MSG_Frame_Help (156//)"
 msgid "Bar frame"
@@ -286,7 +287,7 @@ msgstr ""
 
 msgctxt "MSG_TextFont (200//)"
 msgid "Text"
-msgstr ""
+msgstr "Текст"
 
 msgctxt "MSG_TextFont_Help (201//)"
 msgid "Text only buttons font."
@@ -318,15 +319,15 @@ msgstr ""
 
 msgctxt "MSG_TextGfx (207//)"
 msgid "Icons and text"
-msgstr ""
+msgstr "Иконки и текст"
 
 msgctxt "MSG_Gfx (208//)"
 msgid "Icons only"
-msgstr ""
+msgstr "Только иконки"
 
 msgctxt "MSG_Text (209//)"
 msgid "Text only"
-msgstr ""
+msgstr "Только текст"
 
 msgctxt "MSG_Borderless (210//)"
 msgid "Borderless"
@@ -359,7 +360,7 @@ msgstr ""
 
 msgctxt "MSG_Scaled (216//)"
 msgid "Scaled"
-msgstr ""
+msgstr "Масштабировать"
 
 msgctxt "MSG_Scaled_Help (217//)"
 msgid "If selected, buttons are scaled."
@@ -443,7 +444,7 @@ msgstr ""
 
 msgctxt "MSG_Title_InnerSpacing (307//)"
 msgid "Buttons"
-msgstr ""
+msgstr "Кнопки"
 
 msgctxt "MSG_HorizInnerSpacing (308//)"
 msgid "Horiz"
@@ -642,7 +643,7 @@ msgstr ""
 
 msgctxt "MSG_DisMode_Grid (421//)"
 msgid "Grid"
-msgstr ""
+msgstr "Сетка"
 
 msgctxt "MSG_DisMode_FullGrid (422//)"
 msgid "Full grid"
@@ -668,7 +669,7 @@ msgstr ""
 
 msgctxt "MSG_DisMode_Sunny (427//)"
 msgid "Grey"
-msgstr ""
+msgstr "Серый"
 
 msgctxt "MSG_NtRaiseActive (428//)"
 msgid "Don't raise active buttons"
@@ -751,7 +752,7 @@ msgstr ""
 
 msgctxt "MSG_Pop_OK (700//)"
 msgid "OK"
-msgstr ""
+msgstr "Принять"
 
 msgctxt "MSG_Pop_OK_Help (701//)"
 msgid "Accept changes."
@@ -759,7 +760,7 @@ msgstr ""
 
 msgctxt "MSG_Pop_Cancel (702//)"
 msgid "Cancel"
-msgstr ""
+msgstr "Отменить"
 
 msgctxt "MSG_Pop_Cancel_Help (703//)"
 msgid "Exit without changing."
@@ -771,7 +772,7 @@ msgstr ""
 
 msgctxt "MSG_Popback_Color (711//)"
 msgid "Color"
-msgstr ""
+msgstr "Цвет"
 
 msgctxt "MSG_Popback_Bitmap (712//)"
 msgid "Bitmap"
@@ -819,7 +820,7 @@ msgstr ""
 
 msgctxt "MSG_Poppen_MUI (800//)"
 msgid "MUI"
-msgstr ""
+msgstr "MUI"
 
 msgctxt "MSG_Poppen_Colormap (801//)"
 msgid "Colormap"
@@ -827,11 +828,11 @@ msgstr ""
 
 msgctxt "MSG_Poppen_RGB (802//)"
 msgid "RGB"
-msgstr ""
+msgstr "RGB"
 
 msgctxt "MSG_Poppen_Shine (803//)"
 msgid "Shine"
-msgstr ""
+msgstr "Подсветка"
 
 msgctxt "MSG_Poppen_Halfshine (804//)"
 msgid "Halfshine"
@@ -839,7 +840,7 @@ msgstr ""
 
 msgctxt "MSG_Poppen_Background (805//)"
 msgid "Background"
-msgstr ""
+msgstr "Фон"
 
 msgctxt "MSG_Poppen_Halfshadow (806//)"
 msgid "Halfshadow"
@@ -847,15 +848,15 @@ msgstr ""
 
 msgctxt "MSG_Poppen_Shadow (807//)"
 msgid "Shadow"
-msgstr ""
+msgstr "Тень"
 
 msgctxt "MSG_Poppen_Text (808//)"
 msgid "Text"
-msgstr ""
+msgstr "Текст"
 
 msgctxt "MSG_Poppen_Fill (809//)"
 msgid "Fill"
-msgstr ""
+msgstr "Заливка"
 
 msgctxt "MSG_Poppen_Mark (810//)"
 msgid "Mark"
@@ -867,7 +868,7 @@ msgstr ""
 
 msgctxt "MSG_ColoradjustRed (900//)"
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 msgctxt "MSG_Coloradjust_RedHelp (901//)"
 msgid "The red component of the color."
@@ -875,7 +876,7 @@ msgstr ""
 
 msgctxt "MSG_ColoradjustGreen (902//)"
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
 msgctxt "MSG_Coloradjust_GreenHelp (903//)"
 msgid "The green component of the color."
@@ -883,7 +884,7 @@ msgstr ""
 
 msgctxt "MSG_ColoradjustBlue (904//)"
 msgid "Blue"
-msgstr ""
+msgstr "Синий"
 
 msgctxt "MSG_Coloradjust_BlueHelp (905//)"
 msgid "The blue component of the color."
