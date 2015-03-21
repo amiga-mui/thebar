@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+#### v26.16 RELEASE ###########################################################
+
+2015-03-21 Jens Maus <mail@jens-maus.de>
+
+  * misc: final 26.16 release preparations
+
 2014-08-27 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale: added dutch, spanish and russian translations and updated all

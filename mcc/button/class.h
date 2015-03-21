@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2015 TheBar Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -55,7 +55,8 @@
 #include <SDI_hook.h>
 
 #if defined(__amigaos4__)
-#include <hardware/blit.h>
+#define __USE_CLASSIC_MINTERM__
+#include <graphics/minterm.h>
 #endif
 
 #include "debug.h"
@@ -151,6 +152,7 @@ IPTR xget(Object *obj, const IPTR attr);
 
 /***********************************************************************/
 
+#if !defined(__amigaos4__)
 enum
 {
     MINTERM_ZERO        = 0,
@@ -161,6 +163,7 @@ enum
     MINTERM_NOT_B_AND_C = ANBC | NANBC,
     MINTERM_B_OR_C      = ABC | ABNC | NABC | NABNC | ANBC | NANBC,
 };
+#endif
 
 /****************************************************************************/
 /*
