@@ -3,13 +3,13 @@
 # 
 # version 26
 # Translators:
-# Michael Malyshev, 2014
+# Michael Malyshev, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC TheBar\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/thebar-mcc/\n"
 "POT-Creation-Date: 2014-02-23 14:21+0100\n"
-"PO-Revision-Date: 2014-12-28 11:35+0000\n"
+"PO-Revision-Date: 2015-03-22 12:24+0000\n"
 "Last-Translator: Michael Malyshev\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/thebar/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -639,7 +639,7 @@ msgstr "Если выбрано, игнорируются\nотключенны�
 
 msgctxt "MSG_DisMode_Shape (420//)"
 msgid "Shape"
-msgstr "Форма:"
+msgstr "Форма"
 
 msgctxt "MSG_DisMode_Grid (421//)"
 msgid "Grid"
@@ -651,7 +651,7 @@ msgstr "Полная сетка"
 
 msgctxt "MSG_DisMode (423//)"
 msgid "Disable"
-msgstr "Отключить"
+msgstr "Отключенные"
 
 msgctxt "MSG_DisMode_Help (424//)"
 msgid "How to render disabled buttons."
@@ -669,7 +669,7 @@ msgstr "Если выбрано, содержимое кнопок\nне сдв�
 
 msgctxt "MSG_DisMode_Sunny (427//)"
 msgid "Grey"
-msgstr "Серый"
+msgstr "Серые"
 
 msgctxt "MSG_NtRaiseActive (428//)"
 msgid "Don't raise active buttons"
