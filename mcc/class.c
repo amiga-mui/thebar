@@ -2482,6 +2482,7 @@ static IPTR mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     struct TagItem *tag;
     struct TagItem *tstate;
     ULONG flags = 0, res;
+    BOOL noNotify = FALSE;
 
     ENTER();
 
@@ -2491,6 +2492,11 @@ static IPTR mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
         switch (tag->ti_Tag)
         {
+		    case MUIA_NoNotify:
+		        // remember whether notifications are forbidden
+		        noNotify = tag->ti_Data;
+		        break;
+
             case MUIA_TheBar_Active:
                 if (tidata==data->active) tag->ti_Tag = TAG_IGNORE;
                 else
@@ -2515,14 +2521,14 @@ static IPTR mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                             if isFlagSet(button->flags, BFLG_Sleep)
                                 clearFlag(b->flags, MUIV_TheBar_ButtonFlag_Selected);
                             else
-                                set(button->obj,MUIA_Selected,FALSE);
+                                SetAttrs(button->obj, MUIA_NoNotify, noNotify, MUIA_Selected, FALSE, TAG_DONE);
                         }
                     }
 
                     if isFlagSet(b->flags, BFLG_Sleep)
                         setFlag(b->flags, MUIV_TheBar_ButtonFlag_Selected);
                     else
-                        set(b->obj,MUIA_Selected,TRUE);
+                        SetAttrs(button->obj, MUIA_NoNotify, noNotify, MUIA_Selected, TRUE, TAG_DONE);
                 }
                 break;
 

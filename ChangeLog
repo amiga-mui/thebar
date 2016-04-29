@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2016-04-29 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: remember the state of MUIA_NoNotify and apply it again when
+    modifying MUIA_TheBar_Active. This fixes the unwanted notifications during
+    MUIM_TheBar_NoNotifySetAttr. This closes #3.
+
 #### v26.16 RELEASE ###########################################################
 
 2015-03-21 Jens Maus <mail@jens-maus.de>
