@@ -449,10 +449,9 @@ addRemEventHandler(struct IClass *cl, Object *obj, struct InstData *data)
   {
     ULONG catchableEvents = 0;
 
-    if(isFlagClear(data->flags, FLG_Disabled) &&
-       (((isFlagSet(data->flags, FLG_Raised) || isFlagSet(data->flags, FLG_Sunny)) && isFlagClear(data->flags, FLG_Selected)) || isFlagSet(data->flags2, FLG2_Special)))
+    if(isFlagClear(data->flags, FLG_Disabled))
     {
-      // now we also catch mousemove events
+      // now we also catch mousemove events, regardless of the button style (i.e. raised, sunny, etc)
       catchableEvents |= (isFlagSet(lib_flags, BASEFLG_MUI20) ? IDCMP_MOUSEOBJECT : IDCMP_MOUSEMOVE);
     }
 

@@ -5,6 +5,12 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2016-05-02 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: trigger MUIA_TheButton_MouseOver (and as a consequence
+    MUIA_TheBar_MouseOver as well) for all kinds of button styles, not just for
+    the typical dynamic frame styles (i.e. sunny and raised). This closes #2.
+
 2016-04-29 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: remember the state of MUIA_NoNotify and apply it again when
