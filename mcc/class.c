@@ -2328,13 +2328,6 @@ static IPTR mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             if (isFlagSet(data->flags, FLG_DragBar))
                 set(data->db,MUIA_Group_Horiz,data->cols);
         }
-
-        #if defined(__amigaos3__)
-        // cgx/WritePixelArrayAlpha is available in AfA only
-        if(CyberGfxBase != NULL && CyberGfxBase->lib_Version >= 45 &&
-           PictureDTBase != NULL && PictureDTBase->lib_Version >= 46)
-          data->allowAlphaChannel = TRUE;
-        #endif
     }
 
     RETURN((IPTR)obj);

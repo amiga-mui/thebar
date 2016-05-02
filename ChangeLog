@@ -10,6 +10,9 @@ $URL$
   * mcc/button/class.c: trigger MUIA_TheButton_MouseOver (and as a consequence
     MUIA_TheBar_MouseOver as well) for all kinds of button styles, not just for
     the typical dynamic frame styles (i.e. sunny and raised). This closes #2.
+  * mcc/class.c, mcc/build.c, mcc/button/class.c, mcc/button/build.c: added a
+    custom implementation of WritePixelArrayAlpha() for systems which don't
+    support this function natively (yet). This closes #4.
 
 2016-04-29 Thore Böckelmann <tboeckel@gmx.de>
 

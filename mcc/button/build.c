@@ -437,13 +437,8 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
 /***********************************************************************/
 
-#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
 static UBYTE *
 RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
-#else
-static UBYTE *
-RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, BOOL allowAlphaChannel)
-#endif
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size, maskDone = FALSE;
@@ -542,13 +537,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, BOOL allowAlphaChann
                                 aflag = 1;
                             }
 
-                            #if defined(WITH_ALPHA)
                             if (useAlpha)
                             	hi = *src<0xFF;
-                            #else
-                            if (useAlpha)
-                            	hi = (allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
-                            #endif
                             else
                                 hi = (c & 0x00FFFFFF)==trColor;
 
@@ -633,11 +623,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, BOOL allowAlphaChann
                             aflag = 1;
                         }
 
-                        #if defined(WITH_ALPHA)
-                        if (useAlpha) hi = *src<0xFF;
-                        #else
-                        if (useAlpha) hi = (allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
-                        #endif
+                        if (useAlpha)
+                            hi = *src<0xFF;
                         else
                             hi = (c & 0x00FFFFFF)==trColor;
 
@@ -1093,11 +1080,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         copy.flags = make->flags;
 
         if (isFlagSet(data->image->flags, BRFLG_ARGB))
-        #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
             make->chunky = RGBToRGB(data->image,&copy);
-        #else
-            make->chunky = RGBToRGB(data->image,&copy,data->allowAlphaChannel);
-        #endif
         else
             make->chunky = LUT8ToRGB(data->image,&copy);
 
@@ -1118,11 +1101,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             if((data->simage->data = getSource(data->simage)))
             {
                 if (isFlagSet(data->simage->flags, BRFLG_ARGB))
-                #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                     make->schunky = RGBToRGB(data->simage,&copy);
-                #else
-                    make->schunky = RGBToRGB(data->simage,&copy,data->allowAlphaChannel);
-                #endif
                 else
                     make->schunky = LUT8ToRGB(data->simage,&copy);
 
@@ -1141,11 +1120,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             if((data->dimage->data = getSource(data->dimage)))
             {
                 if (isFlagSet(data->dimage->flags, BRFLG_ARGB))
-                #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                     make->dchunky = RGBToRGB(data->dimage,&copy);
-                #else
-                    make->dchunky = RGBToRGB(data->dimage,&copy,data->allowAlphaChannel);
-                #endif
                 else
                     make->dchunky = LUT8ToRGB(data->dimage,&copy);
 
@@ -1288,11 +1263,7 @@ buildBitMapsCyber(struct InstData *data)
     }
 
     D(DBF_STARTUP, "%lx", isFlagSet(data->image->flags, BRFLG_AlphaMask));
-    #if defined(WITH_ALPHA)
     if (isFlagSet(data->image->flags, BRFLG_AlphaMask))
-    #else
-    if (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask))
-    #endif
     {
         data->nchunky  = make->chunky;
         data->gchunky  = make->gchunky;
@@ -1781,14 +1752,8 @@ freeBitMaps(struct InstData *data)
 {
   ENTER();
 
-  #if defined(WITH_ALPHA)
   if(data->image != NULL &&
      isFlagSet(data->image->flags, BRFLG_AlphaMask))
-  #else
-  if(data->allowAlphaChannel &&
-     data->image != NULL &&
-     isFlagSet(data->image->flags, BRFLG_AlphaMask))
-  #endif
   {
     if(data->nchunky)
       SharedFree(data->nchunky);
@@ -1952,11 +1917,7 @@ build(struct InstData *data)
     {
         if (isFlagSet(data->flags, FLG_Strip))
         {
-            #if defined(WITH_ALPHA)
             if (isFlagSet(data->flags, FLG_CyberDeep))
-            #else
-            if (data->allowAlphaChannel && isFlagSet(data->flags, FLG_CyberDeep))
-            #endif
             {
                 buildBitMapsCyber(data);
                 LEAVE();

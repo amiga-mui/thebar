@@ -122,10 +122,6 @@ struct InstData
     char                           frameSpec[256];
     ULONG                          userFrame;
 
-    #if defined(__amigaos3__)
-    BOOL                           allowAlphaChannel;
-    #endif
-
     ULONG                          flags;
     ULONG                          userFlags;
     ULONG                          flags2;

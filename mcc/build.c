@@ -446,13 +446,8 @@ static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *i
                             aflag = 1;
                         }
 
-                        #if defined(WITH_ALPHA)
                         if (useAlpha)
                             hi = *src<0xFF;
-                        #else
-                        if (useAlpha)
-                            hi = (data->allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
-                        #endif
                         else
                             hi = (c & 0x00FFFFFF)==trColor;
 
@@ -539,13 +534,8 @@ static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *i
                             aflag = 1;
                         }
 
-                        #if defined(WITH_ALPHA)
                         if (useAlpha)
                             hi = *src<0xFF;
-                        #else
-                        if (useAlpha)
-                            hi = (data->allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
-                        #endif
                         else
                             hi = (c & 0x00FFFFFF)==trColor;
 
@@ -1136,11 +1126,7 @@ buildBitMapsCyber(struct InstData *data)
         WaitBlit();
     }
 
-    #if defined(WITH_ALPHA)
     if (isFlagSet(data->image.flags, BRFLG_AlphaMask))
-    #else
-    if (data->allowAlphaChannel && isFlagSet(data->image.flags, BRFLG_AlphaMask))
-    #endif
     {
         data->strip.nchunky  = make->chunky;
         data->strip.gchunky  = make->gchunky;
@@ -1466,11 +1452,7 @@ freeBitMaps(struct InstData *data)
 
     ENTER();
 
-    #if defined(WITH_ALPHA)
     if (isFlagSet(data->image.flags, BRFLG_AlphaMask))
-    #else
-    if (data->allowAlphaChannel && isFlagSet(data->image.flags, BRFLG_AlphaMask))
-    #endif
     {
         if (data->strip.nchunky)
             SharedFree(data->strip.nchunky);

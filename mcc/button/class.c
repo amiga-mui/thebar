@@ -359,13 +359,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         // cleanup the notifyList
         NewList((struct List *)&data->notifyList);
-
-        #if defined(__amigaos3__)
-        // cgx/WritePixelArrayAlpha is available in AfA only
-        if(CyberGfxBase != NULL && CyberGfxBase->lib_Version >= 45 &&
-           PictureDTBase != NULL && PictureDTBase->lib_Version >= 46)
-          data->allowAlphaChannel = TRUE;
-        #endif
     }
 
     RETURN(obj);
@@ -549,7 +542,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                         over = TRUE;
                     }
                     else
-                    	clearFlag(data->flags,FLG_MouseOver);
+                        clearFlag(data->flags,FLG_MouseOver);
 
                     back = TRUE;
                 }
@@ -557,9 +550,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
             case MUIA_Group_Horiz:
                 if (tidata)
-                	setFlag(data->flags, FLG_Horiz);
+                    setFlag(data->flags, FLG_Horiz);
                 else
-                	clearFlag(data->flags, FLG_Horiz);
+                    clearFlag(data->flags, FLG_Horiz);
                 break;
 
             case MUIA_TheButton_Sunny:
@@ -571,9 +564,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 else
                 {
                     if (tidata)
-                    	setFlag(data->flags,FLG_Sunny);
+                        setFlag(data->flags,FLG_Sunny);
                     else
-                    	clearFlag(data->flags,FLG_Sunny);
+                        clearFlag(data->flags,FLG_Sunny);
                 }
                 break;
 
@@ -585,9 +578,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 else
                 {
                     if (tidata)
-                    	setFlag(data->flags,FLG_Selected);
+                        setFlag(data->flags,FLG_Selected);
                     else
-                    	clearFlag(data->flags,FLG_Selected);
+                        clearFlag(data->flags,FLG_Selected);
 
                     sel = TRUE;
                     setidcmp = TRUE;
@@ -614,9 +607,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 else
                 {
                     if (tidata)
-                    	setFlag(data->flags,FLG_Disabled);
+                        setFlag(data->flags,FLG_Disabled);
                     else
-                    	clearFlag(data->flags,FLG_Disabled);
+                        clearFlag(data->flags,FLG_Disabled);
 
                     setidcmp = back = TRUE;
                 }
@@ -630,9 +623,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 else
                 {
                     if (tidata)
-                    	setFlag(data->flags,FLG_ShowMe);
+                        setFlag(data->flags,FLG_ShowMe);
                     else
-                    	clearFlag(data->flags,FLG_ShowMe);
+                        clearFlag(data->flags,FLG_ShowMe);
                 }
                 break;
 
@@ -642,9 +635,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
             case MUIA_TheButton_Quiet:
                 if (tidata)
-                	setFlag(data->flags,FLG_NoNotify);
+                    setFlag(data->flags,FLG_NoNotify);
                 else
-                	clearFlag(data->flags,FLG_NoNotify);
+                    clearFlag(data->flags,FLG_NoNotify);
                 break;
 
             case MUIA_TheButton_Raised:
@@ -656,9 +649,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 else
                 {
                     if (tidata)
-                    	setFlag(data->flags,FLG_Raised);
+                        setFlag(data->flags,FLG_Raised);
                     else
-                    	clearFlag(data->flags,FLG_Raised);
+                        clearFlag(data->flags,FLG_Raised);
                     setidcmp = TRUE;
                 }
                 break;
@@ -670,7 +663,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     tag->ti_Tag = TAG_IGNORE;
                 }
                 else
-                	data->vMode = tidata;
+                    data->vMode = tidata;
                 break;
 
             case MUIA_TheButton_Scaled:
@@ -682,9 +675,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 else
                 {
                     if (tidata)
-                    	setFlag(data->flags,FLG_Scaled);
+                        setFlag(data->flags,FLG_Scaled);
                     else
-                    	clearFlag(data->flags,FLG_Scaled);
+                        clearFlag(data->flags,FLG_Scaled);
                 }
                 break;
 
@@ -695,7 +688,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     tag->ti_Tag = TAG_IGNORE;
                 }
                 else
-                	data->lPos = tidata;
+                    data->lPos = tidata;
                 break;
 
             case MUIA_TheButton_EnableKey:
@@ -710,7 +703,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     {
                         setFlag(data->flags, FLG_EnableKey);
                         if (data->cchar)
-                        	superset(cl,obj,MUIA_ControlChar,ToLower(data->cchar));
+                            superset(cl,obj,MUIA_ControlChar,ToLower(data->cchar));
                     }
                     else
                     {
@@ -727,7 +720,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     addRemEventHandler(cl,obj,data);
                 }
                 else
-                	clearFlag(data->flags2,FLG2_Limbo);
+                    clearFlag(data->flags2,FLG2_Limbo);
                 break;
 
             case MUIA_TheButton_NtRaiseActive:
@@ -739,9 +732,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 else
                 {
                     if (tidata)
-                    	setFlag(data->userFlags,UFLG_NtRaiseActive);
+                        setFlag(data->userFlags,UFLG_NtRaiseActive);
                     else
-                    	clearFlag(data->userFlags,UFLG_NtRaiseActive);
+                        clearFlag(data->userFlags,UFLG_NtRaiseActive);
                     setidcmp = TRUE;
                 }
                 break;
@@ -1323,12 +1316,12 @@ drawText(struct InstData *data,struct RastPort *rp)
 
             ux = x-data->eInfo.te_Width;
             uy = y;
-			switch (rp->TxHeight - rp->TxBaseline)
-			{
-				case 1 : break;
-				case 2 : uy += 1; break;
-				default: uy += 2; break;
-			}
+            switch (rp->TxHeight - rp->TxBaseline)
+            {
+                case 1 : break;
+                case 2 : uy += 1; break;
+                default: uy += 2; break;
+            }
 
             Move(rp,ux,uy);
             Draw(rp,ux+data->ccInfo.te_Extent.MaxX,uy);
@@ -1338,6 +1331,90 @@ drawText(struct InstData *data,struct RastPort *rp)
 
     LEAVE();
 }
+
+/***********************************************************************/
+
+#if !defined(__amigaos4__)
+static LONG do_alpha(LONG a, LONG v)
+{
+    LONG tmp  = (a*v);
+    return ((tmp<<8) + tmp + 32768)>>16;
+}
+
+ULONG _WritePixelArrayAlpha(APTR src, ULONG srcx, ULONG srcy, ULONG srcmod, struct RastPort *rp, ULONG destx, ULONG desty, ULONG width, ULONG height, ULONG globalalpha)
+{
+    // WritePixelArrayAlpha is available with cybergraphics.library V45.0+
+    if(CyberGfxBase->lib_Version >= 45)
+    {
+        return WritePixelArrayAlpha(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha);
+    }
+    else
+    {
+        ULONG pixels = 0;
+
+        if(width > 0 && height > 0)
+        {
+            ULONG *buf;
+
+            if((buf = AllocVec(width * height * 4, MEMF_ANY)) != NULL)
+            {
+                ULONG x, y;
+                ULONG *spix;
+                ULONG *dpix = buf;
+
+                ReadPixelArray(buf, 0, 0, width * 4, rp, destx, desty, width, height, RECTFMT_ARGB);
+
+                // Incorrect but cant bother with alpha channel math for now
+                globalalpha = 255 - (globalalpha >> 24);
+
+                for(y = 0; y < height; y++)
+                {
+                    spix = (ULONG *)((char *)src + (srcy + y) * srcmod + srcx * 4);
+
+                    for(x = 0; x < width; x++)
+                    {
+                        ULONG srcpix, r, g, b;
+                        LONG a;
+
+                        srcpix = *spix++;
+
+                        a = (srcpix >> 24) & 0xff;
+                        r = (srcpix >> 16) & 0xff;
+                        g = (srcpix >> 8) & 0xff;
+                        b = (srcpix >> 0) & 0xff;
+
+                        a = a - globalalpha;
+
+                        if(a > 0)
+                        {
+                            ULONG dstpix, dest_r, dest_g, dest_b;
+
+                            dstpix = *dpix;
+
+                            dest_r = (dstpix >> 16) & 0xff;
+                            dest_g = (dstpix >> 8) & 0xff;
+                            dest_b = (dstpix >> 0) & 0xff;
+
+                            dest_r += do_alpha(a, r - dest_r);
+                            dest_g += do_alpha(a, g - dest_g);
+                            dest_b += do_alpha(a, b - dest_b);
+
+                            *dpix = 0xff000000 | dest_r << 16 | dest_g << 8 | dest_b;
+                        }
+
+                        dpix++;
+                    }
+                }
+                WritePixelArray(buf, 0, 0, width * 4, rp, destx, desty, width, height, RECTFMT_ARGB);
+                FreeVec(buf);
+                pixels = width * height;
+            }
+        }
+
+        return pixels;
+    }
+}
+#endif // !__amigaos4__
 
 /***********************************************************************/
 
@@ -1493,11 +1570,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 APTR          mask = NULL;
                 UWORD         x = 0, y = 0;
                 UBYTE           *chunky = NULL;
-                #if defined(WITH_ALPHA)
                 BOOL            useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
-                #else
-                BOOL            useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
-                #endif
 
                 if ((disMode==MUIV_TheButton_DisMode_Blend) || (disMode==MUIV_TheButton_DisMode_BlendGrey))
                 {
@@ -1678,7 +1751,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                       if(isFlagSet(data->image->flags, BRFLG_EmptyAlpha))
                         WritePixelArray(chunky,x,y, isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
                       else
-                        WritePixelArrayAlpha(chunky,x,y, isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,
+                        _WritePixelArrayAlpha(chunky,x,y, isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,
                             ((disMode==MUIV_TheButton_DisMode_Blend) || (disMode==MUIV_TheButton_DisMode_BlendGrey)) ? 0x4fffffff : 0xffffffff);
 
                       #endif
@@ -1796,11 +1869,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 APTR          mask;
                 UWORD         x = 0, y = 0;
                 UBYTE         *chunky = NULL;
-                #if defined(WITH_ALPHA)
                 ULONG         useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
-                #else
-                ULONG         useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
-                #endif
 
                 if (strip)
                 {
@@ -2058,7 +2127,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                             if (isFlagSet(data->image->flags, BRFLG_EmptyAlpha))
                                 WritePixelArray(chunky,x,y,isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
                             else
-                                WritePixelArrayAlpha(chunky,x,y,isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,0xffffffff);
+                                _WritePixelArrayAlpha(chunky,x,y,isFlagSet(data->flags, FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,0xffffffff);
                             #endif
                         }
                         else

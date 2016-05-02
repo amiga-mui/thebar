@@ -100,11 +100,6 @@ enum
 ** Macros
 */
 
-/* these systems are able to handle alpha channel information */
-#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-    #define WITH_ALPHA 1
-#endif
-
 #define _riflags(obj) (muiRenderInfo(obj)->mri_Flags)
 
 #define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
