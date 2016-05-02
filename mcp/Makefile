@@ -383,10 +383,6 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
-$(LOCALE)/%.catalog: $(LOCALE)/%.ct $(LOCALE)/TheBar_mcp.cd
-	@echo "  MK $@"
-	@$(FC) $(LOCALE)/TheBar_mcp.cd $< CATALOG $@
-
 # for linking the target
 $(TARGET): $(M68KSTUBS) $(OBJS)
 	@echo "  LD $@.debug"
@@ -413,7 +409,7 @@ locale.c: $(LOCALE)/TheBar_mcp.pot C_h.sd C_c.sd
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.po
 	@echo "  FC $@"
-	@$(FC) POFILE $< CATALOG $@
+	@$(FC) REVISION $(shell git rev-list --all --count $<) POFILE $< CATALOG $@
 
 .IGNORE: $(CATALOGS)
 

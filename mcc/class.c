@@ -2528,7 +2528,7 @@ static IPTR mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     if isFlagSet(b->flags, BFLG_Sleep)
                         setFlag(b->flags, MUIV_TheBar_ButtonFlag_Selected);
                     else
-                        SetAttrs(button->obj, MUIA_NoNotify, noNotify, MUIA_Selected, TRUE, TAG_DONE);
+                        SetAttrs(b->obj, MUIA_NoNotify, noNotify, MUIA_Selected, TRUE, TAG_DONE);
                 }
                 break;
 
