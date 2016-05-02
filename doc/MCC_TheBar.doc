@@ -1150,6 +1150,10 @@ TheBar.mcc/MUIA_TheBar_MouseOver
      this attribute contains the id of the last button
      where the mouse was over.
 
+     Starting with TheBar 26.17 this attribute will be
+     triggered for all kinds of button styles, no just
+     raised or sunny.
+
 TheBar.mcc/MUIA_TheBar_NtRaiseActive
 
     NAME
