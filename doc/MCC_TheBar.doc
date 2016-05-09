@@ -25,6 +25,7 @@ TheBar.mcc/MUIA_TheBar_FreeHoriz
 TheBar.mcc/MUIA_TheBar_FreeVert
 TheBar.mcc/MUIA_TheBar_HorizSpacing
 TheBar.mcc/MUIA_TheBar_HorizTextGfxSpacing
+TheBar.mcc/MUIA_TheBar_HoveredButton
 TheBar.mcc/MUIA_TheBar_IgnoreAppearance
 TheBar.mcc/MUIA_TheBar_IgnoreDisImages
 TheBar.mcc/MUIA_TheBar_IgnoreSelImages
@@ -840,6 +841,19 @@ TheBar.mcc/MUIA_TheBar_HorizTextGfxSpacing
     SEE ALSO
      MUIA_TheBar_HorizSpacing
      MUIA_TheBar_HorizInnerSpacing
+
+TheBar.mcc/MUIA_TheBar_HoveredButton
+
+    NAME
+     MUIA_TheBar_HoveredButton -- LONG, [..GN], v26
+
+    FUNCTION
+     Return the ID of the button currenly hovered by the mouse
+     or -1 if no button is hovered. All buttons will be respected,
+     even disabled ones.
+
+    NOTE
+     This attribute is available since TheBar V26.17.
 
 TheBar.mcc/MUIA_TheBar_IgnoreAppearance
 

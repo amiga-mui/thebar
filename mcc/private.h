@@ -128,6 +128,8 @@ struct InstData
     ULONG                          userFlags2;
 
     struct MUI_EventHandlerNode    eh;
+
+    LONG                           hoverID;
 };
 
 /* flags */

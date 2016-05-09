@@ -2128,6 +2128,7 @@ static IPTR mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
         data->userFrame = pt.userFrame;
         #endif
+        data->hoverID   = -1;
 
         if (isFlagSet(data->flags, FLG_FreeStrip))
         {
@@ -2401,6 +2402,7 @@ static IPTR mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_TheBar_IgnoreAppearance: *msg->opg_Storage = isFlagSet(data->flags2, FLG2_IgnoreAppearance) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_DisMode:          *msg->opg_Storage = data->disMode; result=TRUE; break;
     case MUIA_TheBar_NtRaiseActive:    *msg->opg_Storage = isFlagSet(data->userFlags2, UFLG2_NtRaiseActive) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheBar_HoveredButton:    *msg->opg_Storage = data->hoverID; result=TRUE; break;
 
     case MUIA_Group_Horiz:             *msg->opg_Storage = isFlagSet(data->flags, FLG_Horiz) ? TRUE : FALSE; result=TRUE; break;
 
@@ -3208,14 +3210,13 @@ static IPTR mSetup(struct IClass *cl,Object *obj,Msg msg)
                 DoMethod(button->obj,MUIM_TheButton_Build);
     }
 
-    if (isFlagClear(lib_flags,BASEFLG_MUI20))
-    {
-        memset(&data->eh,0,sizeof(data->eh));
-        data->eh.ehn_Class  = cl;
-        data->eh.ehn_Object = obj;
-        data->eh.ehn_Events = IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW;
-        DoMethod(_win(obj),MUIM_Window_AddEventHandler,(IPTR)&data->eh);
-    }
+    // catch MOUSEMOVE events for all MUI versions
+    // catch (IN)ACTIVEWINDOW events for MUI 3.8 only
+    memset(&data->eh, 0, sizeof(data->eh));
+    data->eh.ehn_Class  = cl;
+    data->eh.ehn_Object = obj;
+    data->eh.ehn_Events = IDCMP_MOUSEMOVE | (isFlagClear(lib_flags,BASEFLG_MUI20) ? IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW : 0);
+    DoMethod(_win(obj), MUIM_Window_AddEventHandler, (IPTR)&data->eh);
 
     #if defined(VIRTUAL)
     setFlag(data->flags, FLG_IsInVirtgroup);
@@ -3242,18 +3243,17 @@ static IPTR mSetup(struct IClass *cl,Object *obj,Msg msg)
 /***********************************************************************/
 
 static IPTR
-mCleanup(struct IClass *cl,Object *obj,Msg msg)
+mCleanup(struct IClass *cl, Object *obj, Msg msg)
 {
   struct InstData *data = INST_DATA(cl, obj);
   IPTR result = 0;
 
   ENTER();
 
-  if(isFlagClear(lib_flags,BASEFLG_MUI4) && isFlagSet(data->flags, FLG_Framed))
-    freeFramePens(obj,data);
+  if(isFlagClear(lib_flags, BASEFLG_MUI4) && isFlagSet(data->flags, FLG_Framed))
+    freeFramePens(obj, data);
 
-  if (isFlagClear(lib_flags,BASEFLG_MUI20))
-    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
+  DoMethod(_win(obj), MUIM_Window_RemEventHandler, (IPTR)&data->eh);
 
   if (isFlagSet(data->flags, FLG_FreeStrip))
     freeBitMaps(data);
@@ -3261,7 +3261,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
   clearFlag(data->flags, FLG_Setup|FLG_CyberMap|FLG_CyberDeep|FLG_IsInVirtgroup);
   clearFlag(data->flags2, FLG2_Gradient);
 
-  result = DoSuperMethodA(cl,obj,msg);
+  result = DoSuperMethodA(cl, obj, msg);
 
   RETURN(result);
   return result;
@@ -4590,34 +4590,81 @@ static IPTR mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDr
 
 /***********************************************************************/
 
+#define BETWEEN(a, v, b) ((v) >= (a) && (v) <= (b))
 
-static IPTR mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg)
+static BOOL IsPointInObject(Object *obj, LONG x, LONG y)
 {
-    if (isFlagClear(lib_flags,BASEFLG_MUI20))
-    {
-        struct InstData *data = INST_DATA(cl, obj);
-        struct Button *button, *succ;
+    BOOL inObj;
 
-        ENTER();
+    ENTER();
 
-        for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
-        {
-            if (isFlagSet(button->flags, BFLG_Sleep))
-                continue;
-
-            set(button->obj,MUIA_TheButton_MouseOver,FALSE);
-        }
-
-        RETURN(0);
-        return 0;
-    }
+    if(BETWEEN(_left(obj), x, _right(obj)) && BETWEEN(_top(obj), y, _bottom(obj)))
+        inObj = TRUE;
     else
-    {
-        ULONG res = DoSuperMethodA(cl,obj,(Msg)msg);
+        inObj = FALSE;
 
-        RETURN(res);
-        return res;
+    RETURN(inObj);
+    return inObj;
+}
+
+static IPTR mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
+{
+    struct InstData *data = INST_DATA(cl, obj);
+    ULONG res;
+
+    ENTER();
+
+    if(msg->imsg != NULL)
+    {
+	    switch(msg->imsg->Class)
+	    {
+		    case IDCMP_ACTIVEWINDOW:
+		    case IDCMP_INACTIVEWINDOW:
+		    {
+                struct Button *button, *succ;
+
+                for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
+                {
+                    if(isFlagSet(button->flags, BFLG_Sleep))
+                        continue;
+
+                    set(button->obj, MUIA_TheButton_MouseOver, FALSE);
+                }
+            }
+            break;
+
+            case IDCMP_MOUSEMOVE:
+            {
+			    LONG hoverID = -1;
+
+                if(IsPointInObject(obj, msg->imsg->MouseX, msg->imsg->MouseY) == TRUE)
+                {
+                    struct Button *button, *succ;
+
+                    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
+                    {
+                        if(IsPointInObject(button->obj, msg->imsg->MouseX, msg->imsg->MouseY) == TRUE)
+                        {
+                            hoverID = button->ID;
+                            break;
+    					}
+                    }
+                }
+
+                if(hoverID != data->hoverID)
+                {
+					data->hoverID = hoverID;
+                    set(obj, MUIA_TheBar_HoveredButton, hoverID);
+				}
+			}
+			break;
+        }
     }
+
+    res = 0;
+
+    RETURN(res);
+    return res;
 }
 
 

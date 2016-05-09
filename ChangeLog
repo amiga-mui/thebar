@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id$
 $URL$
 
+2016-05-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: implemented new attribute MUIA_TheBar_HoveredButton to get
+    notified about the currently hovered button. This closes #2 again.
+
 2016-05-02 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/button/class.c: trigger MUIA_TheButton_MouseOver (and as a consequence
