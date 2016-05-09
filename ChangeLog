@@ -2,9 +2,6 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id$
-$URL$
-
 2016-05-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: implemented new attribute MUIA_TheBar_HoveredButton to get
