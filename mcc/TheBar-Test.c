@@ -39,7 +39,6 @@ struct Library *IntuitionBase = NULL;
 struct Library *MUIMasterBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
-struct Library *PictureDTBase = NULL;
 
 struct GraphicsIFace *IGraphics = NULL;
 struct IntuitionIFace *IIntuition = NULL;
@@ -53,7 +52,6 @@ struct Library *MUIMasterBase = NULL;
 struct Library *UtilityBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
-struct Library *PictureDTBase = NULL;
 #else
 struct GfxBase *GfxBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
@@ -65,7 +63,6 @@ struct Library *UtilityBase = NULL;
 #endif
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
-struct Library *PictureDTBase = NULL;
 #endif
 
 DISPATCHERPROTO(_Dispatcher);
@@ -137,7 +134,7 @@ ULONG initAll(void)
 		#ifndef __amigaos4__
         (UtilityBase = (APTR)OpenLibrary("utility.library", 38)) &&
         GETINTERFACE(IUtility, UtilityBase) &&
-		#endif        
+		#endif
 		(DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
         GETINTERFACE(IDataTypes, DataTypesBase) &&
         (MUIMasterBase = OpenLibrary("muimaster.library", 19/*MUIMASTER_VMIN*/)) &&
@@ -152,21 +149,6 @@ ULONG initAll(void)
         {
             CloseLibrary(CyberGfxBase);
             CyberGfxBase = NULL;
-        }
-        #endif
-
-        PictureDTBase = OpenLibrary("picture.datatype",0);
-        #if !defined(__amigaos4__) && !defined(__AROS__)
-        if (PictureDTBase)
-        {
-            if (FindResident("MorphOS"))
-            {
-                if ((PictureDTBase->lib_Version<50) ||
-                    (PictureDTBase->lib_Version==50 && PictureDTBase->lib_Revision<17))
-                {
-                    setFlag(lib_flags,BASEFLG_BROKENMOSPDT);
-                }
-            }
         }
         #endif
 

@@ -79,7 +79,6 @@ extern struct Library         *MUIMasterBase;
 
 extern struct Library         *DataTypesBase;
 extern struct Library         *CyberGfxBase;
-extern struct Library         *PictureDTBase;
 
 extern struct MUI_CustomClass *lib_thisClass;
 extern struct MUI_CustomClass *lib_spacerClass;
@@ -92,7 +91,6 @@ enum
   BASEFLG_Init         = 1<<0,
   BASEFLG_MUI20        = 1<<1,
   BASEFLG_MUI4         = 1<<2,
-  BASEFLG_BROKENMOSPDT = 1<<3,
 };
 
 /***************************************************************************/

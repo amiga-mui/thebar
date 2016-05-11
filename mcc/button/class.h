@@ -87,7 +87,6 @@ extern struct Library          *MUIMasterBase;
 extern struct Library          *DataTypesBase;
 extern struct Library          *CyberGfxBase;
 extern struct Library          *DiskfontBase;
-extern struct Library          *PictureDTBase;
 
 extern struct SignalSemaphore  lib_poolSem;
 extern APTR                    lib_pool;

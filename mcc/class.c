@@ -1211,12 +1211,6 @@ static BOOL loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                 {
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
 
-                  #if defined(__MORPHOS__)
-                  // ignore the return code for mos broken pdt
-                  if (isFlagSet(lib_flags,BASEFLG_BROKENMOSPDT))
-                    res = TRUE;
-                  #endif
-
                   #if defined(__AROS__)
                   // ignore the return code for AROS
                   res = TRUE;
