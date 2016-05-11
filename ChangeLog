@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2016-05-10 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/library.c: removed artificial limitation of blending modes for the
+    AmigaOS3 build.
+
 2016-05-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/class.c: implemented new attribute MUIA_TheBar_HoveredButton to get

@@ -288,10 +288,6 @@ static BOOL ClassInit(UNUSED struct Library *base)
       LocalizeArray(viewModes,viewModeIDs);
       LocalizeArray(labelPoss,labelPosIDs);
 
-      #if defined(__amigaos3__)
-      dismodes[4] = NULL;
-      #endif
-
       // we open the cybgraphics.library but without failing if
       // it doesn't exist
       #if !defined(__amigaos4__)
