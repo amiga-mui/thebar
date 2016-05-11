@@ -109,7 +109,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
         #endif
 
         PictureDTBase = OpenLibrary("picture.datatype",0);
-        #if !defined(__MORPHOS__)
+        #if defined(__MORPHOS__)
         if (PictureDTBase)
         {
             if (FindResident("MorphOS"))
