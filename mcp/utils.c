@@ -272,7 +272,7 @@ opopframe(const void *key, const void *title, const void *help)
 
 /***********************************************************************/
 
-#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+#if defined(__amigaos3__)
 void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad)
 {
     struct RastPort *rp;

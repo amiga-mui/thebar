@@ -1074,7 +1074,7 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
             set(data->disShadowPen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_DisShadowPen);
             set(data->barSpacerShinePen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarSpacerShinePen);
             set(data->barSpacerShadowPen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarSpacerShadowPen);
-            #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+            #if defined(__amigaos3__)
             set(data->barFrameShinePen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarFrameShinePen);
             set(data->barFrameShadowPen,MUIA_Pendisplay_Spec,MUIDEF_TheBar_BarFrameShadowPen);
             #endif
@@ -1101,7 +1101,7 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
             set(data->horizInnerSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_HorizInnerSpacing);
             set(data->topInnerSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_TopInnerSpacing);
             set(data->bottomInnerSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_BottomInnerSpacing);
-            #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+            #if defined(__amigaos3__)
             set(data->leftBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_LeftBarFrameSpacing);
             set(data->rightBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_RightBarFrameSpacing);
             set(data->topBarFrameSpacing,MUIA_Numeric_Value,MUIDEF_TheBar_TopBarFrameSpacing);

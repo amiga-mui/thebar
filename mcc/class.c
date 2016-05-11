@@ -1211,13 +1211,13 @@ static BOOL loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                 {
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
 
-                  #if !defined(__amigaos4__) && !defined(__AROS__)
+                  #if defined(__MORPHOS__)
                   // ignore the return code for mos broken pdt
                   if (isFlagSet(lib_flags,BASEFLG_BROKENMOSPDT))
                     res = TRUE;
                   #endif
 
-                  #ifdef __AROS__
+                  #if defined(__AROS__)
                   // ignore the return code for AROS
                   res = TRUE;
                   #endif
@@ -1225,7 +1225,7 @@ static BOOL loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                 else
                 {
                   // NOPE AROSMAN. YOU CAN'T IGNORE THIS ONE; JUST SKIP to ReadLine8()!
-                  #ifndef __AROS__
+                  #if !defined(__AROS__)
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_LUT8,width,0,0,width,height);
                   #endif
                 }
@@ -2125,9 +2125,7 @@ static IPTR mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->remove    = pt.remove;
         data->cols      = pt.cols;
         data->rows      = pt.rows;
-        #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
         data->userFrame = pt.userFrame;
-        #endif
         data->hoverID   = -1;
 
         if (isFlagSet(data->flags, FLG_FreeStrip))
