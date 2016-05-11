@@ -42,12 +42,12 @@ Object *opoppen(const void *key, const void *title, const void *help);
 Object *opopfri(const void *key, const void *title, const void *help);
 Object *opopback(ULONG gradient, const void *key, const void *title, const void *help);
 Object *opopframe(const void *key, const void *title, const void *help);
-#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+#if defined(__amigaos3__)
 void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
 #endif
 ULONG getKeyChar(const char *string);
 
-#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+#if defined(__amigaos3__)
 /* coloradjust.c */
 void freeColoradjust ( void );
 ULONG initColoradjust ( void );
