@@ -137,8 +137,8 @@ enum
 #define MUIDEF_TheBar_FrameShadowPen        ((APTR)"r00000000,00000000,00000000")
 #define MUIDEF_TheBar_FrameStyle            MUIV_TheButton_FrameStyle_Normal
 
-#define MUIDEF_TheBar_TextFont              NULL
-#define MUIDEF_TheBar_TextGfxFont           NULL
+#define MUIDEF_TheBar_TextFont              ((APTR)"")
+#define MUIDEF_TheBar_TextGfxFont           ((APTR)"")
 
 #define MUIDEF_TheBar_HorizSpacing          1
 #define MUIDEF_TheBar_VertSpacing           1

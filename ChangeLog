@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2016-05-12 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: config items matching the default values will be removed from
+    the configuration to be able to reset all items to their defaults.
+
 2016-05-10 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/library.c: removed artificial limitation of blending modes for the
