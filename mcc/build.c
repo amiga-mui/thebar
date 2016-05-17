@@ -92,7 +92,14 @@ enum
 
 /***********************************************************************/
 
-static UBYTE * LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
+#define IMPOSE            0xaa
+#define IMPOSE_ALPHA    0xaa
+#define ALPHA(x)        ((x)+1)
+#define ALPHA_INV(x)    (257 - ALPHA(x))
+
+/***********************************************************************/
+
+static UBYTE *LUT8ToLUT8(struct MUIS_TheBar_Brush *image, struct copy *copy)
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size;
@@ -233,7 +240,7 @@ static UBYTE * LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
 /***********************************************************************/
 
-static UBYTE * LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
+static UBYTE *LUT8ToRGB(struct MUIS_TheBar_Brush *image, struct copy *copy)
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size;
@@ -316,7 +323,6 @@ static UBYTE * LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                 if (gdest)
                 {
-                    ULONG gcol;
                     UBYTE r, g, b;
 
                     if (RGB8)
@@ -336,11 +342,10 @@ static UBYTE * LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
                         b = *cp   >>24;
                     }
 
-                    gcol = (((r<<5)+(r<<2)+(r<<1))+((g<<6)+(g<<3)+(g<<2))+((b<<4)-(b<<1)))>>7;
                     gdest++;
-                    *gdest++ = gcol;
-                    *gdest++ = gcol;
-                    *gdest++ = gcol;
+                    *gdest++ = (r * ALPHA_INV(IMPOSE_ALPHA) + IMPOSE * ALPHA(IMPOSE_ALPHA)) >> 8;
+                    *gdest++ = (g * ALPHA_INV(IMPOSE_ALPHA) + IMPOSE * ALPHA(IMPOSE_ALPHA)) >> 8;
+                    *gdest++ = (b * ALPHA_INV(IMPOSE_ALPHA) + IMPOSE * ALPHA(IMPOSE_ALPHA)) >> 8;
                 }
 
                 dest++;
@@ -373,7 +378,7 @@ static UBYTE * LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
 /***********************************************************************/
 
-static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy)
+static UBYTE *RGBToRGB(UNUSED struct InstData *data, struct MUIS_TheBar_Brush *image, struct copy *copy)
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size, maskDone = FALSE;
@@ -466,18 +471,16 @@ static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *i
 
                     if (gdest)
                     {
-                        ULONG v;
                         UBYTE r, g, b;
 
                         r = (c & 0x00FF0000)>>16;
                         g = (c & 0x0000FF00)>>8;
                         b = (c & 0x000000FF);
 
-                        v = (((r<<5)+(r<<2)+(r<<1))+((g<<6)+(g<<3)+(g<<2))+((b<<4)-(b<<1)))>>7;
                         *gdest++ = *src;
-                        *gdest++ = v;
-                        *gdest++ = v;
-                        *gdest++ = v;
+                        *gdest++ = (r * ALPHA_INV(IMPOSE_ALPHA) + IMPOSE * ALPHA(IMPOSE_ALPHA)) >> 8;
+                        *gdest++ = (g * ALPHA_INV(IMPOSE_ALPHA) + IMPOSE * ALPHA(IMPOSE_ALPHA)) >> 8;
+                        *gdest++ = (b * ALPHA_INV(IMPOSE_ALPHA) + IMPOSE * ALPHA(IMPOSE_ALPHA)) >> 8;
                     }
 
                     //dest++;
@@ -554,18 +557,16 @@ static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *i
 
                     if (gdest)
                     {
-                        ULONG v;
                         UBYTE r, g, b;
 
                         r = (c & 0x00FF0000)>>16;
                         g = (c & 0x0000FF00)>>8;
                         b = (c & 0x000000FF);
 
-                        v = (((r<<5)+(r<<2)+(r<<1))+((g<<6)+(g<<3)+(g<<2))+((b<<4)-(b<<1)))>>7;
                         *gdest++ = *src;
-                        *gdest++ = v;
-                        *gdest++ = v;
-                        *gdest++ = v;
+                        *gdest++ = (r * ALPHA_INV(IMPOSE_ALPHA) + IMPOSE * ALPHA(IMPOSE_ALPHA)) >> 8;
+                        *gdest++ = (g * ALPHA_INV(IMPOSE_ALPHA) + IMPOSE * ALPHA(IMPOSE_ALPHA)) >> 8;
+                        *gdest++ = (b * ALPHA_INV(IMPOSE_ALPHA) + IMPOSE * ALPHA(IMPOSE_ALPHA)) >> 8;
                     }
 
                     src += 4;
@@ -588,8 +589,7 @@ static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *i
 
 /***********************************************************************/
 
-static LONG
-calcPen(struct palette *pal,ULONG rgb)
+static LONG calcPen(struct palette *pal, ULONG rgb)
 {
     ULONG i;
     LONG d, bestd = 196000;
@@ -621,8 +621,7 @@ calcPen(struct palette *pal,ULONG rgb)
     return besti;
 }
 
-static LONG
-addColor(struct palette *pal,ULONG rgb)
+static LONG addColor(struct palette *pal, ULONG rgb)
 {
     LONG p;
     ULONG i;
@@ -650,8 +649,7 @@ addColor(struct palette *pal,ULONG rgb)
     return p;
 }
 
-static LONG
-bestColor(struct palette *pal,ULONG rgb)
+static LONG bestColor(struct palette *pal, ULONG rgb)
 {
     LONG p = addColor(pal,rgb);
     LONG best;
@@ -666,7 +664,7 @@ bestColor(struct palette *pal,ULONG rgb)
 
 /***********************************************************************/
 
-static UBYTE * RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
+static UBYTE *RGBToLUT8(struct MUIS_TheBar_Brush *image, struct copy *copy)
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size;
@@ -936,7 +934,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
 {
     ENTER();
 
-	if (data->image.data)
+    if (data->image.data)
     {
         struct copy    copy;
         UBYTE *back = data->image.data;
@@ -947,7 +945,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             return FALSE;
         }
 
-	    copy.dw    = make->dw;
+        copy.dw    = make->dw;
         copy.dh    = make->dh;
         copy.flags = make->flags;
 
@@ -997,6 +995,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
                     make->dchunky = RGBToRGB(data, &data->dimage, &copy);
                 else
                     make->dchunky = LUT8ToRGB(&data->dimage,&copy);
+                //ImposeARGB((ULONG *)make->dchunky, data->dimage.width, data->dimage.height, 0xaaaaaaaa);
 
                 freeSource(&data->dimage,back);
 

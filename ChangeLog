@@ -2,6 +2,12 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2016-05-17 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c, mcc/button/build.c: implemented an alternative greying
+    algorithm which just blends a grey shade over the image instead of turning
+    all colors to grey. This closes #5.
+
 2016-05-12 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/class.c: config items matching the default values will be removed from
