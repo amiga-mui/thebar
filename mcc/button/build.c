@@ -1113,7 +1113,6 @@ static BOOL makeSourcesRGB(struct InstData *data,struct make *make)
                     make->dchunky = RGBToRGB(data->dimage,&copy);
                 else
                     make->dchunky = LUT8ToRGB(data->dimage,&copy);
-                //ImposeARGB((ULONG *)make->dchunky, data->dimage->width, data->dimage->height, 0xaaaaaaaa);
 
                 freeSource(data->dimage,back);
                 make->dmask    = copy.mask;
