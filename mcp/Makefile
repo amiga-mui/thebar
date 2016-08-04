@@ -2,7 +2,7 @@
 #
 # TheBar.mcc - Next Generation Toolbar MUI Custom Class
 # Copyright (C) 2003-2005 Alfonso Ranieri
-# Copyright (C) 2005-2015 TheBar Open Source Team
+# Copyright (C) 2005-2016 TheBar Open Source Team
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -403,13 +403,13 @@ $(OBJDIR)/library.o: library.c ../include/mccinit.c \
 locale.h: locale.c
 locale.c: $(LOCALE)/TheBar_mcp.pot C_h.sd C_c.sd
 	@echo "  FC $@"
-	@$(FC) $(LOCALE)/TheBar_mcp.pot locale.h=C_h.sd locale.c=C_c.sd
+	@$(FC) $(LOCALE)/TheBar_mcp.pot locale.h=C_h.sd locale.c=C_c.sd CODESET ISO-8859-1
 
 ## CATALOG GENERATION #################
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.po
 	@echo "  FC $@"
-	@$(FC) REVISION $(shell git rev-list --all --count $<) POFILE $< CATALOG $@
+	@$(FC) REVISION $(shell git rev-list --all --count $<) POFILE $< CATALOG $@ CODESET UTF-8
 
 .IGNORE: $(CATALOGS)
 

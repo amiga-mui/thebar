@@ -2,3 +2,6 @@
 bin_*/
 mcp/locale.c
 mcp/locale.h
+mcp/locale/*.catalog
+MCC_TheBar-*.*
+release/

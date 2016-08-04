@@ -4,7 +4,7 @@
 #
 # TheBar.mcc - Next Generation Toolbar MUI Custom Class
 # Copyright (C) 2003-2005 Alfonso Ranieri
-# Copyright (C) 2005-2015 TheBar Open Source Team
+# Copyright (C) 2005-2016 TheBar Open Source Team
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -85,7 +85,7 @@ for language in `ls mcp/locale/*.catalog`; do
 done
 
 cp -a -R dist/* "release/"
-cp -a AUTHORS ChangeLog COPYING "release/MCC_TheBar/"
+cp -a ChangeLog COPYING "release/MCC_TheBar/"
 cp -a doc/MCC_TheBar.readme "release/MCC_TheBar/ReadMe"
 cp -a demo/pics/* "release/MCC_TheBar/Demos/pics/"
 cp -a doc/MCC_TheBar.readme "release/MCC_TheBar/Docs/"

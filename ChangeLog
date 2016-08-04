@@ -2,6 +2,12 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+#### v26.17 RELEASE ###########################################################
+
+2016-08-04 Jens Maus <mail@jens-maus.de>
+
+  * misc: final 26.17 release preparations
+
 2016-05-17 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcc/build.c, mcc/button/build.c: implemented an alternative greying
