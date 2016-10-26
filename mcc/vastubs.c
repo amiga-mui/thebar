@@ -38,8 +38,10 @@ APTR NewObject( struct IClass *classPtr, CONST_STRPTR classID, Tag tag1, ... )
 { return NewObjectA(classPtr, classID, (struct TagItem *)&tag1); }
 ULONG SetAttrs( APTR object, ULONG tag1, ... )
 { return SetAttrsA(object, (struct TagItem *)&tag1); }
+#ifndef EasyRequest
 LONG EasyRequest( struct Window *window, CONST struct EasyStruct *easyStruct, ULONG *idcmpPtr, ... )
 { return EasyRequestArgs(window, easyStruct, idcmpPtr, &idcmpPtr+1); }
+#endif
 
 #include <proto/datatypes.h>
 Object *NewDTObject( APTR name, Tag tag1, ... )
@@ -48,8 +50,10 @@ ULONG SetDTAttrs( Object *o, struct Window *win, struct Requester *req, Tag tag1
 { return SetDTAttrsA(o, win, req, (struct TagItem *)&tag1); }
 ULONG GetDTAttrs( Object *o, Tag tag1, ... )
 { return GetDTAttrsA(o, (struct TagItem *)&tag1); }
+#ifndef DoDTMethod
 ULONG DoDTMethod( Object *o, struct Window *win, struct Requester *req, ULONG data, ... )
 { return DoDTMethodA(o, win, req, (Msg)&data); }
+#endif
 
 #else
   #error "VARGS stubs are only save on m68k systems!"
