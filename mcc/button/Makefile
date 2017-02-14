@@ -31,7 +31,7 @@
 # # to explicitly compile for AmigaOS3
 # > make OS=os3
 #
-# # to compile for AmigaOS4 but with debugging
+# # to compile for AmigaOS4 but without debugging
 # > make OS=os4 DEBUG=
 #
 
@@ -161,7 +161,7 @@ TESTTARGET= $(BINDIR)/TheButton-Test
 
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
-OPTFLAGS = -O3 -fomit-frame-pointer 
+OPTFLAGS = -O3 -fomit-frame-pointer
 DEBUG    = -DDEBUG -O0
 DEBUGSYM = -g -gstabs
 CFLAGS   = -I. -I../../include $(CPU) $(WARN) $(OPTFLAGS) \
