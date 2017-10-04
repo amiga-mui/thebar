@@ -29,8 +29,8 @@
 
 // for setting all necessary version information
 #define LIB_VERSION    26
-#define LIB_REVISION   17
-#define LIB_DATE       "04.08.2016"
+#define LIB_REVISION   18
+#define LIB_DATE       "04.10.2017"
 #define LIB_COPYRIGHT  "Copyright (C) 2005-2017 TheBar Open Source Team"
 
 // set the LIB_REV_STRING
