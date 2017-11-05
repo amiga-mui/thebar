@@ -815,9 +815,12 @@ static void addconfigitemstr(Object *cfg, char *value, ULONG item, const char *d
         DoMethod(cfg, MUIM_Dataspace_Add, (IPTR)value, strlen(value)+1, item);
 }
 
-static void addconfigitem(Object *cfg, void *value, ULONG size, ULONG item)
+static void addconfigitem(Object *cfg, void *value, ULONG size, ULONG item, void *defValue)
 {
-    DoMethod(cfg, MUIM_Dataspace_Add, (IPTR)&value, size, item);
+	if(defValue != NULL && memcmp(value, defValue, size) == 0)
+		DoMethod(cfg, MUIM_Dataspace_Remove, item);
+	else
+	    DoMethod(cfg, MUIM_Dataspace_Add, (IPTR)value, size, item);
 }
 
 #define setclrflag(v, f) if(v) ap.flags |= (f); else ap.flags &= ~(f);
@@ -844,7 +847,7 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
         if ((ptr = (STRPTR)xget(data->groupBack, MUIA_Popbackground_Grad)))
         {
             DoMethod(cfg, MUIM_Dataspace_Remove, MUICFG_TheBar_GroupBack);
-            addconfigitem(cfg, ptr, sizeof(struct MUIS_TheBar_Gradient), MUICFG_TheBar_Gradient);
+            addconfigitem(cfg, ptr, sizeof(struct MUIS_TheBar_Gradient), MUICFG_TheBar_Gradient, NULL);
         }
         else
         {
@@ -963,16 +966,15 @@ mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_Gadgets
     ap.viewMode = xget(data->viewMode, MUIA_Cycle_Active);
     ap.labelPos = xget(data->labelPos, MUIA_Cycle_Active);
     ap.flags = MUIDEF_TheBar_Appearance_Flags;
+    ap.dummy[0] = 0;
+    ap.dummy[1] = 0;
     setclrflag(xget(data->borderless, MUIA_Selected), MUIV_TheBar_Appearance_Borderless);
     setclrflag(xget(data->raised, MUIA_Selected),     MUIV_TheBar_Appearance_Raised);
     setclrflag(xget(data->sunny, MUIA_Selected),      MUIV_TheBar_Appearance_Sunny);
     setclrflag(xget(data->scaled, MUIA_Selected),     MUIV_TheBar_Appearance_Scaled);
     setclrflag(xget(data->barSpacer, MUIA_Selected),  MUIV_TheBar_Appearance_BarSpacer);
     setclrflag(xget(data->enableKeys, MUIA_Selected), MUIV_TheBar_Appearance_EnableKeys);
-    if(ap.viewMode == MUIDEF_TheBar_Appearance_ViewMode && ap.labelPos == MUIDEF_TheBar_Appearance_LabelPos && ap.flags == MUIDEF_TheBar_Appearance_Flags)
-        DoMethod(cfg, MUIM_Dataspace_Remove, MUICFG_TheBar_Appearance);
-    else
-        addconfigitem(cfg, &ap, sizeof(ap), MUICFG_TheBar_Appearance);
+    addconfigitem(cfg, &ap, sizeof(ap), MUICFG_TheBar_Appearance, &staticAp);
 
     val = xget(data->horizSpacing, MUIA_Numeric_Value);
     addconfigitemint(cfg, val, MUICFG_TheBar_HorizSpacing, MUIDEF_TheBar_HorizSpacing);
