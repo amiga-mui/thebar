@@ -25,12 +25,11 @@ further developed by an independent open source developer group.
 
 TheBar.mcc is available for OS3, OS4, MorphOS and AROS.
 
-The TheBar.mcc class project is hosted on SourceForge. Its project
-name is "thebar".
+The TheBar.mcc class project is hosted on github.com.
 
 To report bugs use the bug tracker at
 
-  http://sf.net/p/thebar/
+  https://github.com/amiga-mui/thebar
 
 Manual Installation
 ~~~~~~~~~~~~~~~~~~~
