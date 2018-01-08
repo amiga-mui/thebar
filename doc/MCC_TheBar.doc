@@ -86,7 +86,7 @@ TheBar.mcc/TheBar.mcc
     $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/doc/MCC_TheBar.doc $
 
     Copyright (C) 2003-2005 Alfonso Ranieri
-    Copyright (C) 2005-2017 TheBar Open Source Team
+    Copyright (C) 2005-2018 TheBar Open Source Team
 
     TheBar.mcc is a MUI custom class which provides facilities to
     generate a dynamic graphical toolbar for MUI applications. Beside

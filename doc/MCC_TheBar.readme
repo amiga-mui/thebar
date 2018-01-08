@@ -10,7 +10,7 @@ Architecture: ppc-amigaos >= 4.0.0; m68k-amigaos >= 3.0; ppc-morphos >= 1.4.2; i
 Introduction
 ~~~~~~~~~~~~
 Copyright (C) 2003-2005 Alfonso Ranieri
-Copyright (C) 2005-2017 TheBar Open Source Team
+Copyright (C) 2005-2018 TheBar Open Source Team
 
 TheBar.mcc is a MUI custom class for management of multiple buttons in a
 toolbar-like environment. It allows to group multiple button together, allows
