@@ -2,13 +2,15 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+#### v26.19 RELEASE ###########################################################
+
 2017-11-05 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/class.c: fixed the "pointer to a pointer" operation when a simple
     pointer is enough already. This fixes the invalid saved configuration for
     the "Appearance" page. Thanks to Christian Maier for the hint.
 
-#### v26.18 RELEASE (special MUI 5.0-2017R3 release) ###########################
+#### v26.18 RELEASE (special MUI 5.0-2017R3 release) ##########################
 
 2016-09-07 Thore Böckelmann <tboeckel@gmx.de>
 
