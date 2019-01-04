@@ -51,7 +51,7 @@ To report bugs use the [bug/issue tracker](https://github.com/amiga-mui/thebar/i
 
 ```
 Copyright (C) 2003-2005 Alfonso Ranieri
-Copyright (C) 2005-2018 TheBar Open Source Team
+Copyright (C) 2005-2019 TheBar Open Source Team
 ```
 
 TheBar.mcc is distributed and licensed under the GNU Lesser Public License Version 2.1.
