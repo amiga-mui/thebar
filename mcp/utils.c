@@ -33,7 +33,6 @@
 // DoSuperNew()
 // Calls parent NEW method within a subclass
 #if !defined(__MORPHOS__)
-#if defined(__AROS__)
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
