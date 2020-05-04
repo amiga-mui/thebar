@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2020-05-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: reworked the DoSuperNew() implementation to call DoSuperMethodA() with
+    an explicitly built OM_NEW message on the stack.
+
 #### v26.19 RELEASE ###########################################################
 
 2017-11-05 Thore Böckelmann <tboeckel@gmx.de>

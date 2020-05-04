@@ -34,27 +34,19 @@
 // Calls parent NEW method within a subclass
 #if !defined(__MORPHOS__)
 #if defined(__AROS__)
-IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
-{
-  IPTR rc;
-#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
-#endif
   VA_LIST args;
-
-  ENTER();
+  struct opSet msg;
 
   VA_START(args, obj);
-  #if defined(__AROS__)
-  rc = (IPTR)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
-  #else
-  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
-  #endif
+  msg.MethodID = OM_NEW;
+  msg.ops_AttrList = VA_ARG(args, struct TagItem *);
+  msg.ops_GInfo = NULL;
+  rc = (Object *)DoSuperMethodA(cl, obj, (Msg)&msg);
   VA_END(args);
 
-  RETURN(rc);
   return rc;
 }
 #endif

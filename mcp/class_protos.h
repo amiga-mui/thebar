@@ -22,11 +22,7 @@
 
 /* utils.c */
 #if !defined(__MORPHOS__)
-#if defined(__AROS__)
-IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
-#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
-#endif
 #endif
 
 #if !defined(__MORPHOS__) && !defined(__AROS__)
