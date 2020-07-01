@@ -2,6 +2,8 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+#### v26.20 RELEASE ###########################################################
+
 2020-05-04 Thore Böckelmann <tboeckel@gmx.de>
 
   * misc: reworked the DoSuperNew() implementation to call DoSuperMethodA() with
