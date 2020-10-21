@@ -74,6 +74,7 @@ for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
 	cp -a mcc/bin_$os/TheBarVirt.mcc "release/MCC_TheBar/Libs/MUI/$fullsys/"
 	cp -a mcc/button/bin_$os/TheButton.mcc "release/MCC_TheBar/Libs/MUI/$fullsys/"
 	cp -a mcp/bin_$os/TheBar.mcp -a "release/MCC_TheBar/Libs/MUI/$fullsys/"
+	cp -a toolbar_mcc/bin_$os/Toolbar.mcc "release/MCC_TheBar/Libs/MUI/$fullsys/"
 done
 
 make -C mcp catalogs

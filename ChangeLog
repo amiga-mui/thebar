@@ -2,6 +2,13 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2020-10-21 Thore Böckelmann <tboeckel@gmx.de>
+
+  * toolbar_mcc: implemented a wrapper class from the old Toolbar.mcc class to
+    TheBar.mcc class. This wrapper class tries to provide as much compatibility
+    as possible, but I cannot guarantee that it fills all the gaps 100%. This
+    closes #7.
+
 #### v26.20 RELEASE ###########################################################
 
 2020-05-04 Thore Böckelmann <tboeckel@gmx.de>
