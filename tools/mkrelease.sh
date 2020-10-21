@@ -49,6 +49,7 @@ make -C mcc release
 make -C mcc/button release
 make -C mcp release
 make -C demo release
+make -C toolbar_mcc release
 
 for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
 	case $os in
