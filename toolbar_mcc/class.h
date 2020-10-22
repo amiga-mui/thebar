@@ -24,9 +24,6 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/utility.h>
-#include <proto/graphics.h>
-#include <proto/datatypes.h>
-#include <proto/cybergraphics.h>
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
 
@@ -35,10 +32,6 @@
 #ifndef __AROS__
 #include <clib/debug_protos.h>
 #endif
-
-#include <datatypes/pictureclass.h>
-#include <utility/pack.h>
-#include <cybergraphx/cybergraphics.h>
 
 #include <string.h>
 
@@ -62,13 +55,11 @@
 #if defined(__amigaos4__)
 extern struct Library         *SysBase;
 extern struct Library         *DOSBase;
-extern struct Library         *GfxBase;
 extern struct Library         *IntuitionBase;
 #else
 extern struct ExecBase        *SysBase;
 extern struct DosLibrary      *DOSBase;
 extern struct IntuitionBase   *IntuitionBase;
-extern struct GfxBase         *GfxBase;
 #endif
 #if defined(__AROS__)
 extern struct UtilityBase     *UtilityBase;
@@ -76,13 +67,6 @@ extern struct UtilityBase     *UtilityBase;
 extern struct Library         *UtilityBase;
 #endif
 extern struct Library         *MUIMasterBase;
-
-extern struct Library         *DataTypesBase;
-extern struct Library         *CyberGfxBase;
-
-extern struct MUI_CustomClass *lib_thisClass;
-extern struct MUI_CustomClass *lib_spacerClass;
-extern struct MUI_CustomClass *lib_dragBarClass;
 
 extern ULONG                  lib_flags;
 
@@ -137,86 +121,8 @@ IPTR xget(Object *obj, const IPTR attr);
   #define xget(OBJ, ATTR) ({IPTR b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
 
-#if !defined(IsMinListEmpty)
-#define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
-#endif
-
-#define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
-#define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
-
-/***********************************************************************/
-
-struct scale
-{
-    UWORD sw;
-    UWORD sh;
-    UWORD dw;
-    UWORD dh;
-};
-
-/***********************************************************************/
-
-#if !defined(__amigaos4__)
-enum
-{
-    MINTERM_ZERO        = 0,
-    MINTERM_ONE         = ABC | ABNC | ANBC | ANBNC | NABC | NABNC | NANBC | NANBNC,
-    MINTERM_COPY        = ABC | ABNC | NABC | NABNC,
-    MINTERM_NOT_C       = ABNC | ANBNC | NABNC | NANBNC,
-    MINTERM_B_AND_C     = ABC | NABC,
-    MINTERM_NOT_B_AND_C = ANBC | NANBC,
-    MINTERM_B_OR_C      = ABC | ABNC | NABC | NABNC | ANBC | NANBC,
-};
-#endif
-
-/****************************************************************************/
-/*
-** MUI undocs
-*/
-
-#ifndef MBQ_MUI_MAXMAX
-#define MBQ_MUI_MAXMAX MUI_MAXMAX
-#endif
-
-#ifndef MUIM_Backfill
-#define MUIM_Backfill 0x80428d73UL
-struct  MUIP_Backfill        { STACKED ULONG MethodID; STACKED LONG left; STACKED LONG top; STACKED LONG right; STACKED LONG bottom; STACKED LONG xoffset; STACKED LONG yoffset; STACKED LONG lum; };
-#endif
-
-#ifndef MUIA_CustomBackfill
-#define MUIA_CustomBackfill  0x80420a63UL
-#endif
-
-#ifndef MUIM_CustomBackfill
-#define MUIM_CustomBackfill  MUIM_Backfill
-#endif
-
-#ifndef MUIP_CustomBackfill
-#define MUIP_CustomBackfill  MUIP_Backfill
-#endif
-
-#ifndef MUIM_CreateDragImage
-#define MUIM_CreateDragImage 0x8042eb6fUL /* V18 */ /* Custom Class */
-struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STACKED LONG touchy; STACKED ULONG flags; }; /* Custom Class */
-struct MUI_DragImage
-{
-    struct BitMap *bm;
-    WORD width;
-    WORD height;
-    WORD touchx;
-    WORD touchy;
-    ULONG flags;
-};
-#endif
-
-#ifndef MUIM_DeleteDragImage
-#define MUIM_DeleteDragImage 0x80423037UL
-struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;};
-#endif
-
 /****************************************************************************/
 
 #include "class_protos.h"
 
 /***********************************************************************/
-
