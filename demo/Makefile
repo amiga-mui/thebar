@@ -188,9 +188,11 @@ ifeq ($(OS), os4)
   # AmigaOS4
 
   # Compiler/link/strip commands
-  CC      = ppc-amigaos-gcc
-  STRIP   = ppc-amigaos-strip
-  OBJDUMP = ppc-amigaos-objdump
+  ifneq ($(HOST), AmigaOS4)
+    CC      = ppc-amigaos-gcc
+    STRIP   = ppc-amigaos-strip
+    OBJDUMP = ppc-amigaos-objdump
+  endif
 
   # Compiler/Linker flags
   CRT      = newlib
@@ -207,14 +209,16 @@ ifeq ($(OS), os3)
   # AmigaOS3
 
   # Compiler/link/strip commands
-  CC      = m68k-amigaos-gcc
-  STRIP   = m68k-amigaos-strip
-  OBJDUMP = m68k-amigaos-objdump
+  ifneq ($(HOST), AmigaOS)
+    CC      = m68k-amigaos-gcc
+    STRIP   = m68k-amigaos-strip
+    OBJDUMP = m68k-amigaos-objdump
+  endif
 
   # Compiler/Linker flags
   CPU	    = -m68020-60 -msoft-float
-  CFLAGS  += -noixemul -DNO_INLINE_STDARG
-  LDFLAGS += -noixemul
+  CFLAGS  += -mcrt=clib2 -DNO_INLINE_STDARG -D__amigaos3__
+  LDFLAGS += -mcrt=clib2
   LDLIBS  += -ldebug -lmui
 
 else
@@ -224,9 +228,11 @@ ifeq ($(OS), mos)
   # MorphOS
 
   # Compiler/link/strip commands
-  CC      = ppc-morphos-gcc
-  STRIP   = ppc-morphos-strip
-  OBJDUMP = ppc-morphos-objdump
+  ifneq ($(HOST), MorphOS)
+    CC      = ppc-morphos-gcc
+    STRIP   = ppc-morphos-strip
+    OBJDUMP = ppc-morphos-objdump
+  endif
 
   # Compiler/Linker flags
   CPU     = -mcpu=powerpc
@@ -248,7 +254,7 @@ ifeq ($(OS), aros-i386)
 
   # Compiler/Linker flags
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
-  LDLIBS += -larossupport -lamiga -lmui
+  LDLIBS += -larossupport -lrom -lmui
 
 else
 ifeq ($(OS), aros-ppc)
@@ -264,7 +270,7 @@ ifeq ($(OS), aros-ppc)
 
   # Compiler/Linker flags
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
-  LDLIBS += -larossupport -lamiga -lmui
+  LDLIBS += -larossupport -lrom -lmui
 
 else
 ifeq ($(OS), aros-x86_64)
@@ -280,7 +286,7 @@ ifeq ($(OS), aros-x86_64)
 
   # Compiler/Linker flags
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
-  LDLIBS += -larossupport -lamiga -lmui
+  LDLIBS += -larossupport -lrom -lmui
 
 endif
 endif
@@ -343,14 +349,12 @@ $(OBJDIR):
 	@echo "  MK $@"
 	@$(MKDIR) $(OBJDIR)
 
-
 # make the binary directories
 $(BINDIR):
 	@echo "  MK $@"
 	@$(MKDIR) $(BINDIR)
 
-#
-
+# for compiling single .c files
 $(OBJDIR)/%.o: %.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
@@ -362,60 +366,70 @@ $(DEMO1TARGET): $(DEMO1OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO1OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 $(DEMO2TARGET): $(DEMO2OBJS)
 	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO2OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 $(DEMO3TARGET): $(DEMO3OBJS)
 	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO3OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 $(DEMO4TARGET): $(DEMO4OBJS)
 	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO4OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 $(DEMO5TARGET): $(DEMO5OBJS)
 	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO5OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 $(DEMO6TARGET): $(DEMO6OBJS)
 	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO6OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 $(DEMO7TARGET): $(DEMO7OBJS)
 	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO7OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 $(DEMO8TARGET): $(DEMO8OBJS)
 	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO8OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 $(DEMO9TARGET): $(DEMO9OBJS)
 	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO9OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 $(DEMO10TARGET): $(DEMO10OBJS)
 	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO10OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+	@$(CHMOD) $@
 
 #
 

@@ -2,6 +2,11 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2020-12-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * demos/Makefile: the AmigaOS3 builds are linked against clib2 instead of some
+    other C runtime library. This closes #10.
+
 #### v26.21 RELEASE ###########################################################
 
 2020-10-21 Thore Böckelmann <tboeckel@gmx.de>
