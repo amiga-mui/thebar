@@ -13,3 +13,6 @@ YEAR=`date +%Y`
 # for files which we will try to update the Copyright notice
 find . \( -not -path "*/.git/*" -not -name "update_copyright.sh" \) -type f \
        -exec sed -i "s/Copyright (C) 2005-.*TheBar Open Source Team/Copyright (C) 2005-${YEAR} TheBar Open Source Team/g" {} \;
+
+find . \( -not -path "*/.git/*" -not -name "update_copyright.sh" \) -type f \
+       -exec sed -i "s/Copyright (C) 2020-.*TheBar Open Source Team/Copyright (C) 2020-${YEAR} TheBar Open Source Team/g" {} \;
