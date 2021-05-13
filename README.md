@@ -1,6 +1,7 @@
 # TheBar.mcc
 
-[![Build Status](https://travis-ci.org/amiga-mui/thebar.svg?branch=master)](https://travis-ci.org/amiga-mui/thebar) [![Code Climate](https://codeclimate.com/github/amiga-mui/thebar/badges/gpa.svg)](https://codeclimate.com/github/amiga-mui/thebar) [![License](http://img.shields.io/:license-lgpl2-blue.svg?style=flat)](http://www.gnu.org/licenses/lgpl-2.1.html) [![Github Issues](http://githubbadges.herokuapp.com/amiga-mui/thebar/issues.svg)](https://github.com/amiga-mui/thebar/issues)
+[![Build](https://github.com/amiga-mui/thebar/workflows/CI/badge.svg)](https://github.com/amiga-mui/thebar/actions)
+[![License](http://img.shields.io/:license-lgpl2-blue.svg?style=flat)](http://www.gnu.org/licenses/lgpl-2.1.html)
 
 TheBar.mcc is a MUI custom class for Amiga systems for management of multiple
 buttons in a toolbar-like environment. It allows to group multiple button together,
