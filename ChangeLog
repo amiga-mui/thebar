@@ -2,6 +2,8 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+#### v26.22 RELEASE ###########################################################
+
 2021-01-03 Thore Böckelmann <tboeckel@gmx.de>
 
   * dist: added italian translation to Installer script kindly provided by Samir
