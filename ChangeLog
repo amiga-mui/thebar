@@ -7,6 +7,8 @@ MUI TheBar MCC class - ChangeLog
   * misc: do not call DoSuperMethod() for MUIM_HandleEvent as this is forbidden
     by MUI development rules. Thanks to deadw00d for the hint. This closes #11.
 
+#### v26.22 RELEASE ###########################################################
+
 2021-01-03 Thore Böckelmann <tboeckel@gmx.de>
 
   * dist: added italian translation to Installer script kindly provided by Samir
