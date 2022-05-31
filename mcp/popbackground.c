@@ -235,7 +235,8 @@ mHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
         else data->grad.flags &= ~MUIV_TheBar_Gradient_DragTo;
     }
 
-    return DoSuperMethodA(cl,obj,(Msg)msg);
+    // don't eat any events
+    return 0;
 }
 
 /***********************************************************************/

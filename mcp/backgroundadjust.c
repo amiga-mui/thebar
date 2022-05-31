@@ -151,6 +151,8 @@ mPatternsHide(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mPatternsHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 {
+    IPTR rc = 0;
+
     if (msg->imsg)
     {
         struct patternsData *data = INST_DATA(cl,obj);
@@ -167,6 +169,7 @@ mPatternsHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
                 DoubleClick(data->secs,data->micros,msg->imsg->Seconds,msg->imsg->Micros))
                 {
                     DoMethod(_app(obj),MUIM_Application_PushMethod,data->pop,2,MUIM_Popbackground_Close,TRUE);
+                    rc = MUI_EventHandlerRC_Eat;
                 }
         }
         else
@@ -208,6 +211,7 @@ mPatternsHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
                     if (p>=0)
                     {
                         DoMethod(_app(obj),MUIM_Application_PushMethod,data->pop,2,MUIM_Popbackground_Close,TRUE);
+                        rc = MUI_EventHandlerRC_Eat;
                     }
                     break;
             }
@@ -222,7 +226,7 @@ mPatternsHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
         data->micros = msg->imsg->Micros;
     }
 
-    return DoSuperMethodA(cl,obj,(Msg)msg);
+    return rc;
 }
 
 /***********************************************************************/
