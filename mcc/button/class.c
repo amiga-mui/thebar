@@ -114,15 +114,15 @@ ULONG packTable[] =
 {
     PACK_STARTTABLE(TBUTTAGBASE),
 
-    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_Image,pack,image,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_SelImage,pack,simage,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_DisImage,pack,dimage,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_Label,pack,label,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_Image,pack,image,PKCTRL_IPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_SelImage,pack,simage,PKCTRL_IPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_DisImage,pack,dimage,PKCTRL_IPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_Label,pack,label,PKCTRL_IPTR|PKCTRL_PACKONLY),
     PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_ViewMode,pack,vMode,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_TheBar,pack,tb,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_TheBar,pack,tb,PKCTRL_IPTR|PKCTRL_PACKONLY),
     PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_ID,pack,id,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_LabelPos,pack,lPos,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_Strip,pack,strip,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBUTTAGBASE,MUIA_TheButton_Strip,pack,strip,PKCTRL_IPTR|PKCTRL_PACKONLY),
 
     PACK_LONGBIT(TBUTTAGBASE,MUIA_TheButton_Borderless,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Borderless),
     PACK_LONGBIT(TBUTTAGBASE,MUIA_TheButton_NoClick,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_NoClick),
@@ -2324,7 +2324,6 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
   IPTR result = 0;
 
   ENTER();
-
   // we catch the MUIM_Notify and send our super class a different
   // modified notify method so that it informs us first and we will later
   // on (in CheckNotify) inform the original Notify destination
@@ -2333,18 +2332,18 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
   if(msg->FollowParams > 0)
   {
     struct ButtonNotify *notify;
-    ULONG size;
+    IPTR size;
 
     // calculate the size of the notify structure with some additional
     // space at the end to put in the parameters as well...
-    size = sizeof(struct ButtonNotify)+(sizeof(ULONG)*msg->FollowParams);
+    size = sizeof(struct ButtonNotify)+(sizeof(IPTR)*msg->FollowParams);
 
     // now we allocate a new ButtonNotify and add
     // it to the notify list of the button
     if((notify = SharedAlloc(size)))
     {
       // now we fill the notify structure
-      memcpy(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
+      memcpy(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->FollowParams));
 
       // add the new notify to the notifies list of the button
       AddTail((struct List *)&data->notifyList, (struct Node *)notify);
@@ -2478,19 +2477,19 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
 
       if(notify == msg->notify)
       {
-        ULONG *destMessage; // Msg is defined in intuition/classusr.h
+        IPTR *destMessage; // Msg is defined in intuition/classusr.h
 
         // now we create a full temporary clone of the notify
         // message which we can modify before we send it to
         // the destination
         if((destMessage = SharedAlloc(sizeof(ULONG)*(notify->msg.FollowParams))))
         {
-          ULONG i;
+          IPTR i;
           Object *destObj = NULL;
-          ULONG *para = (ULONG *)(((IPTR)&notify->msg.FollowParams)+sizeof(ULONG));
+          IPTR *para = (IPTR *)(((IPTR)&notify->msg.FollowParams)+sizeof(IPTR));
 
           // now we fill the notify structure
-          memcpy(destMessage, para, sizeof(ULONG)*(notify->msg.FollowParams));
+          memcpy(destMessage, para, sizeof(IPTR)*(notify->msg.FollowParams));
 
           // parse through the destMessage and replace certain
           // variable with their correct values.
