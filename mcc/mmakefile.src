@@ -1,6 +1,6 @@
 #   $Id$
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM contrib-zune-classes-thebar-mcc : includes linklibs
 
@@ -18,22 +18,20 @@ FILES := \
 	 utils
 
 USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include
-USER_CFLAGS := -DNO_INLINE_STDARG
-USER_CFLAGS += $(PARANOIA_CFLAGS)
+USER_CPPFLAGS := -DNO_INLINE_STDARG
+USER_CFLAGS := $(PARANOIA_CFLAGS)
+USER_LDFLAGS := -noclibs -lstdc.static
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcc \
   modname=TheBar modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
-  objdir=$(GENDIR)/$(CURDIR)/mcc files=$(FILES) \
-  uselibs="amiga mui rom m"
+  objdir=$(GENDIR)/$(CURDIR)/mcc files=$(FILES)
 
-
-USER_CFLAGS := -DVIRTUAL -DNO_INLINE_STDARG
-USER_CFLAGS += $(PARANOIA_CFLAGS)
+USER_CPPFLAGS := -DVIRTUAL -DNO_INLINE_STDARG
+USER_CFLAGS := $(PARANOIA_CFLAGS)
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mccv \
   modname=TheBarVirt modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
-  objdir=$(GENDIR)/$(CURDIR)/mccv files=$(FILES) \
-  uselibs="amiga mui rom m"
+  objdir=$(GENDIR)/$(CURDIR)/mccv files=$(FILES)
 
 
 #MM includes-copy
