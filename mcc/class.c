@@ -4639,7 +4639,7 @@ static IPTR mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent
 
                     for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
                     {
-                        if(IsPointInObject(button->obj, msg->imsg->MouseX, msg->imsg->MouseY) == TRUE)
+                        if(button->obj && (IsPointInObject(button->obj, msg->imsg->MouseX, msg->imsg->MouseY) == TRUE))
                         {
                             hoverID = button->ID;
                             break;
