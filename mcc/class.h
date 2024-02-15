@@ -104,7 +104,9 @@ enum
 #define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
 
 #define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(IPTR)ptr)
+#if !defined(superset)
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
+#endif
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
 #define nnsuperset(cl,obj,tag,val)      SetSuperAttrs(cl,obj,tag,(IPTR)(val),MUIA_NoNotify,TRUE,TAG_DONE)
 #undef set
@@ -211,7 +213,7 @@ struct MUI_DragImage
 
 #ifndef MUIM_DeleteDragImage
 #define MUIM_DeleteDragImage 0x80423037UL
-struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;};
+struct MUIP_DeleteDragImage {STACKED ULONG MethodID; STACKED struct MUI_DragImage *di;};
 #endif
 
 /****************************************************************************/

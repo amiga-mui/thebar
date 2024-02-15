@@ -36,6 +36,10 @@
 #define PDTA_AlphaChannel     (DTA_Dummy + 256)
 #endif
 
+#ifndef PKCTRL_SIPTR
+#define PKCTRL_SIPTR PKCTRL_LONG
+#endif
+
 /***********************************************************************/
 
 static Object *makeButton(struct Button *button,Object *obj,struct InstData *data)
@@ -1544,22 +1548,22 @@ static const ULONG ptable[] =
     PACK_STARTTABLE(TBTAGBASE),
 
     /* Fields */
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Images,pack,brushes,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SelImages,pack,sbrushes,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_DisImages,pack,dbrushes,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Buttons,pack,buttons,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_PicsDrawer,pack,idrawer,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Images,pack,brushes,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SelImages,pack,sbrushes,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_DisImages,pack,dbrushes,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Buttons,pack,buttons,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_PicsDrawer,pack,idrawer,PKCTRL_SIPTR|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SpacerIndex,pack,spacer,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_ViewMode,pack,viewMode,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Pics,pack,pics,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SelPics,pack,spics,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_DisPics,pack,dpics,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Strip,pack,strip,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SelStrip,pack,sstrip,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_DisStrip,pack,dstrip,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_StripBrush,pack,stripBrush,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SelStripBrush,pack,sstripBrush,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_DisStripBrush,pack,dstripBrush,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Pics,pack,pics,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SelPics,pack,spics,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_DisPics,pack,dpics,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Strip,pack,strip,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SelStrip,pack,sstrip,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_DisStrip,pack,dstrip,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_StripBrush,pack,stripBrush,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_SelStripBrush,pack,sstripBrush,PKCTRL_SIPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(TBTAGBASE,MUIA_TheBar_DisStripBrush,pack,dstripBrush,PKCTRL_SIPTR|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_LabelPos,pack,labelPos,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_BarPos,pack,barPos,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(TBTAGBASE,MUIA_TheBar_Columns,pack,cols,PKCTRL_LONG|PKCTRL_PACKONLY),
@@ -1646,7 +1650,7 @@ static const ULONG ptable[] =
 
     PACK_NEWOFFSET(MUIA_Frame),
     PACK_LONGBIT(MUIA_Frame,MUIA_Frame,pack,userFlags2,PKCTRL_BIT|PKCTRL_PACKONLY|PSTF_EXISTS,UFLG2_UserFrame),
-    PACK_ENTRY(MUIA_Frame,MUIA_Frame,pack,userFrame,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(MUIA_Frame,MUIA_Frame,pack,userFrame,PKCTRL_SIPTR|PKCTRL_PACKONLY),
 
     /* Alien: group */
     PACK_NEWOFFSET(MUIA_Group_Horiz),
@@ -2082,7 +2086,7 @@ static IPTR mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     pt.spacer   = pt.stripCols = pt.stripRows = pt.stripHSpace = pt.stripVSpace = -1;
     pt.flags    = FLG_EnableKeys;
 
-    PackStructureTags(&pt,ptable,attrs);
+    PackStructureTags(&pt, (ULONG *)ptable,attrs);
 
     if (pt.viewMode>=MUIV_TheBar_ViewMode_Last)
         pt.viewMode = MUIV_TheBar_ViewMode_Text;
@@ -4635,7 +4639,7 @@ static IPTR mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent
 
                     for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
                     {
-                        if(IsPointInObject(button->obj, msg->imsg->MouseX, msg->imsg->MouseY) == TRUE)
+                        if(button->obj && (IsPointInObject(button->obj, msg->imsg->MouseX, msg->imsg->MouseY) == TRUE))
                         {
                             hoverID = button->ID;
                             break;
